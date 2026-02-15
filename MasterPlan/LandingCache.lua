@@ -2,6 +2,7 @@ local _, T = ...
 if T.Mark ~= 50 then return end
 local G, L, E = T.Garrison, T.L, T.Evie
 local GameTooltip = T.NotGameTooltip or GameTooltip
+local SetPortraitToTexture = T.SetPortraitToTexture
 
 local function HookOnShow(self, OnShow)
 	self:HookScript("OnShow", OnShow)
@@ -114,6 +115,11 @@ local function Ship_SetRecruit(ship)
 end
 hooksecurefunc("GarrisonLandingPageReport_GetShipments", function(self)
 	if GarrisonLandingPage.garrTypeID >= 3 then return end
+	-- BUG[12.0/2601]: SetMaskTexture fizzles, and our replacement can get recycled onto other widgets.
+	-- Force it for everyone, then.
+	for w in self.shipmentsPool:EnumerateActive() do
+		SetPortraitToTexture(w.Icon, w.Icon:GetTexture())
+	end
 	local index, ship = self.shipmentsPool:GetNumActive(), self.shipmentsPool:Acquire()
 	ship:SetPoint("TOPLEFT", 60 + (index % 3) * 105, -105 - math.floor(index / 3) * 100)
 	if Ship_SetRecruit(ship) then

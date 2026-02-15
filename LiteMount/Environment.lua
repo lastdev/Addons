@@ -21,6 +21,7 @@ local issecretvalue = issecretvalue or function () return false end
 
 function LM.Environment:Initialize()
     self:InitializeHolidays()
+    self:InitializeEJInstances()
     self:UpdateSwimTimes()
 
     self.combatTravelForm = nil
@@ -541,34 +542,10 @@ function LM.Environment:GetLocation()
 end
 
 local ModelScanFrame = CreateFrame('PlayerModel')
-ModelScanFrame:Hide()
 
 function LM.Environment:GetPlayerModel()
-    ModelScanFrame:Show()
     ModelScanFrame:SetUnit('player')
-    local modelFileID = ModelScanFrame:GetModelFileID()
-    ModelScanFrame:Hide()
-    return modelFileID
-end
-
--- The level of black magic shenanigans here is off the charts. What on earth
--- is ModelSceneID 596? I don't know but it's what DressUpFrame uses so ...
--- This used in conditions to check if we're wearing a transmog outfit.
-
-local ModelSceneScanFrame = CreateFrame('ModelScene', nil, nil, 'ModelSceneMixinTemplate')
-ModelSceneScanFrame:SetSize(100, 100)
-
-function LM.Environment:GetPlayerTransmogInfo()
-    ModelSceneScanFrame:Show()
-    ModelSceneScanFrame:ClearScene()
-    ModelSceneScanFrame:SetViewInsets(0, 0, 0, 0)
-    ModelSceneScanFrame:ReleaseAllActors()
-    ModelSceneScanFrame:TransitionToModelSceneID(596, CAMERA_TRANSITION_TYPE_IMMEDIATE, CAMERA_MODIFICATION_TYPE_DISCARD, true)
-    local actor = ModelSceneScanFrame:GetPlayerActor()
-    actor:SetModelByUnit("player")
-    local infoList = actor:GetItemTransmogInfoList()
-    ModelSceneScanFrame:Hide()
-    return infoList
+    return ModelScanFrame:GetModelFileID()
 end
 
 local maxMapID
@@ -640,6 +617,20 @@ function LM.Environment:GetMaps(str)
     return lines
 end
 
+function LM.Environment:GetMapContinent(mapID)
+    while true do
+        local info = C_Map.GetMapInfo(mapID)
+        if not info then return end
+        if info.mapType == Enum.UIMapType.Continent then
+            return mapID, info.name
+        elseif mapID == info.parentMapID then
+            return
+        else
+            mapID = info.parentMapID
+        end
+    end
+end
+
 function LM.Environment:GetContinents(str)
     local searchStr = string.lower(str or "")
 
@@ -685,51 +676,48 @@ function LM.Environment:GetMapTree()
     return mapTree
 end
 
--- It's possible to pull the GetInstanceInfo() instance number from the
--- encounter journal, but it's buried down in the encounter info and not
--- in the actual instance info return which is annoying.
--- This really FUBARs the Encounter journal, but I'm not sure if it's
--- taint-safe to put it back. Wah!
+-- This is altering client state (hopefully temporarily). This has to happen
+-- during login, otherwise Blizzard_EncounterJournal will be super confused.
 
-function LM.Environment:GetEJInstances()
-    C_AddOns.LoadAddOn("Blizzard_EncounterJournal")
-
-    -- Save EJ state
-    EncounterJournal:UnregisterEvent("EJ_DIFFICULTY_UPDATE")
-    local originalTier = EJ_GetCurrentTier()
-    local origInstanceID = EncounterJournal.instanceID
-
-    local out = {}
-
-    for tier = 1, EJ_GetNumTiers() do
-        EJ_SelectTier(tier)
-        for _, isRaid in ipairs({ true, false }) do
-            local index = 1
+function LM.Environment:InitializeEJInstances()
+    self.instancesByID = {}
+    local savedTier = EJ_GetCurrentTier()
+    for tierID = 1, EJ_GetNumTiers() do
+        if tierID > GetNumExpansions() then
+            break
+        end
+        EJ_SelectTier(tierID)
+        for _, queryRaid in ipairs({ true, false }) do
+            local i = 1
             while true do
-                local id, name, _, _, _, _, _, _, showDifficulty  = EJ_GetInstanceByIndex(index, isRaid)
-                if not name or not showDifficulty then break end
-                EJ_SelectInstance(id)
-                local i = 1
-                while true do
-                    local n, _, _, _, _, _, _, instanceID = EJ_GetEncounterInfoByIndex(i)
-                    if not n then break end
-                    if instanceID then
-                        out[instanceID] = name
-                        break
-                    end
-                    i = i + 1
+                local _, name, _, _, _, _, _, _, _, hasDifficulty, instanceID, isRaidClassic, isRaid = EJ_GetInstanceByIndex(i, queryRaid)
+                if not instanceID then break end
+                if WOW_PROJECT_ID ~= 1 then
+                    isRaid = isRaidClassic
                 end
-                index = index + 1
+                self.instancesByID[instanceID] = {
+                    id = instanceID,
+                    name = name,
+                    isRaid = isRaid,
+                    tierID = tierID,
+                }
+                i = i + 1
             end
         end
     end
+    EJ_SelectTier(savedTier)
+end
 
-    -- Restore EJ state
-    EJ_SelectTier(originalTier)
-    if origInstanceID then EJ_SelectInstance(origInstanceID) end
-    EncounterJournal:RegisterEvent("EJ_DIFFICULTY_UPDATE")
+function LM.Environment:GetEJInstances()
+    return self.instancesByID
+end
 
-    return out
+function LM.Environment:GetInstanceNameByID(id)
+    if self.instancesByID[id] then
+        return self.instancesByID[id].name
+    else
+        return LM.db.global.instances[id]
+    end
 end
 
 local CALENDAR_FILTER_CVARS = {
@@ -757,9 +745,7 @@ function LM.Environment:InitializeHolidays()
     local holidaysByTitle = {}
 
     C_Calendar.SetAbsMonth(now.month, now.year)
-    for monthDelta = 1, 12 do
-        -- Advance by one, easier than doing our own date arithmetic
-        C_Calendar.SetMonth(1)
+    for monthDelta = 1, 12 do   -- luacheck: no unused (loops 12 times, var unused)
         local monthInfo = C_Calendar.GetMonthInfo()
         for monthDay = 1, monthInfo.numDays do
             for i = 1, C_Calendar.GetNumDayEvents(0, monthDay) do
@@ -771,6 +757,8 @@ function LM.Environment:InitializeHolidays()
                 end
             end
         end
+        -- Advance by one, easier than doing our own date arithmetic
+        C_Calendar.SetMonth(1)
     end
 
     -- if we see the same titled event with different IDs delete them all

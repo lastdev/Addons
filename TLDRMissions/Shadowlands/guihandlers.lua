@@ -2,7 +2,6 @@ local addonName, addon = ...
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
-local AceEvent = LibStub("AceAddon-3.0"):GetAddon("TLDRMissions-AceEvent")
 
 local gui = addon.GUI
 
@@ -360,17 +359,11 @@ local function processResults(results, dontClear)
                     end
                     gui.shortcutButton:SetText(DONE.."!")
                     gui.FailedCalcLabel:SetText(L["MissionsSentPartial"]:format(numSent, numSkipped, numFailed, numFollowersAvailable))
-                    AceEvent:SendMessage("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
-                    if WeakAuras then
-                        WeakAuras.ScanEvents("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
-                    end
+                    addon.triggerSentPartialAlert()
                 else
                     gui.shortcutButton:SetText(FAILED)
                     gui.FailedCalcLabel:SetText(L["AllSimsFailedError"])
-                    AceEvent:SendMessage("TLDRMISSIONS_SENT_FAILURE")
-                    if WeakAuras then
-                        WeakAuras.ScanEvents("TLDRMISSIONS_SENT_FAILURE")
-                    end
+                    addon.triggerSentFailureAlert()
                 end
             end
             
@@ -737,7 +730,6 @@ gui.CalculateButton:SetScript("OnClick", function (self)
         gui.CalculateButton:SetEnabled(true)
         gui.AbortButton:SetEnabled(false)
         gui.SkipCalculationButton:SetEnabled(false)
-        if WeakAuras then WeakAuras.ScanEvents("TLDRMISSIONS_SENT_NONE") end
         return
     end
     
@@ -746,9 +738,7 @@ gui.CalculateButton:SetScript("OnClick", function (self)
         local info = C_Garrison.GetFollowerAutoCombatStats(follower.followerID)
         if info and (info.currentHealth < 1) then
             if addon.db.profile.ignoreDeadFollowers then
-                if WeakAuras then
-                    WeakAuras.ScanEvents("TLDRMISSIONS_SENT_WITH_IGNORED")
-                end
+                addon.triggerZeroHPAlert()
             else
                 gui.shortcutButton:SetText(FAILED)
                 gui.FailedCalcLabel:SetText(L["FollowerZeroHPError"])
@@ -991,10 +981,7 @@ gui.SkipCalculationButton:SetScript("OnClick", function(self)
             end
             gui.shortcutButton:SetText(DONE.."!")
             gui.FailedCalcLabel:SetText(L["MissionsSentPartial"]:format(numSent, numSkipped, numFailed, numFollowersAvailable))
-            AceEvent:SendMessage("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
-            if WeakAuras then
-                WeakAuras.ScanEvents("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
-            end
+            addon.triggerSentPartialAlert()
         else
             gui.shortcutButton:SetText(COVENANT_MISSIONS_START_ADVENTURE)
             gui.FailedCalcLabel:SetText(L["MissionSkipped"])
@@ -1046,10 +1033,7 @@ gui.StartMissionButton:SetScript("OnClick", function(self)
         gui.FailedCalcLabel:SetText(L["NotEnoughAnimaError"])
         gui.SkipMissionButton:SetEnabled(true)
         self:SetEnabled(true)
-        AceEvent:SendMessage("TLDRMISSIONS_NOT_ENOUGH_ANIMA")
-        if WeakAuras then
-            WeakAuras.ScanEvents("TLDRMISSIONS_NOT_ENOUGH_ANIMA")
-        end
+        addon.triggerNotEnoughAnimaAlert()
         return
 	end
     
@@ -1130,10 +1114,7 @@ gui.StartMissionButton:SetScript("OnClick", function(self)
         gui.shortcutButton:SetText(FAILED)
         gui.FailedCalcLabel:SetText(L["NotEnoughAnimaError"])
         self:SetEnabled(true)
-        AceEvent:SendMessage("TLDRMISSIONS_NOT_ENOUGH_ANIMA")
-        if WeakAuras then
-            WeakAuras.ScanEvents("TLDRMISSIONS_NOT_ENOUGH_ANIMA")
-        end
+        addon.triggerNotEnoughAnimaAlert()
         return
 	end
     
@@ -1168,7 +1149,6 @@ gui.StartMissionButton:SetScript("OnClick", function(self)
             else
                 addon:wipeObsoleteMissionLog(missionWaitingUserAcceptance.missionID)
             end
-            AceEvent:SendMessage("TLDRMISSIONS_START_MISSION", missionWaitingUserAcceptance.missionID, C_AddOns.GetAddOnMetadata(addonName, "Version"))
             numSent = numSent + 1
         end)
     end
@@ -1202,18 +1182,11 @@ gui.StartMissionButton:SetScript("OnClick", function(self)
                     end
                     gui.shortcutButton:SetText(DONE.."!")
                     gui.FailedCalcLabel:SetText(L["MissionsSentPartial"]:format(numSent, numSkipped, numFailed, numFollowersAvailable))
-                    AceEvent:SendMessage("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
-                    if WeakAuras then
-                        WeakAuras.ScanEvents("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
-                    end
+                    addon.triggerSentPartialAlert()
                 else
                     gui.shortcutButton:SetText(DONE.."!")
                     gui.NextMissionLabel:SetText(L["MissonsSentSuccess"])
-                    -- two different ways to "listen" for this addon announcing the missions have been sent.
-                    AceEvent:SendMessage("TLDRMISSIONS_SENT_SUCCESS")
-                    if WeakAuras then
-                        WeakAuras.ScanEvents("TLDRMISSIONS_SENT_SUCCESS")
-                    end
+                    addon.triggerSentSuccessAlert()
                 end
                 gui.CalculateButton:SetEnabled(true)
                 gui.AbortButton:SetEnabled(false)
@@ -1255,10 +1228,7 @@ gui.SkipMissionButton:SetScript("OnClick", function(self)
             end
             gui.shortcutButton:SetText(DONE.."!")
             gui.FailedCalcLabel:SetText(L["MissionsSentPartial"]:format(numSent, numSkipped, numFailed, numFollowersAvailable))
-            AceEvent:SendMessage("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
-            if WeakAuras then
-                WeakAuras.ScanEvents("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
-            end
+            addon.triggerSentPartialAlert()
         else
             setNextMissionText()
         end
@@ -1338,10 +1308,7 @@ gui.CompleteMissionsButton:SetScript("OnClick", function(self)
                 gui.shortcutButton:SetText(size)
                 if size < 1 then
                     self:SetText(DONE.."!")
-                    AceEvent:SendMessage("TLDRMISSIONS_COMPLETE_MISSIONS_FINISHED")
-                    if WeakAuras then
-                        WeakAuras.ScanEvents("TLDRMISSIONS_COMPLETE_MISSIONS_FINISHED")
-                    end
+                    addon.triggerCompleteMissionsAlert()
                     C_Timer.After(2, function()
                         if #C_Garrison.GetCompleteMissions(123) == 0 then
                             self:Hide()
@@ -1371,10 +1338,7 @@ gui.CompleteMissionsButton:SetScript("OnClick", function(self)
                             if lastBlockCompletionReason ~= blockCompletionReason then
                                 lastBlockCompletionReason = blockCompletionReason
                                 print(blockCompletionReason)
-                                AceEvent:SendMessage("TLDRMISSIONS_MISSION_BLOCKED_ANIMA_QUEST")
-                                if WeakAuras then
-                                    WeakAuras.ScanEvents("TLDRMISSIONS_MISSION_BLOCKED_ANIMA_QUEST")
-                                end
+                                addon.triggerAnimaQuestMissingAlert()
                             end
                             break
                         end

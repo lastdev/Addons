@@ -107,8 +107,6 @@ function SlashCmdList.MYTHICDUNGEONTOOLS(cmd, editbox)
     MDT:ToggleDevMode()
   elseif rqst == "reset" then
     MDT:ResetMainFramePos()
-  elseif rqst == "dc" then
-    MDT:ToggleDataCollection()
   elseif rqst == "hardreset" then
     if arg == "force" then
       MDT:HardReset()
@@ -178,7 +176,6 @@ local defaultSavedVars = {
     },
     presets = {},
     currentPreset = {},
-    newDataCollectionActive = false,
     fadeOutDuringCombat = false,
     fadeOutAlpha = 0.5,
     colorPaletteInfo = {
@@ -188,10 +185,11 @@ local defaultSavedVars = {
       customPaletteValues = {},
       numberCustomColors = 12,
     },
-    currentDungeonIdx = MDT:IsMop() and 130 or 123, -- set this one every new season
+    currentDungeonIdx = MDT:IsMop() and 130 or 150, -- set this one every new season
     latestDungeonSeen = 0,
     selectedDungeonList = 1,
     knownAffixWeeks = {},
+    prePatchWarningSeenFor = 0,
   },
 }
 do
@@ -233,10 +231,6 @@ do
       minimapIcon:Register("MythicDungeonTools", LDB, db.minimap)
       if not db.minimap.hide then
         minimapIcon:Show("MythicDungeonTools")
-      end
-      if db.newDataCollectionActive or MDT:IsOnBetaServer() then
-        MDT.DataCollection:Init()
-        MDT.DataCollection:InitHealthTrack()
       end
       --compartment
       if not db.minimap.compartmentHide then
@@ -418,12 +412,6 @@ function MDT:HideInterface()
   if self.main_frame then
     self.main_frame:Hide()
   end
-end
-
-function MDT:ToggleDataCollection()
-  db.newDataCollectionActive = not db.newDataCollectionActive
-  print(string.format("%sMDT|r: DataCollection %s. Reload Interface!", mythicColor,
-    db.newDataCollectionActive and "|cFF00FF00Enabled|r" or "|cFFFF0000Disabled|r"))
 end
 
 function MDT:CreateMenu()
@@ -824,6 +812,8 @@ function MDT:MakeCopyHelper(frame)
   function MDT.copyHelper:SmartShow(anchorFrame, x, y)
     MDT.copyHelper:ClearAllPoints()
     MDT.copyHelper:SetPoint("CENTER", anchorFrame, "CENTER", x, y)
+    MDT.copyHelper:SetFrameStrata("TOOLTIP")
+    MDT.copyHelper:SetFrameLevel(200)
     MDT.copyHelper:SetAlpha(1)
     MDT.copyHelper:Show()
     MDT.copyHelper:SetScript("OnUpdate", function()
@@ -1103,6 +1093,10 @@ function MDT:MakeSidePanel(frame)
   frame.LinkToChatButton.frame:SetHighlightFontObject(fontInstance)
   frame.LinkToChatButton.frame:SetDisabledFontObject(fontInstance)
   frame.LinkToChatButton:SetCallback("OnClick", function(widget, callbackName, value)
+    if C_Secrets and C_Secrets.ShouldAurasBeSecret() then
+      print('MDT: '..L["Cannot share routes right now due to blizzard restrictions."])
+      return
+    end
     local distribution = MDT:IsPlayerInGroup()
     if not distribution then return end
     local callback = function()
@@ -1141,6 +1135,10 @@ function MDT:MakeSidePanel(frame)
   local c1, c2, c3 = frame.LiveSessionButton.text:GetTextColor()
   frame.LiveSessionButton.normalTextColor = { r = c1, g = c2, b = c3, }
   frame.LiveSessionButton:SetCallback("OnClick", function(widget, callbackName, value)
+    if C_Secrets and C_Secrets.ShouldAurasBeSecret() then
+      print('MDT: '..L["Cannot share routes right now due to blizzard restrictions."])
+      return
+    end
     if MDT.liveSessionActive then
       MDT:LiveSession_Disable()
     else
@@ -4469,6 +4467,13 @@ function initFrames()
   MDT:RegisterErrorHandledFunctions()
   MDT:CheckSeenDungeonLists()
 
+  -- request spell info for all teleports, so icons are instantly working
+  for _, mapInfo in pairs(MDT.mapInfo) do
+    if mapInfo.teleportId then
+      C_Spell.RequestLoadSpellData(mapInfo.teleportId)
+    end
+  end
+
   local initSpinner = CreateFrame("Button", "MDTInitSpinner", UIParent, "LoadingSpinnerTemplate")
   initSpinner.BackgroundFrame.Background:SetVertexColor(0, 1, 0, 1)
   initSpinner.AnimFrame.Circle:SetVertexColor(0, 1, 0, 1)
@@ -4560,6 +4565,7 @@ function initFrames()
   coroutine.yield()
   MDT:MakeSendingStatusBar(main_frame)
   MDT:POI_CreateDropDown(main_frame)
+  MDT:SetupPrePatchWarning()
 
   --devMode
   if db.devMode and MDT.CreateDevPanel then

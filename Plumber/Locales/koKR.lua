@@ -14,6 +14,7 @@ BINDING_NAME_PLUMBER_QUESTWATCH_PREVIOUS = "이전 퀘스트에 포커스";
 
 
 --Module Control Panel
+L["Addon Name Colon"] =  "Plumber: ";
 L["Module Control"] = "애드온 설정 관리";
 L["Quick Slot Generic Description"] = "\n\n*단축 버튼 칸은 사용자의 현재 상태에 따라 자동 표시.";
 L["Quick Slot Edit Mode"] = HUD_EDIT_MODE_MENU or "편집 모드";
@@ -23,9 +24,10 @@ L["Quick Slot Layout"] = "배치 방식";
 L["Quick Slot Layout Linear"] = "직선형";
 L["Quick Slot Layout Radial"] = "원형";
 L["Restriction Combat"] = "전투 중에는 작동하지 않습니다.";  --Indicate a feature can only work when out of combat
+L["Restriction Instance"] = "이 기능은 인스턴스에서는 작동하지 않습니다.";
 L["Map Pin Change Size Method"] = "\n\n*세계 지도 > 지도 필터 > Plumber에서 핀 크기를 변경";
 L["Toggle Plumber UI"] = "Plumber UI 전환";
-L["Toggle Plumber UI Tooltip"] = "편집 모드에서 다음 Plumber UI를 표시합니다:\n%s\n\n이 체크박스는 편집 모드에서의 UI 표시 여부만 제어합니다.\n이 모듈들을 활성화하거나 비활성화하지는 않습니다.";
+L["Toggle Plumber UI Tooltip"] = "편집 모드에서 다음 Plumber UI를 표시합니다:\n\n%s\n\n이 체크박스는 편집 모드에서의 UI 표시 여부만 제어합니다.\n이 모듈들을 활성화하거나 비활성화하지는 않습니다.";
 L["Remove New Feature Marker"] = "새 기능 표시 제거";
 L["Remove New Feature Marker Tooltip"] = "새 기능 표시 %s는 일주일 후 사라집니다. 이 버튼을 클릭하면 지금 바로 제거할 수 있습니다.";
 L["Modules"] = "모듈";
@@ -33,7 +35,7 @@ L["Release Notes"] = "업데이트 내역";
 L["Option AutoShowChangelog"] = "업데이트 내역 자동 표시";
 L["Option AutoShowChangelog Tooltip"] = "업데이트 내역을 자동으로 표시합니다.";
 L["Category Colon"] = (CATEGORY or "카테고리")..": ";
-L["Module Wrong Game Version"] = "이 모듈은 현재 게임 버전에서 작동하지 않습니다.";
+L["Module Wrong Game Version"] = "이 기능은 현재 게임 버전에서 작동하지 않습니다.";
 L["Changelog Wrong Game Version"] = "다음 변경 사항은 현재 게임 버전에 적용되지 않습니다.";
 L["Settings Panel"] = "설정 패널";
 L["Version"] = "버전";
@@ -42,6 +44,7 @@ L["New Feature Abbr"] = "신규";
 L["Format Month Day"] = EVENT_SCHEDULER_DAY_FORMAT or "%s %d";
 L["Always On Module"] = "이 모듈은 항상 활성화되어 있습니다.";
 L["Return To Module List"] = "목록으로 돌아가기";
+L["Generic Addon Conflict"] = "이 모듈은 유사한 기능을 가진 다른 애드온과 호환되지 않을 수 있습니다.";
 
 
 --Settings Category
@@ -178,7 +181,6 @@ L["ModuleDescription BlizzFixEventToast"] = "이벤트 알림이 마우스 클�
 --Talking Head
 L["ModuleName TalkingHead"] = HUD_EDIT_MODE_TALKING_HEAD_FRAME_LABEL or "말머리";
 L["ModuleDescription TalkingHead"] = "기본 말머리 UI를 깔끔한 얼굴 없는 형태로 교체.";
-L["EditMode TalkingHead"] = "Plumber: "..L["ModuleName TalkingHead"];
 L["TalkingHead Option InstantText"] = "대화 글자 즉시 표시";   --Should texts immediately, no gradual fading
 L["TalkingHead Option TextOutline"] = "글자 외곽선";   --Added a stroke/outline to the letter
 L["TalkingHead Option Condition Header"] = "출처 글자 숨기기:";
@@ -307,6 +309,8 @@ L["ModuleDescription ExpansionLandingPage"] = "시작 화면에 부가 정보 �
 L["Instruction Track Reputation"] = "<Shift 클릭으로 이 평판을 추적>";
 L["Instruction Untrack Reputation"] = CONTENT_TRACKING_UNTRACK_TOOLTIP_PROMPT or "<Shift 클릭으로 추적 중지>";
 L["Error Show UI In Combat"] = "전투 중에는 이 UI를 전환할 수 없습니다.";
+L["Error Show UI In Combat 1"] = "전투 중에는 이 UI를 전환할 수 없습니다.";
+L["Error Show UI In Combat 2"] = "그만하세요";
 
 
 --Landing Page Switch
@@ -322,7 +326,8 @@ L["ModuleDescription WorldMapPin_TWW"] = "카즈 알가르 전역에 걸쳐 추�
 
 
 --Delves
-L["Great Vault Tier Format"] = GREAT_VAULT_WORLD_TIER or "등급 %s";
+L["Great Vault Tier Format"] = GREAT_VAULT_WORLD_TIER or "%s 단계";
+L["Great Vault World Activity Tooltip"] = "1단계 및 글로벌 활동";
 L["Item Level Format"] = ITEM_LEVEL or "아이템 레벨 %d";
 L["Item Level Abbr"] = ITEM_LEVEL_ABBR or "아이템 레벨";
 L["Delves Reputation Name"] = "구렁 탐험가의 여정";
@@ -380,6 +385,16 @@ L["Click To Disable"] = "클릭하여 비활성화";
 --NameplateWidget
 L["ModuleName NameplateWidget"] = "이름표: 열쇠창";
 L["ModuleDescription NameplateWidget"] = "광휘의 잔재 보유 수 이름표에 표시.";
+
+
+--NameplateQuestIndicator
+L["ModuleName NameplateQuest"] = "이름표: 퀘스트 표시기r";
+L["ModuleDescription NameplateQuest"] = "이름표에 퀘스트 표시기 표시\n\n- (선택 사항) 대상의 퀘스트 목표 진행도 표시\n\n- (선택 사항) 파티원이 목표를 완료하지 않은 경우 퀘스트 표시기 표시";
+L["NameplateQuest ShowPartyQuest"] = "파티원 퀘스트 표시";
+L["NameplateQuest ShowPartyQuest Tooltip"] = "파티원 중 퀘스트 목표를 완료하지 않은 사람이 있을 경우 %s 표시기 표시.";
+L["NameplateQuest ShowTargetProgress"] = "목표 진행 상황 표시";
+L["NameplateQuest ShowTargetProgress Tooltip"] = "대상 이름표에 퀘스트 목표 진행 상황을 표시합니다.";
+L["NameplateQuest Instruction Find Nameplate"] = "아이콘 위치를 조정하려면 NPC 이름표가 보이는 장소로 이동하세요.";
 
 
 --PartyInviterInfo
@@ -457,7 +472,6 @@ L["SoftTargetName HideName"] = "오브젝트 이름 숨기기";
 L["SoftTargetName HideName Tooltip"] = "내부에 있을 때 오브젝트 이름을 숨깁니다."
 
 
-
 --LegionRemix
 L["ModuleName LegionRemix"] = "군단 리믹스";
 L["ModuleDescription LegionRemix"] = "- 특성을 자동으로 배웁니다.\n\n- 캐릭터 창에 다양한 정보를 제공하는 위젯을 추가합니다. 이 위젯을 클릭하면 새 유물 UI가 열립니다.";
@@ -529,7 +543,6 @@ L["Sample Item 4"] = "영웅 아이템";
 L["Sample Item 3"] = "희귀 아이템";
 L["Sample Item 2"] = "고급 아이템";
 L["Sample Item 1"] = "일반 아이템";
-L["EditMode LootUI"] = "Plumber: "..(HUD_EDIT_MODE_LOOT_FRAME_LABEL or "아이템");
 L["Manual Loot Instruction Format"] = "특정 아이템을 획득할 때 자동 전리품을 일시적으로 취소하려면 전리품 창이 나타날 때까지 |cffffffff%s|r 키를 길게 누르세요.";
 L["LootUI Option Hide Window"] = "Plumber 전리품 창 숨기기";
 L["LootUI Option Hide Window Tooltip"] = "Plumber 전리품 알림 창을 숨기되, 강제 자동 획득 등 기능은 백그라운드에서 계속 작동합니다.";
@@ -562,6 +575,12 @@ L["LootUI Option Combine Items"] = "유사 아이템 통합 표시";
 L["LootUI Option Combine Items Tooltip"] = "유사한 아이템을 하나의 행에 묶어 표시합니다. 지원되는 카테고리:\n\n- 잡동사니 아이템\n- 시대의 기념품 (군단 리믹스)";
 L["LootUI Option Low Frame Strata"] = "뒤로 보내기";
 L["LootUI Option Low Frame Strata Tooltip"] = "전리품 알림 모드에서 전리품 창을 다른 UI 뒤로 배치합니다.\n\n이 옵션은 수동 전리품 모드에는 영향을 주지 않습니다.";
+L["LootUI Option Show Reputation"] = "평판 변화 표시";
+L["LootUI Option Show Reputation Tooltip"] = "전리품 창에 평판 증가량을 표시합니다.\n\n전투 중 또는 PvP에서 획득한 평판은 이후에 표시됩니다.";
+L["LootUI Option Show All Money"] = "모든 화폐 변동 사항 표시";
+L["LootUI Option Show All Money Tooltip"] = "전리품뿐만 아니라 모든 출처에서 얻은 화폐를 표시해줍니다.";
+L["LootUI Option Hide Title"] = "\"획득했습니다\" 텍스트 숨기기";
+L["LootUI Option Hide Title Tooltip"] = "전리품 창 상단의 \"획득함\" 텍스트를 숨깁니다.";
 
 
 --Quick Slot For Third-party Dev
@@ -576,6 +595,7 @@ L["PlumberMacro Drive"] = "Plumber 고.속.주.행. 매크로";
 L["PlumberMacro Drawer"] = "Plumber 패널 매크로";
 L["PlumberMacro Housing"] = "Plumber 하우징 매크로";
 L["PlumberMacro Torch"] = "Plumber 횃불 매크로";
+L["PlumberMacro Outfit"] = "Plumber 의상 매크로";
 L["PlumberMacro DrawerFlag Combat"] = "전투 종료 시 서랍이 갱신됩니다.";
 L["PlumberMacro DrawerFlag Stuck"] = "패널 갱신에 실패했습니다.";
 L["PlumberMacro Error Combat"] = "전투 중 제한됨";
@@ -602,11 +622,13 @@ L["Drawer Option Update Frequently"] = "항상 최신 상태 유지";
 L["Drawer Option Update Frequently Tooltip"] = "가방이나 주문책에 변경이 있을 때마다 버튼 상태를 갱신합니다. 이 옵션을 켜면 시스템 자원을 약간 더 사용할 수 있습니다";
 L["ModuleName DrawerMacro"] = "패널 매크로";
 L["ModuleDescription DrawerMacro"] = "아이템, 주문, 애완동물, 탈것, 장난감을 관리할 수 있는 맞춤형 확장 메뉴를 생성하세요.\n\n패널 매크로를 만들려면 먼저 새 매크로를 생성한 후 명령어 편집창에 |cffd7c0a3#plumber:drawer|r 입력하세요.";
+L["No Slot For New Character Macro Alert"] = "이 작업을 완료하려면 여분의 캐릭터 전용 매크로 슬롯이 필요합니다.";
 
 
 --New Expansion Landing Page
 L["ModuleName NewExpansionLandingPage"] = "확장팩 개요";
-L["ModuleDescription NewExpansionLandingPage"] = "진영, 주간 활동, 공격대 귀속 정보를 표시하는 UI입니다. 다음 방법으로 열 수 있습니다:\n\n- 미니맵에 있는 '카즈 알가르 요약' 버튼을 클릭하세요.\n\n- 게임 설정의 단축키 메뉴에서 단축키를 설정할 수 있습니다.";
+L["ModuleDescription NewExpansionLandingPage"] = "진영, 주간 활동, 공격대 귀속 정보를 표시하는 UI입니다. 다음 방법으로 열 수 있습니다:\n\n- 게임 설정 > 단축키 > Plumber 애드온에서 단축키를 설정하세요.\n\n- 달력 버튼 아래에 있는 애드온 항목을 사용하세요.";
+L["Abbr NewExpansionLandingPage"] = "확장팩 개요";
 L["Reward Available"] = "보상 가능";
 L["Paragon Reward Available"] = "불멸의 동맹 평판 보상 가능";
 L["Until Next Level Format"] = "%d 다음 레벨까지";   --Earn x reputation to reach the next level
@@ -684,6 +706,9 @@ L["Cannot Reset Instance"] = "지금은 인스턴스를 초기화할 수 없습�
 L["Difficulty Not Accurate"] = "파티장이 아니어서 난이도 정보가 정확하지 않을 수 있습니다.";
 L["Instruction Click To Open Adventure Guide"] = "좌클릭: |cffffffff모험 안내서 열기|r";
 L["Instruction Alt Click To Reset Instance"] = "Alt+우클릭: |cffffffff모든 인스턴스 초기화|r";
+L["Instruction Link Progress In Chat"] = "<채팅에 진행 상황을 공유하려면 Shift 키를 누른 상태로 클릭하세요>";
+L["Instance Name"] = "인스턴스 이름";   --Dungeon/Raid Name
+L["EditMode Instruction InstanceDifficulty"] = "프레임 너비는 사용 가능한 옵션의 수에 따라 달라집니다.";
 
 
 --TransmogChatCommand
@@ -693,6 +718,15 @@ L["Copy To Clipboard"] = "클립보드에 복사";
 L["Copy Current Outfit Tooltip"] = "현재 의상을 온라인으로 공유하기 위해 복사합니다.";
 L["Missing Appearances Format"] = "%d개 외형 누락";
 L["Press Key To Copy Format"] = "|cffffd100%s|r 키를 눌러 복사";
+
+
+--TransmogOutfitSelect
+L["ModuleName TransmogOutfitSelect"] = "의상 컬렉션: 빠른 접근";
+L["ModuleDescription1 TransmogOutfitSelect"] = "어디서나 의상 컬렉션을 열고 저장된 의상을 활성화할 수 있습니다.";
+L["ModuleDescription2 TransmogOutfitSelect"] = "사용법: 형상변환 UI를 열고 의상 목록 위의 |cffd7c0a3빠른 접근|r 버튼을 행동 단축바로 드래그하세요.";
+L["Outfit Collection"] = "의상 컬렉션";
+L["Quick Access Outfit Button"] = "빠른 접근";
+L["Quick Access Outfit Button Tooltip"] = "의상을 어디서나 변경할 수 있도록 이 버튼을 행동 단축바로 클릭하여 드래그하세요.";
 
 
 --QuestWatchCycle
@@ -708,6 +742,7 @@ L["ModuleDescription CraftSearchExtended"] = "특정 단어를 검색할 때 더
 --DecorModelScaleRef
 L["ModuleName DecorModelScaleRef"] = "장식품: 크기 비교용 바나나"; --See HOUSING_DASHBOARD_CATALOG_TOOLTIP
 L["ModuleDescription DecorModelScaleRef"] = "- 장식 미리보기 창에 크기 참조용 바나나를 추가하여 오브젝트의 크기를 가늠할 수 있습니다.\n\n- 또한 왼쪽 버튼을 누른 채 수직으로 이동하여 카메라 각도를 변경할 수 있습니다.";
+L["Toggle Banana"] = "바나나 전환";
 
 
 --Player Housing
@@ -715,6 +750,7 @@ L["ModuleName Housing_Macro"] = "하우징 매크로";
 L["ModuleDescription Housing_Macro"] = "하우징 순간이동 매크로를 생성할 수 있습니다: 먼저 새 매크로를 생성한 후, 명령어 입력창에 |cffd7c0a3#plumber:home|r 을 입력하세요.";
 L["Teleport Home"] = "집으로 순간이동";
 L["Instruction Drag To Action Bar"] = "<클릭하고 드래그하여 행동 단축바로 이동>";
+L["Leave Home"] = HOUSING_DASHBOARD_RETURN or "이전 위치로 돌아가기";
 L["Toggle Torch"] = "횃불 전환";
 L["ModuleName Housing_DecorHover"] = "편집기: 객체 이름 및 복제";
 L["ModuleDescription Housing_DecorHover"] = "장식 모드:\n\n- 커서를 장식 위에 올려놓으면 해당 장식 이름과 저장된 아이템 수가 표시됩니다.\n\n- Alt를 눌러 장식을 \"복제\"할 수 있습니다.\n\n새로 생성된 오브젝트는 현재 각도와 크기를 상속받지 않습니다.";
@@ -723,7 +759,7 @@ L["Duplicate Decor Key"] = "\"복제\" 키";
 L["Enable Duplicate"] = "\"복제\" 활성화";
 L["Enable Duplicate tooltip"] = "장식 모드에서는 커서를 장식 위에 올려놓은 후 키를 눌러 해당 객체의 다른 인스턴스를 배치할 수 있습니다.";
 L["ModuleName Housing_CustomizeMode"] = "편집기: 사용자 정의 모드";
-L["ModuleDescription Housing_CustomizeMode"] = "사용자 정의 모드:\n\n- 한 장식에서 다른 장식으로 염료를 복사할 수 있습니다.\n\n- 염료 이름을 색상 이름으로 변경합니다.";
+L["ModuleDescription Housing_CustomizeMode"] = "사용자 정의 모드:\n\n- 한 장식에서 다른 장식으로 염료를 복사할 수 있습니다.\n\n- 염료 이름을 색상 이름으로 변경합니다.\n\n- 레시피를 추적하려면 염료를 Shift 키를 누른 상태로 클릭하세요.";
 L["Copy Dyes"] = "염색 복사";
 L["Dyes Copied"] = "염색 설정이 복사되었습니다";
 L["Apply Dyes"] = "염색 적용";

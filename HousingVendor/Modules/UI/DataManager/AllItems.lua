@@ -16,6 +16,7 @@ local string_match = string.match
 local string_gsub = string.gsub
 local table_insert = table.insert
 local table_sort = table.sort
+local math_abs = math.abs
 local Util = DataManager.Util or {}
 local Constants = DataManager.Constants or {}
 local INTERNED_STRINGS = Util.INTERNED_STRINGS or {}
@@ -42,6 +43,24 @@ local function FactionNumericToString(faction)
     end
     return faction  -- Already a string or nil
 end
+
+local function NormalizeFactionGroup(faction)
+    if faction == nil then return nil end
+    if faction == "" or faction == "None" then return nil end
+    if type(faction) == "string" then
+        if faction == "Alliance" or faction == "Horde" or faction == "Neutral" then
+            return faction
+        end
+        return faction
+    end
+    if type(faction) == "number" then
+        if faction == 0 then return "Neutral" end
+        if faction == 1 then return "Alliance" end
+        if faction == 2 then return "Horde" end
+        return nil
+    end
+    return nil
+end
 local function CoalesceNonEmptyString(a,b) return Util.CoalesceNonEmptyString and Util.CoalesceNonEmptyString(a,b) or (a~=nil and a~="" and a or b) end
 local function InferFactionFromText(text) return Util.InferFactionFromText and Util.InferFactionFromText(text) or INTERNED_STRINGS["Neutral"] end
 
@@ -55,10 +74,22 @@ local INCREMENTAL_BATCH_SIZE = 300  -- Process 300 items per batch
 
 -- Aggregate all items from HousingAllItems and enrich with API
 function DataManager:GetAllItems()
-    -- Return cached data if available
-    if state.itemCache then
+    -- Ensure pending vendor/quest/achievement data is processed before building item cache
+    if _G.HousingDataAggregator and _G.HousingDataAggregator.ProcessPendingData then
+        _G.HousingDataAggregator:ProcessPendingData()
+    end
+
+    local currentDataRevision = _G.HousingDataAggregatorRevision or 0
+
+    -- Return cached data if available (and still matches the current data revision)
+    if state.itemCache and state._aggregatorRevision == currentDataRevision then
         return state.itemCache
     end
+
+    -- Data changed since the last build; rebuild caches.
+    state.itemCache = nil
+    state.filterOptionsCache = nil
+    state._aggregatorRevision = currentDataRevision
 
     -- Reset batch loading state
     state.batchLoadInProgress = false
@@ -73,7 +104,6 @@ function DataManager:GetAllItems()
     local HousingMissingItems = _G.HousingMissingItems
     local HousingNotReleased = _G.HousingNotReleased
     local HousingMiscellaneous = _G.HousingMiscellaneous
-    local HousingItemCoordinates = _G.HousingItemCoordinates
     local UnitFactionGroup = _G.UnitFactionGroup
 
     local allItems = {}
@@ -88,6 +118,19 @@ function DataManager:GetAllItems()
         qualities = {},
         requirements = {}
     }
+
+    -- Multi-source support: items can be Vendor+Quest, Vendor+Drop, etc.
+    -- We track all applicable sources for filtering (while still keeping a primary `_sourceType` for display).
+    local function AddSourceType(itemRecord, sourceType)
+        if not itemRecord or not sourceType or sourceType == "" then
+            return
+        end
+        if not itemRecord._sourceTypes then
+            itemRecord._sourceTypes = {}
+        end
+        itemRecord._sourceTypes[sourceType] = true
+        filterOptions.sources[sourceType] = true
+    end
 
     -- PERFORMANCE OPTIMIZATION: Use pre-built vendor index (O(1) lookup instead of O(n²) nested loops)
     -- The index is built once in VendorIndex.lua and cached, not rebuilt every time GetAllItems() is called
@@ -146,12 +189,19 @@ function DataManager:GetAllItems()
                                         zoneName = zoneName,
                                         vendorName = vendorData.vendorName,
                                         npcID = vendorData.npcID,
-                                        faction = vendorData.faction,
+                                        faction = NormalizeFactionGroup(vendorData.faction),
                                         coords = vendorData.coords or vendorData.vendorCoords,
                                         factionID = vendorData.factionID,
                                         factionName = vendorData.factionName,
                                         reputationRequired = itemData.reputation
                                     }
+                                    -- Some location files historically put a reputation factionID into `faction`.
+                                    -- If it's not a 0/1/2 faction-group value, treat it as a factionID instead.
+                                    if not entry.faction and type(vendorData.faction) == "number" then
+                                        if vendorData.faction ~= 0 and vendorData.faction ~= 1 and vendorData.faction ~= 2 then
+                                            entry.factionID = entry.factionID or vendorData.faction
+                                        end
+                                    end
 
                                     if not vendorItemIndex[indexedItemID] then
                                         vendorItemIndex[indexedItemID] = {
@@ -316,8 +366,14 @@ function DataManager:GetAllItems()
 
                     -- Source type (determined after enrichment)
                     _sourceType = "Vendor",
+                    _sourceTypes = {},
                     _isProfessionItem = false
                 }
+
+                -- Only mark as Vendor-sourced if the item actually has vendor indices.
+                if itemRecord._vendorIndices and next(itemRecord._vendorIndices) then
+                    AddSourceType(itemRecord, INTERNED_STRINGS["Vendor"] or "Vendor")
+                end
 
                 -- Enhance with HousingItemTrackerDB data if available
                 if HousingDataEnrichment and HousingDataEnrichment.EnhanceItemRecord then
@@ -399,11 +455,19 @@ function DataManager:GetAllItems()
                     if apiData.sourceType then filterOptions.sources[apiData.sourceType] = true end
                     if apiData.qualityName then filterOptions.qualities[apiData.qualityName] = true end
                     -- Add to requirements filter, but skip "Profession" (already in Sources)
-                    if apiData.requirementType and apiData.requirementType ~= "Profession" then 
-                        filterOptions.requirements[apiData.requirementType] = true 
+                    if apiData.requirementType and apiData.requirementType ~= "Profession" then
+                        filterOptions.requirements[apiData.requirementType] = true
                     end
                 end
-                
+
+                -- Fallback: Get quality from C_Item API if Housing APIs didn't provide it (API safety)
+                if itemRecord._apiQuality == nil and itemIDNum and _G.C_Item and _G.C_Item.GetItemQualityByID then
+                    local quality = _G.C_Item.GetItemQualityByID(itemIDNum)
+                    if quality ~= nil then
+                        itemRecord._apiQuality = quality
+                    end
+                end
+
                 -- COMPREHENSIVE ENRICHMENT: Check ALL data files
                 
                 -- 1. VendorLocations - All expansion vendor data
@@ -417,7 +481,7 @@ function DataManager:GetAllItems()
                             entries = { vendorBundle }
                             vendorInfo = {
                                 entries = entries,
-                                factions = { [vendorBundle.faction or "Neutral"] = true }
+                                factions = { [NormalizeFactionGroup(vendorBundle.faction) or "Neutral"] = true }
                             }
                         end
 
@@ -452,8 +516,10 @@ function DataManager:GetAllItems()
                                 combinedFaction = "Neutral"
                             else
                                 for factionKey in pairs(vendorInfo.factions) do
-                                    combinedFaction = factionKey
-                                    break
+                                    if type(factionKey) == "string" then
+                                        combinedFaction = factionKey
+                                        break
+                                    end
                                 end
                             end
                         end
@@ -525,10 +591,14 @@ function DataManager:GetAllItems()
                             filterOptions.expansions[itemRecord.expansionName] = true
                         end
                         if itemRecord.faction and itemRecord.faction ~= "" then
-                            filterOptions.factions[itemRecord.faction] = true
+                            local factionStr = NormalizeFactionGroup(itemRecord.faction)
+                            if factionStr then
+                                itemRecord.faction = factionStr
+                                filterOptions.factions[factionStr] = true
+                            end
                         end
-                        itemRecord._sourceType = INTERNED_STRINGS["Vendor"]
-                        filterOptions.sources[INTERNED_STRINGS["Vendor"]] = true
+                        itemRecord._sourceType = INTERNED_STRINGS["Vendor"] or "Vendor"
+                        AddSourceType(itemRecord, INTERNED_STRINGS["Vendor"] or "Vendor")
                     end
                 end
                 
@@ -537,10 +607,36 @@ function DataManager:GetAllItems()
                 if _G["HousingExpansionData"] then
                     local expData = _G["HousingExpansionData"][itemIDNum]
                     if expData then
+                        local staticName = nil
+                        if expData.vendor and expData.vendor.itemName and expData.vendor.itemName ~= "" then
+                            staticName = expData.vendor.itemName
+                        elseif expData.quest then
+                            local q = expData.quest[1] or expData.quest
+                            staticName = (q and (q.itemName or q.ItemName or q.title or q.name)) or nil
+                        elseif expData.achievement then
+                            local a = expData.achievement[1] or expData.achievement
+                            staticName = (a and (a.title or a.itemName or a.ItemName or a.name)) or nil
+                        elseif expData.drop then
+                            local d = expData.drop[1] or expData.drop
+                            staticName = (d and (d.itemName or d.ItemName or d.title or d.name)) or nil
+                        end
+
+                        if staticName and staticName ~= "" then
+                            itemRecord._searchName = staticName
+                        end
+
+                        if itemRecord.name == "Unknown Item" and staticName and staticName ~= "" then
+                            itemRecord.name = staticName
+                        end
+
                         -- Process each source type
                         if expData.reputation then
-                            itemRecord._sourceType = INTERNED_STRINGS["Reputation"]
-                            filterOptions.sources[INTERNED_STRINGS["Reputation"]] = true
+                            local repSource = (expData.reputation.rep == "renown")
+                                and (INTERNED_STRINGS["Renown"] or "Renown")
+                                or (INTERNED_STRINGS["Reputation"] or "Reputation")
+
+                            itemRecord._sourceType = repSource
+                            AddSourceType(itemRecord, repSource)
 
                             -- Store faction info
                             if expData.reputation.factionID then
@@ -560,20 +656,24 @@ function DataManager:GetAllItems()
                                 filterOptions.expansions[expData.reputation.expansion] = true
                             end
                             if expData.reputation.faction then
-                                local factionStr = FactionNumericToString(expData.reputation.faction)
-                                itemRecord.faction = factionStr
-                                filterOptions.factions[factionStr] = true
+                                local factionStr = NormalizeFactionGroup(expData.reputation.faction)
+                                if factionStr then
+                                    itemRecord.faction = factionStr
+                                    filterOptions.factions[factionStr] = true
+                                end
                             end
                         end
 
                         if expData.vendor then
+                            AddSourceType(itemRecord, INTERNED_STRINGS["Vendor"] or "Vendor")
                             if not itemRecord._sourceType then
-                                itemRecord._sourceType = INTERNED_STRINGS["Vendor"]
-                                filterOptions.sources[INTERNED_STRINGS["Vendor"]] = true
+                                itemRecord._sourceType = INTERNED_STRINGS["Vendor"] or "Vendor"
                             end
 
-                            if expData.vendor.vendorDetails then
-                                local vd = expData.vendor.vendorDetails
+                            local vendorItem = expData.vendor
+                            local vd = vendorItem.vendorDetails
+
+                            if vd then
                                 if vd.vendorName and vd.vendorName ~= "None" then
                                     itemRecord.vendorName = vd.vendorName
                                     filterOptions.vendors[vd.vendorName] = true
@@ -610,72 +710,193 @@ function DataManager:GetAllItems()
                                     filterOptions.expansions[vd.expansion] = true
                                 end
                                 if vd.faction and vd.faction ~= "None" then
-                                    local factionStr = FactionNumericToString(vd.faction)
-                                    itemRecord.faction = factionStr
-                                    filterOptions.factions[factionStr] = true
-                                end
-                                if vd.factionID and vd.factionID ~= "None" then
-                                    itemRecord.factionID = vd.factionID
-                                end
-                                if vd.factionName and vd.factionName ~= "None" then
-                                    itemRecord.factionName = vd.factionName
-                                end
-                                if vd.reputation and vd.reputation ~= "None" then
-                                    itemRecord.reputationRequired = vd.reputation
-                                end
-
-                                -- Treat vendor items gated by reputation/renown as "Reputation" sources
-                                -- so Source/Requirement filtering can find them.
-                                if itemRecord._sourceType == INTERNED_STRINGS["Vendor"] then
-                                    local hasFactionGate = vd.factionID and vd.factionID ~= "None" and vd.factionID ~= ""
-                                    local hasReputationGate = vd.reputation and vd.reputation ~= "None" and vd.reputation ~= ""
-                                    if hasFactionGate or hasReputationGate then
-                                        itemRecord._sourceType = INTERNED_STRINGS["Reputation"]
-                                        filterOptions.sources[INTERNED_STRINGS["Reputation"]] = true
+                                    local factionStr = NormalizeFactionGroup(vd.faction)
+                                    if factionStr then
+                                        itemRecord.faction = factionStr
+                                        filterOptions.factions[factionStr] = true
                                     end
+                                end
+                            end
+
+                            -- NEW FORMAT: Read factionName, reputationLevel, renownLevel from vendor item level
+                            -- These fields are at the top level of the vendor item, not inside vendorDetails
+                            local newFactionName = vendorItem.factionName
+                            local newReputationLevel = vendorItem.reputationLevel
+                            local newRenownLevel = vendorItem.renownLevel
+
+                            -- Set factionName from new format or legacy vendorDetails
+                            if newFactionName and newFactionName ~= "" and newFactionName ~= "None" then
+                                itemRecord.factionName = newFactionName
+                            elseif vd and vd.factionName and vd.factionName ~= "None" then
+                                itemRecord.factionName = vd.factionName
+                            end
+
+                            -- Set factionID from legacy vendorDetails (new format doesn't have factionID at item level)
+                            if vd and vd.factionID and vd.factionID ~= "None" then
+                                itemRecord.factionID = vd.factionID
+                            end
+
+                            -- Set reputationRequired from new format (reputationLevel/renownLevel) or legacy vendorDetails
+                            if newRenownLevel and newRenownLevel > 0 then
+                                itemRecord.reputationRequired = "Renown " .. tostring(newRenownLevel)
+                                itemRecord.renownLevel = newRenownLevel
+                            elseif newReputationLevel and newReputationLevel ~= "" and newReputationLevel ~= "None" then
+                                itemRecord.reputationRequired = newReputationLevel
+                            elseif vd and vd.reputation and vd.reputation ~= "None" then
+                                itemRecord.reputationRequired = vd.reputation
+                            end
+
+                            -- Treat vendor items gated by reputation/renown as "Reputation" sources
+                            -- so Source/Requirement filtering can find them.
+                            if itemRecord._sourceType == INTERNED_STRINGS["Vendor"] then
+                                local hasFactionGate = itemRecord.factionID or (itemRecord.factionName and itemRecord.factionName ~= "")
+                                local hasReputationGate = itemRecord.reputationRequired and itemRecord.reputationRequired ~= ""
+                                if hasFactionGate and hasReputationGate then
+                                    local repSource = (type(itemRecord.reputationRequired) == "string" and itemRecord.reputationRequired:match("^Renown"))
+                                        and (INTERNED_STRINGS["Renown"] or "Renown")
+                                        or (INTERNED_STRINGS["Reputation"] or "Reputation")
+
+                                    itemRecord._sourceType = repSource
+                                    AddSourceType(itemRecord, repSource)
                                 end
                             end
                         end
 
                         if expData.drop then
-                            if not itemRecord._sourceType then
-                                itemRecord._sourceType = INTERNED_STRINGS["Drop"]
-                                filterOptions.sources[INTERNED_STRINGS["Drop"]] = true
-                            end
+                            -- Drop items should be marked as Drop type, even if they also appear in vendor data.
+                            -- This ensures drops are properly categorized in the info panel.
+                            itemRecord._sourceType = INTERNED_STRINGS["Drop"] or "Drop"
+                            AddSourceType(itemRecord, INTERNED_STRINGS["Drop"] or "Drop")
 
-                            -- Handle drop as array (items can drop from multiple sources)
+                            -- Handle drop as array or single object
                             local dropData = expData.drop
-                            if type(dropData) == "table" and #dropData > 0 then
-                                -- Array of drop sources - use first entry for display
-                                local firstDrop = dropData[1]
+                            local firstDrop = nil
+                            if type(dropData) == "table" then
+                                if dropData[1] then
+                                    firstDrop = dropData[1]
+                                elseif dropData.zone or dropData.npcName or dropData.sources then
+                                    firstDrop = dropData
+                                end
+                            end
+                            if firstDrop then
+                                -- Preserve full drop source list for richer preview panel details.
+                                if dropData and dropData[1] then
+                                    itemRecord._allDrops = dropData
+                                elseif dropData then
+                                    itemRecord._allDrops = { dropData }
+                                end
+
                                 if firstDrop.zone then
                                     itemRecord.zoneName = firstDrop.zone
                                     filterOptions.zones[firstDrop.zone] = true
                                 end
-                                if firstDrop.sources then
-                                    -- Try to parse JSON sources
-                                    -- sources is a string like: "[]" or "[{'npcName': 'Boss', 'npcID': 123}]"
-                                    -- For now, just mark as Drop source
+                                -- Extract NPC/Boss name for drop items
+                                if firstDrop.npcName and firstDrop.npcName ~= "" then
+                                    itemRecord.vendorName = firstDrop.npcName
+                                    itemRecord.npcName = firstDrop.npcName
+                                    filterOptions.vendors[firstDrop.npcName] = true
+                                end
+                                if firstDrop.npcID then
+                                    itemRecord.npcID = firstDrop.npcID
+                                end
+                                -- Extract coordinates for waypoint
+                                if firstDrop.coordinates then
+                                    itemRecord.coords = firstDrop.coordinates
+                                end
+                                -- Preserve notes for preview panel.
+                                if firstDrop.notes and firstDrop.notes ~= "" then
+                                    itemRecord.dropNotes = firstDrop.notes
+                                    -- Reuse the reward-style details line for non-vendor sources too.
+                                    if not itemRecord.sourceDetails or itemRecord.sourceDetails == "" then
+                                        itemRecord.sourceDetails = firstDrop.notes
+                                    end
+                                end
+                                if firstDrop.expansion then
+                                    itemRecord.expansionName = firstDrop.expansion
+                                    filterOptions.expansions[firstDrop.expansion] = true
+                                end
+                            end
+                        end
+
+                        if expData.reward then
+                            -- Reward items should be marked as Reward type, even if they also appear in vendor data.
+                            -- This ensures rewards are properly categorized in the info panel.
+                            itemRecord._sourceType = INTERNED_STRINGS["Reward"] or "Reward"
+                            AddSourceType(itemRecord, INTERNED_STRINGS["Reward"] or "Reward")
+
+                            -- Handle reward as array or single object
+                            local rewardData = expData.reward
+                            local firstReward = nil
+                            if type(rewardData) == "table" then
+                                if rewardData[1] then
+                                    firstReward = rewardData[1]
+                                elseif rewardData.zone or rewardData.source then
+                                    firstReward = rewardData
+                                end
+                            end
+                            if firstReward then
+                                if firstReward.zone then
+                                    itemRecord.zoneName = firstReward.zone
+                                    filterOptions.zones[firstReward.zone] = true
+                                end
+                                if firstReward.source then
+                                    itemRecord.vendorName = firstReward.source
+                                    filterOptions.vendors[firstReward.source] = true
+                                end
+                                if firstReward.expansion then
+                                    itemRecord.expansionName = firstReward.expansion
+                                    filterOptions.expansions[firstReward.expansion] = true
+                                end
+                                -- FIX: Store rewardType and sourceDetails for display in UI
+                                if firstReward.rewardType then
+                                    itemRecord.rewardType = firstReward.rewardType
+                                end
+                                if firstReward.sourceDetails then
+                                    itemRecord.sourceDetails = firstReward.sourceDetails
                                 end
                             end
                         end
 
                         if expData.quest then
-                            if not itemRecord._sourceType then
-                                itemRecord._sourceType = INTERNED_STRINGS["Quest"]
-                                filterOptions.sources[INTERNED_STRINGS["Quest"]] = true
-                            end
+                            -- Quest items should always be marked as Quest type, even if they also appear in vendor data.
+                            -- This ensures quest rewards are properly categorized in the info panel.
+                            itemRecord._sourceType = INTERNED_STRINGS["Quest"] or "Quest"
+                            AddSourceType(itemRecord, INTERNED_STRINGS["Quest"] or "Quest")
 
-                            -- Handle quest as array (items can have multiple quests)
+                            -- Handle quest as array or single object
                             local questData = expData.quest
-                            if type(questData) == "table" and #questData > 0 then
-                                -- Array of quests - use first entry for display, store all questIds
-                                local firstQuest = questData[1]
-                                if firstQuest.questId then
-                                    itemRecord._questId = firstQuest.questId
+                            local firstQuest = nil
+                            if type(questData) == "table" then
+                                if questData[1] then
+                                    firstQuest = questData[1]
+                                elseif questData.questId or questData.questID or questData.questName then
+                                    firstQuest = questData
                                 end
-                                if firstQuest.questName then
-                                    itemRecord._questName = firstQuest.questName
+                            end
+                            if firstQuest then
+                                -- Preserve full quest list for richer preview panel details.
+                                if questData and questData[1] then
+                                    itemRecord._allQuests = questData
+                                elseif questData then
+                                    itemRecord._allQuests = { questData }
+                                end
+
+                                -- Support both questId (legacy) and questID (current data format)
+                                local qid = firstQuest.questId or firstQuest.questID
+                                if qid then
+                                    itemRecord._questId = qid
+                                end
+                                -- Prefer a human-readable quest name in the preview panel:
+                                -- many generated files use numeric questName placeholders, while `title` is the display name.
+                                local qName = firstQuest.questName
+                                if type(qName) == "string" and qName:match("^%d+$") and firstQuest.title and firstQuest.title ~= "" then
+                                    qName = firstQuest.title
+                                end
+                                if (not qName or qName == "") and firstQuest.title and firstQuest.title ~= "" then
+                                    qName = firstQuest.title
+                                end
+                                if qName and qName ~= "" then
+                                    itemRecord._questName = qName
                                 end
                                 if firstQuest.title then
                                     itemRecord.title = firstQuest.title
@@ -685,31 +906,53 @@ function DataManager:GetAllItems()
                                     filterOptions.expansions[firstQuest.expansion] = true
                                 end
                                 if firstQuest.faction then
-                                    local factionStr = FactionNumericToString(firstQuest.faction)
-                                    itemRecord.faction = factionStr
-                                    filterOptions.factions[factionStr] = true
+                                    local factionStr = NormalizeFactionGroup(firstQuest.faction)
+                                    if factionStr then
+                                        itemRecord.faction = factionStr
+                                        filterOptions.factions[factionStr] = true
+                                    end
                                 end
                                 -- Store all quest IDs for potential future use
                                 itemRecord._allQuestIds = {}
-                                for _, q in ipairs(questData) do
-                                    if q.questId then
-                                        table.insert(itemRecord._allQuestIds, q.questId)
+                                if questData[1] then
+                                    -- It's an array
+                                    for _, q in ipairs(questData) do
+                                        local questIdVal = q.questId or q.questID
+                                        if questIdVal then
+                                            table.insert(itemRecord._allQuestIds, questIdVal)
+                                        end
+                                    end
+                                else
+                                    -- Single object
+                                    local questIdVal = questData.questId or questData.questID
+                                    if questIdVal then
+                                        table.insert(itemRecord._allQuestIds, questIdVal)
                                     end
                                 end
                             end
                         end
 
                         if expData.achievement then
-                            if not itemRecord._sourceType then
-                                itemRecord._sourceType = INTERNED_STRINGS["Achievement"]
-                                filterOptions.sources[INTERNED_STRINGS["Achievement"]] = true
-                            end
+                            -- Achievement items should be marked as Achievement type, even if they also appear in vendor data.
+                            -- This ensures achievement rewards are properly categorized in the info panel.
+                            itemRecord._sourceType = INTERNED_STRINGS["Achievement"] or "Achievement"
+                            AddSourceType(itemRecord, INTERNED_STRINGS["Achievement"] or "Achievement")
 
                             -- Handle achievement as array (items can have multiple achievements)
+                            -- Also handle single object format for compatibility
                             local achData = expData.achievement
-                            if type(achData) == "table" and #achData > 0 then
-                                -- Array of achievements - use first entry for display
-                                local firstAch = achData[1]
+                            local firstAch = nil
+                            if type(achData) == "table" then
+                                -- Check if it's an array (has numeric index 1) or a single object
+                                if achData[1] then
+                                    firstAch = achData[1]
+                                elseif achData.achievementId or achData.achievementName then
+                                    -- Single achievement object, not wrapped in array
+                                    firstAch = achData
+                                end
+                            end
+
+                            if firstAch then
                                 if firstAch.achievementId then
                                     itemRecord._achievementId = firstAch.achievementId
                                 end
@@ -722,14 +965,21 @@ function DataManager:GetAllItems()
                                 if firstAch.title then
                                     itemRecord.title = firstAch.title
                                 end
-                                if firstAch.expansion then
+                                if firstAch.expansion and not itemRecord.expansionName then
                                     itemRecord.expansionName = firstAch.expansion
                                     filterOptions.expansions[firstAch.expansion] = true
                                 end
+                                if firstAch.category then
+                                    itemRecord._apiSubcategory = firstAch.category
+                                    filterOptions.types[firstAch.category] = true
+                                    filterOptions.categories[firstAch.category] = true
+                                end
                                 if firstAch.faction then
-                                    local factionStr = FactionNumericToString(firstAch.faction)
-                                    itemRecord.faction = factionStr
-                                    filterOptions.factions[factionStr] = true
+                                    local factionStr = NormalizeFactionGroup(firstAch.faction)
+                                    if factionStr then
+                                        itemRecord.faction = factionStr
+                                        filterOptions.factions[factionStr] = true
+                                    end
                                 end
                             end
                         end
@@ -740,15 +990,15 @@ function DataManager:GetAllItems()
                 if _G.HousingProfessionData and _G.HousingProfessionData[itemIDNum] then
                     local profData = _G.HousingProfessionData[itemIDNum]
 
+                    AddSourceType(itemRecord, INTERNED_STRINGS["Profession"] or "Profession")
                     if not itemRecord._sourceType then
-                        itemRecord._sourceType = INTERNED_STRINGS["Profession"]
-                        filterOptions.sources[INTERNED_STRINGS["Profession"]] = true
+                        itemRecord._sourceType = INTERNED_STRINGS["Profession"] or "Profession"
                     end
                     itemRecord._isProfessionItem = true
 
                     -- Add specific profession name to sources (e.g., "Tailoring", "Cooking")
                     if profData.profession then
-                        filterOptions.sources[profData.profession] = true
+                        AddSourceType(itemRecord, profData.profession)
                         itemRecord.profession = profData.profession
                         itemRecord.vendorName = profData.profession
                         filterOptions.vendors[profData.profession] = true
@@ -786,10 +1036,10 @@ function DataManager:GetAllItems()
                     if repInfo and (itemRecord._sourceType == INTERNED_STRINGS["Vendor"] or itemRecord._sourceType == "Vendor") then
                         if repInfo.rep == "renown" then
                             itemRecord._sourceType = INTERNED_STRINGS["Renown"] or "Renown"
-                            filterOptions.sources[itemRecord._sourceType] = true
+                            AddSourceType(itemRecord, itemRecord._sourceType)
                         else
-                            itemRecord._sourceType = INTERNED_STRINGS["Reputation"]
-                            filterOptions.sources[INTERNED_STRINGS["Reputation"]] = true
+                            itemRecord._sourceType = INTERNED_STRINGS["Reputation"] or "Reputation"
+                            AddSourceType(itemRecord, INTERNED_STRINGS["Reputation"] or "Reputation")
                         end
 
                         if repInfo.factionID then
@@ -800,6 +1050,18 @@ function DataManager:GetAllItems()
                         end
                         if repInfo.requiredStanding then
                             itemRecord.reputationRequired = repInfo.requiredStanding
+                        end
+
+                        -- FIX: Add vendor name and zone from reputation data for search
+                        if repInfo.vendorName and repInfo.vendorName ~= "" then
+                            if not itemRecord.vendorName or itemRecord.vendorName == "" then
+                                itemRecord.vendorName = repInfo.vendorName
+                            end
+                        end
+                        if repInfo.zoneName and repInfo.zoneName ~= "" then
+                            if not itemRecord.zoneName or itemRecord.zoneName == "" then
+                                itemRecord.zoneName = repInfo.zoneName
+                            end
                         end
                     end
                 end
@@ -820,23 +1082,24 @@ function DataManager:GetAllItems()
                     if missingData then
                         -- Set source type based on which category it came from
                         if missingCategory == "vendor" then
-                            itemRecord._sourceType = INTERNED_STRINGS["Vendor"]
-                            filterOptions.sources[INTERNED_STRINGS["Vendor"]] = true
+                            itemRecord._sourceType = INTERNED_STRINGS["Vendor"] or "Vendor"
+                            AddSourceType(itemRecord, INTERNED_STRINGS["Vendor"] or "Vendor")
                         elseif missingCategory == "quest" then
-                            itemRecord._sourceType = INTERNED_STRINGS["Quest"]
-                            filterOptions.sources[INTERNED_STRINGS["Quest"]] = true
+                            itemRecord._sourceType = INTERNED_STRINGS["Quest"] or "Quest"
+                            AddSourceType(itemRecord, INTERNED_STRINGS["Quest"] or "Quest")
                         elseif missingCategory == "achievement" then
-                            itemRecord._sourceType = INTERNED_STRINGS["Achievement"]
-                            filterOptions.sources[INTERNED_STRINGS["Achievement"]] = true
+                            itemRecord._sourceType = INTERNED_STRINGS["Achievement"] or "Achievement"
+                            AddSourceType(itemRecord, INTERNED_STRINGS["Achievement"] or "Achievement")
                         elseif missingCategory == "profession" then
-                            itemRecord._sourceType = INTERNED_STRINGS["Profession"]
+                            itemRecord._sourceType = INTERNED_STRINGS["Profession"] or "Profession"
+                            AddSourceType(itemRecord, INTERNED_STRINGS["Profession"] or "Profession")
                             -- Add specific profession name to sources if available
                             if missingData.profession then
-                                filterOptions.sources[missingData.profession] = true
+                                AddSourceType(itemRecord, missingData.profession)
                             end
                         elseif missingCategory == "miscellaneous" then
                             itemRecord._sourceType = "Miscellaneous"
-                            filterOptions.sources["Miscellaneous"] = true
+                            AddSourceType(itemRecord, "Miscellaneous")
                         end
 
                         if missingData.vendors and #missingData.vendors > 0 then
@@ -885,7 +1148,7 @@ function DataManager:GetAllItems()
                     
                     -- Set source type
                     itemRecord._sourceType = "Not Yet Released"
-                    filterOptions.sources["Not Yet Released"] = true
+                    AddSourceType(itemRecord, "Not Yet Released")
                     
                     -- Set expansion (usually "Midnight")
                     if notReleasedData.expansion then
@@ -906,62 +1169,8 @@ function DataManager:GetAllItems()
                     for _, miscData in ipairs(HousingMiscellaneous) do
                         if miscData.itemID == itemIDNum then
                             itemRecord._sourceType = "Miscellaneous"
-                            filterOptions.sources["Miscellaneous"] = true
+                            AddSourceType(itemRecord, "Miscellaneous")
                             break
-                        end
-                    end
-                end
-
-                -- 7. LEGACY: FAILSAFE - Use HousingItemCoordinates if coords/mapID are missing
-                if HousingItemCoordinates and HousingItemCoordinates[itemIDNum] then
-                    -- Check if coords are missing or invalid
-                    local needsCoords = not itemRecord.coords or (itemRecord.coords.x == 0 and itemRecord.coords.y == 0)
-                    local needsMapID = not itemRecord.mapID or itemRecord.mapID == 0
-
-                    if needsCoords or needsMapID then
-                        local coordData = HousingItemCoordinates[itemIDNum]
-                        local selectedCoord = nil
-
-                        -- Handle array of coordinates (multiple vendors)
-                        if type(coordData[1]) == "table" then
-                            -- Try to match by npcID if available
-                            if itemRecord.npcID then
-                                for _, coord in ipairs(coordData) do
-                                    if coord.npcID and coord.npcID == itemRecord.npcID then
-                                        selectedCoord = coord
-                                        break
-                                    end
-                                end
-                            end
-
-                            -- If no npcID match, try to match by player faction
-                            if not selectedCoord then
-                                local playerFaction = UnitFactionGroup("player")
-                                for _, coord in ipairs(coordData) do
-                                    if coord.faction and coord.faction == playerFaction then
-                                        selectedCoord = coord
-                                        break
-                                    end
-                                end
-                            end
-
-                            -- Fallback to first coordinate if no match
-                            if not selectedCoord then
-                                selectedCoord = coordData[1]
-                            end
-                        else
-                            -- Single coordinate entry
-                            selectedCoord = coordData
-                        end
-
-                        -- Apply failsafe coordinates
-                        if selectedCoord then
-                            if needsCoords and selectedCoord.x and selectedCoord.y then
-                                itemRecord.coords = { x = selectedCoord.x, y = selectedCoord.y }
-                            end
-                            if needsMapID and selectedCoord.mapID then
-                                itemRecord.mapID = selectedCoord.mapID
-                            end
                         end
                     end
                 end
@@ -983,7 +1192,7 @@ function DataManager:GetAllItems()
     -- Add visual indicator for Midnight (not yet released)
     for i, exp in ipairs(sortedExpansions) do
         if exp == "Midnight" then
-            sortedExpansions[i] = "Midnight (Not Yet Released)"
+            sortedExpansions[i] = "Midnight"
         end
     end
     
@@ -1001,6 +1210,7 @@ function DataManager:GetAllItems()
     
     -- Cache results
     state.itemCache = allItems
+    state._aggregatorRevision = currentDataRevision
 
     -- IMPORTANT: Do NOT automatically batch-load API data on startup.
     -- This is expensive and can cause significant memory growth over time.

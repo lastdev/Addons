@@ -528,6 +528,7 @@ local GetItemInfo = GetItemInfo or C_Item.GetItemInfo ---@diagnostic disable-lin
 local GetItemInfoInstant = GetItemInfoInstant or C_Item.GetItemInfoInstant ---@diagnostic disable-line: deprecated
 local GetItemQualityColor = GetItemQualityColor or C_Item.GetItemQualityColor ---@diagnostic disable-line: deprecated
 local ReloadUI = ReloadUI or C_UI.Reload
+local issecretvalue = issecretvalue or function(value) return false end ---@type fun(value: any): boolean
 
 -- constants.lua (ns)
 -- dependencies: none
@@ -1704,6 +1705,8 @@ do
     ---|"showMainsScore"
     ---|"showMainBestScore"
     ---|"showWarbandScore"
+    ---|"showMyWarbandScore"
+    ---|"showOtherWarbandScore"
     ---|"showDropDownCopyURL"
     ---|"showSimpleScoreColors"
     ---|"showScoreInCombat"
@@ -1760,7 +1763,9 @@ do
         useEnglishAbbreviations = false,
         showMainsScore = true,
         showMainBestScore = true,
-        showWarbandScore = true,
+        showWarbandScore = true, -- NEW in 11.2.5
+        showMyWarbandScore = false, -- NEW in 11.2.5
+        showOtherWarbandScore = true, -- NEW in 11.2.5
         showDropDownCopyURL = true,
         showSimpleScoreColors = false,
         showScoreInCombat = true,
@@ -2602,7 +2607,7 @@ do
         }
         local index = 0
         local activityInfo = C_LFGList.GetActiveEntryInfo()
-        if activityInfo then
+        if activityInfo and not issecretvalue(activityInfo) then
             local activityID = util:GetLFDActivityID(activityInfo)
             if activityID then
                 temp.dungeon = util:GetDungeonByLFDActivityID(activityID) or util:GetRaidByLFDActivityID(activityID)
@@ -2612,7 +2617,7 @@ do
         local applications = C_LFGList.GetApplications() ---@type number[]
         for _, resultID in ipairs(applications) do
             local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
-            if searchResultInfo and not searchResultInfo.isDelisted then
+            if searchResultInfo and not issecretvalue(searchResultInfo) and not searchResultInfo.isDelisted then
                 local activityID = util:GetLFDActivityID(searchResultInfo)
                 if activityID then
                     local dungeon = util:GetDungeonByLFDActivityID(activityID) or util:GetRaidByLFDActivityID(activityID)
@@ -3390,24 +3395,26 @@ do
         local applicants = C_LFGList.GetApplicants()
         for i = 1, #applicants do
             local applicantInfo = C_LFGList.GetApplicantInfo(applicants[i])
-            local applicantGroup
-            for j = 1, applicantInfo.numMembers do
-                local fullName, class, localizedClass, level, itemLevel, honorLevel, tank, healer, damage, assignedRole, relationship = C_LFGList.GetApplicantMemberInfo(applicantInfo.applicantID, j)
-                local name, realm = util:GetNameRealm(fullName)
-                if name then
-                    local role = GetQueuedRole(tank, healer, damage)
-                    if not applicantGroup then
-                        applicantGroup = {}
+            if not issecretvalue(applicantInfo) then
+                local applicantGroup
+                for j = 1, applicantInfo.numMembers do
+                    local fullName, class, localizedClass, level, itemLevel, honorLevel, tank, healer, damage, assignedRole, relationship = C_LFGList.GetApplicantMemberInfo(applicantInfo.applicantID, j)
+                    local name, realm = util:GetNameRealm(fullName)
+                    if name then
+                        local role = GetQueuedRole(tank, healer, damage)
+                        if not applicantGroup then
+                            applicantGroup = {}
+                        end
+                        applicantGroup[#applicantGroup + 1] = format("%d-%s-%s", role, name, util:GetRealmSlug(realm, true))
                     end
-                    applicantGroup[#applicantGroup + 1] = format("%d-%s-%s", role, name, util:GetRealmSlug(realm, true))
                 end
-            end
-            if applicantGroup then
-                index = index + 1
-                if applicantGroup[2] then
-                    group[index] = applicantGroup
-                else
-                    group[index] = applicantGroup[1]
+                if applicantGroup then
+                    index = index + 1
+                    if applicantGroup[2] then
+                        group[index] = applicantGroup
+                    else
+                        group[index] = applicantGroup[1]
+                    end
                 end
             end
         end
@@ -3435,7 +3442,7 @@ do
             data.group = GetGroupData(unitPrefix, startIndex, endIndex)
         end
         local entry = C_LFGList.GetActiveEntryInfo()
-        if entry then
+        if entry and not issecretvalue(entry) then
             local activityID = util:GetLFDActivityID(entry)
             if activityID then
                 data.activity = activityID
@@ -3446,10 +3453,19 @@ do
     end
 
     local function CanShowCopyDialog()
-        local hasGroupMembers = (IsInRaid() or IsInGroup()) and GetNumGroupMembers() > 1
         local entry = C_LFGList.GetActiveEntryInfo()
+        if issecretvalue(entry) then
+            return false
+        end
+        if entry then
+            return true
+        end
+        local hasGroupMembers = (IsInRaid() or IsInGroup()) and GetNumGroupMembers() > 1
+        if hasGroupMembers then
+            return true
+        end
         local _, numApplicants = C_LFGList.GetNumApplications()
-        return not not (hasGroupMembers or entry or numApplicants > 0)
+        return numApplicants > 0
     end
 
     local function CanShowButton()
@@ -4387,7 +4403,7 @@ do
         for encoderIndex = 1, #encodingOrder do
             local field = encodingOrder[encoderIndex]
             if field == ENCODER_MYTHICPLUS_FIELDS.CURRENT_SCORE then
-                results.currentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
+                results.currentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 13)
                 results.hasRenderableData = results.hasRenderableData or results.currentScore > 0
             elseif field == ENCODER_MYTHICPLUS_FIELDS.CURRENT_ROLES then
                 value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
@@ -4400,7 +4416,7 @@ do
                 value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
                 results.previousRoleOrdinalIndex = 1 + value -- indexes are one-based
             elseif field == ENCODER_MYTHICPLUS_FIELDS.MAIN_CURRENT_SCORE then
-                results.mainCurrentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
+                results.mainCurrentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 13)
                 results.hasRenderableData = results.hasRenderableData or results.mainCurrentScore > 0
             elseif field == ENCODER_MYTHICPLUS_FIELDS.MAIN_CURRENT_ROLES then
                 value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
@@ -4429,7 +4445,7 @@ do
             elseif field == ENCODER_MYTHICPLUS_FIELDS.DUNGEON_BEST_INDEX then
                 bitOffset = ApplyWeeklyAffixForDungeonBest(results, bucket, bitOffset)
             elseif field == ENCODER_MYTHICPLUS_FIELDS.WARBAND_CURRENT_SCORE then
-                results.warbandCurrentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
+                results.warbandCurrentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 13)
                 results.hasRenderableData = results.hasRenderableData or results.warbandCurrentScore > 0
             elseif field == ENCODER_MYTHICPLUS_FIELDS.WARBAND_PREVIOUS_SCORE then
                 results.warbandPreviousScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
@@ -6018,27 +6034,23 @@ do
                         end
                     end
                     local hasShownWarbandScore = false
+                    local warbandText = format("%s %s", L.WARBAND_SCORE, ns.PROFILE_TOOLTIP_COLUMN_TEXTURE.WARBAND)
                     if config:Get("showWarbandScore") then
-                        local warbandText = format("%s %s", L.WARBAND_SCORE, ns.PROFILE_TOOLTIP_COLUMN_TEXTURE.WARBAND)
-                        if not config:Get("showWarbandScore") then
-                            if keystoneProfile.mplusWarbandCurrent.score > keystoneProfile.mplusCurrent.score then
-                                tooltip:AddDoubleLine(warbandText, GetScoreText(keystoneProfile.mplusWarbandCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandCurrent.score))
-                                hasShownWarbandScore = true
+                        local warbandPreviousScoreThreshold = (ns.PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD * keystoneProfile.mplusWarbandPrevious.score)
+                        local isWarbandPreviousScoreRelevant = warbandPreviousScoreThreshold > keystoneProfile.mplusWarbandCurrent.score and warbandPreviousScoreThreshold > keystoneProfile.mplusWarbandCurrent.score
+                        local isWarbandCurrentScoreBetter = keystoneProfile.mplusWarbandCurrent.score > keystoneProfile.mplusCurrent.score
+                        if isWarbandCurrentScoreBetter or isWarbandPreviousScoreRelevant then
+                            hasShownWarbandScore = true
+                            if isWarbandPreviousScoreRelevant then
+                                tooltip:AddDoubleLine(GetSeasonLabel(L.WARBAND_BEST_SCORE_BEST_SEASON, keystoneProfile.mplusWarbandPrevious.season), GetScoreText(keystoneProfile.mplusWarbandPrevious, true), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandPrevious.score, true))
                             end
-                        else
-                            local warbandPreviousScoreThreshold = (ns.PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD * keystoneProfile.mplusWarbandPrevious.score)
-                            local isWarbandPreviousScoreRelevant = warbandPreviousScoreThreshold > keystoneProfile.mplusWarbandCurrent.score and warbandPreviousScoreThreshold > keystoneProfile.mplusWarbandCurrent.score
-                            local isWarbandCurrentScoreBetter = keystoneProfile.mplusWarbandCurrent.score > keystoneProfile.mplusCurrent.score
-                            if isWarbandCurrentScoreBetter or isWarbandPreviousScoreRelevant then
-                                hasShownWarbandScore = true
-                                if isWarbandPreviousScoreRelevant then
-                                    tooltip:AddDoubleLine(GetSeasonLabel(L.WARBAND_BEST_SCORE_BEST_SEASON, keystoneProfile.mplusWarbandPrevious.season), GetScoreText(keystoneProfile.mplusWarbandPrevious, true), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandPrevious.score, true))
-                                end
-                                if keystoneProfile.mplusWarbandCurrent.score > 0 or hasMod or hasModSticky then
-                                    tooltip:AddDoubleLine(warbandText, GetScoreText(keystoneProfile.mplusWarbandCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandCurrent.score))
-                                end
+                            if keystoneProfile.mplusWarbandCurrent.score > 0 or hasMod or hasModSticky then
+                                tooltip:AddDoubleLine(warbandText, GetScoreText(keystoneProfile.mplusWarbandCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandCurrent.score))
                             end
                         end
+                    elseif keystoneProfile.mplusWarbandCurrent.score > keystoneProfile.mplusCurrent.score then
+                        hasShownWarbandScore = true
+                        tooltip:AddDoubleLine(warbandText, GetScoreText(keystoneProfile.mplusWarbandCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandCurrent.score))
                     end
                     if not hasShownWarbandScore and config:Get("showMainsScore") then
                         if not config:Get("showMainBestScore") then
@@ -6084,7 +6096,16 @@ do
                         if hasBestDungeons or true then -- HOTFIX: we prefer to always display this in the expanded profile so even empty profiles can display what dungeons there are for the player to complete
                             local focusDungeon = showLFD and util:GetLFDStatusForCurrentActivity(state.args and state.args.activityID)
                             local dungeonLines, dungeonLinesWidth, dungeonLinesMaxWidth = GetSortedDungeonsTooltipText(keystoneProfile.sortedDungeons)
-                            local dungeonLinesWarband, dungeonLinesWarbandWidth, dungeonLinesWarbandMaxWidth = GetSortedDungeonsTooltipText(keystoneProfile.sortedDungeons, true)
+                            local showWarbandScore
+                            if util:IsUnitPlayer(profile.name, profile.realm, profile.region) then
+                                showWarbandScore = config:Get("showMyWarbandScore")
+                            else
+                                showWarbandScore = config:Get("showOtherWarbandScore")
+                            end
+                            local dungeonLinesWarband, dungeonLinesWarbandWidth, dungeonLinesWarbandMaxWidth ---@type string[], number[], number
+                            if showWarbandScore then
+                                dungeonLinesWarband, dungeonLinesWarbandWidth, dungeonLinesWarbandMaxWidth = GetSortedDungeonsTooltipText(keystoneProfile.sortedDungeons, true)
+                            end
                             local paddingBetweenColumns = 15 -- additional column padding in order to avoid the columns from appearing glued together
                             dungeonLinesMaxWidth = dungeonLinesMaxWidth + paddingBetweenColumns
                             if showHeader then
@@ -6092,7 +6113,7 @@ do
                                     tooltip:AddLine(" ")
                                 end
                                 local text ---@type string?
-                                -- if dungeonLinesWarbandMaxWidth > 0 then
+                                -- if showWarbandScoreInfo and dungeonLinesWarbandMaxWidth > 0 then
                                 --     text = table.concat({
                                 --         ns.PROFILE_TOOLTIP_COLUMN_TEXTURE.WARBAND,
                                 --         util:GetTextPaddingTexture(dungeonLinesMaxWidth - util:GetTooltipTextWidth(ns.PROFILE_TOOLTIP_COLUMN_TEXTURE.CHARACTER)),
@@ -6108,11 +6129,13 @@ do
                                     r, g, b = 0, 1, 0
                                 end
                                 if sortedDungeon.level > 0 or sortedDungeon.warbandLevel > 0 then
-                                    local text = {
+                                    local text = showWarbandScore and {
                                         dungeonLinesWarband[i],
                                         " ",
                                         sortedDungeon.warbandLevel > 0 and ns.PROFILE_TOOLTIP_COLUMN_TEXTURE.WARBAND or "",
                                         sortedDungeon.warbandLevel > 0 and util:GetTextPaddingTexture(dungeonLinesMaxWidth - dungeonLinesWidth[i]) or "",
+                                        dungeonLines[i],
+                                    } or {
                                         dungeonLines[i],
                                     }
                                     tooltip:AddDoubleLine(sortedDungeon.dungeon.shortNameLocale, table.concat(text, ""), r, g, b, 0.5, 0.5, 0.5)
@@ -6235,6 +6258,7 @@ do
     ---@param state TooltipState
     local function UpdateTooltip(tooltip, state)
         -- if unit simply refresh the unit and the original hook will force update the tooltip with the desired behavior
+        ---@type _, string?
         local _, tooltipUnit = tooltip:GetUnit()
         if tooltipUnit then
             ---@diagnostic disable-next-line: undefined-field
@@ -6326,6 +6350,7 @@ do
     local provider = ns:GetModule("Provider") ---@type ProviderModule
     local render = ns:GetModule("Render") ---@type RenderModule
 
+    ---@param self GameTooltip
     local function OnTooltipSetUnit(self)
         if self ~= GameTooltip or not tooltip:IsEnabled() or not config:Get("enableUnitTooltips") then
             return
@@ -6333,26 +6358,28 @@ do
         if (config:Get("showScoreModifier") and not IsModifierKeyDown()) or (not config:Get("showScoreModifier") and not config:Get("showScoreInCombat") and InCombatLockdown()) then
             return
         end
+        ---@type _, string?
         local _, unit = self:GetUnit()
-        if not unit or not UnitIsPlayer(unit) then
+        -- HOTFIX: UnitIsPlayer will error if unit is a secret value and tainted (we can't check if it's tainted or not, so this aborts the routine to be on the safe side)
+        if not unit or issecretvalue(unit) or not UnitIsPlayer(unit) or not util:IsUnitMaxLevel(unit) then
             return
         end
-        if util:IsUnitMaxLevel(unit) then
-            if IS_RETAIL then
-                local bioSummary = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(unit)
-                if bioSummary and bioSummary.currentSeasonScore then
-                    local name, realm = util:GetNameRealm(unit)
-                    provider:OverrideProfile(name, realm, bioSummary.currentSeasonScore, bioSummary.runs)
-                end
+        if IS_RETAIL then
+            local bioSummary = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(unit)
+            if bioSummary and bioSummary.currentSeasonScore then
+                local name, realm = util:GetNameRealm(unit)
+                provider:OverrideProfile(name, realm, bioSummary.currentSeasonScore, bioSummary.runs)
             end
-            render:ShowProfile(self, unit)
         end
+        render:ShowProfile(self, unit)
     end
 
+    ---@param self GameTooltip
     local function OnTooltipCleared(self)
         render:ClearTooltip(self)
     end
 
+    ---@param self GameTooltip
     local function OnHide(self)
         render:HideTooltip(self)
     end
@@ -7497,7 +7524,7 @@ if not IS_CLASSIC_ERA then
             return
         end
         local entry = C_LFGList.GetSearchResultInfo(resultID)
-        if not entry or not entry.leaderName then
+        if not entry or issecretvalue(entry) or not entry.leaderName then
             table.wipe(currentResult)
             return
         end
@@ -7574,6 +7601,9 @@ if not IS_CLASSIC_ERA then
     ---@param self LFGListFrameWildcardFrame
     function OnEnter(self)
         local entry = C_LFGList.GetActiveEntryInfo()
+        if issecretvalue(entry) then
+            return
+        end
         if entry then
             currentResult.activityID = util:GetLFDActivityID(entry)
         end
@@ -12171,9 +12201,11 @@ do
         local resultID = owner.resultID
         if resultID then
             local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
-            local name, realm = util:GetNameRealm(searchResultInfo.leaderName)
-            local faction = searchResultInfo.leaderFactionGroup
-            return name, realm, nil, nil, faction
+            if not issecretvalue(searchResultInfo) then
+                local name, realm = util:GetNameRealm(searchResultInfo.leaderName)
+                local faction = searchResultInfo.leaderFactionGroup
+                return name, realm, nil, nil, faction
+            end
         end
         local memberIdx = owner.memberIdx
         if not memberIdx then
@@ -14081,17 +14113,21 @@ do
         ---@field public checkButton3 RaiderIOSettingsBaseWidgetCheckButton
         ---@field public tooltip? string
 
-        function configOptions.CreateWidget(self, widgetType, height, parentFrame)
+        ---@param self RaiderIOConfigOptions
+        ---@param widgetType FrameType
+        ---@param parentFrame? Frame
+        function configOptions.CreateWidget(self, widgetType, parentFrame)
 
             ---@class RaiderIOSettingsBaseWidget
             local widget = CreateFrame(widgetType, nil, parentFrame or configFrame, BackdropTemplateMixin and "BackdropTemplate")
 
-            if self.lastWidget then
-                widget:SetPoint("TOPLEFT", self.lastWidget, "BOTTOMLEFT", 0, -24)
-                widget:SetPoint("BOTTOMRIGHT", self.lastWidget, "BOTTOMRIGHT", 0, -4)
+            widget:SetSize(380, 20)
+            widget.lastWidget = self.lastWidget
+
+            if widget.lastWidget then
+                widget:SetPoint("TOPLEFT", widget.lastWidget, "BOTTOMLEFT", 0, 0)
             else
                 widget:SetPoint("TOPLEFT", parentFrame or configFrame, "TOPLEFT", 16, 0)
-                widget:SetPoint("BOTTOMRIGHT", parentFrame or configFrame, "TOPRIGHT", -40, -16)
             end
 
             widget.bg = widget:CreateTexture()
@@ -14149,31 +14185,35 @@ do
             end
 
             if not parentFrame then
-                self.lastWidget = widget ---@diagnostic disable-line: inject-field
+                self.lastWidget = widget
             end
 
             return widget
         end
 
+        ---@param self RaiderIOConfigOptions
         function configOptions.CreatePadding(self)
             local frame = self:CreateWidget("Frame")
-            local _, lastWidget = frame:GetPoint(1)
-            frame:ClearAllPoints()
-            frame:SetPoint("TOPLEFT", lastWidget, "BOTTOMLEFT", 0, -14)
-            frame:SetPoint("BOTTOMRIGHT", lastWidget, "BOTTOMRIGHT", 0, -4)
+            frame:SetHeight(10)
             frame.bg:Hide()
             return frame
         end
 
+        ---@param self RaiderIOConfigOptions
+        ---@param text string
+        ---@param parentFrame? Frame
         function configOptions.CreateHeadline(self, text, parentFrame)
-            local frame = self:CreateWidget("Frame", nil, parentFrame)
+            local frame = self:CreateWidget("Frame", parentFrame)
             frame.bg:Hide()
             frame.text:SetText(text)
             return frame
         end
 
+        ---@param self RaiderIOConfigOptions
+        ---@param text string
+        ---@param parentFrame? Frame
         function configOptions.CreateDescription(self, text, parentFrame)
-            local frame = self:CreateWidget("Frame", nil, parentFrame)
+            local frame = self:CreateWidget("Frame", parentFrame)
             frame.bg:Hide()
             frame.text:SetFontObject("GameFontWhite")
             frame.text:SetText(text)
@@ -14186,6 +14226,9 @@ do
         ---@field public addon2? string
         ---@field public addon3? string
 
+        ---@param self RaiderIOConfigOptions
+        ---@param name string
+        ---@param ... string
         function configOptions.CreateModuleToggle(self, name, ...)
             ---@class RaiderIOSettingsModuleToggleWidget
             local frame = self:CreateWidget("Frame")
@@ -14209,6 +14252,7 @@ do
         ---@field public tooltip? string
         ---@field public cvar? FallbackConfigKey
 
+        ---@param self RaiderIOConfigOptions
         ---@param label string
         ---@param description? string
         ---@param cvar? FallbackConfigKey
@@ -14239,6 +14283,7 @@ do
             return frame
         end
 
+        ---@param self RaiderIOConfigOptions
         ---@param label string
         ---@param description? string
         ---@param cvar? FallbackConfigKey
@@ -14256,6 +14301,7 @@ do
         ---@class RaiderIOSettingsRadioToggleWidget : RaiderIOSettingsToggleWidget
         ---@field public valueRadio any
 
+        ---@param self RaiderIOConfigOptions
         ---@param label string
         ---@param description? string
         ---@param cvar FallbackConfigKey
@@ -14691,6 +14737,8 @@ do
             configOptions:CreateHeadline(L.GENERAL_TOOLTIP_OPTIONS)
             if IS_RETAIL then
                 configOptions:CreateOptionToggle(L.SHOW_WARBAND_SCORE, L.SHOW_WARBAND_SCORE_DESC, "showWarbandScore")
+                configOptions:CreateOptionToggle(L.SHOW_MY_WARBAND_SCORE, L.SHOW_MY_WARBAND_SCORE_DESC, "showMyWarbandScore")
+                configOptions:CreateOptionToggle(L.SHOW_OTHER_WARBAND_SCORE, L.SHOW_OTHER_WARBAND_SCORE_DESC, "showOtherWarbandScore")
                 configOptions:CreateOptionToggle(L.SHOW_MAINS_SCORE, L.SHOW_MAINS_SCORE_DESC, "showMainsScore")
                 configOptions:CreateOptionToggle(L.SHOW_BEST_MAINS_SCORE, L.SHOW_BEST_MAINS_SCORE_DESC, "showMainBestScore")
                 configOptions:CreateOptionToggle(L.SHOW_ROLE_ICONS, L.SHOW_ROLE_ICONS_DESC, "showRoleIcons")
@@ -14901,14 +14949,14 @@ do
             configOptions:CreateModuleToggle(L.MODULE_TAIWAN, CreateModuleOptionsArgs("TW"))
 
             -- add save button and cancel buttons
-            local buttons = configOptions:CreateWidget("Frame", 4, configButtonFrame)
+            local buttons = configOptions:CreateWidget("Frame", configButtonFrame)
             buttons:ClearAllPoints()
             buttons:SetPoint("TOPLEFT", configButtonFrame, "TOPLEFT", 16, 0)
             buttons:SetPoint("BOTTOMRIGHT", configButtonFrame, "TOPRIGHT", -16, -10)
             buttons:Hide()
-            local save = configOptions:CreateWidget("Button", 4, configButtonFrame)
-            local cancel = configOptions:CreateWidget("Button", 4, configButtonFrame)
-            local reset = configOptions:CreateWidget("Button", 4, configButtonFrame)
+            local save = configOptions:CreateWidget("Button", configButtonFrame)
+            local cancel = configOptions:CreateWidget("Button", configButtonFrame)
+            local reset = configOptions:CreateWidget("Button", configButtonFrame)
             save:ClearAllPoints()
             save:SetPoint("LEFT", buttons, "LEFT", 0, -12)
             save:SetSize(96, 28)
@@ -14929,11 +14977,15 @@ do
             reset:SetScript("OnClick", Reset_OnClick)
 
             -- adjust frame height dynamically
-            local children = {configFrame:GetChildren()} ---@type Region[]
-            local height = 0
-            for i = 1, #children do
-                height = height + children[i]:GetHeight() + 3.5
-            end
+            local height = -30
+            local lastWidget = configOptions.lastWidget
+            repeat
+                if not lastWidget then
+                    break
+                end
+                height = height + lastWidget:GetHeight()
+                lastWidget = lastWidget.lastWidget
+            until not lastWidget
 
             configSliderFrame:SetMinMaxValues(1, max(1, height - 440))
             configFrame:SetHeight(height)
@@ -15133,7 +15185,7 @@ do
     local util = ns:GetModule("Util") ---@type UtilModule
 
     local TRACKING_EVENTS = {
-        "COMBAT_LOG_EVENT_UNFILTERED",
+        -- "COMBAT_LOG_EVENT_UNFILTERED", -- TODO: This didn't error on beta, but started to upon 12.0 release
         "UNIT_AURA",
         "UNIT_FLAGS",
         "UNIT_MODEL_CHANGED",
@@ -15168,8 +15220,9 @@ do
     end
 
     ---@return nil @The provided guid is checked if it's a player, and if the serverId is unknown, if that's the case we will log it into the SV and map it to our known regionId.
+    ---@param guid? string
     local function InspectPlayerGUID(guid)
-        if not guid then
+        if issecretvalue(guid) or not guid then
             return
         end
         local guidType, serverId = strsplit("-", guid) ---@type string, string|number
@@ -15206,7 +15259,7 @@ do
             end
         else
             local unit = ...
-            if not unit or not UnitIsPlayer(unit) or UnitIsUnit(unit, "player") then
+            if issecretvalue(unit) or not unit or not UnitIsPlayer(unit) or UnitIsUnit(unit, "player") then
                 return
             end
             local guid = UnitGUID(unit)

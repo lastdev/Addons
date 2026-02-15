@@ -1,13 +1,17 @@
-## Interface: 110207
+## Interface: 120001, 120000, 110207, 50503, 30405
 ## Title: HandyNotes: Wrath of the Lich King
-## Version: 129
-## Notes: Wrath of the Lich King Notes
-## OptionalDeps: Ace3
-## RequiredDeps: HandyNotes
-## X-Embeds: Ace3
+## Notes: Where are the interesting things in Northrend?
+## Author: Kemayo
+## Version: v22
+## IconTexture: Interface\Icons\Ability_Spy
+## DefaultState: enabled
+## X-Category: Map
+## X-eMail: kemayo @ gmail DOT com
+## X-Curse-Project-ID: 678106
+## X-Wago-ID: xZKxlvKk
 ## SavedVariables: HandyNotes_WrathOfTheLichKingDB
-## IconTexture: 630787
+## RequiredDeps: HandyNotes
 
-embeds.xml
-core\core.xml
-plugin.xml
+handler\handler.xml
+
+wrath.lua

@@ -48,6 +48,21 @@ _G.HousingVendorFactionIDs = _G.HousingVendorFactionIDs or {
     ["Proudmoore Admiralty"] = 2160,
     ["Order of Embers"] = 2161,
     ["Storm's Wake"] = 2162,
+
+    -- The War Within
+    ["Hallowfall Arathi"] = 2570,
+    ["Council of Dornogal"] = 2590,
+    ["The Assembly of the Deeps"] = 2594,
+    ["The Severed Threads"] = 2600,
+    ["The Cartels of Undermine"] = 2653,
+    ["The K'aresh Trust"] = 2658,
+    ["Darkfuse Solutions"] = 2669,
+    ["Venture Company"] = 2671,
+    ["Blackwater Cartel"] = 2675,
+    -- Note: Steamwheedle Cartel OLD faction is ID 169, NEW Undermine faction is ID 2677
+    -- Not adding to avoid conflicts - ReputationFactions.lua has correct hardcoded ID
+    ["Gallagio Loyalty Rewards Club"] = 2685,
+    ["Flame's Radiance"] = 2688,
 }
 
 -- Normalized lookup to tolerate minor formatting differences (case/whitespace).

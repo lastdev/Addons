@@ -1,4 +1,4 @@
-## Interface: 110000
+## Interface: 120000, 50503
 ## Title: Itemansion
 ## Notes: Отображает дополнение, в котором был добавлен предмет
 ## Notes-enUS: Displays in which expansion the item was added

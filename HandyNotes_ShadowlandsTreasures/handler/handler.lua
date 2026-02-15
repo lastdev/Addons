@@ -102,6 +102,8 @@ do
             upgrade = ns.rewards.Pet(item[1], type(item.pet) == "number" and item.pet)
         elseif item.set then
             upgrade = ns.rewards.Set(item[1], item.set)
+        elseif item.decor then
+            upgrade = ns.rewards.Decor(item[1])
         else
             upgrade = ns.rewards.Item(item[1])
         end
@@ -115,6 +117,9 @@ do
         end
         if item.covenant then
             table.insert(available, ns.conditions.Covenant(item.covenant))
+        end
+        if item.expansion then
+            table.insert(available, ns.conditions.Expansion(item.expansion))
         end
         if item.requires then
             if ns.IsObject(item.requires) then
@@ -210,7 +215,7 @@ function ns.RegisterPoints(zone, points, defaults)
             local relatedNode = ns.nodeMaker(setmetatable({
                 label=point.related.label or (point.npc and "Related to nearby NPC" or "Related to nearby treasure"),
                 atlas=point.related.atlas or "playerpartyblip", color=point.related.color, scale=point.related.scale,
-                texture=point.related.texture or false, minimap=point.related.minimap,
+                texture=point.related.texture or false, minimap=point.related.minimap, worldmap=point.related.worldmap,
                 note=point.related.note or false,
                 loot=upgradeloot(point.related.loot),
                 active=point.related.active, requires=point.related.requires, hide_before=point.related.hide_before,
@@ -604,6 +609,10 @@ local function render_string(s, context)
             if name then
                 return name
             end
+        elseif variant == "expansion" then
+            if _G["EXPANSION_NAME"..id] then
+                return _G["EXPANSION_NAME"..id]
+            end
         end
         return fallback ~= "" and fallback or (variant .. ':' .. id)
     end)
@@ -661,7 +670,17 @@ local trimmed_icon = function(texture)
     return icon_cache[texture]
 end
 local atlas_texture = function(atlas, extra, left, right, top, bottom)
-    atlas = C_Texture.GetAtlasInfo(atlas)
+    atlasInfo = C_Texture.GetAtlasInfo(atlas)
+    if not atlasInfo then
+        if ns.DEBUG then
+            if not ns.DEBUG_missing_atlas_cache then ns.DEBUG_missing_atlas_cache = {} end
+            if not ns.DEBUG_missing_atlas_cache[atlas] then
+                print(("%s: missing atlas %s"):format(myname, atlas))
+                ns.DEBUG_missing_atlas_cache[atlas] = true
+            end
+        end
+        atlasInfo = C_Texture.GetAtlasInfo("QuestObjective") or C_Texture.GetAtlasInfo("VignetteLoot")
+    end
     if type(extra) == "number" then
         extra = {scale=extra}
     end
@@ -673,16 +692,16 @@ local atlas_texture = function(atlas, extra, left, right, top, bottom)
     end
     if left then
         -- An atlas is already cropped into a texture, so we need to treat something else as our 1
-        local horizontal = atlas.rightTexCoord - atlas.leftTexCoord
-        local vertical = atlas.bottomTexCoord - atlas.topTexCoord
-        atlas.rightTexCoord = atlas.leftTexCoord + (right * horizontal)
-        atlas.leftTexCoord = atlas.leftTexCoord + (left * horizontal)
-        atlas.bottomTexCoord = atlas.topTexCoord + (bottom * vertical)
-        atlas.topTexCoord = atlas.topTexCoord + (top * vertical)
+        local horizontal = atlasInfo.rightTexCoord - atlasInfo.leftTexCoord
+        local vertical = atlasInfo.bottomTexCoord - atlasInfo.topTexCoord
+        atlasInfo.rightTexCoord = atlasInfo.leftTexCoord + (right * horizontal)
+        atlasInfo.leftTexCoord = atlasInfo.leftTexCoord + (left * horizontal)
+        atlasInfo.bottomTexCoord = atlasInfo.topTexCoord + (bottom * vertical)
+        atlasInfo.topTexCoord = atlasInfo.topTexCoord + (top * vertical)
     end
     return ns.merge({
-        icon = atlas.file,
-        tCoordLeft = atlas.leftTexCoord, tCoordRight = atlas.rightTexCoord, tCoordTop = atlas.topTexCoord, tCoordBottom = atlas.bottomTexCoord,
+        icon = atlasInfo.file,
+        tCoordLeft = atlasInfo.leftTexCoord, tCoordRight = atlasInfo.rightTexCoord, tCoordTop = atlasInfo.topTexCoord, tCoordBottom = atlasInfo.bottomTexCoord,
     }, extra)
 end
 ns.atlas_texture = atlas_texture
@@ -1230,7 +1249,10 @@ function HLHandler:OnEnter(uiMapID, coord)
         if point.route and ns.points[uiMapID][point.route] then
             point = ns.points[uiMapID][point.route]
         end
-        ns.RouteWorldMapDataProvider:HighlightRoute(point, uiMapID, coord)
+        if point._uiMapID == uiMapID then
+            -- Highlight the route only if it's on the original mapid for the point
+            ns.RouteWorldMapDataProvider:HighlightRoute(point, uiMapID, coord)
+        end
     end
     if ns.DecorationWorldMapDataProvider then
         ns.DecorationWorldMapDataProvider:OnMouseEnter(point, uiMapID, coord)
@@ -1392,7 +1414,9 @@ do
             rootDescription:CreateButton(COMMUNITIES_INVITE_MANAGER_LINK_TO_CHAT, function() sendToChat(uiMapID, coord) end)
         end
         -- Hide menu item
-        rootDescription:CreateButton("Hide this point", function() hideNode(uiMapID, coord) end)
+        if not ns.hiddenConfig.unhide then
+            rootDescription:CreateButton("Hide this point", function() hideNode(uiMapID, coord) end)
+        end
         if point.achievement then
             rootDescription:CreateButton(render_string("Hide {achievement:" .. point.achievement .. "}", point), hideAchievement, point.achievement)
         end
@@ -1405,7 +1429,7 @@ do
             end
             if not ns.hiddenConfig.groupsHidden then
                 rootDescription:CreateButton(
-                    render_string(("Hide %s in all zones"):format(ns.groups[point.group] or point.group), point),
+                    render_string((ns.hiddenConfig.groupsHiddenByZone and "Hide all %s" or "Hide %s in all zones"):format(ns.groups[point.group] or point.group), point),
                     function() hideGroup(uiMapID, coord) end
                 )
             end
@@ -1597,39 +1621,61 @@ function HL:FillCaches()
     end)
 end
 
-hooksecurefunc(AreaPOIPinMixin, "TryShowTooltip", function(self)
-    -- if not self.db.profile.show_on_world then return end
-    if not self.areaPoiID then return end
-    if not ns.POIsToPoints[self.areaPoiID] then return end
-    local point = ns.POIsToPoints[self.areaPoiID]
-    -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
-    handle_tooltip(GameTooltip, point, true)
-end)
-hooksecurefunc(AreaPOIPinMixin, "OnMouseLeave", function(self)
-    if _G[myname.."ComparisonTooltip"] then _G[myname.."ComparisonTooltip"]:Hide() end
-end)
-
-hooksecurefunc(VignettePinMixin, "OnMouseEnter", function(self)
-    local vignetteInfo = self.vignetteInfo
-    if not (vignetteInfo.vignetteID and ns.VignetteIDsToPoints[vignetteInfo.vignetteID]) then return end
-    local point = ns.VignetteIDsToPoints[vignetteInfo.vignetteID]
-    -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
-    handle_tooltip(GameTooltip, point, true)
-end)
-hooksecurefunc(VignettePinMixin, "OnMouseLeave", function(self)
-    if _G[myname.."ComparisonTooltip"] then _G[myname.."ComparisonTooltip"]:Hide() end
-end)
-
-if _G.TaskPOI_OnEnter then
-    hooksecurefunc("TaskPOI_OnEnter", function(self)
-        if not self.questID then return end
-        if not ns.WorldQuestsToPoints[self.questID] then return end
-        local point = ns.WorldQuestsToPoints[self.questID]
-        -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
-        handle_tooltip(GameTooltip, point, false)
+if _G.LegendHighlightablePoiPinMixin then
+    -- Midnight
+    EventRegistry:RegisterCallback("TaskPOI.TooltipShown", function(self, pin, questID)
+        if not pin then return end
+        local point
+        if pin.vignetteID then
+            point = ns.VignetteIDsToPoints[pin.vignetteID]
+        elseif pin.worldQuest and pin.questID then
+            point = ns.WorldQuestsToPoints[pin.questID]
+        elseif pin.poiInfo and pin.poiInfo.areaPoiID then 
+            point = ns.POIsToPoints[pin.poiInfo.areaPoiID]
+        end
+        if point then
+            handle_tooltip(GameTooltip, point, true)
+        end
     end)
-    hooksecurefunc("TaskPOI_OnLeave", function(self)
-        -- 10.0.2 doesn't hide this by default any more
+    EventRegistry:RegisterCallback("MapLegendPinOnLeave", function(self)
         if _G[myname.."ComparisonTooltip"] then _G[myname.."ComparisonTooltip"]:Hide() end
     end)
+else
+    hooksecurefunc(AreaPOIPinMixin, "TryShowTooltip", function(self)
+        -- if not self.db.profile.show_on_world then return end
+        local areaPoiID = self.poiInfo and self.poiInfo.areaPoiID or self.areaPoiID
+        if not areaPoiID then return end
+        if not ns.POIsToPoints[areaPoiID] then return end
+        local point = ns.POIsToPoints[areaPoiID]
+        -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
+        handle_tooltip(GameTooltip, point, true)
+    end)
+    hooksecurefunc(AreaPOIPinMixin, "OnMouseLeave", function(self)
+        if _G[myname.."ComparisonTooltip"] then _G[myname.."ComparisonTooltip"]:Hide() end
+    end)
+
+    hooksecurefunc(VignettePinMixin, "OnMouseEnter", function(self)
+        local vignetteInfo = self.vignetteInfo
+        if not (vignetteInfo.vignetteID and ns.VignetteIDsToPoints[vignetteInfo.vignetteID]) then return end
+        local point = ns.VignetteIDsToPoints[vignetteInfo.vignetteID]
+        -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
+        handle_tooltip(GameTooltip, point, true)
+    end)
+    hooksecurefunc(VignettePinMixin, "OnMouseLeave", function(self)
+        if _G[myname.."ComparisonTooltip"] then _G[myname.."ComparisonTooltip"]:Hide() end
+    end)
+
+    if _G.TaskPOI_OnEnter then
+        hooksecurefunc("TaskPOI_OnEnter", function(self)
+            if not self.questID then return end
+            if not ns.WorldQuestsToPoints[self.questID] then return end
+            local point = ns.WorldQuestsToPoints[self.questID]
+            -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
+            handle_tooltip(GameTooltip, point, false)
+        end)
+        hooksecurefunc("TaskPOI_OnLeave", function(self)
+            -- 10.0.2 doesn't hide this by default any more
+            if _G[myname.."ComparisonTooltip"] then _G[myname.."ComparisonTooltip"]:Hide() end
+        end)
+    end
 end

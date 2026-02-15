@@ -164,20 +164,21 @@ function CompletionTracker:OnAchievementEarned(achievementID)
         -- Check Achievement Rewards category
         if HousingData.vendorData["Achievement Items"] then
             for _, zone in pairs(HousingData.vendorData["Achievement Items"]) do
-                for _, vendor in ipairs(zone) do
-                    if vendor.items then
-                        for _, item in ipairs(vendor.items) do
-                            if item.achievementRequired then
-                                -- Parse achievement ID from requirement string
-                                -- achievementRequired might be achievement name or ID
-                                if tostring(item.achievementID) == tostring(achievementID) then
-                                    achievementFound = true
-                                    break
+                if type(zone) == "table" then
+                    for _, vendor in ipairs(zone) do
+                        if vendor.items then
+                            for _, item in ipairs(vendor.items) do
+                                if item.achievementRequired then
+                                    local itemAchID = tonumber(item.achievementID)
+                                    if itemAchID and itemAchID == tonumber(achievementID) then
+                                        achievementFound = true
+                                        break
+                                    end
                                 end
                             end
                         end
+                        if achievementFound then break end
                     end
-                    if achievementFound then break end
                 end
                 if achievementFound then break end
             end
@@ -217,19 +218,21 @@ function CompletionTracker:OnQuestCompleted(questID)
         -- Check Quest Items category
         if HousingData.vendorData["Quest Items"] then
             for _, zone in pairs(HousingData.vendorData["Quest Items"]) do
-                for _, vendor in ipairs(zone) do
-                    if vendor.items then
-                        for _, item in ipairs(vendor.items) do
-                            if item.questRequired then
-                                -- Check if this is the quest
-                                if tostring(item.questID) == tostring(questID) then
-                                    questFound = true
-                                    break
+                if type(zone) == "table" then
+                    for _, vendor in ipairs(zone) do
+                        if vendor.items then
+                            for _, item in ipairs(vendor.items) do
+                                if item.questRequired then
+                                    local itemQuestID = tonumber(item.questID)
+                                    if itemQuestID and itemQuestID == tonumber(questID) then
+                                        questFound = true
+                                        break
+                                    end
                                 end
                             end
                         end
+                        if questFound then break end
                     end
-                    if questFound then break end
                 end
                 if questFound then break end
             end

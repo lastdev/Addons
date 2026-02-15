@@ -1,0 +1,140 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+    <!-- ===================================== -->
+    <!-- Alchemy                             -->
+    <!-- ===================================== -->
+    <Script file="Alchemy/Classic.lua"/>
+    <Script file="Alchemy/Outland.lua"/>
+    <Script file="Alchemy/Northrend.lua"/>
+    <Script file="Alchemy/Cataclysm.lua"/>
+    <Script file="Alchemy/Pandaria.lua"/>
+    <Script file="Alchemy/Draenor.lua"/>
+    <Script file="Alchemy/Legion.lua"/>
+    <Script file="Alchemy/Kul Tiran.lua"/>
+    <Script file="Alchemy/Shadowlands.lua"/>
+    <Script file="Alchemy/Dragon Isles.lua"/>
+    <Script file="Alchemy/Khaz Algar.lua"/>
+    <Script file="Alchemy/Midnight.lua"/>
+
+    <!-- ===================================== -->
+    <!-- Blacksmithing                       -->
+    <!-- ===================================== -->
+    <Script file="Blacksmithing/Classic.lua"/>
+    <Script file="Blacksmithing/Outland.lua"/>
+    <Script file="Blacksmithing/Northrend.lua"/>
+    <Script file="Blacksmithing/Cataclysm.lua"/>
+    <Script file="Blacksmithing/Pandaria.lua"/>
+    <Script file="Blacksmithing/Draenor.lua"/>
+    <Script file="Blacksmithing/Legion.lua"/>
+    <Script file="Blacksmithing/Kul Tiran.lua"/>
+    <Script file="Blacksmithing/Shadowlands.lua"/>
+    <Script file="Blacksmithing/Dragon Isles.lua"/>
+    <Script file="Blacksmithing/Khaz Algar.lua"/>
+    <Script file="Blacksmithing/Midnight.lua"/>
+
+    <!-- ===================================== -->
+    <!-- Cooking                             -->
+    <!-- ===================================== -->
+    <Script file="Cooking/Pandaria.lua"/>
+    <Script file="Cooking/Draenor.lua"/>
+    <Script file="Cooking/Kul Tiran.lua"/>
+    <Script file="Cooking/Shadowlands.lua"/>
+    <Script file="Cooking/Dragon Isles.lua"/>
+    <Script file="Cooking/Khaz Algar.lua"/>
+
+    <!-- ===================================== -->
+    <!-- Enchanting                          -->
+    <!-- ===================================== -->
+    <Script file="Enchanting/Classic.lua"/>
+    <Script file="Enchanting/Outland.lua"/>
+    <Script file="Enchanting/Northrend.lua"/>
+    <Script file="Enchanting/Cataclysm.lua"/>
+    <Script file="Enchanting/Pandaria.lua"/>
+    <Script file="Enchanting/Draenor.lua"/>
+    <Script file="Enchanting/Legion.lua"/>
+    <Script file="Enchanting/Kul Tiran.lua"/>
+    <Script file="Enchanting/Shadowlands.lua"/>
+    <Script file="Enchanting/Dragon Isles.lua"/>
+    <Script file="Enchanting/Khaz Algar.lua"/>
+    <Script file="Enchanting/Midnight.lua"/>
+
+    <!-- ===================================== -->
+    <!-- Engineering                         -->
+    <!-- ===================================== -->
+    <Script file="Engineering/Classic.lua"/>
+    <Script file="Engineering/Outland.lua"/>
+    <Script file="Engineering/Northrend.lua"/>
+    <Script file="Engineering/Cataclysm.lua"/>
+    <Script file="Engineering/Pandaria.lua"/>
+    <Script file="Engineering/Draenor.lua"/>
+    <Script file="Engineering/Legion.lua"/>
+    <Script file="Engineering/Kul Tiran.lua"/>
+    <Script file="Engineering/Shadowlands.lua"/>
+    <Script file="Engineering/Dragon Isles.lua"/>
+    <Script file="Engineering/Khaz Algar.lua"/>
+    <Script file="Engineering/Midnight.lua"/>
+
+    <!-- ===================================== -->
+    <!-- Inscription                         -->
+    <!-- ===================================== -->
+    <Script file="Inscription/Classic.lua"/>
+    <Script file="Inscription/Outland.lua"/>
+    <Script file="Inscription/Northrend.lua"/>
+    <Script file="Inscription/Cataclysm.lua"/>
+    <Script file="Inscription/Pandaria.lua"/>
+    <Script file="Inscription/Draenor.lua"/>
+    <Script file="Inscription/Legion.lua"/>
+    <Script file="Inscription/Kul Tiran.lua"/>
+    <Script file="Inscription/Shadowlands.lua"/>
+    <Script file="Inscription/Dragon Isles.lua"/>
+    <Script file="Inscription/Khaz Algar.lua"/>
+    <Script file="Inscription/Midnight.lua"/>
+
+    <!-- ===================================== -->
+    <!-- Jewelcrafting                       -->
+    <!-- ===================================== -->
+    <Script file="Jewelcrafting/Classic.lua"/>
+    <Script file="Jewelcrafting/Outland.lua"/>
+    <Script file="Jewelcrafting/Northrend.lua"/>
+    <Script file="Jewelcrafting/Cataclysm.lua"/>
+    <Script file="Jewelcrafting/Pandaria.lua"/>
+    <Script file="Jewelcrafting/Draenor.lua"/>
+    <Script file="Jewelcrafting/Legion.lua"/>
+    <Script file="Jewelcrafting/Kul Tiran.lua"/>
+    <Script file="Jewelcrafting/Shadowlands.lua"/>
+    <Script file="Jewelcrafting/Dragon Isles.lua"/>
+    <Script file="Jewelcrafting/Khaz Algar.lua"/>
+    <Script file="Jewelcrafting/Midnight.lua"/>
+
+    <!-- ===================================== -->
+    <!-- Leatherworking                      -->
+    <!-- ===================================== -->
+    <Script file="Leatherworking/Classic.lua"/>
+    <Script file="Leatherworking/Outland.lua"/>
+    <Script file="Leatherworking/Cataclysm.lua"/>
+    <Script file="Leatherworking/Pandaria.lua"/>
+    <Script file="Leatherworking/Draenor.lua"/>
+    <Script file="Leatherworking/Legion.lua"/>
+    <Script file="Leatherworking/Kul Tiran.lua"/>
+    <Script file="Leatherworking/Shadowlands.lua"/>
+    <Script file="Leatherworking/Dragon Isles.lua"/>
+    <Script file="Leatherworking/Khaz Algar.lua"/>
+    <Script file="Leatherworking/Midnight.lua"/>
+
+    <!-- ===================================== -->
+    <!-- Tailoring                           -->
+    <!-- ===================================== -->
+    <Script file="Tailoring/Classic.lua"/>
+    <Script file="Tailoring/Outland.lua"/>
+    <Script file="Tailoring/Northrend.lua"/>
+    <Script file="Tailoring/Cataclysm.lua"/>
+    <Script file="Tailoring/Pandaria.lua"/>
+    <Script file="Tailoring/Draenor.lua"/>
+    <Script file="Tailoring/Legion.lua"/>
+    <Script file="Tailoring/Kul Tiran.lua"/>
+    <Script file="Tailoring/Shadowlands.lua"/>
+    <Script file="Tailoring/Dragon Isles.lua"/>
+    <Script file="Tailoring/Khaz Algar.lua"/>
+    <Script file="Tailoring/Midnight.lua"/>
+
+</Ui>

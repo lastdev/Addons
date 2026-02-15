@@ -14,7 +14,6 @@ local DelayTimer = TSM.LibTSMWoW:IncludeClassType("DelayTimer")
 local ItemString = TSM.LibTSMTypes:Include("Item.ItemString")
 local CraftString = TSM.LibTSMTypes:Include("Crafting.CraftString")
 local RecipeString = TSM.LibTSMTypes:Include("Crafting.RecipeString")
-local TempTable = TSM.LibTSMUtil:Include("BaseType.TempTable")
 local CustomString = TSM.LibTSMTypes:Include("CustomString")
 local ItemInfo = TSM.LibTSMService:Include("Item.ItemInfo")
 local BagTracking = TSM.LibTSMService:Include("Inventory.BagTracking")
@@ -33,6 +32,8 @@ local private = {
 	preparedSpellId = nil,
 	preparedTime = 0,
 	timeoutTimer = nil,
+	optionalMatTable = {},
+	unusedOptionalMatTempTables = {},
 }
 
 
@@ -151,7 +152,7 @@ end
 
 function ProfessionUtil.HasVellum(recipeString)
 	local craftString = CraftString.FromRecipeString(recipeString)
-	if Profession.IsEnchant(craftString) and not ClientInfo.IsVanillaClassic() then
+	if Profession.IsEnchant(craftString) and not ClientInfo.IsVanillaClassic() and not ClientInfo.IsBCClassic() then
 		return BagTracking.GetBagQuantity(Profession.GetVellumItemString(craftString)) > 0
 	else
 		return false
@@ -233,7 +234,7 @@ function ProfessionUtil.Craft(recipeString, quantity, useVellum, salvageSlotId, 
 		return 0
 	end
 	local isEnchant = Profession.IsEnchant(craftString)
-	local vellumable = isEnchant and not ClientInfo.IsVanillaClassic()
+	local vellumable = isEnchant and not ClientInfo.IsVanillaClassic() and not ClientInfo.IsBCClassic()
 	if not ClientInfo.IsRetail() and (isEnchant or TradeSkill.IsClassicCrafting()) then
 		quantity = 1
 	elseif spellId ~= private.preparedSpellId or private.preparedTime == GetTime() then
@@ -255,23 +256,24 @@ function ProfessionUtil.Craft(recipeString, quantity, useVellum, salvageSlotId, 
 	private.craftBaseString = ItemString.GetBase(TSM.Crafting.GetItemString(craftString)) or ""
 	private.craftCallback = callback
 	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI) then
-		local optionalMats = TempTable.Acquire()
+		assert(not next(private.optionalMatTable))
 		local applyConcentration = false
 		if type(recipeString) == "string" then
 			applyConcentration = RecipeString.GetConcentration(recipeString) and true or false
 			for _, slotId, itemId in RecipeString.OptionalMatIterator(recipeString) do
-				local info = TempTable.Acquire()
-				info.itemID = itemId
+				local info = tremove(private.unusedOptionalMatTempTables) or {}
+				info.reagent = info.reagent or {}
+				info.reagent.itemID = itemId
 				info.dataSlotIndex = slotId
 				info.quantity = TSM.Crafting.GetOptionalMatQuantity(craftString, itemId)
-				tinsert(optionalMats, info)
+				tinsert(private.optionalMatTable, info)
 			end
 		end
-		TradeSkill.Craft(spellId, quantity, optionalMats, level, enchantItemSlotId, salvageSlotId, applyConcentration)
-		for _, info in pairs(optionalMats) do
-			TempTable.Release(info)
+		TradeSkill.Craft(spellId, quantity, private.optionalMatTable, level, enchantItemSlotId, salvageSlotId, applyConcentration)
+		for _, tbl in ipairs(private.optionalMatTable) do
+			tinsert(private.unusedOptionalMatTempTables, tbl)
 		end
-		TempTable.Release(optionalMats)
+		wipe(private.optionalMatTable)
 	else
 		local index = Profession.GetIndexByCraftString(craftString)
 		private.craftName = TradeSkill.Craft(index, quantity)

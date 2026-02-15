@@ -10,6 +10,372 @@ local L = addon.L;
 local changelogs = addon.ControlCenter.changelogs;
 
 
+changelogs[10806] = {
+    {
+        type = "date",
+        versionText = "1.8.6 b",
+        timestamp = 1770130000,
+    },
+
+    {
+        type = "h1",
+        text = L["ModuleName LootUI"],
+        dbKey = "LootUI",
+    },
+
+    {
+        type = "Checkbox",
+        dbKey = "LootUI",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Added an option to show currencies earned from all sources, not just loot.",
+    },
+
+    {
+        type = "br",
+    },
+
+    {
+        type = "h1",
+        text = L["ModuleName NameplateQuest"],
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "You can now customize the progress text format to show Completed/Required or Remaining quantity, and keep the quest icon visible.",
+    },
+
+    {
+        type = "br",
+    },
+    {
+        type = "br",
+    },
+
+
+    {
+        type = "date",
+        versionText = "1.8.6",
+        timestamp = 1769870000,
+    },
+
+    {
+        type = "h1",
+        text = L["ModuleName NameplateQuest"],
+        dbKey = "NameplateQuest",
+    },
+
+    {
+        type = "Checkbox",
+        dbKey = "NameplateQuest",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Show quest indicator on nameplates. This indicator is customizable.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "(Optional) Show quest objective progress on your target or mouseover.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "(Optional) Show quest indicator if your party members haven't completed the objective.",
+    },
+
+    {
+        type = "img",
+        dbKey = "NameplateQuest",
+    },
+
+    {
+        type = "br",
+    },
+
+    {
+        type = "h1",
+        text = MISCELLANEOUS,
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Loot Window: Added an option to hide the \"You received\" text.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Fixed several secret-related errors. \"Trust me, bro.\"",
+    },
+};
+
+
+changelogs[10805] = {
+    {
+        type = "date",
+        versionText = "1.8.5 b-e",
+        timestamp = 1769530000,
+    },
+
+    {
+        type = "h1",
+        text = L["ModuleName LootUI"],
+        dbKey = "LootUI",
+    },
+
+    {
+        type = "Checkbox",
+        dbKey = "LootUI",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Added an option to display money earned from all sources, not just loot.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Money earned while interacting with mailbox or NPC will be displayed afterwards.",
+    },
+
+    {
+        type = "br",
+    },
+
+    {
+        type = "h1",
+        text = L["ModuleName TransmogOutfitSelect"],
+        dbKey = "TransmogOutfitSelect",
+    },
+
+    {
+        type = "Checkbox",
+        dbKey = "TransmogOutfitSelect",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = L["ModuleDescription1 TransmogOutfitSelect"],
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = L["ModuleDescription2 TransmogOutfitSelect"],
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "You can drag the top area of this window to move it.",
+    },
+
+    {
+        type = "img",
+        fileName = "Changelog_TransmogOutfitSelect",
+        large = true,
+    },
+
+    {
+        type = "br",
+    },
+
+    {
+        type = "h1",
+        text = "Bug Fixes",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Expansion Summary, Great Vault: World Activities should show the correct, post-stat-squished item levels.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Loot Window, Reputations: Fixed an issue that prevents the changes to Weaver, General, and Vizier from showing.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Drawer Macros should be able to work in combat again.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Decor Catalog: Fixed an error when using the decor search box in house editing mode.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Expansion Summary: The UI should no longer display the paragon progress for factions that haven't reached maximum renown.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Appearances Tab: Fixed an error when Ctrl-clicking an appearance.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Nameplate: Keyflame: Fixed an error when you were in specific areas in Hallowfall.",
+    },
+
+    {
+        type = "br",
+    },
+    {
+        type = "br",
+    },
+
+
+    {
+        type = "date",
+        versionText = "1.8.5",
+        timestamp = 1768900000,
+    },
+
+    {
+        type = "h1",
+        text = L["ModuleName InstanceDifficulty"],
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "You can now adjust this UI's position in Edit Mode.",
+    },
+
+    {
+        type = "br",
+    },
+
+    {
+        type = "tocVersionCheck",
+        minimumTocVersion = 120000,
+        breakpoint = false,
+    },
+
+
+    {
+        type = "h1",
+        text = L["ModuleName LootUI"],
+        dbKey = "LootUI",
+    },
+
+    {
+        type = "Checkbox",
+        dbKey = "LootUI",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Added a new option to display reputations earned from all sources in the loot window.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Hover the cursor over the notification to show the reputation's progress.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Reputations earned during combat or in PvP instances will be displayed afterwards.",
+    },
+
+    {
+        type = "br",
+    },
+
+    {
+        type = "h1",
+        text = L["ModuleName Housing_Macro"],
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "The Teleport Home macro will be automatically changed to Return to Previous Location when eligible.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Shout-outs to ConsolePort dev Munk, and a mysterious helper that works in extreme weather, and of course myelf for reviving the Teleport Home macro in Midnight.",
+    },
+
+    {
+        type = "br",
+    },
+
+    {
+        type = "h1",
+        text = L["ModuleName NewExpansionLandingPage"],
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "The Khaz Algar landing page button has been removed. To open Plumber Expansion Summary, set a hotkey in Game Settings> Keybindings> Plumber Addon, or use the Addon Compartment under the Calendar button.",
+    },
+
+    {
+        type = "br",
+    },
+
+    {
+        type = "h1",
+        text = "Retired Features",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = L["ModuleName SpellcastingInfo"],
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = L["ModuleName Delves_SeasonProgress"]..": ".."Blizzard has redesigned this UI. Your Delves Progress is now shown in Adventure Guide> Journeys.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = L["ModuleName SoftTargetName"]..": ".."The radial cast bar on nameplates has been removed.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = L["ModuleName TransmogChatCommand"]..": ".."This module has been removed. Features like \"using outfit slash commands to load available items to the Transmog UI\" will be migrated to the Narcissus addon.",
+    },
+};
+
+
 changelogs[10804] = {
     {
         type = "date",
@@ -20,28 +386,24 @@ changelogs[10804] = {
     {
         type = "h1",
         text = "Housing Modules",
-        redacted = true,
     },
 
     {
         type = "p",
         bullet = true,
         text = "House Editor, Customize Mode: You can Shift Click a dye swatch to track its recipe, or post it in chat.",
-        redacted = true,
     },
 
     {
         type = "p",
         bullet = true,
         text = "Decor Catalog: You can Shift Click a decor to post it in chat if the chat edit box is active. Alternatively, from its context menu.",
-        redacted = true,
     },
 
     {
         type = "p",
         bullet = true,
         text = "Thanks to Cabal members Keyboardturner and Ghost for the inspiration and for providing a cozy place to code.",
-        redacted = true,
     },
 
     {
@@ -52,7 +414,6 @@ changelogs[10804] = {
         type = "h1",
         text = L["ModuleName InstanceDifficulty"],
         dbKey = "InstanceDifficulty",
-        redacted = true,
     },
 
     {
@@ -64,28 +425,24 @@ changelogs[10804] = {
         type = "p",
         bullet = true,
         text = "You can now Alt Right Click on the instance name to reset all instances.",
-        redacted = true,
     },
 
     {
         type = "p",
         bullet = true,
         text = "You can now Shift Click on a difficulty button to post your raid progress in chat if you have killed any boss on that difficulty.",
-        redacted = true,
     },
 
     {
         type = "p",
         bullet = true,
         text = "Karazhan side entrance should show the correct difficulties.",
-        redacted = true,
     },
 
     {
         type = "p",
         bullet = true,
         text = "Thanks to the Dawnsong Twins, especially the nicer one, for testing this module multiple times and giving valuable feedback.",
-        redacted = true,
     },
 
     {
@@ -690,35 +1047,6 @@ changelogs[10800] = {
         dbKey = "TooltipTransmogEnsemble",
     },
 
-
-    {
-        type = "br",
-    },
-
-    {
-        type = "h1",
-        text = L["ModuleName TransmogChatCommand"],
-        dbKey = "TransmogChatCommand",
-    },
-
-    {
-        type = "Checkbox",
-        dbKey = "TransmogChatCommand",
-    },
-
-    {
-        type = "p",
-        bullet = true,
-        text = "When using a transmog chat command (which starts with /outfit), undress your character first so the old items won't be carried over into the new outfit.",
-    },
-
-    {
-        type = "p",
-        bullet = true,
-        text = "When at the Transmogrifier, using a chat command automatically loads all available items to the Transmog UI instead of opening the Dressing Room.",
-    },
-
-
     {
         type = "br",
     },
@@ -737,7 +1065,7 @@ changelogs[10800] = {
     {
         type = "p",
         bullet = true,
-        text = "Loot UI, Link Item: You can link an item in chat by Shift + clicking an item in Manual Loot mode.",
+        text = "Loot Window, Link Item: You can link an item in chat by Shift + clicking an item in Manual Loot mode.",
     },
 };
 

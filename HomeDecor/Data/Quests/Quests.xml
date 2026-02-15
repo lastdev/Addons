@@ -1,0 +1,29 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	
+	 <!-- Classic -->
+    <Script file="Classic/EasternKingdoms.lua"/>
+	<Script file="Classic/Kalimdor.lua"/>
+	<!-- BC -->
+	<Script file="BurningCrusade/Outland.lua"/>
+	<!-- Wrath -->
+	<Script file="Wrath/Northrend.lua"/>
+	<!-- MoP -->
+    <Script file="Pandaria/Pandaria.lua"/>
+	<!-- WoD -->
+    <Script file="Warlords/Draenor.lua"/>
+	
+	<!-- Legion -->
+    <Script file="Legion/BrokenIsles.lua"/>
+	
+	<!-- BfA -->
+    <Script file="BattleForAzeroth/KulTiras.lua"/>
+	<Script file="BattleForAzeroth/Zandalar.lua"/>
+	<!-- Shadowlands -->
+    <Script file="Shadowlands/TheShadowlands.lua"/>
+	
+	<!-- Dragonflight -->
+    <Script file="Dragonflight/DragonIsles.lua"/>
+	
+	<!-- WW -->
+    <Script file="WarWithin/KhazAlgar.lua"/>
+</Ui>

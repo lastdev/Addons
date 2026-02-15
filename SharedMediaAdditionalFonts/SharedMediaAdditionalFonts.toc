@@ -1,13 +1,28 @@
-## Interface: 110107
+## Interface: 120000
 ## Title: SharedMedia Additional Fonts
+## Category: Media
+## Category-deDE: Medien
+## Category-esES: Medios
+## Category-esMX: Medios
+## Category-frFR: Médias
+## Category-itIT: Media
+## Category-koKR: 미디어
+## Category-ptBR: Mídia
+## Category-ruRU: Медиа
+## Category-zhCN: 材质
+## Category-zhTW: 材質
 ## Notes: Inserts additionnal fonts into SharedMediaLib's storage.
-## Version: 11.1.7
+## Version: 12.0.0c
 ## Author: Lots of people, maintained by AllInOneMighty.
+## IconTexture: Interface\Icons\Trade_archaeology_highborne_scroll
 ## X-Category: Miscellaneous
 ## X-Credits: elsia
-## OptionalDeps: LibSharedMedia-3.0, LibSharedMedia-2.0, SharedMediaLib
+## OptionalDeps: LibSharedMedia-3.0
 
+#@no-lib-strip@
 Libs\LibStub\LibStub.lua
 
-Core.lua
+Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
+#@end-no-lib-strip@
+
 SharedMediaAdditionalFonts.lua

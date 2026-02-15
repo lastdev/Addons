@@ -1,6 +1,6 @@
 # DelveBuddy
 
-**DelveBuddy** is a World of Warcraft addon that helps you track weekly Delve activities and rewards across all your characters. It integrates with Data Broker displays (Titan Panel, ChocolateBar, Bazooka, etc.) and provides a minimap icon for quick access. Updated for patch 11.2 and Season 3.
+**DelveBuddy** is a World of Warcraft addon that helps you track weekly Delve activities and rewards across all your characters. It integrates with Data Broker displays (Titan Panel, ChocolateBar, Bazooka, etc.) and provides a minimap icon for quick access. Updated for Midnight pre-patch 12.0.0.
 
 ## Features
 *	Tracking
@@ -9,13 +9,15 @@
     * **Gilded Stashes** (weekly looted)
     * **Delver’s Bounty** (owned and looted this week)
     * **Great Vault Rewards** (World Delves progress per tier)
+    * **Current Gear Item Level** (so you know who needs to do more delves)
 *	UI Enhancements
     * Shows currently active Bountiful Delves
     * Shows currently active Worldsoul Memories (and Radiant Echoes owned)
     * Click a Delve or World Soul Memory to create a waypoint to it
-    * Easy access to Delve-O-Bot and Shrieking Quartz items - one-click!
+    * Easy access to Delve-O-Bot, Delver's Bounty, and Shrieking Quartz items - one-click!
 * Reminders & Warnings
     * Warning when entering a Bountiful Delve without a Restored Coffer Key
+    * Warning when entering a Delve if your companion doesn't have an assigned role
     * Reminds you to use Delver’s Bounty when inside a Bountiful Delve
 
 ## Installation
@@ -29,7 +31,7 @@
 * **Slash Commands:**
     * `/db minimap` — Show/hide the minimap icon.
     * `/db scale <0.75-2.0>` -- Set tooltip scale
-    * `/db reminders <coffer|bounty> <on||off>` -- Enable/disable reminders
+    * `/db reminders <coffer|bounty> <on|off>` -- Enable/disable reminders
     * `/db waypoints <blizzard|tomtom|both>` -- Set waypoint providers
     * `/db debugLogging <on|off>` — Enable/disable debug logs
     * `/db debuginfo` - Print useful debugging info

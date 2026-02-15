@@ -1,7 +1,7 @@
 ﻿-- Pawn by Vger-Azjol-Nerub
 -- www.vgermods.com
--- © 2006-2025 Travis Spomer.  This mod is released under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 license.
--- See Readme.htm for more information.
+-- © 2006-2026 Travis Spomer.  This mod is released under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 license.
+-- See Readme.md for more information.
 --
 -- Scale templates
 ------------------------------------------------------------
@@ -254,7 +254,7 @@ PawnScaleTemplates =
 	["ClassID"] = 12, -- Demon Hunter
 	["SpecID"] = 3, -- Devourer
 	["Role"] = "DAMAGER",
-	["PrimaryStat"] = "Agility",
+	["PrimaryStat"] = "Intellect",
 	["HideUpgrades"] = 2, -- Hide 2H upgrades
 	["UnusableStats"] = { "IsFrill" }
 },

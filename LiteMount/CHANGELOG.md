@@ -1,13 +1,10 @@
 # LiteMount
 
-## [11.2.7-3](https://github.com/xod-wow/LiteMount/tree/11.2.7-3) (2025-12-16)
-[Full Changelog](https://github.com/xod-wow/LiteMount/compare/11.2.7-2...11.2.7-3) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
+## [12.0.1-1](https://github.com/xod-wow/LiteMount/tree/12.0.1-1) (2026-02-12)
+[Full Changelog](https://github.com/xod-wow/LiteMount/compare/12.0.0-10...12.0.1-1) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
 
-- Allow ForceNewRandom to specify buttons again  
-- Use proper localization for groups menu  
-- Squash merge branch feature\_forcenewrandom  
-    - Add ForceNewRandom action to clear the persisted mount (#393)  
-    - Mount persistence now done by remembering last mount, not saved rng  
-    - Mount persistence for "least used" (fixes #342)  
-- Allow setting group memberships from mount icon menu  
-- Show right-click icon menu in all mount views  
+- Remove prepatch 12.0.0 from ToC  
+- Handle the Blizzard brokenness of the "Sweeper" broom mounts  
+    Fixes #409  
+- Increase debug lines to 200 and add a gap between activations  
+- Remove [channeling:spell] due to secrets  

@@ -1,22 +1,10 @@
-lightweight tag 472d46e57aa144a7cf9f427c2e9bd7958983f2d5 12.0.0-03
+lightweight tag ea66384f8bdf1b8a6d4bacaf3d20fda8304c6388 12.0.0-05
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Mon Dec 29 12:30:00 2025 -0800
+Date:	Tue Jan 20 20:00:18 2026 -0800
 
-commit 472d46e57aa144a7cf9f427c2e9bd7958983f2d5
+commit ea66384f8bdf1b8a6d4bacaf3d20fda8304c6388
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Mon Dec 29 12:30:00 2025 -0800
+Date:   Tue Jan 20 20:00:18 2026 -0800
 
-    Bump addon version
-
-commit 84ab580fd9fa510b6235504a5938f2cdcb26bf7f
-Author: Kate Martin <51387586+renanthera@users.noreply.github.com>
-Date:   Thu Dec 25 20:31:56 2025 -0700
-
-    Bump for 11.2.7 release.
-
-commit 84ab580fd9fa510b6235504a5938f2cdcb26bf7f
-Author: Kate Martin <51387586+renanthera@users.noreply.github.com>
-Date:   Thu Dec 25 20:31:56 2025 -0700
-
-    Bump for 11.2.7 release.
+    Actually get Devourer working
 

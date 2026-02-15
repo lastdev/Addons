@@ -7,7 +7,7 @@
 local addonName, addon = ...
 
 -- Simple localization table for messages
-local L = TomTomLocals
+local L = addon.L
 
 local IMAGE_ARROW = "Interface\\Addons\\TomTom\\Images\\Arrow-1024"
 local IMAGE_ARROW_UP = "Interface\\AddOns\\TomTom\\Images\\Arrow-UP-1024"

@@ -713,7 +713,7 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 			local function FollowerButton_OnClick(self)
 				local id = self.info and self.info.followerID
 				if id and IsModifiedClick("CHATLINK") then
-					ChatEdit_InsertLink(C_Garrison.GetFollowerLink(id))
+					ChatFrameUtil.InsertLink(C_Garrison.GetFollowerLink(id))
 				end
 			end
 			local function LevelPulse_OnStop(self)
@@ -790,7 +790,7 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 					link = C_CurrencyInfo.GetCurrencyLink(self.currencyID, tonumber(self.Quantity:GetText() or 1) or 1)
 				end
 				if link then
-					ChatEdit_InsertLink(link)
+					ChatFrameUtil.InsertLink(link)
 				end
 			end
 			local function SetIcon(self, texture)
@@ -1889,7 +1889,7 @@ do -- CreateMissionButton
 					text = qt .. " " .. text
 				end
 				if text then
-					ChatEdit_InsertLink(text)
+					ChatFrameUtil.InsertLink(text)
 				end
 			end
 		end
@@ -2249,7 +2249,7 @@ do -- activeMissionsHandle
 		if IsModifiedClick("CHATLINK") then
 			local missionLink = C_Garrison.GetMissionLink(mi.missionID)
 			if (missionLink) then
-				ChatEdit_InsertLink(missionLink)
+				ChatFrameUtil.InsertLink(missionLink)
 			end
 		elseif mi.readyTime and mi.readyTime < time() and not (mi.succeeded or mi.failed) and activeUI.completionState ~= "RUNNING" then
 			CompleteMission(mi)
@@ -2543,7 +2543,7 @@ do -- availMissionsHandle
 		if IsModifiedClick("CHATLINK") then
 			local missionLink = C_Garrison.GetMissionLink(mi.missionID)
 			if (missionLink) then
-				ChatEdit_InsertLink(missionLink)
+				ChatFrameUtil.InsertLink(missionLink)
 			end
 		elseif mi.missionID then
 			OpenToMission(mi)
@@ -3310,7 +3310,7 @@ do -- Ships
 	end
 	local function ShipMission_OnClick(self, button)
 		if IsModifiedClick("CHATLINK") and self.info then
-			ChatEdit_InsertLink(C_Garrison.GetMissionLink(self.info.missionID))
+			ChatFrameUtil.InsertLink(C_Garrison.GetMissionLink(self.info.missionID))
 		elseif self.info.canStart then
 			local f1, f2, f3
 			if button == "RightButton" then

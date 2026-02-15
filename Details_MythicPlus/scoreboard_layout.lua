@@ -7,7 +7,7 @@ local Details, DetailsFramework = Details, DetailsFramework
 local addon = private.addon
 
 local L = DetailsFramework.Language.GetLanguageTable(addonName)
-local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
+local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
 
 --player keystone icon, keystone text
 local keystoneTextureSize = 45 --the icon is a square
@@ -72,7 +72,7 @@ local showCrowdControlTooltip = function(self, playerData)
 
             local spellInfo = C_Spell.GetSpellInfo(spellName)
             if (not spellInfo) then
-                local spellId = openRaidLib.GetCCSpellIdBySpellName(spellName)
+                local spellId = openRaidLib and openRaidLib.GetCCSpellIdBySpellName(spellName) or 0
                 if (spellId) then
                     spellInfo = C_Spell.GetSpellInfo(spellId)
                 end
@@ -287,32 +287,35 @@ do -- player likes
 end
 
 do -- player portrait
+
     local column = addon.ScoreboardColumn:Create("player-portrait", "", 60, function (line)
-        local lineHeight = line:GetHeight()
-        local playerPortrait = Details:CreatePlayerPortrait(line, "$parentPortrait")
-        ---@cast playerPortrait playerportrait
-        playerPortrait.Portrait:SetSize(lineHeight-2, lineHeight-2)
-        playerPortrait:SetSize(lineHeight-2, lineHeight-2)
-        playerPortrait.RoleIcon:SetSize(18, 18)
-        playerPortrait.RoleIcon:ClearAllPoints()
-        playerPortrait.RoleIcon:SetPoint("bottomleft", playerPortrait.Portrait, "bottomright", -9, -2)
-        playerPortrait.RoleIcon:SetDrawLayer("overlay", 6)
+        if private.buildVersion >= private.buildVersionCutOff then
+            local lineHeight = line:GetHeight()
+            local playerPortrait = Details:CreatePlayerPortrait(line, "$parentPortrait")
+            ---@cast playerPortrait playerportrait
+            playerPortrait.Portrait:SetSize(lineHeight-2, lineHeight-2)
+            playerPortrait:SetSize(lineHeight-2, lineHeight-2)
+            playerPortrait.RoleIcon:SetSize(18, 18)
+            playerPortrait.RoleIcon:ClearAllPoints()
+            playerPortrait.RoleIcon:SetPoint("bottomleft", playerPortrait.Portrait, "bottomright", -9, -2)
+            playerPortrait.RoleIcon:SetDrawLayer("overlay", 6)
 
-        local itemLevelText = playerPortrait:CreateFontString("$parentLootItemLevel", "overlay", "GameFontNormal")
-        itemLevelText:SetPoint("bottom", playerPortrait, "bottom", 0, 0)
-        itemLevelText:SetTextColor(1, 1, 1)
-        DetailsFramework:SetFontSize(itemLevelText, 11)
-        playerPortrait.ItemLevelText = itemLevelText
+            local itemLevelText = playerPortrait:CreateFontString("$parentLootItemLevel", "overlay", "GameFontNormal")
+            itemLevelText:SetPoint("bottom", playerPortrait, "bottom", 0, 0)
+            itemLevelText:SetTextColor(1, 1, 1)
+            DetailsFramework:SetFontSize(itemLevelText, 11)
+            playerPortrait.ItemLevelText = itemLevelText
 
-        local itemLevelBg = playerPortrait:CreateTexture("$parentItemLevelBackgroundTexture", "overlay")
-        itemLevelBg:SetDrawLayer("overlay", 5)
-        itemLevelBg:SetTexture([[Interface\Cooldown\LoC-ShadowBG]])
-        itemLevelBg:SetPoint("bottomleft", playerPortrait.Portrait, "bottomleft", -7, -1)
-        itemLevelBg:SetPoint("bottomright", playerPortrait.Portrait, "bottomright", 7, -1)
-        itemLevelBg:SetHeight(14)
-        playerPortrait.ItemLevelBg = itemLevelBg
+            local itemLevelBg = playerPortrait:CreateTexture("$parentItemLevelBackgroundTexture", "overlay")
+            itemLevelBg:SetDrawLayer("overlay", 5)
+            itemLevelBg:SetTexture([[Interface\Cooldown\LoC-ShadowBG]])
+            itemLevelBg:SetPoint("bottomleft", playerPortrait.Portrait, "bottomleft", -7, -1)
+            itemLevelBg:SetPoint("bottomright", playerPortrait.Portrait, "bottomright", 7, -1)
+            itemLevelBg:SetHeight(14)
+            playerPortrait.ItemLevelBg = itemLevelBg
 
-        return playerPortrait
+            return playerPortrait
+        end
     end)
 
     column:SetOnRender(function (frame, playerData)
@@ -321,8 +324,19 @@ do -- player portrait
         frame.Portrait:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1)
         if (not portraitTexture) then
             local class = playerData.class
-            frame.Portrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
-            frame.Portrait:SetTexCoord(unpack(CLASS_ICON_TCOORDS[class]))
+            if CLASS_ICON_TCOORDS[class] then
+                frame.Portrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
+                frame.Portrait:SetTexCoord(unpack(CLASS_ICON_TCOORDS[class]))
+            else
+                if Details then
+                    local texturePath, left, right, top, bottom = Details:GetClassIcon(class)
+                    frame.Portrait:SetTexture(texturePath)
+                    frame.Portrait:SetTexCoord(left, right, top, bottom)
+                else
+                    frame.Portrait:SetTexture("Interface\\ICONS\\INV_Misc_QuestionMark")
+                    frame.Portrait:SetTexCoord(0, 1, 0, 1)
+                end
+            end
         end
 
         if (playerData.ilevel) then

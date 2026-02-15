@@ -1,0 +1,16 @@
+lightweight tag 9a4eea534d8e9cc9a5d9e5cf84635f197e7bf294 v1.5.3
+Author:	GitHub <noreply@github.com>
+Date:	Wed Feb 11 09:13:07 2026 +0100
+
+commit 618873787eda5eb728dc718de285b35b25c4539a
+Author: inzenir <simon.cedula@gmail.com>
+Date:   Wed Feb 11 09:12:21 2026 +0100
+
+    Version bump
+
+commit 618873787eda5eb728dc718de285b35b25c4539a
+Author: inzenir <simon.cedula@gmail.com>
+Date:   Wed Feb 11 09:12:21 2026 +0100
+
+    Version bump
+

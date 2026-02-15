@@ -150,6 +150,7 @@ local function checkWaterwalking()
 end
 local function checkReEquip()
     if InCombatLockdown() then return false end
+    if UnitIsDeadOrGhost("player") then return false end
     local mainRod = AngleurUnderlight_MainFishingRod.itemID
     if not mainRod then return end
     if not isEligible(mainRod) then 
@@ -176,6 +177,7 @@ end
 
 local function checkEquip()
     if InCombatLockdown() then return false end
+    if UnitIsDeadOrGhost("player") then return false end
     if not isEligible(UNDERLIGHT) then 
         print(T["Underlight Angler not found in bags. Cannot equip."])
         return
@@ -233,6 +235,7 @@ function AngleurUnderlight_Events(self, event, unit)
     elseif event == "MOUNT_JOURNAL_USABILITY_CHANGED" or "MIRROR_TIMER_START" then
         -- No need to check for it all when in combat, + "wasSwimming" needs to stay unchanged during combat
         if InCombatLockdown() then return end
+        if UnitIsDeadOrGhost("player") then return end
         Angleur_SingleDelayer(1, 0, 0.2, swimdelayFrame, function()
             if checkSwimOrBreath() then
                 wasSwimming = true

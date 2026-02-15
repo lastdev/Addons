@@ -1842,4 +1842,109 @@ HousingDataAggregator_RegisterReputation({
       extra = nil,
     },
   },
+  [116] = {
+    itemID = "247737",
+    factionID = "1273",
+    reputation = "Good Friend",
+  },
+  [117] = {
+    itemID = "247734",
+    factionID = "1283",
+    reputation = "Good Friend",
+  },
+  [118] = {
+    itemID = "247670",
+    factionID = "1275",
+    reputation = "Good Friend",
+  },
+  [119] = {
+    itemID = "245508",
+    factionID = "1280",
+    reputation = "Good Friend",
+  },
+  [120] = {
+    itemID = "251483",
+    factionID = "1731",
+    reputation = "Friendly",
+  },
+  [121] = {
+    itemID = "245423",
+    factionID = "1731",
+    reputation = "Friendly",
+  },
+  [122] = {
+    itemID = "251493",
+    factionID = "1731",
+    reputation = "Honored",
+  },
+  [123] = {
+    itemID = "251481",
+    factionID = "1731",
+    reputation = "Honored",
+  },
+  [124] = {
+    itemID = "251476",
+    factionID = "1731",
+    reputation = "Revered",
+  },
+  [125] = {
+    itemID = "251551",
+    factionID = "1731",
+    reputation = "Exalted",
+  },
+  [126] = {
+    itemID = "251479",
+    factionID = "1731",
+    reputation = "Exalted",
+  },
+  [127] = {
+    itemID = "245424",
+    factionID = "1710",
+    reputation = "Friendly",
+  },
+  [128] = {
+    itemID = "251544",
+    factionID = "1710",
+    reputation = "Friendly",
+  },
+  [129] = {
+    itemID = "245431",
+    factionID = "1708",
+    reputation = "Friendly",
+  },
+  [130] = {
+    itemID = "245433",
+    factionID = "1708",
+    reputation = "Friendly",
+  },
+  [131] = {
+    itemID = "263026",
+    factionID = "2766",
+    reputation = "Rank 2",
+  },
+  [132] = {
+    itemID = "259071",
+    factionID = "2766",
+    reputation = "Rank 5",
+  },
+  [133] = {
+    itemID = "255840",
+    factionID = "2766",
+    reputation = "Rank 7",
+  },
+  [134] = {
+    itemID = "263026",
+    factionID = "2767",
+    reputation = "Rank 2",
+  },
+  [135] = {
+    itemID = "259071",
+    factionID = "2767",
+    reputation = "Rank 5",
+  },
+  [136] = {
+    itemID = "255840",
+    factionID = "2767",
+    reputation = "Rank 7",
+  },
 })

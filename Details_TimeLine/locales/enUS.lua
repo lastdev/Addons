@@ -29,3 +29,4 @@ L["STRING_TYPE"] = "Type:"
 L["STRING_TYPE_COOLDOWN"] = "Cooldown"
 L["STRING_TYPE_DEBUFF"] = "Debuff"
 L["STRING_UNKNOWN"] = "unknown"
+

@@ -7,7 +7,7 @@
 local addonName, addon = ...
 
 -- Simple localization table for messages
-local L = TomTomLocals
+local L = addon.L
 
 local registry = {}
 addon.waypointThemeRegistry = registry

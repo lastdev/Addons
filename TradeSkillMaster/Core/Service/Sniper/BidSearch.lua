@@ -30,7 +30,7 @@ function BidSearch.OnInitialize(settingsDB)
 end
 
 function BidSearch.GetSearchContext()
-	assert(ClientInfo.IsVanillaClassic())
+	assert(ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic())
 	return private.searchContext
 end
 
@@ -41,7 +41,7 @@ end
 -- ============================================================================
 
 function private.ScanThread(auctionScan)
-	assert(ClientInfo.IsVanillaClassic())
+	assert(ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic())
 	local numQueries = auctionScan:GetNumQueries()
 	if numQueries == 0 then
 		auctionScan:NewQuery()

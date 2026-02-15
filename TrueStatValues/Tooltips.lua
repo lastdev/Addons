@@ -84,7 +84,7 @@ function addon.tsv:OnTooltip(ev, tooltip, ...)
         local tt1 = GameTooltipTextLeft1
         if (tt1) then
             local text = tt1:GetText()
-            if (text and not blackList[text]) then
+            if (not issecretvalue(text) and text and not blackList[text]) then
                 for statId, labelGenerator in pairs(statLabelMap) do
                     if (statEventMap[statId] == ev) then
                         local label = labelGenerator()
@@ -110,7 +110,7 @@ function addon.tsv:OnTooltip(ev, tooltip, ...)
                 local textleft = "GameTooltipTextLeft" .. tostring(i)
                 if (_G[textleft] and _G[textleft].GetText) then
                     local text = _G[textleft]:GetText()
-                    if (text and text ~= "") then
+                    if (text and type(text) == "string" and not issecretvalue(text) and text ~= "") then
                         for statId, pattern in pairs(patterns) do
                             local amount = string.match(text, pattern)
                             if (amount) then

@@ -70,7 +70,7 @@ local function OpenAllTips(display, mode)
     tipMode = mode
 
     -- Character summary tooltip
-    local charTip = QTip:Acquire("DelveBuddyCharTip", 11,
+    local charTip = QTip:Acquire("DelveBuddyCharTip", 12,
         "LEFT","CENTER","CENTER","CENTER","CENTER","CENTER","CENTER","CENTER", "CENTER", "CENTER", "CENTER")
     charTip:EnableMouse(true)
     charTip:SmartAnchorTo(display)
@@ -411,6 +411,7 @@ end
 function DelveBuddy:PopulateCharacterSection(tip)
     tip:Clear()
 
+    local ILVL_ICON = "|TInterface\\Icons\\inv_helmet_06:16:16:0:0|t"
     local SHARD_ICON = "|TInterface\\Icons\\inv_gizmo_hardenedadamantitetube:16:16:0:0|t"
     local KEY_ICON   = "|TInterface\\Icons\\Inv_10_blacksmithing_consumable_key_color1:16:16:0:0|t"
     local BOUNTY_ICON = "|TInterface\\Icons\\Icon_treasuremap:16:16:0:0|t"
@@ -420,6 +421,7 @@ function DelveBuddy:PopulateCharacterSection(tip)
     -- Row 1: Icons (blank where you don't want one)
     tip:AddHeader(
         " ",
+        ILVL_ICON,
         SHARD_ICON,
         KEY_ICON,
         SHARD_ICON,
@@ -435,6 +437,7 @@ function DelveBuddy:PopulateCharacterSection(tip)
     -- Row 2: Text labels
     local labelLine = tip:AddLine(
         " ",
+        "iLvl",
         "Earned",
         "Earned",
         "Owned",
@@ -461,6 +464,7 @@ function DelveBuddy:PopulateCharacterSection(tip)
             name = name:match("^[^-]+") or name
             local icon = self:ClassIconMarkup(data.class)
             local displayName = icon .. self:ClassColoredName(name, data.class)
+            local itemLevel = self:FormatItemLevel(data.itemLevel or 0)
             local shardsEarnedText = self:FormatKeysEarned(data.shardsEarned or 0, self.IDS.CONST.MAX_WEEKLY_SHARDS)
             local shardsOwnedText = self:FormatKeysEarned(data.shardsOwned or 0, 100)
             local keysEarnedText = self:FormatKeysEarned(data.keysEarned, self.IDS.CONST.MAX_WEEKLY_KEYS)
@@ -477,22 +481,22 @@ function DelveBuddy:PopulateCharacterSection(tip)
             local vault2 = self:FormatVaultCell(rewards and rewards[2])
             local vault3 = self:FormatVaultCell(rewards and rewards[3])
 
-            local line = tip:AddLine(displayName, shardsEarnedText, keysEarnedText, shardsOwnedText, keysOwnedText, 
+            local line = tip:AddLine(displayName, itemLevel, shardsEarnedText, keysEarnedText, shardsOwnedText, keysOwnedText, 
             stashesText, bountyText, lootedText, vault1, vault2, vault3)
 
             -- Only for current character
             if name == UnitName("player") then
                 -- Vault cells: open the vault
-                for col = 9, 11 do
+                for col = 10, 12 do
                     tip:SetCellScript(line, col, "OnMouseUp", function()
                         HideAllTips()
                         DelveBuddy:OpenVaultUI()
                     end)
                 end
 
-                -- Column 4 (shards owned): overlay a secure button to use the Coffer Key Shard
+                -- Column 5 (shards owned): overlay a secure button to use the Coffer Key Shard
                 if not InCombatLockdown() then
-                    local cell = tip.lines[line].cells[4]
+                    local cell = tip.lines[line].cells[5]
                     if cell then
                         cofferKeyShardButton = DelveBuddy:CreateAndAttachSecureButton(
                             cofferKeyShardButton,
@@ -502,8 +506,8 @@ function DelveBuddy:PopulateCharacterSection(tip)
                     end
 
                     -- Keep these so QTip applies highlight
-                    tip:SetCellScript(line, 4, "OnEnter", function() end)
-                    tip:SetCellScript(line, 4, "OnLeave", function() end)
+                    tip:SetCellScript(line, 5, "OnEnter", function() end)
+                    tip:SetCellScript(line, 5, "OnLeave", function() end)
                 end
             end
         end
@@ -655,7 +659,7 @@ function DelveBuddy:PopulateDelveSection(tip)
 
     -- Delver's Bounty (only in a Bountiful Delve and if player has one)
     if not InCombatLockdown() and self:IsInBountifulDelve() and self:HasDelversBountyItem() then
-        local itemID = DelveBuddy.IDS.Item.DelversBounty
+        local itemID = self:GetDelversBountyItemId()
         local itemIcon = self:TextureIcon(C_Item.GetItemIconByID(itemID))
         local itemName = C_Item.GetItemNameByID(itemID)
         local lineText = ("%s %s"):format(itemIcon, itemName)
@@ -694,9 +698,9 @@ function DelveBuddy:PopulateDelveSection(tip)
         end)
     end
 
-    -- Shrieking Quartz
-    if not InCombatLockdown() and self:IsDelveInProgress() and self:HasShriekingQuartzItem() then
-        local itemID = DelveBuddy.IDS.Item.ShriekingQuartz
+    -- Nemesis Lure
+    if not InCombatLockdown() and self:IsDelveInProgress() and self:HasNemesisLureItem() then
+        local itemID = self:GetNemesisLureItemId()
         local itemIcon = self:TextureIcon(C_Item.GetItemIconByID(itemID))
         local itemName = ("%s %s"):format(itemIcon, C_Item.GetItemNameByID(itemID))
 
@@ -707,7 +711,7 @@ function DelveBuddy:PopulateDelveSection(tip)
         if row then
             nemesisCallButton = DelveBuddy:CreateAndAttachSecureButton(
                 nemesisCallButton,
-                function() return DelveBuddy:BuildShriekingQuartzButton() end,
+                function() return DelveBuddy:BuildNemesisLureButton() end,
                 row
             )
         end
@@ -775,6 +779,27 @@ DelveBuddy.Colors = {
     Cyan = "00ffff",
 }
 
+function DelveBuddy:FormatItemLevel(itemLevel)
+    itemLevel = tonumber(itemLevel)
+
+    -- If unknown or missing, show a gray "?"
+    if not itemLevel or itemLevel <= 0 then
+        return self:ColorText("?", self.Colors.Gray)
+    end
+
+    -- Caller guarantees this came from Blizzard already truncated to an int
+    local text = tostring(itemLevel)
+
+    -- GetItemLevelColor returns r,g,b in [0,1]
+    local r, g, b = GetItemLevelColor(itemLevel)
+    if not r then
+        return self:ColorText(text, self.Colors.Gray)
+    end
+
+    local hex = string.format("%02x%02x%02x", math.floor(r * 255 + 0.5), math.floor(g * 255 + 0.5), math.floor(b * 255 + 0.5))
+    return self:ColorText(text, hex)
+end
+
 function DelveBuddy:FormatKeysEarned(earned, max)
     local earnedPart = tostring(earned)
 
@@ -815,19 +840,27 @@ function DelveBuddy:FormatVaultCell(v)
     if not v then return "—" end
 
     if v.progress >= v.threshold then
-        local tier = v.level > 0 and v.level or "—"
-        local iLvl = self.TierToVaultiLvl[v.level] or "?"
-        local color = self.Colors.Yellow -- tier 5-7
-        if type(tier) ~= "number" then
-            color = self.Colors.Gray     -- unknown tier
-        elseif tier <= 4 then
-            color = self.Colors.Cyan     -- tier 1-4
-        elseif tier >= 8 then
-            color = self.Colors.Green    -- tier 8+
+        local tier = v.level >= 0 and v.level or "—"
+        local iLvl = "?"
+        if type(v.ilvl) == "number" and v.ilvl > 0 then
+            iLvl = v.ilvl
         end
+        local color = self:ColorForTier(tier)
         return self:ColorText(("Tier %s (%s)"):format(tier, iLvl), color)
     else
         return self:ColorText(("%d/%d"):format(v.progress, v.threshold), self.Colors.Gray)
+    end
+end
+
+function DelveBuddy:ColorForTier(tier)
+    if type(tier) ~= "number" then
+        return self.Colors.Gray     -- unknown tier
+    elseif tier <= 4 then
+        return self.Colors.Cyan     -- tier 0-4
+    elseif tier <= 7 then
+        return self.Colors.Yellow   -- tier 5-7
+    else
+        return self.Colors.Green    -- tier 8+
     end
 end
 
@@ -971,8 +1004,8 @@ function DelveBuddy:BuildDelveOBotButton()
     end)
 end
 
-function DelveBuddy:BuildShriekingQuartzButton()
-    local itemID = DelveBuddy.IDS.Item.ShriekingQuartz
+function DelveBuddy:BuildNemesisLureButton()
+    local itemID = self:GetNemesisLureItemId()
     return self:BuildSecureButton("DelveBuddySecureNemesisButton", function(b)
         b:SetAttribute("type", "macro")
         b:SetAttribute("macrotext", "/use item:" .. itemID)
@@ -980,7 +1013,7 @@ function DelveBuddy:BuildShriekingQuartzButton()
 end
 
 function DelveBuddy:BuildDelversBountyButton()
-    local itemID = DelveBuddy.IDS.Item.DelversBounty
+    local itemID = self:GetDelversBountyItemId()
     return self:BuildSecureButton("DelveBuddySecureDelversBountyButton", function(b)
         b:SetAttribute("type", "macro")
         b:SetAttribute("macrotext", "/use item:" .. tostring(itemID))

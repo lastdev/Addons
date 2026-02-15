@@ -128,6 +128,7 @@ local automaticBlizzardTracking = true			--By Default blizzard trackers are almo
 local automaticBlizzardTrackingInitialCheck = false --Initial check for value at start of each encounter
 core.syncMessageQueue = {}							--Messages sent from sync to other addons. Used when range is too small for one addon to cover.
 core.groupSizeRequiresUpdate = false
+local encounterTimer = nil						--Timer used to detect Success/Failure of encounter achievements in midnight and above
 
 --------------------------------------
 -- Addon Syncing
@@ -701,7 +702,9 @@ function enableAchievementTracking(self)
 	events:RegisterEvent("CHAT_MSG_SYSTEM")						--Used to find out when players join group to intiate an achievement scan of the group
 	events:RegisterEvent("PLAYER_REGEN_DISABLED")				--Used to detect when the player has entered combat and to reset tracked variables for bosses
 	events:RegisterEvent("PLAYER_REGEN_ENABLED")				--Used to track when the player has left combat
-	events:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")			--Used to track the completion/failiure of achievements
+	if core.gameVersionMajor < 12 then
+		events:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")			--Used to track the completion/failiure of achievements
+	end
 	events:RegisterEvent("ENCOUNTER_START")						--Used to detect the start of a boss fight
 	events:RegisterEvent("ENCOUNTER_END")						--Used to detect the end of a boss fight
 	events:RegisterEvent("UPDATE_MOUSEOVER_UNIT")				--Used to output achievement for boss and players missing achievements on hoverkk
@@ -1212,6 +1215,10 @@ function events:GROUP_ROSTER_UPDATE()
 end
 
 function events:CHAT_MSG_SYSTEM(self, message)
+	if core.gameVersionMajor >= 12 then
+		return
+	end
+
 	local chatStrs = {"joins the party", "joined the instance group", "joined the raid group", "joined a raid group", "leaves the party", "left the instance group", "leaves the party", "left the raid group"}
 	for i = 1, #chatStrs do
 		if string.match(message, chatStrs[i]) then
@@ -1290,6 +1297,109 @@ function events:ENCOUNTER_START(self, encounterID, encounterName, difficultyID, 
 			end
 		end
 	end
+
+	encounterTimer = C_Timer.NewTicker(1, function()
+		if core.restrictions == true then
+			core:detectBlizzardTrackingAutomatically()
+		end
+
+		--Boss Detection!
+		if core.foundBoss == true then
+			--Start tracking the particular boss if the user has not disabled tracking for that boss
+			for i = 1, #core.currentBosses do
+				if core.currentBosses[i].enabled == true then
+					if core.Options.OnlyTrackMissingAchievements.get() == false or (core.Options.OnlyTrackMissingAchievements.get() == true and core.currentBosses[i].players[1] ~= L["GUI_NoPlayersNeedAchievement"]) then
+						core.currentBosses[i].track()
+
+						--If boss has an info frame then display it
+						if core.currentBosses[i].displayInfoFrame == true and core.infoFrameShown == false then
+							if core.Options.DisplayInfoFrame.get() == true then
+								core:sendDebugMessage("Showing InfoFrame")
+								core.IATInfoFrame:ToggleOn()
+								core.IATInfoFrame:SetHeading(GetAchievementLink(core.currentBosses[i].achievement))
+								core.infoFrameShown = true
+							end
+						end
+					end
+				elseif core.currentBosses[i].enabled == false and core.currentBosses[i].track == nil then
+					if core.Options.OnlyTrackMissingAchievements.get() == false or (core.Options.OnlyTrackMissingAchievements.get() == true and core.currentBosses[i].players[1] ~= L["GUI_NoPlayersNeedAchievement"]) then
+						--We have detected a boss fight but have no tracking for it. Lets automatically detect blizzard tracking and if something is found ask the user to report to author
+						core:detectBlizzardTrackingAutomatically()
+					end
+				end
+
+				--Detect Automatic Tracking if specified in database
+				if core.currentBosses[i].forceAutomaticDetection == true then
+					core:detectBlizzardTrackingAutomatically()
+				end
+			end
+
+			--Track additional variables for the instance if they are not tied to a boss/encounter
+			if pcall(function() core[core.instanceClear]:TrackAdditional() end) == true then
+				core[core.instanceClear]:TrackAdditional()
+			end
+		else
+			if core.lockDetection == false then
+				--Check if any of the 5 nameplates have caches boss ID and whether source and dest GUID have been stored or not
+				local doNotTrack = false
+				for i = 1, 5 do
+					if UnitGUID("boss" .. i) ~= nil and UnitIsDead("boss" .. i) == false and UnitIsEnemy("Player", "boss" .. i) == true then
+						local _, _, _, _, _, bossID, _ = strsplit("-", UnitGUID("boss" .. i))
+						if bossID ~= nil then
+							if core:has_value(core.mobCache, bossID) == false then
+								core:sendDebugMessage("Calling Detect Boss 1: " .. bossID)
+								detectBoss(bossID)
+							end
+						end
+					elseif UnitIsDead("boss" .. i) == true then
+						doNotTrack = true
+					end
+				end
+
+				if core.sourceID ~= nil and doNotTrack == false and core.currentSource == "Creature" then
+					--core:sendDebugMessage(core.sourceID)
+					if core:has_value(core.mobCache, core.sourceID) ~= true then
+						core:sendDebugMessage("Calling Detect Boss 2: " .. core.sourceID)
+						--print(...)
+						detectBoss(core.sourceID)
+					end
+				end
+
+				if core.destID ~= nil and doNotTrack == false and core.currentDest == "Creature" then
+					--core:sendDebugMessage(core.destID)
+					if core:has_value(core.mobCache, core.destID) == false then
+						core:sendDebugMessage("Calling Detect Boss 3: " .. core.destID)
+						--print(...)
+						detectBoss(core.destID)
+					end
+				end
+
+				--Start tracking the particular boss if the user has not disabled tracking for that boss
+				for i = 1, #core.currentBosses do
+					if core.currentBosses[i].enabled == true then
+						if core.Options.OnlyTrackMissingAchievements.get() == false or (core.Options.OnlyTrackMissingAchievements.get() == true and core.currentBosses[i].players[1] ~= L["GUI_NoPlayersNeedAchievement"]) then
+							core.currentBosses[i].track()
+						end
+					elseif core.currentBosses[i].enabled == false and core.currentBosses[i].track == nil then
+						if core.Options.OnlyTrackMissingAchievements.get() == false or (core.Options.OnlyTrackMissingAchievements.get() == true and core.currentBosses[i].players[1] ~= L["GUI_NoPlayersNeedAchievement"]) then
+							--We have detected a boss fight but have no tracking for it. Lets automatically detect blizzard tracking and if something is found ask the user to report to author
+							core:detectBlizzardTrackingAutomatically()
+						end
+					end
+
+					--Detect Automatic Tracking if specified in database
+					if core.currentBosses[i].forceAutomaticDetection == true then
+						core:detectBlizzardTrackingAutomatically()
+					end
+				end
+
+				--Track additional variables for the instance if they are not tied to a boss/encounter
+				if pcall(function() core[core.instanceClear]:TrackAdditional() end) == true then
+					core[core.instanceClear]:TrackAdditional()
+				end
+			end
+		end
+	end)
 end
 
 --Fired when a users has finished engaging a boss. This is used to make sure achievement tracking is not fired when the player is not attacking a boss
@@ -1308,11 +1418,22 @@ function events:ENCOUNTER_END()
 		core:getGroupSize()
 		core.groupSizeRequiresUpdate = false
 	end
+
+	-- Cancel encounter timer for midnight and above
+	if encounterTimer ~= nil and encounterTimer:IsCancelled() == false then
+		encounterTimer:Cancel()
+		encounterTimer = nil
+	end
 end
 
 --Used to display current boss achievement on mouseover and playing that are currently missing the achievment
 function events:UPDATE_MOUSEOVER_UNIT()
 	if core.gameVersionMajor > 4 then
+		-- In midnight the mouseover unit is a secret when in combat so if we are in combat skip this event
+		if core.gameVersionMajor >= 12 and UnitAffectingCombat("player") == true then
+			return
+		end
+
 		--If not in cache
 		--Loop through each boss in db
 		--Loop through EJ_GetCreatureInfo for each boss and compare with mouseover target
@@ -1342,7 +1463,8 @@ function events:UPDATE_MOUSEOVER_UNIT()
 					else
 						while EJ_GetCreatureInfo(counter, core.Instances[core.expansion][core.instanceType][core.instance][boss].name) ~= nil do
 							local _, name, _, _, _ = EJ_GetCreatureInfo(counter, core.Instances[core.expansion][core.instanceType][core.instance][boss].name)
-							if currentMouseoverTarget == name and core:has_value(encounterCache, core.Instances[core.expansion][core.instanceType][core.instance][boss].name) == false then
+
+							if (core.gameVersionMajor >= 12 and issecretvalue(currentMouseoverTarget) == false) and (currentMouseoverTarget == name and core:has_value(encounterCache, core.Instances[core.expansion][core.instanceType][core.instance][boss].name) == false) then
 								bossFound = true
 								local players = L["GUI_PlayersWhoNeedAchievement"] .. ": "
 								for i = 1, #core.Instances[core.expansion][core.instanceType][core.instance][boss].players do
@@ -1354,8 +1476,6 @@ function events:UPDATE_MOUSEOVER_UNIT()
 							counter = counter + 1
 						end
 					end
-
-
 				end
 			end
 			if bossFound == false then
@@ -1621,7 +1741,9 @@ function checkAndClearInstanceVariables()
 		events:UnregisterEvent("CHAT_MSG_SYSTEM")
 		events:UnregisterEvent("PLAYER_REGEN_DISABLED")
 		events:UnregisterEvent("PLAYER_REGEN_ENABLED")
-		events:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+		if core.gameVersionMajor < 12 then
+			events:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+		end
 		events:UnregisterEvent("INSPECT_ACHIEVEMENT_READY")
 		events:UnregisterEvent("ENCOUNTER_START")
 		events:UnregisterEvent("ENCOUNTER_END")
@@ -2353,6 +2475,11 @@ function detectBossByEncounterID(id)
 								end
 								if core.Instances[core.expansion][core.instanceType][core.instance][boss].enabled == true then
 									core.outputTrackingStatus = true
+
+									-- Check if we are restricted from tracking the achievement
+									if core.Instances[core.expansion][core.instanceType][core.instance][boss].restrictions == true then
+										core.restrictions = true
+									end
 								end
 								core.foundBoss = true
 							end
@@ -2380,6 +2507,11 @@ function detectBossByEncounterID(id)
 						end
 						if core.Instances[core.expansion][core.instanceType][core.instance][boss].enabled == true then
 							core.outputTrackingStatus = true
+
+							-- Check if we are restricted from tracking the achievement
+							if core.Instances[core.expansion][core.instanceType][core.instance][boss].restrictions == true then
+								core.restrictions = true
+							end
 						end
 						core.foundBoss = true
 					end
@@ -2397,6 +2529,11 @@ function detectBossByEncounterID(id)
 			--Announce to chat if enabled
 			core:sendMessage(L["Core_NoTrackingForInstance"],true)
 		end
+	elseif core.restrictions == true then
+		core:printMessage(L["Core_RestrictionsForAchievement"])
+
+		--Announce to chat if enabled
+		core:sendMessage(L["Core_RestrictionsForAchievement"],true)
 	end
 
 	if core.foundBoss == true then
@@ -2609,13 +2746,18 @@ function core:getAchievementToTrack()
 						core.trackingSupressed = true
 					end
 
-					core:sendMessage("setup") --This is sent at the start of the encounter to elect a leader rather than waiting for the first message to output
+					-- We only need to elect a leader for versions below midnight as we cannot output to chat in midnight and above
+					if core.gameVersionMajor < 12 then
+						core:sendMessage("setup") --This is sent at the start of the encounter to elect a leader rather than waiting for the first message to output
+					end
 					core.achievementTrackedMessageShown = true
 
 					--Announce to chat if enabled
 					if core.Options.AnnounceTracking.get() == true then
 						if core.Options.OnlyTrackMissingAchievements.get() == false or (core.Options.OnlyTrackMissingAchievements.get() == true and core.currentBosses[i].players[1] ~= L["GUI_NoPlayersNeedAchievement"]) then
-							core:sendMessage(L["GUI_Tracking"] .. ": "  .. GetAchievementLink(core.currentBosses[i].achievement))
+							if core.restrictions ~= true then
+								core:sendMessage(L["GUI_Tracking"] .. ": "  .. GetAchievementLink(core.currentBosses[i].achievement))
+							end
 						end
 					end
 				end
@@ -2655,240 +2797,272 @@ end
 
 --Output messages to the chat. All messages get sent this function for easy management
 function core:sendMessage(message, outputToRW, messageType)
-	if message ~= lastMessageSent then
-		if debugModeChat == false then
-			if masterAddon == true and electionFinished == true then
-				if message ~= "setup" then
-					if outputToRW == true and core.chatType == "RAID" and core.Options.AnnounceMessagesToRaidWarning.get() == true and (UnitIsGroupAssistant("Player") or UnitIsGroupLeader("Player")) then
-						--Important message output to raid warning from user request
-						--print("Outputting to Raid Warning")
-						SendChatMessage("[IAT] " .. message,"RAID_WARNING",DEFAULT_CHAT_FRAME.editBox.languageID)
-						core:logMessage("[IAT] " .. message)
-					elseif outputToRW == true and core.Options.AnnounceMessagesToRaidWarning.get() == true then
-						core:logMessage("[IAT] " .. message)
-						if outputToRW == true and relayAddonPlayer ~= nil then
-							message = message:gsub(',', 'IATCOMMA')
-							C_ChatInfo.SendAddonMessage("Whizzey", "relayMessage," .. relayAddonPlayer .. "," .. message, "RAID")
-						else
-							RaidNotice_AddMessage(RaidWarningFrame, "[IAT] " .. message, ChatTypeInfo["RAID_WARNING"])
-							SendChatMessage("[IAT] " .. message,core.chatType,DEFAULT_CHAT_FRAME.editBox.languageID)
-						end
+	if core.gameVersionMajor >= 12 then
+		-- Midnight onwards we can longer access the chat so we output directly to the RaidNotice frame
+		if message ~= lastMessageSent then
+			if debugModeChat == false then
+				RaidNotice_AddMessage(RaidWarningFrame, "[IAT] " .. message, ChatTypeInfo["RAID_WARNING"])
+
+				if enableSound == true and messageType == "completed" then
+					if type(completedSound) == "number" then
+						PlaySound(completedSound, "Master")
 					else
-						--print("Outputting normally")
-						SendChatMessage("[IAT] " .. message,core.chatType,DEFAULT_CHAT_FRAME.editBox.languageID)
-						core:logMessage("[IAT] " .. message)
+						PlaySoundFile(completedSound, "Master")
 					end
-
-
-
-					if outputToRW == true and enableSound == true and messageType == "completed" then
-						--print(type(completedSound))
-						--print(completedSound)
-						if type(completedSound) == "number" then
-							--print(1)
-							PlaySound(completedSound, "Master")
-						else
-							--print(2)
-							PlaySoundFile(completedSound, "Master")
-						end
-					elseif outputToRW == true and enableSoundFailed == true and messageType == "failed" then
-						if type(failedSound) == "number" then
-							--print(3)
-							PlaySound(failedSound, "Master")
-						else
-							--print(4)
-							PlaySoundFile(failedSound, "Master")
-						end
-					end
-
-					--Send alive signal to other IAT users
-					C_ChatInfo.SendAddonMessage("Whizzey", "aliveIAT," .. UnitName("Player") .. "," .. core.Config.majorVersion .. "," .. core.Config.minorVersion, "RAID")
-				end
-			elseif masterAddon == true and requestToRun == true then
-				if message ~= "setup" then
-					--We need to store the messages in a queue while the master addon is being decided
-					if outputToRW == true then
-						core:sendDebugMessage("Inserting into Message Queue: " .. message .. ",true")
-						message = message:gsub(',', 'IATCOMMA')
-						table.insert(messageQueue, message .. ",true")
+				elseif enableSoundFailed == true and messageType == "failed" then
+					if type(failedSound) == "number" then
+						PlaySound(failedSound, "Master")
 					else
-						core:sendDebugMessage("Inserting into Message Queue: " .. message .. ",false")
-						message = message:gsub(',', 'IATCOMMA')
-						table.insert(messageQueue, message .. ",false")
+						PlaySoundFile(failedSound, "Master")
 					end
 				end
-			else
-				--Initate a request to see if this addon should be the master addon
-				if requestToRun == false then
-					requestToRun = true
-					firstBroadcast = 10
+			elseif debugModeChat == true then
+				core:sendDebugMessage("[DEBUG] " .. message)
+			end
 
-					--Broadcast addon info to decide whether it should be the master addon or not
-					core:sendDebugMessage("Setting Master Addon 8")
-					masterAddon = true
-					local name, realm = UnitName("Player")
-
-					local sendInstanceID = core.instance
-
-					if sendInstanceID == nil then
-						sendInstanceID = ""
-					end
-
-					C_ChatInfo.SendAddonMessage("Whizzey", "info," .. tostring(addonID) .. "," .. name .. "," .. tostring(masterAddon) .. "," .. tostring(playerRank) .. "," .. tostring(core.Config.majorVersion) .. "," .. tostring(core.Config.minorVersion) .. "," .. tostring(core.trackingSupressed) .. "," .. tostring(sendInstanceID), "RAID")
-
-					C_Timer.After(3, function()
-						if masterAddon == true then
-							core:sendDebugMessage("This addon is in charge of outputting messages")
-
-							--Announce we are the master addon to all other addons in the group so other addons can relay personal and independent tracking achievments
-							C_ChatInfo.SendAddonMessage("Whizzey", "masterAddonPlayer," .. UnitName("Player"), "RAID")
-
-							if message ~= "setup" then
-								core:detectGroupType()
-								if outputToRW == true and core.chatType == "RAID" and core.Options.AnnounceMessagesToRaidWarning.get() == true and (UnitIsGroupAssistant("Player") or UnitIsGroupLeader("Player")) then
-									--Important message output to raid warning from user request
-									--print("Outputting to Raid Warning")
-									SendChatMessage("[IAT] " .. message,"RAID_WARNING",DEFAULT_CHAT_FRAME.editBox.languageID)
-									core:logMessage("[IAT] " .. message)
-								elseif outputToRW == true and core.Options.AnnounceMessagesToRaidWarning.get() == true then
-									SendChatMessage("[IAT] " .. message,core.chatType,DEFAULT_CHAT_FRAME.editBox.languageID)
-									core:logMessage("[IAT] " .. message)
-									RaidNotice_AddMessage(RaidWarningFrame, "[IAT] " .. message, ChatTypeInfo["RAID_WARNING"])
-								else
-									--print("Outputting normally")
-									SendChatMessage("[IAT] " .. message,core.chatType,DEFAULT_CHAT_FRAME.editBox.languageID)
-									core:logMessage("[IAT] " .. message)
-								end
-
-								if outputToRW == true and enableSound == true and messageType == "completed" then
-									--print(type(completedSound))
-									--print(completedSound)
-									if type(completedSound) == "number" then
-										--print(5)
-										PlaySound(completedSound, "Master")
-									else
-										--print(6)
-										PlaySoundFile(completedSound, "Master")
-									end
-								elseif outputToRW == true and enableSoundFailed == true and messageType == "failed" then
-									if type(failedSound) == "number" then
-										--print(7)
-										PlaySound(failedSound, "Master")
-									else
-										--print(8)
-										PlaySoundFile(failedSound, "Master")
-									end
-								end
+			-- This is so we don't spam the same message multiple times
+			lastMessageSent = message
+		else
+			--DEBUG
+			print("Cannot send message as it is the same as last message sent")
+			core:sendDebugMessage("Cannot Send Message: " .. message)
+		end
+	else
+		if message ~= lastMessageSent then
+			if debugModeChat == false then
+				if masterAddon == true and electionFinished == true then
+					if message ~= "setup" then
+						if outputToRW == true and core.chatType == "RAID" and core.Options.AnnounceMessagesToRaidWarning.get() == true and (UnitIsGroupAssistant("Player") or UnitIsGroupLeader("Player")) then
+							--Important message output to raid warning from user request
+							--print("Outputting to Raid Warning")
+							SendChatMessage("[IAT] " .. message,"RAID_WARNING",DEFAULT_CHAT_FRAME.editBox.languageID)
+							core:logMessage("[IAT] " .. message)
+						elseif outputToRW == true and core.Options.AnnounceMessagesToRaidWarning.get() == true then
+							core:logMessage("[IAT] " .. message)
+							if outputToRW == true and relayAddonPlayer ~= nil then
+								message = message:gsub(',', 'IATCOMMA')
+								C_ChatInfo.SendAddonMessage("Whizzey", "relayMessage," .. relayAddonPlayer .. "," .. message, "RAID")
+							else
+								RaidNotice_AddMessage(RaidWarningFrame, "[IAT] " .. message, ChatTypeInfo["RAID_WARNING"])
+								SendChatMessage("[IAT] " .. message,core.chatType,DEFAULT_CHAT_FRAME.editBox.languageID)
 							end
+						else
+							--print("Outputting normally")
+							SendChatMessage("[IAT] " .. message,core.chatType,DEFAULT_CHAT_FRAME.editBox.languageID)
+							core:logMessage("[IAT] " .. message)
+						end
 
-							--If the message queue has messages in then ouput these messages as well
-							if #messageQueue > 0 then
-								for k, v in pairs(messageQueue) do
-									local v, outputToRW2 = strsplit(",", v)
-									v = v:gsub('IATCOMMA', ',')
-									-- print("Outputting from Message Queue: " .. v .. outputToRW2)
-									-- print(core.chatType)
-									if outputToRW2 == "true" and core.chatType == "RAID" and core.Options.AnnounceMessagesToRaidWarning.get() == true and (UnitIsGroupAssistant("Player") or UnitIsGroupLeader("Player")) then
+
+
+						if outputToRW == true and enableSound == true and messageType == "completed" then
+							--print(type(completedSound))
+							--print(completedSound)
+							if type(completedSound) == "number" then
+								--print(1)
+								PlaySound(completedSound, "Master")
+							else
+								--print(2)
+								PlaySoundFile(completedSound, "Master")
+							end
+						elseif outputToRW == true and enableSoundFailed == true and messageType == "failed" then
+							if type(failedSound) == "number" then
+								--print(3)
+								PlaySound(failedSound, "Master")
+							else
+								--print(4)
+								PlaySoundFile(failedSound, "Master")
+							end
+						end
+
+						--Send alive signal to other IAT users
+						C_ChatInfo.SendAddonMessage("Whizzey", "aliveIAT," .. UnitName("Player") .. "," .. core.Config.majorVersion .. "," .. core.Config.minorVersion, "RAID")
+					end
+				elseif masterAddon == true and requestToRun == true then
+					if message ~= "setup" then
+						--We need to store the messages in a queue while the master addon is being decided
+						if outputToRW == true then
+							core:sendDebugMessage("Inserting into Message Queue: " .. message .. ",true")
+							message = message:gsub(',', 'IATCOMMA')
+							table.insert(messageQueue, message .. ",true")
+						else
+							core:sendDebugMessage("Inserting into Message Queue: " .. message .. ",false")
+							message = message:gsub(',', 'IATCOMMA')
+							table.insert(messageQueue, message .. ",false")
+						end
+					end
+				else
+					--Initate a request to see if this addon should be the master addon
+					if requestToRun == false then
+						requestToRun = true
+						firstBroadcast = 10
+
+						--Broadcast addon info to decide whether it should be the master addon or not
+						core:sendDebugMessage("Setting Master Addon 8")
+						masterAddon = true
+						local name, realm = UnitName("Player")
+
+						local sendInstanceID = core.instance
+
+						if sendInstanceID == nil then
+							sendInstanceID = ""
+						end
+
+						C_ChatInfo.SendAddonMessage("Whizzey", "info," .. tostring(addonID) .. "," .. name .. "," .. tostring(masterAddon) .. "," .. tostring(playerRank) .. "," .. tostring(core.Config.majorVersion) .. "," .. tostring(core.Config.minorVersion) .. "," .. tostring(core.trackingSupressed) .. "," .. tostring(sendInstanceID), "RAID")
+
+						C_Timer.After(3, function()
+							if masterAddon == true then
+								core:sendDebugMessage("This addon is in charge of outputting messages")
+
+								--Announce we are the master addon to all other addons in the group so other addons can relay personal and independent tracking achievments
+								C_ChatInfo.SendAddonMessage("Whizzey", "masterAddonPlayer," .. UnitName("Player"), "RAID")
+
+								if message ~= "setup" then
+									core:detectGroupType()
+									if outputToRW == true and core.chatType == "RAID" and core.Options.AnnounceMessagesToRaidWarning.get() == true and (UnitIsGroupAssistant("Player") or UnitIsGroupLeader("Player")) then
 										--Important message output to raid warning from user request
-										-- print("Outputting to Raid Warning")
-										SendChatMessage("[IAT] " .. v,"RAID_WARNING",DEFAULT_CHAT_FRAME.editBox.languageID)
-										core:logMessage("[IAT] " .. v)
-									elseif outputToRW2 == "true" and core.Options.AnnounceMessagesToRaidWarning.get() == true then
-										-- print("Outputting to RaidNotice")
-										SendChatMessage("[IAT] " .. v,core.chatType,DEFAULT_CHAT_FRAME.editBox.languageID)
-										core:logMessage("[IAT] " .. v)
-										RaidNotice_AddMessage(RaidWarningFrame, "[IAT] " .. v, ChatTypeInfo["RAID_WARNING"])
+										--print("Outputting to Raid Warning")
+										SendChatMessage("[IAT] " .. message,"RAID_WARNING",DEFAULT_CHAT_FRAME.editBox.languageID)
+										core:logMessage("[IAT] " .. message)
+									elseif outputToRW == true and core.Options.AnnounceMessagesToRaidWarning.get() == true then
+										SendChatMessage("[IAT] " .. message,core.chatType,DEFAULT_CHAT_FRAME.editBox.languageID)
+										core:logMessage("[IAT] " .. message)
+										RaidNotice_AddMessage(RaidWarningFrame, "[IAT] " .. message, ChatTypeInfo["RAID_WARNING"])
 									else
-										-- print("Outputting to normal")
-										SendChatMessage("[IAT] " .. v,core.chatType,DEFAULT_CHAT_FRAME.editBox.languageID)
-										core:logMessage("[IAT] " .. v)
+										--print("Outputting normally")
+										SendChatMessage("[IAT] " .. message,core.chatType,DEFAULT_CHAT_FRAME.editBox.languageID)
+										core:logMessage("[IAT] " .. message)
 									end
 
-									--Relay Raid warning message if needed
-									local tmpMessage = v
-									C_Timer.After(3, function()
-										if outputToRW2 == "true" and relayAddonPlayer ~= nil then
-											C_ChatInfo.SendAddonMessage("Whizzey", "relayMessage," .. relayAddonPlayer .. "," .. tmpMessage, "RAID")
-										end
-									end)
-
-
-									if outputToRW2 == true and enableSound == true and messageType == "completed" then
+									if outputToRW == true and enableSound == true and messageType == "completed" then
 										--print(type(completedSound))
 										--print(completedSound)
 										if type(completedSound) == "number" then
-											--print(9)
+											--print(5)
 											PlaySound(completedSound, "Master")
 										else
-											--print(10)
+											--print(6)
 											PlaySoundFile(completedSound, "Master")
 										end
-									elseif outputToRW2 == true and enableSoundFailed == true and messageType == "failed" then
+									elseif outputToRW == true and enableSoundFailed == true and messageType == "failed" then
 										if type(failedSound) == "number" then
-											--print(11)
+											--print(7)
 											PlaySound(failedSound, "Master")
 										else
-											--print(12)
+											--print(8)
 											PlaySoundFile(failedSound, "Master")
 										end
 									end
 								end
-							end
-							messageQueue = {}
 
-							--Lets check if this addon has RW privallages. If not lets send a request to forward RW messages onto this addon from another addon is raid.
-							--We will only do this if major versions are the same and not minor.
-							if playerRank == 0 and core.chatType == "RAID" then
-								core:sendDebugMessage("This addon has no RW permissions. Requesting help")
-								--This addon does not have permission to output to RW. Ask other users in group to output message
-								C_ChatInfo.SendAddonMessage("Whizzey", "relay123", "RAID")
-							end
-						else
-							core:sendDebugMessage("Another addon is currently in charge of outputting messages for this fight")
-						end
-						electionFinished = true
-					end)
-				end
+								--If the message queue has messages in then ouput these messages as well
+								if #messageQueue > 0 then
+									for k, v in pairs(messageQueue) do
+										local v, outputToRW2 = strsplit(",", v)
+										v = v:gsub('IATCOMMA', ',')
+										-- print("Outputting from Message Queue: " .. v .. outputToRW2)
+										-- print(core.chatType)
+										if outputToRW2 == "true" and core.chatType == "RAID" and core.Options.AnnounceMessagesToRaidWarning.get() == true and (UnitIsGroupAssistant("Player") or UnitIsGroupLeader("Player")) then
+											--Important message output to raid warning from user request
+											-- print("Outputting to Raid Warning")
+											SendChatMessage("[IAT] " .. v,"RAID_WARNING",DEFAULT_CHAT_FRAME.editBox.languageID)
+											core:logMessage("[IAT] " .. v)
+										elseif outputToRW2 == "true" and core.Options.AnnounceMessagesToRaidWarning.get() == true then
+											-- print("Outputting to RaidNotice")
+											SendChatMessage("[IAT] " .. v,core.chatType,DEFAULT_CHAT_FRAME.editBox.languageID)
+											core:logMessage("[IAT] " .. v)
+											RaidNotice_AddMessage(RaidWarningFrame, "[IAT] " .. v, ChatTypeInfo["RAID_WARNING"])
+										else
+											-- print("Outputting to normal")
+											SendChatMessage("[IAT] " .. v,core.chatType,DEFAULT_CHAT_FRAME.editBox.languageID)
+											core:logMessage("[IAT] " .. v)
+										end
 
-				--We are not the master addon but lets check if there are RW messages that we need to relay
-				if outputToRW == true and relayAddonPlayer ~= nil then
-					C_ChatInfo.SendAddonMessage("Whizzey", "relayMessage," .. relayAddonPlayer .. "," .. message, "RAID")
-				end
+										--Relay Raid warning message if needed
+										local tmpMessage = v
+										C_Timer.After(3, function()
+											if outputToRW2 == "true" and relayAddonPlayer ~= nil then
+												C_ChatInfo.SendAddonMessage("Whizzey", "relayMessage," .. relayAddonPlayer .. "," .. tmpMessage, "RAID")
+											end
+										end)
 
-				--Check if other addon is still broadcasting
-				if masterAddon == false then
-					if checkBrodcast == false then
-						checkBrodcast = true
-						C_Timer.After(firstBroadcast, function()
-							firstBroadcast = 1
-							if broadcastMessage ~= true and broadcastMajorVersion == tostring(core.Config.majorVersion) and brodcastMinorVersion == tostring(core.Config.minorVersion) then
-								core:sendDebugMessage("Critical Error. Master addon is not broadcasting...")
-								masterAddon = false
-								requestToRun = false
-								electionFinished = false
+
+										if outputToRW2 == true and enableSound == true and messageType == "completed" then
+											--print(type(completedSound))
+											--print(completedSound)
+											if type(completedSound) == "number" then
+												--print(9)
+												PlaySound(completedSound, "Master")
+											else
+												--print(10)
+												PlaySoundFile(completedSound, "Master")
+											end
+										elseif outputToRW2 == true and enableSoundFailed == true and messageType == "failed" then
+											if type(failedSound) == "number" then
+												--print(11)
+												PlaySound(failedSound, "Master")
+											else
+												--print(12)
+												PlaySoundFile(failedSound, "Master")
+											end
+										end
+									end
+								end
 								messageQueue = {}
-								firstBroadcast = 10
-								broadcastMajorVersion = nil
-								brodcastMinorVersion = nil
+
+								--Lets check if this addon has RW privallages. If not lets send a request to forward RW messages onto this addon from another addon is raid.
+								--We will only do this if major versions are the same and not minor.
+								if playerRank == 0 and core.chatType == "RAID" then
+									core:sendDebugMessage("This addon has no RW permissions. Requesting help")
+									--This addon does not have permission to output to RW. Ask other users in group to output message
+									C_ChatInfo.SendAddonMessage("Whizzey", "relay123", "RAID")
+								end
 							else
-								core:sendDebugMessage("Critical Error but version mismatch. Not going to try and take control")
+								core:sendDebugMessage("Another addon is currently in charge of outputting messages for this fight")
 							end
-							checkBrodcast = false
-							broadcastMessage = nil
+							electionFinished = true
 						end)
 					end
-				end
-			end
-		elseif debugModeChat == true then
-			core:sendDebugMessage("[DEBUG] " .. message)
-		end
 
-		if message ~= "setup" then
-			lastMessageSent = message
+					--We are not the master addon but lets check if there are RW messages that we need to relay
+					if outputToRW == true and relayAddonPlayer ~= nil then
+						C_ChatInfo.SendAddonMessage("Whizzey", "relayMessage," .. relayAddonPlayer .. "," .. message, "RAID")
+					end
+
+					--Check if other addon is still broadcasting
+					if masterAddon == false then
+						if checkBrodcast == false then
+							checkBrodcast = true
+							C_Timer.After(firstBroadcast, function()
+								firstBroadcast = 1
+								if broadcastMessage ~= true and broadcastMajorVersion == tostring(core.Config.majorVersion) and brodcastMinorVersion == tostring(core.Config.minorVersion) then
+									core:sendDebugMessage("Critical Error. Master addon is not broadcasting...")
+									masterAddon = false
+									requestToRun = false
+									electionFinished = false
+									messageQueue = {}
+									firstBroadcast = 10
+									broadcastMajorVersion = nil
+									brodcastMinorVersion = nil
+								else
+									core:sendDebugMessage("Critical Error but version mismatch. Not going to try and take control")
+								end
+								checkBrodcast = false
+								broadcastMessage = nil
+							end)
+						end
+					end
+				end
+			elseif debugModeChat == true then
+				core:sendDebugMessage("[DEBUG] " .. message)
+			end
+
+			if message ~= "setup" then
+				lastMessageSent = message
+			end
+		else
+			--DEBUG
+			core:sendDebugMessage("Cannot Send Message: " .. message)
 		end
-	else
-		--DEBUG
-		core:sendDebugMessage("Cannot Send Message: " .. message)
 	end
 
 	--When a chat message needs to be sent, If the addon is not the master addon then request if there is currently a master addon in the group for the particular fight
@@ -2986,10 +3160,6 @@ function core:sendMessageSafe(message, requireMasterAddon, outputToRW)
 			print("[DEBUG] " .. tmpMessageArr[i])
 		end
 	end
-end
-
-function core:sendMessage2(message)
-
 end
 
 --Output message on a rolling timer
@@ -3648,8 +3818,15 @@ end
 
 --Check whether a table contains a certain value
 function core:has_value(tab, val)
+	-- In midnight onwards check if the value we recieve is not a secret
+	if core:issecret(val) then
+		return false
+	end
+
     for index, value in ipairs(tab) do
-        if value == val then
+		if core:issecret(value) then
+			return false
+		elseif value == val then
             return true
         end
     end
@@ -3658,8 +3835,15 @@ function core:has_value(tab, val)
 end
 
 function core:has_value2(tab, val)
+	-- In midnight onwards check if the value we recieve is notw a secret
+	if core:issecret(val) then
+		return false
+	end
+
     for index, value in pairs(tab) do
-        if value == val then
+		if core:issecret(value) then
+			return false
+		elseif value == val then
             return true
         end
     end
@@ -3668,10 +3852,12 @@ function core:has_value2(tab, val)
 end
 
 function core:getHealthPercent(boss)
-	if UnitExists(boss) then
-		return (UnitHealth(boss) / UnitHealthMax(boss)) * 100
-	else
-		return 0
+	if core:issecret(boss) == false then
+		if UnitExists(boss) then
+			return (UnitHealth(boss) / UnitHealthMax(boss)) * 100
+		else
+			return 0
+		end
 	end
 end
 
@@ -3710,7 +3896,6 @@ end
 
 --Automatically detect blizzard tracking for new instances and ask user to report.
 function core:detectBlizzardTrackingAutomatically()
-	--score:sendDebugMessage(tostring(core:getBlizzardTrackingStatus(core.achievementIDs[1])))
 	if automaticBlizzardTrackingInitialCheck == false then
 		automaticBlizzardTracking = core:getBlizzardTrackingStatus(core.achievementIDs[1])
 		core:sendDebugMessage("Automatic Blizzard Tracking set to: " .. tostring(automaticBlizzardTracking))
@@ -3958,4 +4143,32 @@ function core:hasDebuff(player,spellId)
 		end
 	end
 	return found
+end
+
+function core:issecret(val)
+	-- Secret values only exist in game version 12 and above
+	if core.gameVersionMajor < 12 then
+		return false
+	end
+
+	-- Check if val is a secret value
+	return issecretvalue(val)
+end
+
+function core:checkRestrictions()
+	if core.gameVersionMajor >= 12 then
+		return true
+	else
+		return false
+	end
+end
+
+function core:IsNotRestricted()
+	if core.gameVersionMajor < 12 then
+		-- Not in the restricted environment
+		return true
+	else
+		-- In the restricted environment
+		return false
+	end
 end

@@ -10,6 +10,7 @@ local MOTH = ns.nodeMaker{
 -- Dust 'Em Off
 -- quest=93559 for the initial loot the intro-quest object
 ns.RegisterPoints(ns.HARANDAR, {
+	-- PlayerConditionID: 144412 (presumably: Moth-Watching I @ renown 2)
 	[36354839] = {quest=92196, vignette=7173},
 	[36112640] = {quest=92197, vignette=7175},
 	[49882551] = {quest=92198, vignette=7176},
@@ -19,7 +20,7 @@ ns.RegisterPoints(ns.HARANDAR, {
 	[33387560] = {quest=92202, vignette=7180},
 	[31848177] = {quest=92203, vignette=7181},
 	[42186652] = {quest=92204, vignette=7182},
-	-- [] = {quest=92205, vignette=7183},
+	[52418077] = {quest=92205, vignette=7183},
 	[48545536] = {quest=92307, vignette=7184},
 	[56584765] = {quest=92299, vignette=7185},
 	[40443446] = {quest=92300, vignette=7186},
@@ -31,13 +32,13 @@ ns.RegisterPoints(ns.HARANDAR, {
 	[67736886] = {quest=92306, vignette=7192},
 	[59435432] = {quest=92206, vignette=7193, note="Under the mushroom cap"},
 	[71395864] = {quest=92215, vignette=7194},
-	-- [] = {quest=92214, vignette=7195},
+	-- [52945066] = {quest=92214, vignette=7195}, <- in the Den
 	[32066709] = {quest=92213, vignette=7196},
 	[32628478] = {quest=92212, vignette=7197},
 	[30317340] = {quest=92211, vignette=7198},
 	[43215365] = {quest=92210, vignette=7199},
 	[60354859] = {quest=92209, vignette=7200},
-	-- [] = {quest=92208, vignette=7201},
+	[33954404] = {quest=92208, vignette=7201},
 	[38344740] = {quest=92207, vignette=7202},
 	[62353714] = {quest=92226, vignette=7203},
 	[49267553] = {quest=92235, vignette=7204},
@@ -47,9 +48,10 @@ ns.RegisterPoints(ns.HARANDAR, {
 	[47634696] = {quest=92231, vignette=7208}, -- c
 	[41614011] = {quest=92230, vignette=7209}, -- c
 	[53775910] = {quest=92229, vignette=7210},
-	-- [] = {quest=92228, vignette=7211},
+	[66965657] = {quest=92228, vignette=7211},
 	[55143288] = {quest=92227, vignette=7212},
 	[46382488] = {quest=92225, vignette=7213},
+	-- PlayerConditionID: 144440 (presumably: Big Moth Hunter I @ renown 4 + Moth-Watching II @ renown 6)
 	-- [] = {quest=92224, vignette=7214},
 	-- [] = {quest=92223, vignette=7215},
 	-- [] = {quest=92222, vignette=7216},
@@ -90,6 +92,7 @@ ns.RegisterPoints(ns.HARANDAR, {
 	-- [] = {quest=92257, vignette=7251},
 	-- [] = {quest=92256, vignette=7252},
 	-- [] = {quest=92266, vignette=7253},
+	-- PlayerConditionID: 144441 (presumably: Big Moth Hunter II @ renown 9 + Moth Watching III @ renown 11)
 	-- [] = {quest=92308, vignette=7254},
 	-- [] = {quest=92316, vignette=7255},
 	-- [] = {quest=92315, vignette=7256},

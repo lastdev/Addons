@@ -8,6 +8,7 @@ local GetItemIconByID = C_Item.GetItemIconByID;
 local GetItemLinkByGUID = C_Item.GetItemLinkByGUID;
 local gsub = string.gsub;
 local match = string.match;
+local Secret_CanAccess = addon.API.Secret_CanAccess;
 
 
 local ItemIconInfoTable = {
@@ -87,12 +88,14 @@ do
         table.insert(self.modules, module);
     end
 
-    function HandlerMixin:CallSubModules(tooltip, itemID, hyperlink)
+    function HandlerMixin:CallSubModules(tooltip, id, hyperlink)
+        if not Secret_CanAccess(id) then return end;
+
         self.hasAltMode = nil;
         self.currentTooltip = tooltip;
 
         for _, m in ipairs(self.modules) do
-            if m:ProcessData(tooltip, itemID, hyperlink) then
+            if m:ProcessData(tooltip, id, hyperlink) then
                 self.anyChange = true;
                 if m.hasAltMode then
                     self.hasAltMode = true;
@@ -280,20 +283,20 @@ do  --GameTooltipManager
     end
 
     function GameTooltipManager:GetItemManager()
-        return self:GetHandler(0)   ----Enum.TooltipDataType.Item
+        return self:GetHandler(Enum.TooltipDataType.Item)
     end
 
     function GameTooltipManager:GetSpellManager()
-        return self:GetHandler(1)   ----Enum.TooltipDataType.Spell
+        return self:GetHandler(Enum.TooltipDataType.Spell)
     end
 
     function GameTooltipManager:GetCurrencyManager()
-        return self:GetHandler(5)   ----Enum.TooltipDataType.Currency
+        return self:GetHandler(Enum.TooltipDataType.Currency)
     end
 
     function GameTooltipManager:GetMinimapManager()
         local useLeftTextAsArgument = true;
-        return self:GetHandler(21, useLeftTextAsArgument)   ----Enum.TooltipDataType.MinimapMouseover
+        return self:GetHandler(Enum.TooltipDataType.MinimapMouseover, useLeftTextAsArgument)
     end
 end
 

@@ -40,26 +40,10 @@ Dismount [nofalling]
 CopyTargetsMount
 ApplyRules
 SwitchFlightStyle [mod:rshift]
-IF [mod:shift]
-    IF [submerged]
-        Limit -SWIM
-    ELSEIF [flyable]
-        Limit -DRAGONRIDING/FLY
-    ELSEIF [floating]
-        Limit -SWIM
-    ELSEIF [drivable]
-        Limit -DRIVE
-    END
-END
+Downshift [mod:shift]
 SmartMount
-IF [falling]
-  # Slow Fall, Levitate, Zen Flight, Glide, Flap
-  Spell 130, 1706, 125883, 131347, 164862
-  # Hearty Dragon Plume, Rocfeather Skyhorn Kite
-  Use 182729, 131811
-  # Last resort dismount even if falling
-  Dismount
-END
+Falling [falling]
+Dismount
 Macro
 ]]
 
@@ -84,6 +68,23 @@ local DefaultRulesByProject = LM.TableWithDefault({
 
 local DefaultRules = DefaultRulesByProject[WOW_PROJECT_ID]
 
+local DefaultFallingByProject = LM.TableWithDefault({
+    DEFAULT = {
+        "spell:130",    -- Slow Fall
+        "spell:1706",   -- Levitate
+        "spell:125883", -- Zen Flight
+    },
+    [1] = { -- Retail
+        "spell:130",    -- Slow Fall
+        "spell:1706",   -- Levitate
+        "spell:125883", -- Zen Flight
+        "spell:131347", -- Glide
+        "spell:164862", -- Flap
+        "item:182729",  -- Hearty Dragon Plume
+        "item:131811",  -- Rocfeather Skyhorn Kite
+    },
+})
+
 -- A lot of things need to be cleaned up when flags are deleted/renamed
 
 local defaults = {
@@ -99,6 +100,7 @@ local defaults = {
         flagChanges         = { },
         mountPriorities     = { },
         buttonActions       = { ['*'] = DefaultButtonAction },
+        falling             = DefaultFallingByProject[WOW_PROJECT_ID],
         groups              = { },
         rules               = { }, -- Note: tables as * don't work
         copyTargetsMount    = true,
@@ -747,20 +749,8 @@ function LM.Options:RecordInstance()
     LM.db.global.instances[info[8]] = info[1]
 end
 
-function LM.Options:GetInstances(id)
+function LM.Options:GetInstances()
     return CopyTable(LM.db.global.instances, true)
-end
-
-function LM.Options:GetInstanceNameByID(id)
-    if LM.db.global.instances[id] then
-        return LM.db.global.instances[id]
-    end
-
-    -- AQ is hard-coded in the default rules. This is not really the right
-    -- name but it's close enough.
-    if id == 531 then
-        return C_Map.GetMapInfo(319).name
-    end
 end
 
 

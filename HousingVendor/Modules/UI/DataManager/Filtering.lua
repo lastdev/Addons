@@ -35,11 +35,160 @@ local function IsItemAvailableByID(itemID)
     local idNum = tonumber(itemID)
     if not idNum then return false end
 
+    -- DNT / DO NOT USE items should never appear in the addon UI.
+    if _G.HousingDNTItems and _G.HousingDNTItems[idNum] then
+        return false
+    end
+
+    -- Treat explicit "not released" flags as unavailable (these are curated by the addon).
     if _G.HousingNotReleased and _G.HousingNotReleased[idNum] then
         return false
     end
 
+    -- Catalog validation: hide items whose decorID isn't in the current game catalog.
+    if _G.HousingCatalogValidation and _G.HousingCatalogValidation.IsScanComplete
+       and _G.HousingCatalogValidation:IsScanComplete()
+       and not _G.HousingCatalogValidation:IsItemInCatalog(idNum) then
+        return false
+    end
+
     return true
+end
+
+-- Search haystack cache (lowercased concatenation of fields) to reduce repeated string.lower calls.
+-- Stored on DataManager state to avoid mutating item records and to allow easy reset if needed.
+state._searchHaystackCache = state._searchHaystackCache or {}
+state._searchHaystackCacheMeta = state._searchHaystackCacheMeta or {}
+
+-- Helper to collect vendor/NPC names from various sources
+local function CollectAllVendorNames(item)
+    local names = {}
+    local seen = {}
+
+    local function addName(name)
+        if name and name ~= "" and name ~= "None" and not seen[name] then
+            seen[name] = true
+            names[#names + 1] = name
+        end
+    end
+
+    -- 1. Direct vendorName field
+    addName(item.vendorName)
+
+    -- 2. NPC name (for drops)
+    addName(item.npcName)
+
+    -- 3. Vendor pool indices
+    if item._vendorIndices and type(item._vendorIndices) == "table" then
+        local pool = _G.HousingVendorPool
+        if pool and type(pool) == "table" then
+            for _, idx in ipairs(item._vendorIndices) do
+                local v = idx and pool[idx] or nil
+                if v then
+                    addName(v.name)
+                    addName(v.location) -- Also add zone from vendor pool
+                end
+            end
+        end
+    end
+
+    -- 4. Nested vendorDetails
+    local vd = item.vendorDetails
+    if vd and type(vd) == "table" then
+        addName(vd.vendorName)
+        addName(vd.name)
+        addName(vd.location)
+        addName(vd.factionName)
+    end
+
+    -- 5. Alternate vendor (for drops)
+    local av = item.alternateVendor
+    if av and type(av) == "table" then
+        addName(av.npcName)
+        addName(av.vendorName)
+        addName(av.zone)
+    end
+
+    -- 6. Faction-level vendor name (for reputation items)
+    local factionID = item.factionID or (vd and vd.factionID)
+    if factionID then
+        local repData = _G.HousingReputationData or _G.HousingReputations
+        if repData then
+            local faction = repData[factionID] or repData[tostring(factionID)]
+            if faction then
+                addName(faction.vendorName)
+                addName(faction.label)
+                addName(faction.zone)
+            end
+        end
+    end
+
+    -- 7. Quest NPC name
+    local questId = item._questId or item.questRequired or item.questID
+    if questId then
+        local questNPCs = _G.HousingQuestNPCs
+        if questNPCs then
+            local qnpc = questNPCs[tonumber(questId)]
+            if qnpc then
+                addName(qnpc.npcName)
+            end
+        end
+    end
+
+    return table.concat(names, "\n")
+end
+
+local function GetSearchHaystack(item)
+    if not item then return "" end
+    local itemID = item.itemID and tonumber(item.itemID) or nil
+    if not itemID then
+        -- Fallback (no stable key): compute on demand without caching.
+        local parts = {
+            tostring(item.name or ""),
+            tostring(item._searchName or ""),
+            tostring(item.zoneName or ""),
+            tostring(item._questName or ""),
+            tostring(item.rewardType or ""),
+            tostring(item.sourceDetails or ""),
+            CollectAllVendorNames(item),
+        }
+        if item._apiDataLoaded then
+            parts[#parts + 1] = tostring(item._apiExpansion or "")
+            parts[#parts + 1] = tostring(item._apiCategory or "")
+            parts[#parts + 1] = tostring(item._apiSubcategory or "")
+            parts[#parts + 1] = tostring(item._apiVendor or "")
+            parts[#parts + 1] = tostring(item._apiZone or "")
+        end
+        return string_lower(table_concat(parts, "\n"))
+    end
+
+    local meta = state._searchHaystackCacheMeta[itemID]
+    local apiLoaded = item._apiDataLoaded == true
+    if meta and meta.apiLoaded == apiLoaded and state._searchHaystackCache[itemID] ~= nil then
+        return state._searchHaystackCache[itemID]
+    end
+
+    local parts = {
+        tostring(item.name or ""),
+        tostring(item._searchName or ""),
+        tostring(item.zoneName or ""),
+        tostring(item._questName or ""),
+        tostring(item.rewardType or ""),
+        tostring(item.sourceDetails or ""),
+        CollectAllVendorNames(item),
+    }
+    if apiLoaded then
+        parts[#parts + 1] = tostring(item._apiExpansion or "")
+        parts[#parts + 1] = tostring(item._apiCategory or "")
+        parts[#parts + 1] = tostring(item._apiSubcategory or "")
+        parts[#parts + 1] = tostring(item._apiVendor or "")
+        parts[#parts + 1] = tostring(item._apiZone or "")
+    end
+
+    local haystack = string_lower(table_concat(parts, "\n"))
+    state._searchHaystackCache[itemID] = haystack
+    state._searchHaystackCacheMeta[itemID] = { apiLoaded = apiLoaded }
+    return haystack
 end
 
 -- Use shared GetFilterHash from Util (moved to Shared.lua to eliminate duplication)
@@ -64,7 +213,7 @@ function DataManager:FilterItems(items, filters)
     wipe(state.debugCounts)
     local filtered = state.filteredResults
     local debugCounts = state.debugCounts
-    local searchText = string.lower(filters.searchText or "")
+    local searchText = string_lower(filters.searchText or "")
 
     -- Initialize debug counters
     debugCounts.total = #items
@@ -83,30 +232,21 @@ function DataManager:FilterItems(items, filters)
     
     for _, item in ipairs(items) do
         local show = true
-        
+
+        -- MANDATORY: Always filter out unavailable items (DNT, unreleased, not in catalog)
+        -- This uses the Housing Catalog API to ensure only current decor items are shown.
+        if show then
+            local itemID = item.itemID and tonumber(item.itemID) or nil
+            if itemID and not IsItemAvailableByID(itemID) then
+                show = false
+                debugCounts.availabilityFiltered = (debugCounts.availabilityFiltered or 0) + 1
+            end
+        end
+
         -- Search filter - compute lowercase on-demand (memory optimization)
         if searchText ~= "" then
-            local searchMatch = false
-            
-            -- Check core fields (convert to lowercase on-demand)
-            if string.find(string.lower(item.name or ""), searchText, 1, true) or
-               string.find(string.lower(item.zoneName or ""), searchText, 1, true) or
-               string.find(string.lower(item.vendorName or ""), searchText, 1, true) then
-                searchMatch = true
-            end
-            
-            -- Check API data if available
-            if not searchMatch and item._apiDataLoaded then
-                if (item._apiExpansion and string.find(string.lower(item._apiExpansion), searchText, 1, true)) or
-                   (item._apiCategory and string.find(string.lower(item._apiCategory), searchText, 1, true)) or
-                   (item._apiSubcategory and string.find(string.lower(item._apiSubcategory), searchText, 1, true)) or
-                   (item._apiVendor and string.find(string.lower(item._apiVendor), searchText, 1, true)) or
-                   (item._apiZone and string.find(string.lower(item._apiZone), searchText, 1, true)) then
-                    searchMatch = true
-                end
-            end
-            
-            if not searchMatch then
+            local haystack = GetSearchHaystack(item)
+            if not string_find(haystack, searchText, 1, true) then
                 show = false
                 debugCounts.searchFiltered = debugCounts.searchFiltered + 1
             end
@@ -125,10 +265,19 @@ function DataManager:FilterItems(items, filters)
             if hasSelections then
                 local itemExpansion = item._apiExpansion or item.expansionName
                 
-                -- Check if item's expansion is in the selected list
-                if not filters.selectedExpansions[itemExpansion] then
-                    show = false
-                    debugCounts.expansionFiltered = debugCounts.expansionFiltered + 1
+                local isSelected = itemExpansion and filters.selectedExpansions[itemExpansion] or false
+
+                if filters.excludeExpansions then
+                    if isSelected then
+                        show = false
+                        debugCounts.expansionFiltered = debugCounts.expansionFiltered + 1
+                    end
+                else
+                    -- Include-only behavior (default)
+                    if not isSelected then
+                        show = false
+                        debugCounts.expansionFiltered = debugCounts.expansionFiltered + 1
+                    end
                 end
             end
         end
@@ -189,9 +338,11 @@ function DataManager:FilterItems(items, filters)
                 or sourceType == INTERNED_STRINGS["Reputation"]
                 or sourceType == INTERNED_STRINGS["Renown"] then
 
-                if filters.selectedSources and (filters.selectedSources[sourceType] or filters.selectedSources[tostring(sourceType)]) then
+                if not filters.excludeSources and filters.selectedSources
+                    and (filters.selectedSources[sourceType] or filters.selectedSources[tostring(sourceType)]) then
                     bypassZoneFilter = true
-                elseif filters.source and (filters.source == sourceType or filters.source == tostring(sourceType)) then
+                elseif not filters.excludeSources and filters.source
+                    and (filters.source == sourceType or filters.source == tostring(sourceType)) then
                     bypassZoneFilter = true
                 end
             end
@@ -330,6 +481,7 @@ function DataManager:FilterItems(items, filters)
             -- Only filter if there are specific selections
             if hasSelections then
                 local matchesSource = false
+                local itemSourceTypes = item._sourceTypes
                 
                 -- Check each selected source
                 for selectedSource, _ in pairs(filters.selectedSources) do
@@ -347,6 +499,12 @@ function DataManager:FilterItems(items, filters)
                             break
                         end
                     elseif selectedSource == "Reputation" or selectedSource == "Renown" then
+                        -- Multi-source support: allow explicit membership first
+                        if itemSourceTypes and itemSourceTypes[selectedSource] then
+                            matchesSource = true
+                            break
+                        end
+
                         -- Reputation/renown items may still have _sourceType "Vendor" but be gated by faction standing
                         local itemID = tonumber(item.itemID)
                         local repInfo = itemID and HousingVendorItemToFaction and HousingVendorItemToFaction[itemID] or nil
@@ -364,6 +522,12 @@ function DataManager:FilterItems(items, filters)
                             break
                         end
                     else
+                        -- Multi-source support: any of the item's sources can match
+                        if itemSourceTypes and itemSourceTypes[selectedSource] then
+                            matchesSource = true
+                            break
+                        end
+
                         -- Check if filter is a specific profession name (Cooking, Tailoring, etc.)
                         local isProfessionFilter = item._isProfessionItem and item.profession == selectedSource
                         
@@ -377,10 +541,17 @@ function DataManager:FilterItems(items, filters)
                         end
                     end
                 end
-                
-                if not matchesSource then
-                    show = false
-                    debugCounts.sourceFiltered = debugCounts.sourceFiltered + 1
+
+                if filters.excludeSources then
+                    if matchesSource then
+                        show = false
+                        debugCounts.sourceFiltered = debugCounts.sourceFiltered + 1
+                    end
+                else
+                    if not matchesSource then
+                        show = false
+                        debugCounts.sourceFiltered = debugCounts.sourceFiltered + 1
+                    end
                 end
             end
         end
@@ -481,6 +652,16 @@ function DataManager:FilterItems(items, filters)
         if show and filters.requirement and filters.requirement ~= "All Requirements" then
             local itemRequirement = "None"
             
+            local function HasSourceType(itemRecord, sourceKey)
+                if not itemRecord or not sourceKey then return false end
+                local sourceTypes = itemRecord._sourceTypes
+                if sourceTypes and (sourceTypes[sourceKey] or sourceTypes[INTERNED_STRINGS[sourceKey]]) then
+                    return true
+                end
+                local st = itemRecord._sourceType
+                return st == sourceKey or st == INTERNED_STRINGS[sourceKey]
+            end
+
             -- Check HousingVendorItemToFaction lookup for reputation/renown items
             if HousingVendorItemToFaction then
                 local repInfo = HousingVendorItemToFaction[tonumber(item.itemID)]
@@ -498,7 +679,9 @@ function DataManager:FilterItems(items, filters)
             if itemRequirement == "None" then
                 if item._apiAchievement and item._apiAchievement ~= "" then
                     itemRequirement = "Achievement"
-                elseif item._sourceType == INTERNED_STRINGS["Quest"] then
+                elseif HasSourceType(item, "Achievement") then
+                    itemRequirement = "Achievement"
+                elseif HasSourceType(item, "Quest") then
                     itemRequirement = "Quest"
                 elseif item.professionSkillNeeded and item.professionSkillNeeded > 0 then
                     itemRequirement = "Profession"
@@ -510,9 +693,21 @@ function DataManager:FilterItems(items, filters)
                 end
             end
             
-            if itemRequirement ~= filters.requirement then
-                show = false
-                debugCounts.requirementFiltered = debugCounts.requirementFiltered + 1
+            if filters.requirement == "Vendor" then
+                local itemSource = item._sourceType or item.sourceType or "Vendor"
+                -- Treat "Vendor" requirement as "purchased from a vendor", including reputation/renown-gated vendors.
+                local isVendorSource = (itemSource == "Vendor") or (itemSource == INTERNED_STRINGS["Vendor"])
+                    or (itemSource == "Reputation") or (itemSource == INTERNED_STRINGS["Reputation"])
+                    or (itemSource == "Renown") or (itemSource == INTERNED_STRINGS["Renown"])
+                if not isVendorSource then
+                    show = false
+                    debugCounts.requirementFiltered = debugCounts.requirementFiltered + 1
+                end
+            else
+                if itemRequirement ~= filters.requirement then
+                    show = false
+                    debugCounts.requirementFiltered = debugCounts.requirementFiltered + 1
+                end
             end
         end
 
@@ -537,19 +732,8 @@ function DataManager:FilterItems(items, filters)
             -- for items that simply aren't cached yet, not just unreleased items
         end
 
-        -- Show Only Available Items filter (API-verified items only)
-        if show and filters.showOnlyAvailable then
-            local itemID = item.itemID and tonumber(item.itemID) or nil
-            if itemID then
-                if not IsItemAvailableByID(itemID) then
-                    show = false
-                    debugCounts.availabilityFiltered = (debugCounts.availabilityFiltered or 0) + 1
-                end
-            else
-                show = false
-                debugCounts.availabilityFiltered = (debugCounts.availabilityFiltered or 0) + 1
-            end
-        end
+        -- Note: showOnlyAvailable is now handled by the mandatory availability filter
+        -- at the top of the loop (IsItemAvailableByID is always applied).
 
         -- Hide items with no valid data (question mark icons or missing tooltip info)
         if show then
@@ -584,6 +768,17 @@ function DataManager:FilterItems(items, filters)
                     if itemInfo and itemInfo.iconFileID and itemInfo.iconFileID > 0 then
                         hasTooltipData = true
                     end
+                end
+
+                -- If we have static info, treat it as valid data (avoid hiding known items).
+                if not hasTooltipData and (
+                    (item.name and item.name ~= "" and item.name ~= "Unknown Item")
+                    or (item._searchName and item._searchName ~= "" and item._searchName ~= "Unknown Item")
+                    or (item.title and item.title ~= "")
+                    or (item.vendorName and item.vendorName ~= "" and item.vendorName ~= "None")
+                    or (item.zoneName and item.zoneName ~= "")
+                ) then
+                    hasTooltipData = true
                 end
                 
                 -- If we have API data loaded, assume item has valid data (even if icon not loaded yet)

@@ -12,6 +12,8 @@ addon.LegionGUI.rewardStrings = {
     "gear",
     "crafting-reagents",
     "augment-runes",
+    "veiled-argunite",
+    "wakening-essence",
 }
 
 if addon.LegionGUI.GoldCheckButton then

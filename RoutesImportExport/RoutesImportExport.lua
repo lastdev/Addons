@@ -44,15 +44,15 @@ local function stripSpecialChars(string)
 end
 
 local function getProjectName(projectId)
-    return (projectId == WOW_PROJECT_MAINLINE and "Retail") or (projectId == WOW_PROJECT_CLASSIC and "Classic") or (projectId == WOW_PROJECT_BURNING_CRUSADE_CLASSIC and "TBCC") or (projectId == WOW_PROJECT_WRATH_CLASSIC and "WOTLKC") or (projectId == 14 and "CATA") or "Unknown"
+    return (projectId == WOW_PROJECT_MAINLINE and "Retail") or (projectId == WOW_PROJECT_CLASSIC and "Classic") or (projectId == WOW_PROJECT_BURNING_CRUSADE_CLASSIC and "TBCC") or (projectId == WOW_PROJECT_WRATH_CLASSIC and "WOTLKC") or (projectId == 14 and "CATA") or (projectId == 19 and "MOP") or "Unknown"
 end
 
 local function getProjectLongName(projectId)
-    return (projectId == WOW_PROJECT_MAINLINE and "Retail WoW") or (projectId == WOW_PROJECT_CLASSIC and "Classic WoW") or (projectId == WOW_PROJECT_BURNING_CRUSADE_CLASSIC and "Burning Crusade Classic") or (projectId == WOW_PROJECT_WRATH_CLASSIC and "Wrath of the Lich King Classic") or (projectId == 14 and "Cataclysm Classic") or "Unknown WoW Type"
+    return (projectId == WOW_PROJECT_MAINLINE and "Retail WoW") or (projectId == WOW_PROJECT_CLASSIC and "Classic WoW") or (projectId == WOW_PROJECT_BURNING_CRUSADE_CLASSIC and "Burning Crusade Classic") or (projectId == WOW_PROJECT_WRATH_CLASSIC and "Wrath of the Lich King Classic") or (projectId == 14 and "Cataclysm Classic") or (projectId == 19 and "Mists of Pandaria Classic") or "Unknown WoW Type"
 end
 
 local function getProjectId(projectName)
-    return (projectName =="Retail" and WOW_PROJECT_MAINLINE) or (projectName == "Classic" and WOW_PROJECT_CLASSIC) or (projectName == "TBCC" and WOW_PROJECT_BURNING_CRUSADE_CLASSIC) or (projectName == "WOTLKC" and WOW_PROJECT_WRATH_CLASSIC) or (projectName == "CATA" and 14)
+    return (projectName =="Retail" and WOW_PROJECT_MAINLINE) or (projectName == "Classic" and WOW_PROJECT_CLASSIC) or (projectName == "TBCC" and WOW_PROJECT_BURNING_CRUSADE_CLASSIC) or (projectName == "WOTLKC" and WOW_PROJECT_WRATH_CLASSIC) or (projectName == "CATA" and 14) or (projectName == "MOP" and 19)
 end
 
 local function serialize(data)

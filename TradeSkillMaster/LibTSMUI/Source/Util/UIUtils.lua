@@ -27,6 +27,8 @@ do
 	local hours = {}
 	if LibTSMUI.IsVanillaClassic() then
 		hours = { 0.5, 2, 8, 24 }
+	elseif LibTSMUI.IsBCClassic() then
+		hours = { 0.5, 2, 12, 48 }
 	else
 		hours = { 1, 2, 24, 48 }
 	end

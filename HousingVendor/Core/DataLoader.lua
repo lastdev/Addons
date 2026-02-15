@@ -1,5 +1,5 @@
 -- DataLoader.lua
--- Data is loaded directly via TOC (single addon mode)
+
 
 local _G = _G
 
@@ -34,7 +34,11 @@ function DataLoader:EnsureDataLoaded(func)
     end
 
     if not self:IsDataLoaded() then
-        print("|cFFFF0000HousingVendor:|r Data is not loaded - addon files may be missing or failed to load")
+        if _G.HousingVendorLog and _G.HousingVendorLog.Error then
+            _G.HousingVendorLog:Error("Data is not loaded - addon files may be missing or failed to load")
+        else
+            print("|cFFFF0000HousingVendor:|r Data is not loaded - addon files may be missing or failed to load")
+        end
         return nil
     end
 

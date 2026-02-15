@@ -547,10 +547,16 @@ function ApplicationFrame.__private:_HandleResizeClick(_, mouseButton)
 end
 
 function ApplicationFrame.__private:_HandleDragStart()
+	if self:_GetBaseFrame():IsProtected() and ClientInfo.IsInCombat() then
+		return
+	end
 	self:_GetBaseFrame():StartMoving()
 end
 
 function ApplicationFrame.__private:_HandleDragStop()
+	if self:_GetBaseFrame():IsProtected() and ClientInfo.IsInCombat() then
+		return
+	end
 	self:_GetBaseFrame():StopMovingOrSizing()
 	self:_SavePositionAndSize()
 	self:Draw()

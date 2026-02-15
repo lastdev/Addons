@@ -664,7 +664,7 @@ do -- Mission page rewards
 				text = q .. self.title
 			end
 			if text then
-				ChatEdit_InsertLink(text)
+				ChatFrameUtil.InsertLink(text)
 			end
 		end
 	end

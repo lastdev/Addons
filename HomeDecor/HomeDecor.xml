@@ -1,0 +1,10 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <!-- Data categories -->
+    <Include file="Data/Achievements/Achievements.xml"/>
+    <Include file="Data/Quests/Quests.xml"/>
+    <Include file="Data/Vendors/Vendors.xml"/>
+    <Include file="Data/Drops/Drops.xml"/>
+    <Include file="Data/Professions/Professions.xml"/>
+	<Include file="Data/Pvp/Pvp.xml"/>
+	<Include file="Data/Events/Events.xml"/>
+</Ui>

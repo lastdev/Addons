@@ -1,10 +1,10 @@
-## Interface: 110200, 110107, 50500, 30404, 11507
+## Interface: 120001, 120000, 110207, 50503, 30405, 20505, 11508
 ## Title: Simple Item Level
 ## Author: Kemayo
 ## Notes: Show item levels in useful places
 ## OptionalDeps: LibAppropriateItems-1.0
 ## SavedVariables: SimpleItemLevelDB
-## Version: v54
+## Version: v60
 ## IconAtlas: poi-door-arrow-up
 
 ## Category-enUS: Inventory

@@ -63,8 +63,8 @@ function Gathering.OnEnable()
 		:AddStringField("sourcesStr")
 		:Commit()
 	private.queuedCraftsUpdateQuery = TSM.Crafting.CreateQueuedCraftsQuery()
-		:SetUpdateCallback(private.OnQueuedCraftsUpdated)
-	private.OnQueuedCraftsUpdated()
+		:SetUpdateCallback(Gathering.OnQueuedCraftsUpdated)
+	Gathering.OnQueuedCraftsUpdated()
 	private.dbUpdateTimer = DelayTimer.New("GATHERING_DB_UPDATE", private.UpdateDB)
 	BagTracking.RegisterQuantityCallback(function()
 		private.dbUpdateTimer:RunForTime(1)
@@ -142,6 +142,13 @@ function Gathering.SourcesStrToTable(sourcesStr, info, alts)
 	end
 end
 
+function Gathering.OnQueuedCraftsUpdated()
+	private.UpdateCrafterList()
+	private.UpdateProfessionList()
+	private.UpdateDB()
+	private.contextChangedCallback()
+end
+
 
 
 -- ============================================================================
@@ -202,13 +209,6 @@ function private.UpdateProfessionList()
 			private.settings.professions[profession] = true
 		end
 	end
-end
-
-function private.OnQueuedCraftsUpdated()
-	private.UpdateCrafterList()
-	private.UpdateProfessionList()
-	private.UpdateDB()
-	private.contextChangedCallback()
 end
 
 function private.UpdateDB()

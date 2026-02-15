@@ -5,9 +5,6 @@ local GetCVar = _G.GetCVar or _G.C_CVar.GetCVar
 local ChatEdit_ChooseBoxForSend = _G.ChatEdit_ChooseBoxForSend or _G.ChatFrameUtil.ChooseBoxForSend
 local ChatEdit_DeactivateChat = _G.ChatEdit_DeactivateChat or _G.ChatFrameUtil.DeactivateChat
 
-
-if not Prat.BN_CHAT then return end -- Requires 3.3.5
-
 Prat:AddModuleToLoad(function()
 
   local PRAT_MODULE = Prat:RequestModuleName("Editbox")
@@ -750,9 +747,7 @@ end
 
 
     self:SetAttach(nil, self.db.profile.editX, self.db.profile.editY, self.db.profile.editW)
-    self:SecureHook("ChatEdit_DeactivateChat")
-    self:SecureHook("ChatEdit_SetLastActiveWindow")
-    self:SecureHook("ChatFrame_OpenChat")
+
 	  if _G.ChatFrameUtil then
 		  if _G.ChatFrameUtil.DeactivateChat then
 			  self:SecureHook(_G.ChatFrameUtil, "DeactivateChat", "ChatEdit_DeactivateChat")
@@ -763,14 +758,19 @@ end
 		  if _G.ChatFrameUtil.OpenChat then
 			  self:SecureHook(_G.ChatFrameUtil, "OpenChat", "ChatFrame_OpenChat")
 		  end
+	  else
+		  self:SecureHook("ChatEdit_DeactivateChat")
+		  self:SecureHook("ChatEdit_SetLastActiveWindow")
+		  self:SecureHook("ChatFrame_OpenChat")
 	  end
 
     self:SetBackdrop()
     self:UpdateHeight()
     if self.db.profile.colorByChannel then
-      self:SecureHook("ChatEdit_UpdateHeader", "SetBorderByChannel", true)
 		if _G.ChatFrameEditBoxBaseMixin and _G.ChatFrameEditBoxBaseMixin.UpdateHeader then
 			self:SecureHook(_G.ChatFrameEditBoxBaseMixin, "UpdateHeader", "SetBorderByChannel")
+		else
+			self:SecureHook("ChatEdit_UpdateHeader", "SetBorderByChannel", true)
 		end
     end
     self:SecureHook("FCF_Tab_OnClick")

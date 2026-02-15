@@ -1,9 +1,9 @@
-## Interface: 110207, 50503, 11508
+## Interface: 120001, 120000, 110207, 50503, 30405, 20505, 11508
 ## Title: BankStack
 ## Author: Kemayo
 ## Notes: From bags we came, to bank we return
 ## IconTexture: Interface\Icons\INV_Misc_Shovel_01
-## Version: v2025.7
+## Version: v2026.2
 ## X-Category: Inventory
 ## LoadOnDemand: 0
 ## OptionalDeps: Ace3, LibDBIcon-1.0, LibBankTabSuitableItems-1.0, tekDebug

@@ -2,57 +2,57 @@ local L = LibStub("AceLocale-3.0"):NewLocale("Details_TimeLine", "itIT")
 if not L then return end 
 
 --[[Translation missing --]]
-L["STRING_DATAINVALID"] = "Failed to load this segment: data is corrupt."
+--[[ L["STRING_DATAINVALID"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_ELAPSED"] = "Time Elapsed"
+--[[ L["STRING_ELAPSED"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_INCOMBAT"] = "Timeline is capturing data from current combat."
+--[[ L["STRING_INCOMBAT"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_NODATA"] = "Timeline have nothing to show at the moment."
+--[[ L["STRING_NODATA"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_OPTIONS"] = "Options"
+--[[ L["STRING_OPTIONS"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_OPTIONS_BGCOLOR"] = "Background Color"
+--[[ L["STRING_OPTIONS_BGCOLOR"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_OPTIONS_BGCOLOR_DESC"] = "Select the background color"
+--[[ L["STRING_OPTIONS_BGCOLOR_DESC"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_OPTIONS_MAXSEGMENTS"] = "Max Segments"
+--[[ L["STRING_OPTIONS_MAXSEGMENTS"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_OPTIONS_MAXSEGMENTS_DESC"] = "Limit of segments stored"
+--[[ L["STRING_OPTIONS_MAXSEGMENTS_DESC"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_OPTIONS_TITLE"] = "Time Line Options"
+--[[ L["STRING_OPTIONS_TITLE"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_OPTIONS_WINDOWCOLOR"] = "Window Scale"
+--[[ L["STRING_OPTIONS_WINDOWCOLOR"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_OPTIONS_WINDOWCOLOR_DESC"] = "Set the window size"
+--[[ L["STRING_OPTIONS_WINDOWCOLOR_DESC"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_PLUGIN_DESC"] = [=[Shows a time line of cooldowns used by your raid members and debuffs applied by enemies in your raid.
-Also show when each member died, with that, you may see the the player died without using cooldowns or if died after a combination of debuffs.]=]
+--[[ L["STRING_PLUGIN_DESC"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_PLUGIN_NAME"] = "Time Line"
+--[[ L["STRING_PLUGIN_NAME"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_RESET"] = "Reset"
+--[[ L["STRING_RESET"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_SEARCH"] = "Filter:"
+--[[ L["STRING_SEARCH"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_SECONDS"] = "Seconds"
+--[[ L["STRING_SECONDS"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_SELECT_SEGMENT"] = "Segment:"
+--[[ L["STRING_SELECT_SEGMENT"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_SOURCE"] = "Source"
+--[[ L["STRING_SOURCE"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_SPELLICONS"] = "Spell Icons"
+--[[ L["STRING_SPELLICONS"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_TARGET"] = "Target"
+--[[ L["STRING_TARGET"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_TIME"] = "At"
+--[[ L["STRING_TIME"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_TOOLTIP"] = "Show timeline data"
+--[[ L["STRING_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_TYPE"] = "Type:"
+--[[ L["STRING_TYPE"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_TYPE_COOLDOWN"] = "Cooldown"
+--[[ L["STRING_TYPE_COOLDOWN"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_TYPE_DEBUFF"] = "Debuff"
+--[[ L["STRING_TYPE_DEBUFF"] = ""--]] 
 --[[Translation missing --]]
-L["STRING_UNKNOWN"] = "unknown"
+--[[ L["STRING_UNKNOWN"] = ""--]] 
+

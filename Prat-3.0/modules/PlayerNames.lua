@@ -108,7 +108,7 @@ Prat:AddModuleToLoad(function()
   do
       local L
 
-  
+
 L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = true,
@@ -181,7 +181,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
-  
+
 L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "Interroger activement les joueurs",
@@ -261,7 +261,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
-  
+
 L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "Spielerinformationen aktiv abfragen",
@@ -334,7 +334,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
-  
+
 L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "적극적인 플레이어 정보 요청",
@@ -407,7 +407,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
-  
+
 L = {
 	["PlayerNames"] = {
 		--[[Translation missing --]]
@@ -543,7 +543,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
-  
+
 L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "Активный запрос инфы о игроке",
@@ -616,7 +616,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
-  
+
 L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "活跃的查询玩家信息",
@@ -692,7 +692,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
-  
+
 L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "Pedir Información de Jugador Activamente",
@@ -773,7 +773,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
-  
+
 L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "主動查詢玩家資訊",
@@ -1039,6 +1039,7 @@ L = {
         desc = PL["Toggle showing the raid target icon which is currently on the player."],
         type = "toggle",
         order = 142,
+		hidden = Prat.IsRetail,
       },
       tabcomplete = {
         name = PL["Enable TabComplete"],
@@ -1238,7 +1239,7 @@ L = {
   end
 
   local GetToonInfoByBnetID
-  if Prat.IsClassic then
+  if not Prat.IsRetail then
     GetToonInfoByBnetID = function(bnetAccountID)
       if not bnetAccountID then return end
 
@@ -1267,7 +1268,7 @@ L = {
   end
 
   local GetBnetClientByID
-  if Prat.IsClassic then
+  if not Prat.IsRetail then
     GetBnetClientByID = function(bnetAccountID)
       if not bnetAccountID then return end
 
@@ -1540,6 +1541,9 @@ L = {
 
   function module:addName(Name, Server, Class, Level, SubGroup, Source)
     if Name then
+		if issecretvalue and (issecretvalue(Name) or issecretvalue(Server)) then
+			return
+		end
       local nosave
       Source = Source or "UNKNOWN"
 
@@ -1656,7 +1660,7 @@ L = {
     end
 
     -- Add raid target icon
-    if self.db.profile.showtargeticon then
+    if not Prat.IsRetail and self.db.profile.showtargeticon then
       local icon = UnitExists(Name) and GetRaidTargetIndex(Name)
       if icon then
         icon = ICON_LIST[icon]

@@ -3,7 +3,7 @@
 
                                              Winter Veil
 
-                                     v4.33 - 6th January 2025
+                                      v4.34 - 24th January 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

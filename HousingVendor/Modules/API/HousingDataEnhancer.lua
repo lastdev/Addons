@@ -7,13 +7,13 @@ local function CopyTable(t)
     local meta = getmetatable(t)
     local target = {}
     for k, v in pairs(t) do
-        if type(v) == "table" then
-            target[k] = CopyTable(v)
-        else
-            target[k] = v
-        end
+        -- PERF: Shallow-copy only. EnhanceItemData only sets top-level scalar fields and should not
+        -- mutate nested tables from the source record.
+        target[k] = v
     end
-    setmetatable(target, meta)
+    if meta ~= nil then
+        setmetatable(target, meta)
+    end
     return target
 end
 

@@ -22,11 +22,26 @@ function Angleur_SetTab1(self)
     end
 
     self.ultraFocus.title:SetText(T["Ultra Focus:"])
+    self.ultraFocus.title:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 3, -3)
+        GameTooltip:AddLine(colorBlu:WrapTextInColorCode(self:GetText()))
+        GameTooltip:AddLine(T["Let Angleur take care of Audio & Loot settings for you."], 1, 1, 1, 0)
+        GameTooltip:Show()
+    end)
+    self.ultraFocus.title:SetScript("OnLeave", function(self)
+        GameTooltip:Hide()
+    end)
+    self.ultraFocus.title:SetText(T["Ultra Focus:"])
     self.ultraFocus.audio.text:SetText(T["Audio"])
     self.ultraFocus.audio.text:SetFontObject(SpellFont_Small)
+    self.ultraFocus.audio.checkbox:ClearAllPoints()
+    self.ultraFocus.audio.checkbox:SetPoint("TOPLEFT", self.ultraFocus.audio, "TOPLEFT")
     self.ultraFocus.audio.text:ClearAllPoints()
-    self.ultraFocus.audio.text:SetPoint("LEFT", self.ultraFocus.audio, "RIGHT")
-    self.ultraFocus.audio:SetScript("OnClick", function(self)
+    self.ultraFocus.audio.text:SetPoint("LEFT", self.ultraFocus.audio.checkbox, "RIGHT")
+    self.ultraFocus.audio.text.tooltip = T["If checked, Angleur will adjust your audio settings for you when you cast your rod, and restore them to the previous values when you reel/loot.\n\n" 
+    .. "Ambience & Music will be muted.\nSound Effects will be turned up.\n\nWhile Angleur is awake, \'Sound in Background\' will also be enabled(restored to previous on sleep).\n\n"
+    .. "If you want to change the adjusted audio volume, go to Angleur->Tiny->Master Volume(Ultra Focus) and adjust from the slider."]
+    self.ultraFocus.audio.checkbox:SetScript("OnClick", function(self)
         if self:GetChecked() then
             AngleurConfig.ultraFocusAudioEnabled = true
             if AngleurCharacter.sleeping == false then
@@ -39,13 +54,15 @@ function Angleur_SetTab1(self)
         end
     end)
     if AngleurConfig.ultraFocusAudioEnabled == true then
-        self.ultraFocus.audio:SetChecked(true)
+        self.ultraFocus.audio.checkbox:SetChecked(true)
     end
 
     self.ultraFocus.autoLoot.text:SetText(T["Temp. Auto Loot "])
     self.ultraFocus.autoLoot.text:SetFontObject(SpellFont_Small)
+    self.ultraFocus.autoLoot.checkbox:ClearAllPoints()
+    self.ultraFocus.autoLoot.checkbox:SetPoint("TOPLEFT", self.ultraFocus.autoLoot, "TOPLEFT")
     self.ultraFocus.autoLoot.text:ClearAllPoints()
-    self.ultraFocus.autoLoot.text:SetPoint("LEFT", self.ultraFocus.autoLoot, "RIGHT")
+    self.ultraFocus.autoLoot.text:SetPoint("LEFT", self.ultraFocus.autoLoot.checkbox, "RIGHT")
     self.ultraFocus.autoLoot.text.tooltip = T["If checked, Angleur will temporarily turn on " .. colorYello:WrapTextInColorCode("Auto-Loot") .. ", then turn it back off after you reel.\n\n" 
     .. colorGrae:WrapTextInColorCode("If you have ") .. colorYello:WrapTextInColorCode("Auto-Loot ") .. colorGrae:WrapTextInColorCode("enabled anyway, this feature will be disabled automatically.")]
     self.ultraFocus.autoLoot.disabledText:SetJustifyH("LEFT")
@@ -53,7 +70,7 @@ function Angleur_SetTab1(self)
     self.ultraFocus.autoLoot.disabledText:SetText(T["(Already on)"])
     self.ultraFocus.autoLoot.disabledText:ClearAllPoints()
     self.ultraFocus.autoLoot.disabledText:SetPoint("TOP", self.ultraFocus.autoLoot.text, "BOTTOM")
-    self.ultraFocus.autoLoot:SetScript("OnClick", function(self)
+    self.ultraFocus.autoLoot.checkbox:SetScript("OnClick", function(self)
         if self:GetChecked() then
             AngleurConfig.ultraFocusAutoLootEnabled = true
         elseif self:GetChecked() == false then
@@ -61,7 +78,7 @@ function Angleur_SetTab1(self)
         end
     end)
     if AngleurConfig.ultraFocusAutoLootEnabled == true then
-        self.ultraFocus.autoLoot:SetChecked(true)
+        self.ultraFocus.autoLoot.checkbox:SetChecked(true)
     end
 
 
@@ -88,19 +105,19 @@ function Angleur_SetTab1(self)
 
 
     self.recastEnable.text:SetText(T["Enable Recast Key"])
-    self.recastEnable:reposition()
     self.recastEnable.disabledText:SetText(T[""])
-    self.recastEnable:SetScript("OnClick", function()
-        if self.recastEnable:GetChecked() then
+    self.recastEnable.text.tooltip = T["Bind a dedicated \'Re-Cast Key\'.\n\nWill be released back to you when not fishing."]
+    self.recastEnable.checkbox:SetScript("OnClick", function()
+        if self.recastEnable.checkbox:GetChecked() then
             AngleurConfig.recastEnabled = true
             self.recastEnable.recastKey:Show()
-        elseif self.recastEnable:GetChecked() == false then
+        elseif self.recastEnable.checkbox:GetChecked() == false then
             AngleurConfig.recastEnabled = false
             self.recastEnable.recastKey:Hide()
         end
     end)
     if AngleurConfig.recastEnabled == true then
-        self.recastEnable:SetChecked(true)
+        self.recastEnable.checkbox:SetChecked(true)
         self.recastEnable.recastKey:Show()
     end
 

@@ -1,10 +1,8 @@
 # Simple Item Level
 
-## [v54](https://github.com/kemayo/wow-simpleitemlevel/tree/v54) (2025-08-03)
-[Full Changelog](https://github.com/kemayo/wow-simpleitemlevel/compare/v53...v54) [Previous Releases](https://github.com/kemayo/wow-simpleitemlevel/releases)
+## [v60](https://github.com/kemayo/wow-simpleitemlevel/tree/v60) (2026-01-23)
+[Full Changelog](https://github.com/kemayo/wow-simpleitemlevel/compare/v59...v60) [Previous Releases](https://github.com/kemayo/wow-simpleitemlevel/releases)
 
-- Possible case-sensitive library loading issue  
-    Refs #51  
-- Update for 11.2.0  
-    Mostly needed fixes for the new bank system, but equipment flyouts also  
-    changed.  
+- Try to check tooltips when inspecting, for the most-accurate levels  
+- New option to offset levels into the character/inspect frames  
+    Post-wrath only  

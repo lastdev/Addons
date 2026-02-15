@@ -1,7 +1,7 @@
 # Auctionator
 
-## [307](https://github.com/TheMouseNest/Auctionator/tree/307) (2025-12-31)
-[Full Changelog](https://github.com/TheMouseNest/Auctionator/compare/306...307) 
+## [316](https://github.com/TheMouseNest/Auctionator/tree/316) (2026-02-10)
+[Full Changelog](https://github.com/TheMouseNest/Auctionator/compare/315...316) 
 
-- Update links on "About" section  
-- Support showing auction prices on RareScanner tooltips  
+- Update toc for 12.0.1  
+- Added MoP gems estimates (#1770)  

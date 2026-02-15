@@ -171,7 +171,7 @@ function AuctionItemBuyConfirmationDialog:Configure(isBuy, subRow, quantity, auc
 		buyout = subRow:GetRequiredBid(subRow)
 	end
 	local displayItemBuyout = ceil(buyout / quantity)
-	local displayTotalBuyout = LibTSMUI.IsVanillaClassic() and buyout or ceil(buyout / quantity)
+	local displayTotalBuyout = (LibTSMUI.IsVanillaClassic() or LibTSMUI.IsBCClassic()) and buyout or ceil(buyout / quantity)
 	local itemString = subRow:GetItemString()
 	local pct = marketValue and marketValue > 0 and displayItemBuyout > 0 and Math.Round(100 * displayItemBuyout / marketValue) or nil
 

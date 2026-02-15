@@ -299,10 +299,6 @@ end
       return module:LinkwTLD(...)
     end
 
-    local function Skip(...)
-      return module:Skip(...)
-    end
-
     Prat:SetModulePatterns(module, {
       -- X://Y url
       { pattern = "^(%a[%w+.-]+://%S+)", matchfunc = Link },
@@ -802,14 +798,6 @@ end
 
     if self.tlds[tld:upper()] then
       link = self:RawLink(link)
-    end
-
-    return self:AddLink(link)
-  end
-
-  function module:Skip(link, ...)
-    if link == nil then
-      return ""
     end
 
     return self:AddLink(link)

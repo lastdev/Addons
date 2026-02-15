@@ -346,7 +346,7 @@ function AuctionSubRow:_SetRawData(data, browseId, itemLink)
 	self._hashNoSeller = nil
 	self._browseId = browseId
 	if data then
-		if LibTSMService.IsVanillaClassic() then
+		if LibTSMService.IsVanillaClassic() or LibTSMService.IsBCClassic() then
 			local _, _, stackSize, timeLeft, buyout, seller, minIncrement, minBid, bid, isHighBidder = AuctionHouse.GetBrowseResult(data)
 			self._itemLink = itemLink
 			self._buyout = buyout

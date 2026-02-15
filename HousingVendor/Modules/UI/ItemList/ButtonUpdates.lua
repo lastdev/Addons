@@ -79,6 +79,32 @@ local DEFAULT_COLORS = {
     bgTertiary = { 0.16, 0.12, 0.24, 0.90 },
 }
 
+local function IsProfessionItem(item, itemID)
+    if item and item.profession and item.profession ~= "" then
+        return true
+    end
+    local prof = _G.HousingProfessionData
+    if type(prof) == "table" and itemID and prof[itemID] then
+        return true
+    end
+    return false
+end
+
+local function FormatMoneyFromCopper(copper)
+    local ppd = _G.HousingPreviewPanelData
+    if ppd and ppd.Util and ppd.Util.FormatMoneyFromCopper then
+        return ppd.Util.FormatMoneyFromCopper(copper)
+    end
+    if _G.GetCoinTextureString then
+        return _G.GetCoinTextureString(tonumber(copper) or 0)
+    end
+    local amount = tonumber(copper) or 0
+    local gold = math_floor(amount / 10000)
+    local silver = math_floor((amount % 10000) / 100)
+    local c = amount % 100
+    return string_format("%dg %02ds %02dc", gold, silver, c)
+end
+
 local NEW_TIMER = C_Timer and C_Timer.NewTimer or nil
 local NEW_TICKER = C_Timer and C_Timer.NewTicker or nil
 
@@ -369,8 +395,116 @@ end
 local function OnRegularItemButtonClick(button)
     local item = button and button.itemData
     if not item then return end
+
     if HousingPreviewPanel then
         HousingPreviewPanel:ShowItem(item)
+    end
+end
+
+local function GetBestVendorContext(item)
+    local filters = _G.HousingFilters and _G.HousingFilters.currentFilters or {}
+    local filterVendor = filters and filters.vendor
+    local filterZone = filters and filters.zone
+    local filterMapID = filters and filters.zoneMapID
+
+    local vendorName = nil
+    local coords = nil
+    if _G.HousingVendorHelper then
+        vendorName = _G.HousingVendorHelper:GetVendorName(item, filterVendor, filterZone, filterMapID)
+        coords = _G.HousingVendorHelper:GetVendorCoords(item, filterVendor, filterZone, filterMapID)
+    else
+        vendorName = item and (item.vendorName or item._apiVendor) or nil
+        coords = item and (item.coords or item.vendorCoords) or nil
+    end
+
+    return vendorName, coords
+end
+
+local function GetBestWaypointContext(item, itemID, isProfessionItem)
+    if isProfessionItem and itemID then
+        local hv = _G.HousingVendor
+        local pt = hv and hv.ProfessionTrainers
+        if pt and pt.GetTrainerForItem then
+            local trainer = pt:GetTrainerForItem(itemID, item)
+            local coords = trainer and trainer.coords or nil
+            local x = coords and tonumber(coords.x) or nil
+            local y = coords and tonumber(coords.y) or nil
+            local mapID = coords and tonumber(coords.mapID) or nil
+            if x and y and mapID and x > 0 and y > 0 and mapID > 0 then
+                return (trainer and trainer.name) or "Trainer", (trainer and trainer.location) or nil, coords, "trainer"
+            end
+        end
+    end
+
+    local vendorName, coords = GetBestVendorContext(item)
+    local zoneName = nil
+    if _G.HousingVendorHelper and _G.HousingVendorHelper.GetZoneName then
+        local Filters = _G.HousingFilters
+        local filterZone = Filters and Filters.currentFilters and Filters.currentFilters.zone
+        local filterMapID = Filters and Filters.currentFilters and Filters.currentFilters.zoneMapID
+        zoneName = _G.HousingVendorHelper:GetZoneName(item, filterZone, filterMapID)
+    else
+        zoneName = item and (item._apiZone or item.zoneName) or nil
+    end
+    return vendorName, zoneName, coords, "vendor"
+end
+
+local function SetActionEnabled(btn, enabled)
+    if not btn then return end
+    if btn.SetEnabled then
+        btn:SetEnabled(enabled == true)
+    end
+    btn:SetAlpha((enabled == true) and 1 or 0.4)
+end
+
+
+local function SetActionShown(btn, shown)
+    if not btn then return end
+    if btn.SetShown then
+        btn:SetShown(shown == true)
+    else
+        if shown == true and btn.Show then
+            btn:Show()
+        elseif shown ~= true and btn.Hide then
+            btn:Hide()
+        end
+    end
+end
+
+local function LayoutSimpleActionBar(button)
+    if not (button and button.simpleActionBar) then
+        return
+    end
+
+    local bar = button.simpleActionBar
+    local order = { button.simpleWaypointBtn, button.simpleMarkBtn, button.simpleMatsBtn }
+    local spacing = 6
+    local prev = nil
+    local totalWidth = 0
+
+    for i = 1, #order do
+        local b = order[i]
+        if b and b.IsShown and b:IsShown() then
+            b:ClearAllPoints()
+            if prev then
+                b:SetPoint("LEFT", prev, "RIGHT", spacing, 0)
+                totalWidth = totalWidth + spacing
+            else
+                b:SetPoint("LEFT", bar, "LEFT", 0, 0)
+            end
+            local w = b.GetWidth and b:GetWidth() or 0
+            totalWidth = totalWidth + (w or 0)
+            prev = b
+        end
+    end
+
+    -- Avoid zero width (keeps anchoring stable).
+    if totalWidth < 1 then
+        totalWidth = 1
+    end
+
+    if bar.SetWidth then
+        bar:SetWidth(totalWidth)
     end
 end
 
@@ -541,7 +675,7 @@ local function UpdateQualityAsync(button, item, itemID, buttonIndex)
         end
 
         if quality ~= nil then
-            item._apiQuality = item._apiQuality or quality
+            item._apiQuality = quality
 
             local displayName = item.name or "Unknown"
             local colorCode = GetQualityColorCode(quality)
@@ -587,61 +721,16 @@ local function UpdateQualityAsync(button, item, itemID, buttonIndex)
     end
 end
 
-local function FormatCostFromVendorInfo(vendorInfo)
-    if not vendorInfo or not vendorInfo.cost or #vendorInfo.cost == 0 then
-        return nil
-    end
-
-    local parts = {}
-    for _, costEntry in ipairs(vendorInfo.cost) do
-        if costEntry then
-            if costEntry.currencyID == 0 then
-                local copperAmount = tonumber(costEntry.amount) or 0
-                if GetCoinTextureString then
-                    table_insert(parts, GetCoinTextureString(copperAmount))
-                else
-                    local gold = math_floor(copperAmount / 10000)
-                    local silver = math_floor((copperAmount % 10000) / 100)
-                    local copper = copperAmount % 100
-
-                    if gold > 0 and silver > 0 then
-                        table_insert(parts, string_format("%dg %ds", gold, silver))
-                    elseif gold > 0 then
-                        table_insert(parts, string_format("%dg", gold))
-                    elseif silver > 0 then
-                        table_insert(parts, string_format("%ds", silver))
-                    elseif copper > 0 then
-                        table_insert(parts, string_format("%dc", copper))
-                    end
-                end
-            elseif costEntry.currencyID then
-                local amount = tonumber(costEntry.amount) or 0
-                local icon = GetCurrencyIconMarkup(costEntry.currencyID)
-                if icon and icon ~= "" then
-                    table_insert(parts, tostring(amount) .. " " .. icon)
-                else
-                    local currencyName = "Currency #" .. tostring(costEntry.currencyID)
-                    local currencyInfo = HousingAPI and HousingAPI.GetCurrencyInfo and HousingAPI:GetCurrencyInfo(costEntry.currencyID)
-                    if currencyInfo and currencyInfo.name then
-                        currencyName = currencyInfo.name
-                    elseif HousingCurrencyTypes and HousingCurrencyTypes[costEntry.currencyID] then
-                        currencyName = HousingCurrencyTypes[costEntry.currencyID]
-                    end
-                    table_insert(parts, tostring(amount) .. " " .. currencyName)
-                end
-            end
-        end
-    end
-
-    if #parts == 0 then return nil end
-    return table_concat(parts, " + ")
-end
+-- Removed: FormatCostFromVendorInfo (dead code duplicate of HousingCostFormatter:FormatCostFromVendorInfo).
 
 local function PopulateVendorAndCostOnce(button, item, itemID)
     if not (button and item and itemID and HousingAPI) then return end
     if not button:IsVisible() then return end
     if button._hvItemID ~= itemID then return end
-    if button._hvCostDone and button._hvVendorDone then return end
+    if button._hvCostDone and button._hvVendorDone
+        and button._hvCostSource == "vendor" then
+        return
+    end
 
     local catalogData = nil
     if HousingAPICache and HousingAPICache.GetCatalogData then
@@ -665,97 +754,31 @@ local function PopulateVendorAndCostOnce(button, item, itemID)
         end
     end
 
-    if button.vendorText then
-        local Filters = _G.HousingFilters
-        local filterVendor = Filters and Filters.currentFilters and Filters.currentFilters.vendor or nil
-        if _G.HousingVendorHelper then
-            local staticVendor = _G.HousingVendorHelper:GetVendorName(item, filterVendor)
-            if staticVendor and staticVendor ~= "" then
-                button.vendorText:SetText(staticVendor)
-                button.vendorText:Show()
-                button._hvVendorDone = true
-            end
-        end
+    -- Shared vendor + cost resolver (keeps Full UI and Compact UI consistent).
+    do
+        local resolver = _G.HousingVendorCostResolver
+        if resolver and resolver.Resolve then
+            local Filters = _G.HousingFilters
+            local filterVendor = Filters and Filters.currentFilters and Filters.currentFilters.vendor or nil
+            local resolved = resolver:Resolve(item, itemID, { filterVendor = filterVendor, catalogData = catalogData })
+            if resolved then
+                if button.vendorText then
+                    local currentVendor = button.vendorText:GetText()
+                    if (not currentVendor or currentVendor == "") and resolved.vendorName and resolved.vendorName ~= "" then
+                        button.vendorText:SetText(resolved.vendorName)
+                        button.vendorText:Show()
+                        button._hvVendorDone = true
+                    end
+                end
 
-        local currentVendor = button.vendorText:GetText()
-        if (not currentVendor or currentVendor == "") and catalogData and catalogData.vendor and catalogData.vendor ~= "" then
-            button.vendorText:SetText(catalogData.vendor)
-            button.vendorText:Show()
-            button._hvVendorDone = true
-        end
-    end
-
-    if catalogData and button.costText and catalogData.cost and catalogData.cost ~= "" then
-        local current = button.costText:GetText()
-        if not current or current == "" or current == "..." or current ~= catalogData.cost then
-            local decorated = ApplyStaticCostIcons(catalogData.cost, item and item._staticCostComponents)
-            local canUpgrade = (not current or current == "" or current == "...")
-                or (type(current) == "string" and not string_find(current, "|T", 1, true) and string_find(catalogData.cost, "|T", 1, true))
-            if canUpgrade then
-                button.costText:SetText(decorated)
-            end
-        end
-        button.costText:Show()
-        button._hvCostDone = true
-    end
-
-    if button._hvCostDone and button._hvVendorDone then
-        return
-    end
-
-    local enrichedVendors = nil
-    if HousingDataEnrichment then
-        enrichedVendors = HousingDataEnrichment:GetVendorInfo(itemID)
-    end
-    if enrichedVendors and #enrichedVendors > 0 then
-        local vendor = enrichedVendors[1]
-        if button.vendorText and vendor.name and vendor.name ~= "" then
-            button.vendorText:SetText(vendor.name)
-            button.vendorText:Show()
-            button._hvVendorDone = true
-        end
-        if button.costText and vendor.price and vendor.currency and vendor.price > 0 then
-            local costText = (vendor.currency == "Gold")
-                and string_format("%dg", vendor.price)
-                or string_format("%d %s", vendor.price, vendor.currency)
-            local current = button.costText:GetText()
-            if not current or current == "" or current == "..." or current ~= costText then
-                button.costText:SetText(costText)
-            end
-            button.costText:Show()
-            button._hvCostDone = true
-        end
-        return
-    end
-
-    local vendorInfo = nil
-    local baseInfo = HousingAPI:GetDecorItemInfoFromItemID(itemID)
-    if baseInfo and baseInfo.decorID then
-        if HousingAPICache and HousingAPICache.GetVendorInfo then
-            vendorInfo = HousingAPICache:GetVendorInfo(baseInfo.decorID)
-        else
-            vendorInfo = HousingAPI:GetDecorVendorInfo(baseInfo.decorID)
-        end
-    end
-
-    if vendorInfo then
-        if button.vendorText then
-            local currentVendor = button.vendorText:GetText()
-            if (not currentVendor or currentVendor == "") and vendorInfo.name and vendorInfo.name ~= "" then
-                button.vendorText:SetText(vendorInfo.name)
-                button.vendorText:Show()
-                button._hvVendorDone = true
-            end
-        end
-
-        if button.costText then
-            local currentCost = button.costText:GetText()
-            if not currentCost or currentCost == "" or currentCost == "..." then
-                local formatted = FormatCostFromVendorInfo(vendorInfo)
-                if formatted and formatted ~= "" then
-                    button.costText:SetText(formatted)
-                    button.costText:Show()
-                    button._hvCostDone = true
+                if button.costText then
+                    local currentCost = button.costText:GetText()
+                    if resolved.costText and resolved.costText ~= "" and (not currentCost or currentCost == "" or currentCost == "..." or currentCost ~= resolved.costText) then
+                        button.costText:SetText(resolved.costText)
+                        button.costText:Show()
+                        button._hvCostDone = true
+                        button._hvCostSource = resolved.costSource or button._hvCostSource
+                    end
                 end
             end
         end
@@ -767,6 +790,14 @@ function ItemList:UpdateSpecialViewItemButton(button, item)
     if not button or not item then return end
 
     button.itemData = item
+
+    if button.simpleActionBar then
+        button.simpleActionBar:Hide()
+    end
+    if button.costText and button.costText.ClearAllPoints then
+        button.costText:ClearAllPoints()
+        button.costText:SetPoint("RIGHT", button, "RIGHT", -12, 0)
+    end
 
     -- Determine the type and set appropriate visuals
     local viewType = "Item"
@@ -814,6 +845,10 @@ function ItemList:UpdateSpecialViewItemButton(button, item)
     -- Hide map icon for special view items
     if button.mapIcon then
         button.mapIcon:Hide()
+    end
+
+    if button.planBtn then
+        button.planBtn:Hide()
     end
     
     -- Set a generic icon for special views
@@ -963,6 +998,11 @@ function ItemList:UpdateRegularItemButton(button, item, buttonIndex)
     -- Update item name with quality color (Midnight theme enhanced)
     local displayName = item.name or "Unknown"
 
+    -- Force load item data before checking quality
+    if itemID and C_Item and C_Item.RequestLoadItemDataByID then
+        C_Item.RequestLoadItemDataByID(itemID)
+    end
+
     local quality = item._apiQuality
     if quality == nil and itemID and C_Item and C_Item.GetItemQualityByID then
         quality = C_Item.GetItemQualityByID(itemID)
@@ -1004,6 +1044,71 @@ function ItemList:UpdateRegularItemButton(button, item, buttonIndex)
         button.zoneText:SetText(zoneName)
     end
 
+    -- Plan toggle button (full UI list).
+    if button.planBtn and button.planBtn.SetShown then
+        local pm = _G.HousingPlanManager
+        local itemID = tonumber(item.itemID)
+        local hasReagents = IsProfessionItem(item, itemID)
+        local showPlanBtn = (pm and pm.ToggleItem and pm.IsInPlan) and hasReagents
+        button.planBtn:SetShown(showPlanBtn == true)
+
+        local inPlan = false
+        if showPlanBtn and itemID and pm and pm.IsInPlan then
+            inPlan = pm:IsInPlan(itemID)
+        end
+
+        if button.planBtn.icon then
+            if inPlan then
+                button.planBtn.icon:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
+                button.planBtn.icon:SetTexCoord(0, 1, 0, 1)
+            else
+                button.planBtn.icon:SetTexture("Interface\\AddOns\\HousingVendor\\Data\\Media\\add.tga")
+                button.planBtn.icon:SetTexCoord(0, 1, 0, 1)
+            end
+        end
+
+	        if not button.planBtn._hvSetup then
+	            button.planBtn._hvSetup = true
+	            button.planBtn:SetScript("OnClick", function()
+	                local rowItem = button.itemData
+	                local rid = rowItem and tonumber(rowItem.itemID)
+	                local mgr = _G.HousingPlanManager
+	                if mgr and rid and mgr.ToggleItem then
+	                    mgr:ToggleItem(rid)
+	
+	                    local isIn = mgr.IsInPlan and mgr:IsInPlan(rid)
+	                    if button.planBtn and button.planBtn.icon then
+	                        if isIn then
+	                            button.planBtn.icon:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
+	                            button.planBtn.icon:SetTexCoord(0, 1, 0, 1)
+	                        else
+	                            button.planBtn.icon:SetTexture("Interface\\AddOns\\HousingVendor\\Data\\Media\\add.tga")
+	                            button.planBtn.icon:SetTexCoord(0, 1, 0, 1)
+	                        end
+	                    end
+	                end
+	            end)
+
+            button.planBtn:SetScript("OnEnter", function(selfBtn)
+                local rowItem = button.itemData
+                local rid = rowItem and tonumber(rowItem.itemID)
+                local mgr = _G.HousingPlanManager
+                local isIn = mgr and rid and mgr.IsInPlan and mgr:IsInPlan(rid)
+                GameTooltip:SetOwner(selfBtn, "ANCHOR_TOP")
+                GameTooltip:SetText(isIn and "Remove from Crafting List" or "Add to Crafting List", 1, 1, 1, 1, true)
+                GameTooltip:Show()
+            end)
+            button.planBtn:SetScript("OnLeave", function()
+                GameTooltip:Hide()
+            end)
+        end
+
+        if button.costText and button.costText.ClearAllPoints then
+            button.costText:ClearAllPoints()
+            button.costText:SetPoint("RIGHT", button.planBtn, "LEFT", -10, 0)
+        end
+    end
+
     -- Display owned quantity if available (from cached API data)
     if button.quantityText then
         local numStored = item._apiNumStored or 0
@@ -1041,13 +1146,49 @@ function ItemList:UpdateRegularItemButton(button, item, buttonIndex)
     if button._hvItemID ~= itemID then
         button._hvCostDone = false
         button._hvVendorDone = false
+        button._hvCostSource = nil
         -- Only clear vendor text when the button is reused for a different item (prevents flicker on refresh).
         if button.vendorText then
             button.vendorText:SetText("")
             button.vendorText:Show()
         end
+        if button.costText then
+            button.costText:SetText("")
+            button.costText:Hide()
+        end
+        if button.ahPriceText then
+            button.ahPriceText:SetText("")
+            button.ahPriceText:Hide()
+        end
     end
     button._hvItemID = itemID
+
+    -- Auction House price (cached); only for profession items.
+    if button.ahPriceText then
+        local showAh = false
+        if itemID and IsProfessionItem(item, itemID) then
+            local api = _G.HousingAuctionHouseAPI
+            if api and api.GetCachedPrice then
+                local price = select(1, api:GetCachedPrice(itemID))
+                price = tonumber(price)
+                if price and price > 0 then
+                    button.ahPriceText:SetText("AH: " .. FormatMoneyFromCopper(price))
+                    button.ahPriceText:Show()
+                    showAh = true
+                end
+            end
+        end
+        if not showAh then
+            button.ahPriceText:SetText("")
+            button.ahPriceText:Hide()
+        end
+
+        if button.zoneText then
+            button.zoneText:ClearAllPoints()
+            -- Keep location inside the row: zone above cost, AH below cost.
+            button.zoneText:SetPoint("BOTTOMRIGHT", button.costText, "TOPRIGHT", 0, 2)
+        end
+    end
 
     -- Synchronous vendor fallback (stable): fill vendor immediately from hard data if possible.
     if button.vendorText then
@@ -1077,10 +1218,12 @@ function ItemList:UpdateRegularItemButton(button, item, buttonIndex)
                 button.costText:SetText(ApplyStaticCostIcons(item.cost, item._staticCostComponents))
                 button.costText:Show()
                 button._hvCostDone = true
+                button._hvCostSource = "static"
             elseif item.price and item.price > 0 then
                 button.costText:SetText(string_format("%dg", item.price))
                 button.costText:Show()
                 button._hvCostDone = true
+                button._hvCostSource = "static"
             end
         end
     end
@@ -1089,17 +1232,22 @@ function ItemList:UpdateRegularItemButton(button, item, buttonIndex)
         local maxAttempts = 4
 
         local function ApplyStaticFallbacks()
-            if button.costText then
+            if button.costText and button._hvCostSource ~= "vendor" then
                 local currentCost = button.costText:GetText()
-                if (not currentCost or currentCost == "" or currentCost == "...") then
-                    if item.cost and item.cost ~= "" then
-                        button.costText:SetText(ApplyStaticCostIcons(item.cost, item._staticCostComponents))
+                if item.cost and item.cost ~= "" then
+                    local desired = ApplyStaticCostIcons(item.cost, item._staticCostComponents)
+                    if currentCost ~= desired then
+                        button.costText:SetText(desired)
                         button.costText:Show()
-                        button._hvCostDone = true
-                    elseif item.price and item.price > 0 then
+                    end
+                    button._hvCostDone = true
+                    button._hvCostSource = "static"
+                elseif (not currentCost or currentCost == "" or currentCost == "...") then
+                    if item.price and item.price > 0 then
                         button.costText:SetText(string_format("%dg", item.price))
                         button.costText:Show()
                         button._hvCostDone = true
+                        button._hvCostSource = "static"
                     elseif currentCost == "..." then
                         button.costText:Hide()
                     end
@@ -1165,7 +1313,22 @@ function ItemList:UpdateRegularItemButton(button, item, buttonIndex)
         -- No catalog API, try item.price directly
         -- Note: Static data stores price in GOLD, not copper
         if button.costText then
-            if item.cost and item.cost ~= "" then
+            local formatter = _G.HousingCostFormatter
+            if formatter and formatter.GetBestCostText then
+                local best = formatter:GetBestCostText(item, itemID)
+                if best and best ~= "" then
+                    button.costText:SetText(best)
+                    button.costText:Show()
+                elseif item.cost and item.cost ~= "" then
+                    button.costText:SetText(ApplyStaticCostIcons(item.cost, item._staticCostComponents))
+                    button.costText:Show()
+                elseif item.price and item.price > 0 then
+                    button.costText:SetText(string_format("%dg", item.price))
+                    button.costText:Show()
+                else
+                    button.costText:Hide()
+                end
+            elseif item.cost and item.cost ~= "" then
                 button.costText:SetText(ApplyStaticCostIcons(item.cost, item._staticCostComponents))
                 button.costText:Show()
             elseif item.price and item.price > 0 then
@@ -1218,7 +1381,36 @@ function ItemList:UpdateRegularItemButton(button, item, buttonIndex)
             button.collectedIcon:Hide()
         end
     end
-    
+
+    -- Crafted recipe-known label (profession items only; requires TradeSkill cache)
+    if button.recipeText then
+        local known = nil
+        local hv = _G.HousingVendor
+        local pr = hv and hv.ProfessionReagents
+        local hasReagents = pr and pr.HasReagents and itemID and pr:HasReagents(tonumber(itemID)) or false
+
+        if hasReagents then
+            if pr and pr.IsRecipeKnown then
+                known = pr:IsRecipeKnown(tonumber(itemID))
+            end
+            local theme = GetTheme()
+            local colors = theme.Colors or {}
+            local statusSuccess = colors.statusSuccess or { 0.30, 0.85, 0.50, 1.0 }
+
+            if known == true then
+                button.recipeText:SetText("Recipe Known")
+                button.recipeText:SetTextColor(statusSuccess[1], statusSuccess[2], statusSuccess[3], 1)
+                button.recipeText:Show()
+            else
+                button.recipeText:SetText("")
+                button.recipeText:Hide()
+            end
+        else
+            button.recipeText:SetText("")
+            button.recipeText:Hide()
+        end
+    end
+     
     -- Restore default click behavior for regular items (preview panel only)
     SetClickHandler(button, "regular", OnRegularItemButtonClick)
 end

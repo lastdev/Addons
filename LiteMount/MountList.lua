@@ -192,7 +192,7 @@ function LM.MountList:LFUWeights()
     local weights = { }
     local lowestSummonCount
 
-    for i, m in ipairs(self) do
+    for _, m in ipairs(self) do
         if m:GetPriority() ~= LM.Options.DISABLED_PRIORITY then
             local c = m:GetSummonCount()
             if c <= (lowestSummonCount or c) then
@@ -343,6 +343,18 @@ local SortFunctions = {
             else
                 return a.name < b.name
             end
+        end,
+    ['expansion'] =
+        function (a, b)
+            return (a.expansion or -1) < (b.expansion or -1)
+        end,
+    ['mountid'] =
+        function (a, b)
+            return (a.mountID or 0) < (b.mountID or 0)
+        end,
+    ['spellid'] =
+        function (a, b)
+            return (a.spellID or 0) < (b.spellID or 0)
         end,
 }
 

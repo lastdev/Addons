@@ -375,7 +375,12 @@ function Details:GetBarColor(actor) --[[exported]]
 			return unpack(actor.color)
 
 		else
-			return unpack(Details.class_colors[actor.classe or "UNKNOW"])
+			local color = Details.class_colors[actor.classe or "UNKNOW"]
+			if (not color) then
+				return detailsFramework:ParseColors("brown")
+			else
+				return unpack(Details.class_colors[actor.classe or "UNKNOW"])
+			end
 		end
 	end
 end
@@ -1739,7 +1744,8 @@ end
 			spellSchoolColor = Details.spells_school[1]
 		end
 
-		Details:SetBarColors(thisLine, instancia, unpack(spellSchoolColor))
+		local r, g, b, a = detailsFramework:ParseColors(spellSchoolColor)
+		Details:SetBarColors(thisLine, instancia, r, g, b, a)
 
 		thisLine.icone_classe:SetTexture(icon)
 		thisLine.icone_classe:SetTexCoord(0.078125, 0.921875, 0.078125, 0.921875)
@@ -1757,12 +1763,27 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --main refresh function
 
+function Details:ClearSecretFontStrings(instance)
+	local bars = instance.barras
+	for i = 1, #bars do
+		local thisLine = bars[i]
+		if thisLine.lineText11 then
+			thisLine.lineText11:SetText("")
+			thisLine.lineText12:SetText("")
+			thisLine.lineText13:SetText("")
+			thisLine.lineText14:SetText("")
+		end
+	end
+end
+
 --~refresh
 ---@param instanceObject instance
 ---@param combatObject combat
 ---@param bForceUpdate boolean
 ---@param bExportData boolean
 function damageClass:RefreshWindow(instanceObject, combatObject, bForceUpdate, bExportData)
+	if not Details222.UpdateIsAllowed() then return end --temporary stop updates in th new dlc
+
 	---@type actorcontainer
 	local damageContainer = combatObject[class_type] --o que esta sendo mostrado -> [1] - dano [2] - cura --pega o container com ._NameIndexTable ._ActorTable
 
@@ -1781,6 +1802,8 @@ function damageClass:RefreshWindow(instanceObject, combatObject, bForceUpdate, b
 		--colocado isso recentemente para fazer as barras de dano sumirem na troca de atributo
 		return Details:HideBarsNotInUse(instanceObject, damageContainer), "", 0, 0
 	end
+
+	Details:ClearSecretFontStrings(instanceObject)
 
 	--total
 	local total = 0
@@ -2739,12 +2762,15 @@ end
 
 -- ~atualizar ~barra ~update
 function damageClass:RefreshLine(instanceObject, lineContainer, whichRowLine, rank, total, subAttribute, bForceRefresh, keyName, combatTime, percentageType, bUseAnimations, bars_show_data, bars_brackets, bars_separator)
+	---@type detailsline
 	local thisLine = lineContainer[whichRowLine]
 
 	if (not thisLine) then
 		print("DEBUG: problema com <instance.thisLine> "..whichRowLine.." "..rank)
 		return
 	end
+
+	thisLine.statusbar:SetMinMaxValues(0, 100)
 
 	local previousData = thisLine.minha_tabela
 	thisLine.minha_tabela = self --store references
@@ -3118,6 +3144,7 @@ function Details:RefreshLineValue(thisLine, instance, previousData, isForceRefre
 
 		if (not previousData or previousData ~= thisLine.minha_tabela or isForceRefresh) then
 			thisLine:SetValue(100)
+			thisLine:Show()
 
 			if (thisLine.hidden or thisLine.fading_in or thisLine.faded) then
 				Details.FadeHandler.Fader(thisLine, "out")
@@ -3449,11 +3476,17 @@ function Details:SetClassIcon(texture, instance, class) --[[exported]] --~icons
 				texture:SetVertexColor(1, 1, 1)
 			else
 				texture:SetTexture(instance.row_info.icon_file or [[Interface\AddOns\Details\images\classes_small]])
+				if (not class or class == "" or type(class) ~= "string") then
+					class = "UNKNOW"
+				end
 				texture:SetTexCoord(unpack(Details.class_coords[class]))
 				texture:SetVertexColor(1, 1, 1)
 			end
 		else
 			texture:SetTexture(instance and instance.row_info.icon_file or [[Interface\AddOns\Details\images\classes_small]])
+			if (not class) then
+				class = "UNKNOW"
+			end
 			texture:SetTexCoord(unpack(Details.class_coords[class]))
 			texture:SetVertexColor(1, 1, 1)
 		end
@@ -3932,10 +3965,14 @@ function damageClass:ToolTip_DamageDone(instance, numero, barra, keydown)
 	if (owner and owner.classe) then
 		r, g, b = unpack(Details.class_colors [owner.classe])
 	else
-		if (not Details.class_colors [self.classe]) then
-			return print("Details!: error class not found:", self.classe, "for", self.nome)
+		local class = self.classe
+		if (not class or class == "" or type(class) ~= "string") then
+			class = "UNKNOW"
 		end
-		r, g, b = unpack(Details.class_colors [self.classe])
+		if (not Details.class_colors[class]) then
+			return print("Details!: error class not found:", class, "for", self.nome)
+		end
+		r, g, b = unpack(Details.class_colors[class])
 	end
 
 	local combatObject = instance:GetCombat()

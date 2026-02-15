@@ -1,5 +1,43 @@
 = DelveBuddy Changelog =
 
+== 2.0.6 ==
+Misc:
+* Updated TOC for 12.0.1
+
+== 2.0.5 ==
+Fixes:
+* Re-added missing Vault 3 column
+
+== 2.0.4 ==
+Enhancements:
+* Added "iLvl" column to show current average equipped item level, so you know who needs to do more delves. :)
+
+== 2.0.3 ==
+Fixes:
+* Removed accidental logging code on login (whoopsie!)
+
+== 2.0.2 ==
+Enhancements:
+* Show a warning if your companion doesn't have a role set.
+
+Fixes:
+* Fixed a bug that caused some delves to display in the wrong zone
+* Fixed a bug that caused vault reward iLvls to not be displayed correctly
+
+Misc:
+* Changed how bountiful delves are detected, which should ease finding new delves in future seasons
+
+== 2.0.1 ==
+Fixes:
+* Fixed issue which caused DelveBuddy to not display if you had vault rewards earned using an older version of DelveBuddy. You will temporarily see "?" as the Vault reward iLvl for characters which haven't been logged in recently. Logging those characters will fix the issue, and correct iLvls will be displayed again.
+
+== 2.0.0 ==
+Enhancements:
+* Updated for Midnight pre-patch 12.0.0 (with TWW Season 3 delves).
+
+Misc:
+* Rebuilt delve detection, reward classification, and other areas of the addon to be more data-driven. Everything looks and acts exactly as before, but with these changes it will be much easier to update when Midnight Delve Season 1 starts in March. 
+
 == 1.3.6 ==
 Fixes:
 * Fix timerunning character detection

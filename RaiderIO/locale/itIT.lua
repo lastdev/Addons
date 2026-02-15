@@ -108,16 +108,24 @@ L["DUNGEON_SHORT_NAME_HOV"] = "SDV"
 --[[ L["DUNGEON_SHORT_NAME_KR"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_LOWR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_MC"] = ""--]] 
 L["DUNGEON_SHORT_NAME_MISTS"] = "NEBBIE"
 L["DUNGEON_SHORT_NAME_ML"] = "VM"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_MOS"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_MT"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_NELT"] = ""--]] 
 L["DUNGEON_SHORT_NAME_NL"] = "ADN"
 L["DUNGEON_SHORT_NAME_NO"] = "ODN"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_NPX"] = ""--]] 
 L["DUNGEON_SHORT_NAME_NW"] = "SN"
 L["DUNGEON_SHORT_NAME_PF"] = "PF"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_POS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_PSF"] = "PdFS"
 L["DUNGEON_SHORT_NAME_RISE"] = "ADM"
 L["DUNGEON_SHORT_NAME_RLP"] = "PDVDR"
@@ -130,6 +138,8 @@ L["DUNGEON_SHORT_NAME_SIEGE"] = "ASSEDIO"
 L["DUNGEON_SHORT_NAME_SOA"] = "SOA"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_SOTS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_SR"] = ""--]] 
 L["DUNGEON_SHORT_NAME_STRT"] = "STRADE"
 L["DUNGEON_SHORT_NAME_SV"] = "VDP"
 --[[Translation missing --]]
@@ -148,6 +158,8 @@ L["DUNGEON_SHORT_NAME_UPPR"] = "KS"
 L["DUNGEON_SHORT_NAME_VP"] = "PDV"
 L["DUNGEON_SHORT_NAME_WM"] = "MDC"
 L["DUNGEON_SHORT_NAME_WORK"] = "OFFICINA"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_WS"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_YARD"] = ""--]] 
 L["ENABLE_AUTO_FRAME_POSITION"] = "Posiziona Automaticamente la Cornice del Profilo RaiderIO"
@@ -339,6 +351,8 @@ L["RAID_BOSS_CN_7"] = "Il Concilio del Sangue"
 L["RAID_BOSS_CN_8"] = "Picchiapoltiglia"
 L["RAID_BOSS_CN_9"] = "Generali della Legione di Pietra "
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_DR_1"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_DS_1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_DS_2"] = ""--]] 
@@ -485,6 +499,10 @@ L["RAID_BOSS_MFO_5"] = "Cacciatori d'Anime"
 L["RAID_BOSS_MFO_7"] = "Re del Nexus Salhadaar"
 L["RAID_BOSS_MFO_8"] = "Dimensius, il Divoratore"
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_MQD_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MQD_2"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_MSV_1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_MSV_2"] = ""--]] 
@@ -608,6 +626,18 @@ L["RAID_BOSS_VOTI_6"] = "Kurog Totem Truce"
 L["RAID_BOSS_VOTI_7"] = "Custode della Progenie Diurna"
 L["RAID_BOSS_VOTI_8"] = "Raszageth la Mangiatempeste"
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_6"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOT"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BRD"] = ""--]] 
@@ -629,6 +659,8 @@ L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "NM"
 --[[ L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_DR"] = ""--]] 
 L["RAID_DS"] = "Anima del Drago"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Boss Incursione Sconfitti"
 L["RAID_FL"] = "Terre del Fuoco"
@@ -637,6 +669,8 @@ L["RAID_FL"] = "Terre del Fuoco"
 L["RAID_ICC"] = "Rocca della Corona di Ghiaccio "
 L["RAID_LOU"] = "Liberazione di Cavafonda"
 L["RAID_MFO"] = "Manaforgia Omega"
+--[[Translation missing --]]
+--[[ L["RAID_MQD"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_MSV"] = ""--]] 
 L["RAID_NP"] = "Palazzo dei Nerub'ar"
@@ -648,6 +682,8 @@ L["RAID_RS"] = "Santuario di Rubino"
 --[[Translation missing --]]
 --[[ L["RAID_TOT"] = ""--]] 
 L["RAID_TOTFW"] = "Trono dei Quattro Venti"
+--[[Translation missing --]]
+--[[ L["RAID_VS"] = ""--]] 
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Media Punteggio per +%s in Tempo"
 L["RAIDERIO_BEST_RUN"] = "Raider.IO M+ Migliore Run"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personalizzazione del client RaiderIO"
@@ -745,10 +781,18 @@ L["SHOW_LEADER_PROFILE"] = "Permetti il ​​modificatore del Tooltip del profi
 L["SHOW_LEADER_PROFILE_DESC"] = "Tenere premuto un modificatore (shift/ctlr/alt) per alternare la descrizione del profilo tra Profilo Personale/Profilo Leader."
 L["SHOW_MAINS_SCORE"] = "Mostra Punteggio del Personaggio Principale e Progresso Incursione"
 L["SHOW_MAINS_SCORE_DESC"] = "Mostra il punteggio del PG Principale del giocatore e i Progressi dell'Incursione sul tooltip. I giocatori devono essere registrati sul sito Raider.IO ed impostare un personaggio come principale."
+--[[Translation missing --]]
+--[[ L["SHOW_MY_WARBAND_SCORE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SHOW_MY_WARBAND_SCORE_DESC"] = ""--]] 
 L["SHOW_ON_GUILD_ROSTER"] = "Mostra nell'elenco Membri di Gilda"
 L["SHOW_ON_GUILD_ROSTER_DESC"] = "Mostra il Punteggio M+ quando passi il mouse sopra l'elenco dei giocatori di Gilda."
 L["SHOW_ON_PLAYER_UNITS"] = "Mostra sula Finestra del Giocatore"
 L["SHOW_ON_PLAYER_UNITS_DESC"] = "Mostra il Punteggio M+ quando passi il mouse sopra un Giocatore."
+--[[Translation missing --]]
+--[[ L["SHOW_OTHER_WARBAND_SCORE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SHOW_OTHER_WARBAND_SCORE_DESC"] = ""--]] 
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE"] = "Mostra i progressi delle Incursioni nel Tooltip del Profilo."
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE_DESC"] = "Quando impostato, mostrerà i progressi delle Incursioni nel Tooltip di RaiderIO."
 L["SHOW_RAIDERIO_BESTRUN_FIRST"] = "(Sperimentale) Dai la priorità a Raider.IO Migliore Run"

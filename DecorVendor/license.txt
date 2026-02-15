@@ -1,0 +1,18 @@
+Copyright (c) 2025–2026 MidniteDestiny
+
+Project Name : DecorVendor
+CurseForge   : https://www.curseforge.com/wow/addons/decor-vendor
+License Type : All Rights Reserved
+Author       : MidniteDestiny
+Created      : October 2025
+
+This license applies to the World of Warcraft addon "DecorVendor"
+(CurseForge project: decor-vendor) and all files contained within
+this project.
+
+This addon, in whole or in part, may not be redistributed, modified,
+repackaged, or included in other projects without explicit written
+permission from the author.
+
+This license file must remain present and unmodified in all copies
+of the project.

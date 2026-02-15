@@ -82,14 +82,14 @@ end
 local function CommonLinkable_OnClick(self)
 	if not IsModifiedClick("CHATLINK") then
 	elseif self.achievementID then
-		ChatEdit_InsertLink(GetAchievementLink(self.achievementID))
+		ChatFrameUtil.InsertLink(GetAchievementLink(self.achievementID))
 	elseif self.itemID then
 		local _, link = C_Item.GetItemInfo(self.itemID)
 		if link then
-			ChatEdit_InsertLink(link)
+			ChatFrameUtil.InsertLink(link)
 		end
 	elseif self.currencyID and self.currencyID ~= 0 then
-		ChatEdit_InsertLink(C_CurrencyInfo.GetCurrencyLink(self.currencyID, self.currencyAmount or 0))
+		ChatFrameUtil.InsertLink(C_CurrencyInfo.GetCurrencyLink(self.currencyID, self.currencyAmount or 0))
 	end
 end
 local function Button_EatKeyboardInputThisFrame(self)
@@ -169,7 +169,7 @@ local function Equipment_PostClick(self)
 end
 local function Equipment_PreClick(self)
 	if IsModifiedClick("CHATLINK") and self.abilityID then
-		ChatEdit_InsertLink(C.GetFollowerAbilityLink(self.abilityID))
+		ChatFrameUtil.InsertLink(C.GetFollowerAbilityLink(self.abilityID))
 		return
 	end
 	local maid = self.mutableAbilityID
@@ -247,7 +247,7 @@ local function Champion_OnEnter(self)
 end
 local function ToggleChampionOnClick(self, button)
 	if IsModifiedClick("CHATLINK") and button == "LeftButton" then
-		ChatEdit_InsertLink(C.GetFollowerLink(self.followerID))
+		ChatFrameUtil.InsertLink(C.GetFollowerLink(self.followerID))
 	elseif button == "LeftButton" then
 		EV("I_TOGGLE_FOLLOWER_FOCUS", self.followerID, self.selectDisabled)
 	elseif button == "RightButton" then
@@ -321,7 +321,7 @@ local function ResourceButton_Update(self, _event, currencyID, quant)
 end
 local function ResourceButton_OnClick(self)
 	if IsModifiedClick("CHATLINK") then
-		ChatEdit_InsertLink(C_CurrencyInfo.GetCurrencyLink(self.currencyID, 24))
+		ChatFrameUtil.InsertLink(C_CurrencyInfo.GetCurrencyLink(self.currencyID, 24))
 	end
 end
 local function GroupButton_OnEnter(self)
@@ -342,7 +342,7 @@ local function GroupButton_OnClick(self, button)
 end
 local function Mission_OnClick(self)
 	if IsModifiedClick("CHATLINK") and self.missionID then
-		ChatEdit_InsertLink(C.GetMissionLink(self.missionID))
+		ChatFrameUtil.InsertLink(C.GetMissionLink(self.missionID))
 	else
 		if self.missionID and self.ProgressBar:IsShown() and self.completableAfter and self.completableAfter <= GetTime()
 		   and (self.ProgressBar:IsMouseOver(6, -6, -6, 6) or self.RewardChest:IsMouseOver()) then
@@ -780,7 +780,8 @@ function Factory.MissionThreat(parent)
 	return f
 end
 function Factory.FollowerAbilityOrEquipment(parent)
-	local f,t = T.TenSABT(CreateFrame("Button", nil, parent, "InsecureActionButtonTemplate"))
+	local f,t = CreateFrame("Button", nil, parent, "InsecureActionButtonTemplate")
+	f:SetAttribute("useOnKeyDown", false)
 	f:SetSize(32, 32)
 	f:SetScript("OnEnter", Ability_OnEnter)
 	f:SetScript("OnLeave", Ability_OnLeave)
@@ -1322,8 +1323,8 @@ function Factory.MissionTable(name)
 	frame:SetClampedToScreen(true)
 	frame:SetClampRectInsets(0, 0, 4, -2)
 	local mover = CreateFrame("Button", nil, frame)
-	mover:SetPoint("TOPLEFT", frame.TitleText, "TOPLEFT", -48, -20)
-	mover:SetPoint("BOTTOMRIGHT", frame.TitleText, "BOTTOMRIGHT", 48, 20)
+	mover:SetPoint("TOPLEFT", frame.TitleText, "TOPLEFT", -52, 6)
+	mover:SetPoint("BOTTOMRIGHT", frame.TitleText, "BOTTOMRIGHT", 52, -4)
 	mover:SetScript("OnMouseDown", function()
 		frame:StartMoving()
 	end)
@@ -1655,6 +1656,7 @@ function Factory.ConfirmOnUseButton()
 	end
 	local b = CreateFrame("Button", n, nil, "InsecureActionButtonTemplate")
 	b:RegisterEvent("USE_BIND_CONFIRM")
+	b:SetAttribute("useOnKeyDown", false)
 	b:SetScript("OnEvent", function(self)
 		self.armState = self.armState == 1 and 2 or nil
 	end)
@@ -1679,7 +1681,6 @@ function Factory.ConfirmOnUseButton()
 			StopSound(s2)
 		end
 	end)
-	T.TenSABT(b)
 	function b:Arm()
 		local _
 		self.armState = 1

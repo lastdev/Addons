@@ -1,8 +1,9 @@
 --Localization.ruRU.lua
 
-if ( GetLocale() == "ruRU" ) then
+if GetLocale() ~= "ruRU" then return end
 
-TomTomLocals = {
+local addonName, addon = ...
+local baseLocale = {
 	["%d yards"] = "%d ярды",
 	["%s (%.2f, %.2f)"] = "%s (%.2f, %.2f)",
 	["%s yards away"] = "%s ярдов осталось",
@@ -214,6 +215,4 @@ TomTomLocals = {
 	["|cffffff78TomTom|r: Added '%s' (sent from %s) to zone %s"] = "|cffffff78TomTom|r: Добавить '%s' (присланное от %s) в локацию %s",
 }
 
-setmetatable(TomTomLocals, {__index=function(t,k) rawset(t, k, k); return k; end})
-
-end
+addon:RegisterLocale('ruRU', baseLocale)

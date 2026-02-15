@@ -1,5 +1,5 @@
-local VERSION_TEXT = "1.8.4 c";
-local VERSION_DATE = 1766300000;
+local VERSION_TEXT = "1.8.6 b";
+local VERSION_DATE = 1770130000;
 
 
 local addonName, addon = ...
@@ -207,7 +207,6 @@ local DefaultValues = {
         SoftTarget_Objectives = false,
         SoftTarget_House_HideIcon = false,
         SoftTarget_House_HideName = false,
-
     AppearanceTab = false,              --Adjust Appearance Tab models to reduce GPU usage spike
         AppearanceTab_ModelCount = 1,
     ItemUpgradeUI = true,
@@ -220,6 +219,7 @@ local DefaultValues = {
     TransmogChatCommand = false,        --Adjust /outfit command behavior
     CraftSearchExtended = false,        --Show more search result, custom keywords
     SourceAchievementLink = true,       --Make Achievement name in MountJournal, DecorCatalog interactable
+    TransmogOutfitSelect = true,        --Show Minimized Transmog Outfit Collection
 
 
     --Tooltip
@@ -256,15 +256,19 @@ local DefaultValues = {
         LootUI_NewTransmogIcon = true,
         LootUI_UseCustomColor = false,
         LootUI_GrowUpwards = false,
+        LootUI_WindowHide = false,
+        LootUI_CombineItems = false,
+        LootUI_LowFrameStrata = false,
+        LootUI_HideTitle = false,
+        LootUI_ShowReputation = false,
+        LootUI_ShowAllMoneyChange = false,
+        LootUI_ShowAllCurrencyChange = false,
+        LootUI_ReplaceDefaultAlert = false,
         LootUI_ForceAutoLoot = true,
         LootUI_LootUnderMouse = false,
         LootUI_UseHotkey = true,
         LootUI_HotkeyName = "E",
-        LootUI_ReplaceDefaultAlert = false,
         LootUI_UseStockUI = false,
-        LootUI_WindowHide = false,
-        LootUI_CombineItems = false,
-        LootUI_LowFrameStrata = false,
 
 
     --Unified Map Pin System
@@ -335,6 +339,19 @@ local DefaultValues = {
     Housing_ItemAcquiredAlert = true,       --Click AlertFrame to view decor model
 
 
+    --Namaplte: Quest Indicator
+    NameplateQuest = false,
+        NameplateQuest_IconSize = 2,
+        NameplateQuest_ShowPartyQuest = false,
+        NameplateQuest_ShowTargetProgress = false,
+            NameplateQuest_TextOutline = true,
+        NameplateQuest_WidgetOffsetX = 0,
+        NameplateQuest_WidgetOffsetY = 0,
+        NameplateQuest_ProgressFormat = 1,
+        NameplateQuest_ProgressShowIcon = false,
+        --NameplateQuest_Side = "RIGHT",    --Initial value dedfined by detecting addon
+
+
     --Declared elsewhere:
         --DreamseedChestABTesting = math.random(100) >= 50
 
@@ -348,12 +365,13 @@ local DefaultValues = {
 
 local NeverEnableByDefault = {
     AppearanceTab = true,
+    NameplateQuest = true,
 };
 
 
 local function LoadDatabase()
     PlumberDB = PlumberDB or {};
-    PlumberStorage = PlumberStorage or {};  --Save large data (Spell)
+    PlumberStorage = PlumberStorage or {};
     PlumberDB_PC = PlumberDB_PC or {};
 
     DB = PlumberDB;
@@ -393,6 +411,9 @@ local function LoadDatabase()
 
     CallbackRegistry:Trigger("NewDBKeysAdded", newDBKeys);
     CallbackRegistry:Trigger("DBLoaded", DB);
+
+
+    PlumberStorage.CreatureSpells = nil;    --Store SpellcastingInfo, retired in  Midnight
 end
 
 

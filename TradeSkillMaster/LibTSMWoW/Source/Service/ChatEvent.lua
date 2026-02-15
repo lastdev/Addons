@@ -7,6 +7,7 @@
 local LibTSMWoW = select(2, ...).LibTSMWoW
 local ChatEvent = LibTSMWoW:Init("Service.ChatEvent")
 local Event = LibTSMWoW:Include("Service.Event")
+local ClientInfo = LibTSMWoW:Include("Util.ClientInfo")
 local String = LibTSMWoW:From("LibTSMUtil"):Include("Lua.String")
 local private = {
 	lootHandlers = {},
@@ -43,6 +44,10 @@ end
 -- ============================================================================
 
 function private.HandleLootEvent(_, msg)
+	if ClientInfo.IsRetail() and issecretvalue(msg) then
+		-- The message is a secret, so just ignore it
+		return
+	end
 	if #private.lootHandlers == 0 then
 		return
 	end

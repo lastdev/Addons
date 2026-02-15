@@ -1,41 +1,63 @@
-## Interface: 120000, 120001, 110207
+## Interface: 120000, 120001, 
 ## Title: |cFFFF0000Housing|r|cFF0066FFVendor|r
-## Notes: Housing Decor Vendors Database
-## Version:  01.01.26.20
+## Notes: |cFFAAAAAAHousing Decor & Crafted Items|r |cFF44FF44Database|r • Waypoints • TomTom support • |cFFFFAA00Find every vendor fast!|r
+## Version: 03.02.26.5C
+## Author: RenZhi
 ## IconTexture: Interface\Icons\INV_Misc_Map02.blp
 ## Category-enUS: Decor Vendors
-## Author: RenZhi
 ## SavedVariables: HousingDB, HousingVendorRepDB
+## Notes-esES: Base de datos de vendedores de decoración de vivienda con artículos elaborados y puntos de ruta
+## Notes-deDE: Möbelhändler-Datenbank mit hergestellten Gegenständen und Wegpunkten
+## Notes-frFR: Base de données des vendeurs de décoration avec objets fabriqués et points de repère
+## Notes-itIT: Database dei venditori di arredamento con oggetti creati e waypoint
+## Notes-ptBR: Banco de dados de vendedores de decoração com itens criados e waypoints
+## Notes-ruRU: База данных продавцов декораций с созданными предметами и путевыми точками
+## Notes-zhCN: 房屋装饰商数据库，包含制作物品和路径点
+## Notes-zhTW: 房屋裝飾商資料庫，包含製作物品和路徑點
+## Notes-koKR: 주거용 장식 판매자 데이터베이스 (제작 아이템 및 웨이포인트 포함)
+## Notes-esMX: Base de datos de vendedores de decoración de vivienda con artículos elaborados y puntos de ruta
+## IconTexture: AddOns\HousingVendor\HousingVendor_Icon64.blp
+
 
 Core\Core.lua
 Core\DataLoader.lua
 Core\Events.lua
 Core\Config.lua
+Core\Logger.lua
+
+Modules\Util\VersionDetect.lua
 
 Data\DataAggregator.lua
 Data\DataConstants.lua
+Data\CurrencyTypes.lua
 Data\FactionIDs.lua
+Data\VendorExtra.lua
 Data\ItemFieldIndices.lua
 Data\DNT\AllItems_DNT.lua
 Data\AllItems.lua
 
 Data\NonVendor\Achievements.lua
 Data\NonVendor\Quests.lua
-Data\NonVendor\Costs.lua
+Data\QuestNPCs.lua
+Data\NonVendor\Drops.lua
+Data\NonVendor\Rewards.lua
 Data\NonVendor\Professions.lua
+Data\NonVendor\ProfessionTrainers.lua
+Data\NonVendor\RawMats.lua
 Data\NonVendor\ReputationFactions.lua
-Data\NonVendor\ReputationItems.lua
-
 Data\VendorLocations\Classic.lua
 Data\VendorLocations\BurningCrusade.lua
+Data\VendorLocations\WrathoftheLichKing.lua
 Data\VendorLocations\Cataclysm.lua
 Data\VendorLocations\MistsofPandaria.lua
+Data\VendorLocations\WarlordsofDraenor.lua
 Data\VendorLocations\Legion.lua
 Data\VendorLocations\BattleforAzeroth.lua
 Data\VendorLocations\Shadowlands.lua
 Data\VendorLocations\Dragonflight.lua
 Data\VendorLocations\TheWarWithin.lua
 Data\VendorLocations\Midnight.lua
+
 
 Locale\enUS.lua
 Locale\deDE.lua
@@ -52,20 +74,35 @@ Locale\Locale.lua
 
 Modules\Data\ReputationLoader.lua
 Modules\Data\ProfessionReagents.lua
+Modules\Data\ProfessionTrainers.lua
+Modules\Data\ReagentSources.lua
 Modules\Data\DataEnrichment.lua
 
 Modules\Map\MapIDToExpansion.lua
 Modules\Map\PortalData.lua
 Modules\Map\PortalPathfinder.lua
 Modules\Map\WaypointManager.lua
+Modules\Map\VendorMapPins.lua
 
 Modules\Tools\TooltipScanner.lua
 Modules\Tools\TooltipInfoExtractor.lua
+Modules\Tools\QuestTitleResolver.lua
 Modules\Tools\Reputation.lua
 Modules\Tools\CompletionTracker.lua
 Modules\Tools\VersionFilter.lua
+Modules\Tools\ItemCounts.lua
+Modules\Tools\AltItemCounts.lua
+Modules\Tools\AltProfessions.lua
+Modules\Tools\ModelPositions.lua
+
+Modules\Achievements\Achievement.lua
+
+Modules\Reputation\Reputation.lua
 
 Modules\UI\UITheme.lua
+Modules\UI\FilterModel.lua
+Modules\UI\CostFormatter.lua
+Modules\UI\VendorCostResolver.lua
 
 Modules\UI\DataManager.lua
 Modules\UI\DataManager\Shared.lua
@@ -89,17 +126,28 @@ Modules\UI\PreviewPanelData.lua
 Modules\UI\PreviewPanel\DataFormatter.lua
 Modules\UI\PreviewPanel.lua
 Modules\UI\ConfigUI.lua
+Modules\Planning\PlanManager.lua
+Modules\UI\PlanUI.lua
+Modules\UI\AchievementsUI.lua
+Modules\UI\EndeavorsUI.lua
+Modules\UI\ReputationUI.lua
 Modules\UI\StatisticsUI.lua
+Modules\UI\AuctionHouseUI.lua
 Modules\UI\Statistics\Data.lua
 Modules\UI\Statistics\Charts.lua
 Modules\UI\Statistics\Filters.lua
+Modules\UI\VendorMarker.lua
 Modules\UI\OutstandingItemsUI.lua
 Modules\UI\OutstandingItems\Detection.lua
 Modules\UI\OutstandingItems\Popup.lua
 Modules\UI\OutstandingItems\Events.lua
+Modules\UI\MaterialsTrackerUI.lua
 Modules\UI\MinimapButton.lua
 
 Modules\API\CollectionAPI.lua
+Modules\API\CatalogValidation.lua
+Modules\API\VendorPriceAPI.lua
+Modules\API\AuctionHouseAPI.lua
 Modules\API\HousingAPI.lua
 Modules\API\HousingAPICache.lua
 Modules\API\HousingCatalogAPI.lua

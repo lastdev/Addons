@@ -7,6 +7,12 @@ patternUpgradeLevel = patternUpgradeLevel:gsub("%%s", ")(.*)(")
 patternUpgradeLevel = patternUpgradeLevel:gsub("%%d", "[0-9]+")
 patternUpgradeLevel = "(" .. patternUpgradeLevel .. ")"
 
+local SQUISH_CURVE_ID = 92181;
+
+local function GetPostSquishItemLevel(preSquishItemLevel)
+	return C_CurveUtil.EvaluateGameCurve(SQUISH_CURVE_ID, preSquishItemLevel);
+end
+
 local patternIlvl = ITEM_LEVEL
 
 -- Apostr-off (because the french are weird)
@@ -23,19 +29,61 @@ local categoryEnum = {
 	Champion = 973,
 	Hero = 974,
 	Myth = 978, -- 10.1.5
-	Awakened = 1 -- Until reused, no idea what its ID is and no point figuring it out
+	Awakened = 998,
+};
+
+-- C_SeasonInfo.GetCurrentDisplaySeasonID()
+local SeasonData = {
+	--[30] = { -- TWW s3 (pre-prepatch)
+	--	[categoryEnum.Explorer] = 642,
+	--	[categoryEnum.Adventurer] = 655,
+	--	[categoryEnum.Veteran] = 668,
+	--	[categoryEnum.Champion] = 681,
+	--	[categoryEnum.Hero] = 694,
+	--	[categoryEnum.Myth] = 707,
+	--},
+	[30] = { -- TWW s3 prepatch 98, 102, 108, 121, 134, 147
+		[categoryEnum.Explorer] = 98,
+		[categoryEnum.Adventurer] = 102,
+		[categoryEnum.Veteran] = 108,
+		[categoryEnum.Champion] = 121,
+		[categoryEnum.Hero] = 134,
+		[categoryEnum.Myth] = 147,
+	},
+	[34] = { -- Midnight s1
+		[categoryEnum.Explorer] = 207, -- no longer used?
+		[categoryEnum.Adventurer] = 220,
+		[categoryEnum.Veteran] = 233,
+		[categoryEnum.Champion] = 246,
+		[categoryEnum.Hero] = 259,
+		[categoryEnum.Myth] = 272,
+	},
 };
 
 -- Item category data
 local categoryDataTab = {
-	[categoryEnum.Explorer] = {englishName = "Explorer", minLevel = 642, color = ITEM_POOR_COLOR},
-	[categoryEnum.Adventurer] = {englishName = "Adventurer", minLevel = 655, color = WHITE_FONT_COLOR},
-	[categoryEnum.Veteran] = {englishName = "Veteran", minLevel = 668, color = UNCOMMON_GREEN_COLOR},
-	[categoryEnum.Champion] = {englishName = "Champion", minLevel = 681, color = RARE_BLUE_COLOR},
-	[categoryEnum.Hero] = {englishName = "Hero", minLevel = 694, color = ITEM_EPIC_COLOR},
-	[categoryEnum.Myth] = {englishName = "Myth", minLevel = 707, color = ITEM_LEGENDARY_COLOR},
+	[categoryEnum.Explorer] = {englishName = "Explorer", minLevel = 207, color = ITEM_POOR_COLOR},
+	[categoryEnum.Adventurer] = {englishName = "Adventurer", minLevel = 220, color = WHITE_FONT_COLOR},
+	[categoryEnum.Veteran] = {englishName = "Veteran", minLevel = 233, color = UNCOMMON_GREEN_COLOR},
+	[categoryEnum.Champion] = {englishName = "Champion", minLevel = 246, color = RARE_BLUE_COLOR},
+	[categoryEnum.Hero] = {englishName = "Hero", minLevel = 259, color = ITEM_EPIC_COLOR},
+	[categoryEnum.Myth] = {englishName = "Myth", minLevel = 272, color = ITEM_LEGENDARY_COLOR},
 	[categoryEnum.Awakened] = {englishName = "Awakened", minLevel = 493, color = ITEM_LEGENDARY_COLOR}, -- update later maybe, for now this is OLD
-}
+};
+
+local function UpdateSeasonData()
+	local currentSeasonID = C_SeasonInfo.GetCurrentDisplaySeasonID()
+
+	if currentSeasonID and SeasonData[currentSeasonID] then
+		local currentSeasonData = SeasonData[currentSeasonID]
+
+		for trackID, minLevel in pairs(currentSeasonData) do
+			if categoryDataTab[trackID] then
+				categoryDataTab[trackID].minLevel = minLevel
+			end
+		end
+	end
+end
 
 local categoryThemesCount = {
 	[categoryEnum.Explorer] = 1,
@@ -45,7 +93,7 @@ local categoryThemesCount = {
 	[categoryEnum.Hero] = 1,
 	[categoryEnum.Myth] = 1,
 	[categoryEnum.Awakened] = 1,
-}
+};
 
 local categoryIconThemes = {
 	[categoryEnum.Explorer] = {
@@ -69,7 +117,7 @@ local categoryIconThemes = {
 	[categoryEnum.Awakened] = {
 		["Default"] = {index = 1, name = L["Default"], icon = "|A:ui-ej-icon-empoweredraid-large:%d:%d|a"}
 	},
-}
+};
 
 local function GetIconForTrack(trackID, size)
 	local iconTheme = IUQI_DB[categoryDataTab[trackID].englishName .. "Theme"];
@@ -112,11 +160,12 @@ local function SearchAndReplaceTooltipLine(tooltip)
 			local ilvl = tonumber(text:match(patternIlvl));
 			if ilvl then
 				-- Checking if the ilvl is in the right range (otherwise it's a previous season item)
-				if ilvl >= categoryData.minLevel then
+				local itemMinLevel = categoryData.minLevel
+				if ilvl >= itemMinLevel then
 					-- Not showing ilvl range on a max upgraded item
-					local itemMaxLevel = itemUpgradeData.maxItemLevel
+					local itemMaxLevel = GetPostSquishItemLevel(itemUpgradeData.maxItemLevel)
 
-					if ilvl ~= itemMaxLevel then
+					if ilvl < itemMaxLevel and itemMaxLevel > itemMinLevel then -- sometimes itemMaxLevel is 0 (??????????)
 						text = text .. "/" .. itemMaxLevel
 
 						line:SetText(text)
@@ -260,7 +309,10 @@ local function UpdateEquipmentFlyoutFrames(self)
 		-- Retrieve the link from the bag slot or inventory slot (depending on item location)
 		local itemLocation = iconButton.location
 		if type(itemLocation) == "table" then return end
-		local player, bank, bags, voidStorage, slot, bag, tab, voidSlot = EquipmentManager_UnpackLocation(itemLocation)
+		local locationData = EquipmentManager_GetLocationData(itemLocation)
+		if not locationData then return end
+		local player, bank, bags, slot, bag = locationData.isPlayer, locationData.isBank, locationData.isBags, locationData.slot, locationData.bag
+		
 		local itemLink;
 		if bags then
 			-- Item in player/bank bags (must be first as player or bank will also be true)
@@ -282,6 +334,8 @@ end
 
 -- Updates all slots on login/reload
 EventRegistry:RegisterFrameEventAndCallback("PLAYER_ENTERING_WORLD", function(_, slotIndex, isEmpty)
+	UpdateSeasonData()
+
 	for slotIndex = 1, 17 do
 		UpdateInventory(slotIndex)
 	end

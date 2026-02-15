@@ -145,7 +145,7 @@ Prat:AddModuleToLoad(function()
 do
       local L
 
-  
+
 L = {
 	["AltNames"] = {
 		["%d alts found for %s: %s"] = true,
@@ -248,7 +248,7 @@ L = {
 
     PL:AddLocale(PRAT_MODULE, "enUS",L)
 
-  
+
 L = {
 	["AltNames"] = {
 		--[[Translation missing --]]
@@ -423,7 +423,7 @@ L = {
 
     PL:AddLocale(PRAT_MODULE, "frFR",L)
 
-  
+
 L = {
 	["AltNames"] = {
 		["%d alts found for %s: %s"] = "%d Alternativen gefunden für %s: %s",
@@ -526,7 +526,7 @@ L = {
 
     PL:AddLocale(PRAT_MODULE, "deDE",L)
 
-  
+
 L = {
 	["AltNames"] = {
 		["%d alts found for %s: %s"] = "%2$s의 부 캐릭터 %1$d개 찾음: %3$s",
@@ -630,7 +630,7 @@ L = {
 
     PL:AddLocale(PRAT_MODULE, "koKR",L)
 
-  
+
 L = {
 	["AltNames"] = {
 		--[[Translation missing --]]
@@ -828,7 +828,7 @@ L = {
 
     PL:AddLocale(PRAT_MODULE, "esMX",L)
 
-  
+
 L = {
 	["AltNames"] = {
 		["%d alts found for %s: %s"] = "%d альтов найдено для %s: %s",
@@ -932,7 +932,7 @@ L = {
 
     PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
-  
+
 L = {
 	["AltNames"] = {
 		["%d alts found for %s: %s"] = "%d 马甲找到 %s: %s",
@@ -1039,7 +1039,7 @@ L = {
 
     PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
-  
+
 L = {
 	["AltNames"] = {
 		["%d alts found for %s: %s"] = "%d alternativos encontrados para %s: %s",
@@ -1160,7 +1160,7 @@ L = {
 
     PL:AddLocale(PRAT_MODULE, "esES",L)
 
-  
+
 L = {
 	["AltNames"] = {
 		["%d alts found for %s: %s"] = "%d 分身找到於 %s: %s",
@@ -1727,7 +1727,7 @@ L = {
         TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, function(tooltip, data)
           if tooltip == GameTooltip and self.altertooltip then
             local unitid = UnitTokenFromGUID(data.guid)
-            if UnitIsPlayer(unitid) then
+            if (not issecretvalue or not issecretvalue(unitid)) and UnitIsPlayer(unitid) then
               self:ModifyUnitTooltip(unitid)
             end
           end

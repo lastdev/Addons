@@ -149,7 +149,9 @@ function Details222.StartUp.StartMeUp()
 
 	--Details222.LoadCommentatorFunctions()
 
-	Details222.AuraScan.FindAndIgnoreWorldAuras()
+	if not detailsFramework.IsAddonApocalypseWow() then
+		Details222.AuraScan.FindAndIgnoreWorldAuras()
+	end
 
 	Details222.Notes.RegisterForOpenRaidNotes()
 
@@ -341,6 +343,10 @@ function Details222.StartUp.StartMeUp()
 
 	if (C_EventUtils.IsEventValid("SCENARIO_COMPLETED")) then
 		Details.listener:RegisterEvent("SCENARIO_COMPLETED")
+	end
+
+	if (detailsFramework.IsAddonApocalypseWow()) then
+		Details.listener:RegisterEvent("PLAYER_IN_COMBAT_CHANGED")
 	end
 
 	Details.listener:RegisterEvent("ENCOUNTER_START")
@@ -544,11 +550,13 @@ function Details222.StartUp.StartMeUp()
 	--store the names of all interrupt spells
 	---@type table<string, boolean>
 	Details.InterruptSpellNamesCache = {}
-	for spellId, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
-		if (spellData.type == 6) then
-			local spellInfo = C_Spell.GetSpellInfo(spellId)
-			if (spellInfo) then
-				Details.InterruptSpellNamesCache[spellInfo.name] = true
+	if LIB_OPEN_RAID_COOLDOWNS_INFO then
+		for spellId, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
+			if (spellData.type == 6) then
+				local spellInfo = C_Spell.GetSpellInfo(spellId)
+				if (spellInfo) then
+					Details.InterruptSpellNamesCache[spellInfo.name] = true
+				end
 			end
 		end
 	end
@@ -565,20 +573,25 @@ function Details222.StartUp.StartMeUp()
 	---@type table<unitname, table<spellname, boolean>>
 	Details.CrowdControlSpellsByUnitCache = {}
 
-	for spellId, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
-		if (spellData.type == 8) then
-			local spellInfo = C_Spell.GetSpellInfo(spellId)
-			if (spellInfo) then
-				Details.CrowdControlSpellIdsCache[spellId] = spellInfo.name
-				Details.CrowdControlSpellNamesCache[spellInfo.name] = true
+	if LIB_OPEN_RAID_COOLDOWNS_INFO then
+		for spellId, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
+			if (spellData.type == 8) then
+				local spellInfo = C_Spell.GetSpellInfo(spellId)
+				if (spellInfo) then
+					Details.CrowdControlSpellIdsCache[spellId] = spellInfo.name
+					Details.CrowdControlSpellNamesCache[spellInfo.name] = true
+				end
 			end
 		end
 	end
-	for spellId, spellData in pairs(LIB_OPEN_RAID_CROWDCONTROL) do
-		local spellInfo = C_Spell.GetSpellInfo(spellId)
-		if (spellInfo and not Details.CrowdControlSpellNamesCache[spellInfo.name]) then
-			Details.CrowdControlSpellIdsCache[spellId] = spellInfo.name
-			Details.CrowdControlSpellNamesCache[spellInfo.name] = true
+
+	if LIB_OPEN_RAID_CROWDCONTROL then
+		for spellId, spellData in pairs(LIB_OPEN_RAID_CROWDCONTROL) do
+			local spellInfo = C_Spell.GetSpellInfo(spellId)
+			if (spellInfo and not Details.CrowdControlSpellNamesCache[spellInfo.name]) then
+				Details.CrowdControlSpellIdsCache[spellId] = spellInfo.name
+				Details.CrowdControlSpellNamesCache[spellInfo.name] = true
+			end
 		end
 	end
 
@@ -773,6 +786,24 @@ function Details222.StartUp.StartMeUp()
 		end
 	end
 
+	if detailsFramework.IsAddonApocalypseWow() then
+		if not Details.switch_post_apoc then
+			Details.switch_post_apoc = true
+
+			Details.switch.slots = 6
+			Details.switch.table = {
+				{["atributo"] = 1, ["sub_atributo"] = 1}, --damage done
+				{["atributo"] = 2, ["sub_atributo"] = 1}, --healing done
+				{["atributo"] = 4, ["sub_atributo"] = 3}, --interrupts
+				{["atributo"] = 4, ["sub_atributo"] = 4}, --dispels
+				{["atributo"] = 1, ["sub_atributo"] = 3}, --damage taken
+				{["atributo"] = 2, ["sub_atributo"] = 3}, --overhealing
+			}
+
+			Details:Msg("Bookmarks has been reset.")
+		end
+	end
+
 	if (not DetailsFramework.IsTimewalkWoW()) then
 		Details.cached_specs[UnitGUID("player")] = GetSpecializationInfo(GetSpecialization() or 0)
 	end
@@ -878,6 +909,10 @@ function Details222.StartUp.StartMeUp()
 
 	if (DetailsFramework:IsNearlyEqual(Details.class_coords.ROGUE[4], 0.25)) then
 		DetailsFramework.table.copy(Details.class_coords, Details.default_profile.class_coords)
+	end
+
+	if detailsFramework.IsAddonApocalypseWow() then
+		Details222.BParser.UpdateDamageMeterSwap()
 	end
 
 	if (DetailsFramework.IsWarWow()) then

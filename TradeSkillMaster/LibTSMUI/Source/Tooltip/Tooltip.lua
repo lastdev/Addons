@@ -12,6 +12,7 @@ local ItemString = LibTSMUI:From("LibTSMTypes"):Include("Item.ItemString")
 local RecipeString = LibTSMUI:From("LibTSMTypes"):Include("Crafting.RecipeString")
 local ClientInfo = LibTSMUI:From("LibTSMWoW"):Include("Util.ClientInfo")
 local Event = LibTSMUI:From("LibTSMWoW"):Include("Service.Event")
+local TradeSkill = LibTSMUI:From("LibTSMWoW"):Include("API.TradeSkill")
 local ItemInfo = LibTSMUI:From("LibTSMService"):Include("Item.ItemInfo")
 local Profession = LibTSMUI:From("LibTSMService"):Include("Profession")
 local private = {
@@ -64,7 +65,7 @@ function Tooltip.Show(parent, data, noWrapping, xOffset)
 	elseif type(data) == "string" and data == "honor" then
 		GameTooltip:SetText(HONOR_POINTS, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
 		GameTooltip:AddLine(TOOLTIP_HONOR_POINTS, nil, nil, nil, 1)
-	elseif ClientInfo.IsPandaClassic() and type(data) == "string" and strfind(data, "^currency:") then
+	elseif (ClientInfo.IsPandaClassic() or ClientInfo.IsBCClassic()) and type(data) == "string" and strfind(data, "^currency:") then
 		local currencyId = tonumber(strmatch(data, "currency:(%d+)"))
 		if currencyId == 390 then
 			GameTooltip:SetText(PVP_CONQUEST, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
@@ -83,20 +84,21 @@ function Tooltip.Show(parent, data, noWrapping, xOffset)
 		if ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI) then
 			-- Release the previous tables
 			for _, tbl in ipairs(private.optionalMatTable) do
-				wipe(tbl)
 				tinsert(private.unusedOptionalMatTempTables, tbl)
 			end
 			wipe(private.optionalMatTable)
 			local level = RecipeString.GetLevel(data)
 			for _, slotId, itemId in RecipeString.OptionalMatIterator(data) do
 				local info = tremove(private.unusedOptionalMatTempTables) or {}
-				info.itemID = itemId
+				info.reagent = info.reagent or {}
+				info.reagent.itemID = itemId
 				info.dataSlotIndex = slotId
 				info.quantity = 1
 				tinsert(private.optionalMatTable, info)
 			end
+			local qualityIDs = TradeSkill.GetQualitiesForRecipe(spellId)
 			local quality = RecipeString.GetQuality(data)
-			GameTooltip:SetRecipeResultItem(spellId, private.optionalMatTable, nil, level, quality)
+			GameTooltip:SetRecipeResultItem(spellId, private.optionalMatTable, nil, level, qualityIDs and qualityIDs[quality])
 		else
 			local index = Profession.GetIndexByCraftString(CraftString.Get(spellId))
 			if index then

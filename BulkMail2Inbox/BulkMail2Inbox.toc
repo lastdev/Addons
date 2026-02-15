@@ -1,0 +1,25 @@
+## Interface: 120000, 120001, 50503, 38000, 20505, 11508
+## X-Curse-Project-ID: 13587
+## X-WoWI-ID: 18867
+## X-Wago-ID: WL6JdYGv
+## Title: Bulk Mail Inbox
+## Notes: Bulk mail reception made really easy
+## Notes-ruRU: BulkMail - получение почты делает на много легче
+## Version: 20260207.1
+## Author: NeoTron
+## IconTexture: Interface\Icons\INV_Letter_15
+## X-Credits: hyperactiveChipmunk
+## X-Category: Mail
+## X-eMail: neotron@gmail.com
+## X-Website: http://wowace.com/wiki/BulkMail2Inbox
+## SavedVariables: BulkMail2InboxDB, BulkMail3InboxDB
+## OptionalDeps: Ace3, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, LibQTip-1.0, LibAbacus-3.0, LibDataBroker-1.1, LibDropdown-1.0, BulkMail2
+## LoadManagers: SupplyAndDemand, ForkliftGnome, AddonLoader
+## X-S&D-AtMail: true
+## X-LoadOn-Mailbox: true
+## X-LoadOn-Slash: /bulkmailinbox, /bmi
+
+embeds.xml
+Locales.xml
+BulkMailInbox.lua
+

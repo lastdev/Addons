@@ -1,4 +1,4 @@
---Coutesy of ZamestoTV. Thank you!    --Translator: ZamestoTV as of 1.8.2
+--Coutesy of ZamestoTV. Thank you!    --Translator: ZamestoTV as of 1.8.6
 
 if not (GetLocale() == "ruRU") then return end;
 
@@ -9,9 +9,12 @@ local L = addon.L;
 --Globals
 BINDING_HEADER_PLUMBER = "Plumber";
 BINDING_NAME_TOGGLE_PLUMBER_LANDINGPAGE = "Окно Резюме дополнения";   --Show/hide Expansion Summary UI
+BINDING_NAME_PLUMBER_QUESTWATCH_NEXT = "Фокус на следующем задании";
+BINDING_NAME_PLUMBER_QUESTWATCH_PREVIOUS = "Фокус на предыдущем задании";
 
 
 --Module Control Panel
+L["Addon Name Colon"] =  "Plumber: ";
 L["Module Control"] = "Управление модулем";
 L["Quick Slot Generic Description"] = "\n\n*Быстрый слот - это набор интерактивных кнопок, которые появляются при определенных условиях.";
 L["Quick Slot Edit Mode"] = HUD_EDIT_MODE_MENU or "Режим редактирования";
@@ -21,6 +24,7 @@ L["Quick Slot Layout"] = "Макет";
 L["Quick Slot Layout Linear"] = "Линейный";
 L["Quick Slot Layout Radial"] = "Радиальный";
 L["Restriction Combat"] = "Не работает в бою";    --Indicate a feature can only work when out of combat
+L["Restriction Instance"] = "Эта функция не работает в некоторых подземельях.";
 L["Map Pin Change Size Method"] = "\n\n*Вы можете изменить размер штифта на карте мира - Фильтр карты - Plumber";
 L["Toggle Plumber UI"] = "Переключить интерфейс Plumber";
 L["Toggle Plumber UI Tooltip"] = "Показать следующий интерфейс Plumber в режиме редактирования:\n%s\n\nЭтот флажок управляет только их видимостью в режиме редактирования. Он не включает и не отключает эти модули.";
@@ -40,6 +44,7 @@ L["New Feature Abbr"] = "Новое";
 L["Format Month Day"] = EVENT_SCHEDULER_DAY_FORMAT or "%s %d";
 L["Always On Module"] = "Этот модуль всегда включен.";
 L["Return To Module List"] = "Вернуться к списку";
+L["Generic Addon Conflict"] = "Этот модуль может быть несовместим с аддонами, обладающими аналогичными функциональными возможностями:";
 
 
 --Settings Category
@@ -67,6 +72,7 @@ L["KW LegionRemix"] = "Legion Remix";
 L["KW Housing"] = "Жильё Дом Игрока";
 L["KW Combat"] = "Бой";
 L["KW ActionBar"] = "Панель действий";
+L["KW Console"] = "Контроллер игровой приставки";
 
 --Filter Sort Method
 L["SortMethod 1"] = "По названию";  --Alphabetical Order
@@ -175,7 +181,6 @@ L["ModuleDescription BlizzFixEventToast"] = "Измените поведение
 --Talking Head
 L["ModuleName TalkingHead"] = HUD_EDIT_MODE_TALKING_HEAD_FRAME_LABEL or "Говорящая голова";
 L["ModuleDescription TalkingHead"] = "Замените стандартный пользовательский интерфейс Говорящей головы на чистый, безголовый.";
-L["EditMode TalkingHead"] = "Plumber: "..L["ModuleName TalkingHead"];
 L["TalkingHead Option InstantText"] = "Мгновенный текст";   --Should texts immediately, no gradual fading
 L["TalkingHead Option TextOutline"] = "Текстовый контур";
 L["TalkingHead Option Condition Header"] = "Скрыть тексты из источника:";
@@ -304,6 +309,8 @@ L["ModuleDescription ExpansionLandingPage"] = "Отображение допол
 L["Instruction Track Reputation"] = "<Нажмите Shift, чтобы отслеживать эту репутацию>";
 L["Instruction Untrack Reputation"] = CONTENT_TRACKING_UNTRACK_TOOLTIP_PROMPT or "<Нажмите Shift, чтобы остановить отслеживание>";
 L["Error Show UI In Combat"] = "Вы не можете переключать этот интерфейс во время боя.";
+L["Error Show UI In Combat 1"] = "Вы действительно не можете переключать этот интерфейс в бою.";
+L["Error Show UI In Combat 2"] = "ПОЖАЛУЙСТА, ПРЕКРАТИТЕ";
 
 
 --Landing Page Switch
@@ -320,6 +327,7 @@ L["ModuleDescription WorldMapPin_TWW"] = "Показать дополнител�
 
 --Delves
 L["Great Vault Tier Format"] = GREAT_VAULT_WORLD_TIER or "Уровень %s";
+L["Great Vault World Activity Tooltip"] = "Тир 1 и Мировые Активности";
 L["Item Level Format"] = ITEM_LEVEL or "Уровень предмета %d";
 L["Item Level Abbr"] = ITEM_LEVEL_ABBR or "iLvl";
 L["Delves Reputation Name"] = "Путешествие в вылазки";
@@ -377,6 +385,16 @@ L["Click To Disable"] = "Нажмите, чтобы отключить";
 --NameplateWidget
 L["ModuleName NameplateWidget"] = "Подсказка: Ключевой огонь";
 L["ModuleDescription NameplateWidget"] = "Показывать количество имеющихся Сияющих останков в подсказке.";
+
+
+--NameplateQuestIndicator
+L["ModuleName NameplateQuest"] = "Неймплейты: Индикатор задания";
+L["ModuleDescription NameplateQuest"] = "Показывать индикатор задания на неймплейтах.\n\n- (Опционально) Показывать прогресс цели задания для вашей цели.\n\n- (Опционально) Показывать индикатор задания, если участники вашей группы не завершили цель.";
+L["NameplateQuest ShowPartyQuest"] = "Показывать задания членов группы";
+L["NameplateQuest ShowPartyQuest Tooltip"] = "Показывать маркер %s, если один из членов вашей группы не завершил цель задания.";
+L["NameplateQuest ShowTargetProgress"] = "Показывать прогресс на цели";
+L["NameplateQuest ShowTargetProgress Tooltip"] = "Показывать прогресс цели задания на неймплейте вашей текущей цели.";
+L["NameplateQuest Instruction Find Nameplate"] = "Чтобы настроить положение иконки, перейдите в место, где видны неймплейты НИП.";
 
 
 --PartyInviterInfo
@@ -448,6 +466,10 @@ L["SoftTargetName QuestObjective Tooltip"] = "Показывать цели за
 L["SoftTargetName QuestObjective Alert"] = "Эта функция требует включения |cffffffffПоказывать всплывающую подсказку цели|r в настройках игры > Доступность > Общие.";
 L["SoftTargetName ShowNPC"] = "Включать НПС";
 L["SoftTargetName ShowNPC Tooltip"] = "Если отключено, имя будет отображаться только на интерактивных игровых объектах.";
+L["SoftTargetName HideIcon"] = "Скрыть иконку взаимодействия";
+L["SoftTargetName HideIcon Tooltip"] = "Скрывать иконку взаимодействия и радиальную полосу заклинания в доме.";
+L["SoftTargetName HideName"] = "Скрыть название объекта";
+L["SoftTargetName HideName Tooltip"] = "Скрывать название объекта мягкой цели в доме."
 
 
 --LegionRemix
@@ -521,7 +543,6 @@ L["Sample Item 4"] = "Потрясающий эпический предмет";
 L["Sample Item 3"] = "Потрясающий редкий предмет";
 L["Sample Item 2"] = "Потрясающий необычный предмет";
 L["Sample Item 1"] = "Обычный предмет";
-L["EditMode LootUI"] =  "Plumber: "..(HUD_EDIT_MODE_LOOT_FRAME_LABEL or "Окно добычи");
 L["Manual Loot Instruction Format"] = "Чтобы временно отменить автоматическую добычу определенного предмета, нажмите и удерживайте |cffffffff%s|r клавишу, пока не появится окно добычи.";
 L["LootUI Option Hide Window"] = "Скрывать окно добычи Plumber";
 L["LootUI Option Hide Window Tooltip"] = "Скрывает уведомление о добыче от Plumber, но все функции (например, принудительный автолут) продолжают работать в фоновом режиме.";
@@ -554,6 +575,12 @@ L["LootUI Option Combine Items"] = "Объединять похожие пред
 L["LootUI Option Combine Items Tooltip"] = "Отображать похожие предметы в одной строке. Поддерживаемые категории:\n\n- Мусорные предметы\n- Осколки времени (Legion Remix)";
 L["LootUI Option Low Frame Strata"] = "Отправить на задний план";
 L["LootUI Option Low Frame Strata Tooltip"] = "В режиме уведомления о добыче поместите окно добычи за другим элементом пользовательского интерфейса.\n\nЭта опция не влияет на режим ручной добычи.";
+L["LootUI Option Show Reputation"] = "Показать изменения репутации";
+L["LootUI Option Show Reputation Tooltip"] = "Отображайте любые повышения репутации в окне добычи.\n\nРепутация, заработанная во время боя или в PvP-сражениях, будет отображена позже.";
+L["LootUI Option Show All Money"] = "Показывать все изменения денег";
+L["LootUI Option Show All Money Tooltip"] = "Показывать деньги, полученные из всех источников, а не только из добычи.";
+L["LootUI Option Hide Title"] = "Скрыть текст \"Вы получили\"";
+L["LootUI Option Hide Title Tooltip"] = "Скрыть текст \"Вы получили\" в верхней части окна добычи.";
 
 
 --Quick Slot For Third-party Dev
@@ -568,6 +595,7 @@ L["PlumberMacro Drive"] = "Макрос Plumber Р.А.З.Г.О.Н.";
 L["PlumberMacro Drawer"] = "Plumber макрос ящика";
 L["PlumberMacro Housing"] = "Plumber макрос для дома";
 L["PlumberMacro Torch"] = "Plumber макрос факела";
+L["PlumberMacro Outfit"] = "Plumber макрос набора";
 L["PlumberMacro DrawerFlag Combat"] = "Ящик будет обновлен после выхода из боя.";
 L["PlumberMacro DrawerFlag Stuck"] = "Что-то пошло не так при обновлении ящика.";
 L["PlumberMacro Error Combat"] = "Недоступно в бою";
@@ -594,11 +622,13 @@ L["Drawer Option Update Frequently"] = "Часто обновляйте";
 L["Drawer Option Update Frequently Tooltip"] = "Попробуйте обновить состояние кнопок всякий раз, когда в ваших сумках или книгах заклинаний происходят изменения. Включение этой опции может немного увеличить использование ресурсов.";
 L["ModuleName DrawerMacro"] = "Макрос ящика";
 L["ModuleDescription DrawerMacro"] = "Создайте пользовательское всплывающее меню для управления вашими предметами, заклинаниями, питомцами, маунтами и игрушками.\n\nЧтобы создать макрос Ящика, сначала создайте новый макрос, затем введите |cffd7c0a3#plumber:drawer|r в поле редактирования команд.";
+L["No Slot For New Character Macro Alert"] = "You need to have a spare Character Specific Macro slot to complete this action.";
 
 
 --New Expansion Landing Page
 L["ModuleName NewExpansionLandingPage"] = "Резюме дополнения";
 L["ModuleDescription NewExpansionLandingPage"] = "Интерфейс, который отображает фракции, еженедельные мероприятия и рейдовые кд. Вы можете открыть его:\n\n- Нажав на кнопку Обзор Каз Алгара на мини-карте..\n\n- Установить горячую клавишу в настройках игры - Сочетания клавиш.";
+L["Abbr NewExpansionLandingPage"] = "Резюме дополнения";
 L["Reward Available"] = "Доступная награда";
 L["Paragon Reward Available"] = "Доступна награда Парагона";
 L["Until Next Level Format"] = "%d до следующего уровня";
@@ -672,6 +702,13 @@ L["List Is Empty"] = "Список пуст.";
 L["ModuleName InstanceDifficulty"] = "Сложность подземелий";
 L["ModuleDescription InstanceDifficulty"] = "- Показывает выбор сложности у входа в рейд или подземелье.\n\n- При входе в подземелье отображает текущую сложность и информацию о блокировках в верхней части экрана.";
 L["Cannot Change Difficulty"] = "Сейчас изменить сложность подземелья нельзя.";
+L["Cannot Reset Instance"] = "Сейчас нельзя обновить подземелье.";
+L["Difficulty Not Accurate"] = "Сложность отображается неточно, потому что вы не лидер группы";
+L["Instruction Click To Open Adventure Guide"] = "ЛКМ: |cffffffffОткрыть Путеводитель по приключениям|r";
+L["Instruction Alt Click To Reset Instance"] = "Alt + ПКМ: |cffffffffОбновить все подземелья|r";
+L["Instruction Link Progress In Chat"] = "<Shift + клик, чтобы отправить прогресс в чат>";
+L["Instance Name"] = "Название подземелья";   --Dungeon/Raid Name
+L["EditMode Instruction InstanceDifficulty"] = "Ширина рамки зависит от количества доступных опций.";
 
 
 --TransmogChatCommand
@@ -683,9 +720,29 @@ L["Missing Appearances Format"] = "%d |4внешность:внешности:в
 L["Press Key To Copy Format"] = "Нажмите |cffffd100%s|r для копирования";
 
 
+--TransmogOutfitSelect
+L["ModuleName TransmogOutfitSelect"] = "Коллекция образов: Быстрый доступ";
+L["ModuleDescription1 TransmogOutfitSelect"] = "Позволяет открыть коллекцию образов и применить сохранённый внешний вид где угодно.";
+L["ModuleDescription2 TransmogOutfitSelect"] = "Для этого: откройте интерфейс трансмогрификации, затем перетащите кнопку |cffd7c0a3Быстрый доступ|r над списком образов на свою панель действий.";
+L["Outfit Collection"] = "Коллекция образов";
+L["Quick Access Outfit Button"] = "Быстрый доступ";
+L["Quick Access Outfit Button Tooltip"] = "Нажмите и перетащите эту кнопку на панель действий, чтобы менять образы в любом месте.";
+
+
+--QuestWatchCycle
+L["ModuleName QuestWatchCycle"] = "Клавиши: Фокус на задание";
+L["ModuleDescription QuestWatchCycle"] = "Позволяет использовать горячие клавиши для фокусировки на следующем/предыдущем задании в трекере целей.\n\n|cffd4641cНастройте горячие клавиши в Привязки клавиш > Аддона Plumber.|r";
+
+
+--CraftSearchExtended
+L["ModuleName CraftSearchExtended"] = "Расширенные результаты поиска";
+L["ModuleDescription CraftSearchExtended"] = "Показывает больше результатов при поиске определённых слов.\n\n- Алхимия и Начертание: Найти рецепты пигментов для жилья по поиску цветов красителей.";
+
+
 --DecorModelScaleRef
 L["ModuleName DecorModelScaleRef"] = "Каталог декора: банан для масштаба"; --See HOUSING_DASHBOARD_CATALOG_TOOLTIP
 L["ModuleDescription DecorModelScaleRef"] = "- Добавляет в окно предпросмотра декора эталон размера (банан), чтобы было понятно, насколько большой предмет.\n\n- Также позволяет менять наклон камеры, удерживая левую кнопку мыши и двигая её вверх/вниз.";
+L["Toggle Banana"] = "Вкл/Выкл Банан";
 
 
 --Player Housing
@@ -693,6 +750,7 @@ L["ModuleName Housing_Macro"] = "Макросы для дома";
 L["ModuleDescription Housing_Macro"] = "Вы можете создать макрос Телепортация домой: создайте новый макрос, затем введите в поле ввода команду |cffd7c0a3#plumber:home|r.";
 L["Teleport Home"] = "Телепортация домой";
 L["Instruction Drag To Action Bar"] = "<Кликните и перетащите на панель команд>";
+L["Teleport Home Temp Disabled"] = "\"Телепортация домой\" Макрос больше недоступен";
 L["Toggle Torch"] = "Включить/выключить факел";
 L["ModuleName Housing_DecorHover"] = "Редактор: название объекта и дублирование";
 L["ModuleDescription Housing_DecorHover"] = "В режиме украшения (Decorate Mode):\n\n- При наведении курсора на предмет декора будет отображаться его название и количество в хранилище.\n\n- Удерживая Alt, можно дублировать выбранный декор.\n\nНовый объект не унаследует текущие углы поворота и масштаб.";
@@ -700,6 +758,42 @@ L["Duplicate"] = "Дублировать";
 L["Duplicate Decor Key"] = "Клавиша Дублировать";
 L["Enable Duplicate"] = "Включить Дублирование";
 L["Enable Duplicate tooltip"] = "В режиме украшения наведите курсор на декор и нажмите указанную клавишу — рядом появится ещё один такой же предмет.";
+L["ModuleName Housing_CustomizeMode"] = "Редактор: Режим настройки 3";
+L["ModuleDescription Housing_CustomizeMode"] = "В режиме настройки:\n\n- Позволяет копировать красители с одного декора на другой.\n\n- Изменяет название слота красителя с индекса на название цвета.\n\n- Shift + клик по образцу красителя для отслеживания рецепта.";
+L["Copy Dyes"] = "Копировать";
+L["Dyes Copied"] = "Красители скопированы";
+L["Apply Dyes"] = "Применить";
+L["Preview Dyes"] = "Предпросмотр";
+L["ModuleName TooltipDyeDeez"] = "Подсказка: Пигмент красителя";
+L["ModuleDescription TooltipDyeDeez"] = "Отображать названия цветов красителей в подсказке пигмента для жилья.";
+L["Instruction Show More Info"] = "<Зажмите Alt для дополнительной информации>";
+L["Instruction Show Less Info"] = "<Зажмите Alt для скрытия информации>";
+L["ModuleName Housing_ItemAcquiredAlert"] = "Уведомление о собранном декоре";
+L["ModuleDescription Housing_ItemAcquiredAlert"] = "Позволяет кликнуть ЛКМ по уведомлению о собранном декоре для предпросмотра модели.";
+
+
+--Housing Clock
+L["ModuleName Housing_Clock"] = "Редактор: Часы";
+L["ModuleDescription Housing_Clock"] = "В редакторе дома показывает часы в верхней части экрана.\n\nТакже отслеживает время, проведённое в редакторе дома.";
+L["Time Spent In Editor"] = "Время в редакторе";
+L["This Session Colon"] = "Эта сессия: ";
+L["Time Spent Total Colon"] = "Всего: ";
+L["Right Click Show Settings"] = "ПКМ для настроек.";
+L["Plumber Clock"] = "Часы Plumber";
+L["Clock Type"] = "Тип часов";
+L["Clock Type Analog"] = "Аналоговые";
+L["Clock Type Digital"] = "Цифровые";
+
+
+--CatalogExtendedSearch
+L["ModuleName Housing_CatalogSearch"] = "Каталог декора";
+L["ModuleDescription Housing_CatalogSearch"] = "- Улучшает поле поиска в Каталоге декора и вкладке Хранилища, позволяя искать предметы по достижению, торговцу, зоне или валюте.\n\n- Показывает количество совпадений рядом с категорией.\n\n- Позволяет ссылаться на декор в чате.";
+L["Match Sources"] = "Источники совпадений";
+
+
+--SourceAchievementLink
+L["ModuleName SourceAchievementLink"] = "Интерактивная информация об источнике";
+L["ModuleDescription SourceAchievementLink"] = "Делает большинство названий достижений в следующих интерфейсах кликабельными, позволяя просматривать детали или отслеживать их.\n\n- Каталог декора\n\n- Журнал средств передвижения";
 
 
 --Generic
@@ -716,6 +810,13 @@ L["Level Maxed"] = "(Максимально)";   --Reached max level
 L["Current Colon"] = ITEM_UPGRADE_CURRENT or "Текущий:";
 L["Unclaimed Reward Alert"] = WEEKLY_REWARDS_UNCLAIMED_TITLE or "У вас есть невостребованные награды";
 L["Uncollected Set Counter Format"] = "У вас |cffffffff%d|r несобранных |4сета:сетов; трансмогрификации.";
+L["InstructionFormat Left Click"] = "ЛКМ для %s";
+L["InstructionFormat Right Click"] = "ПКМ для %s";
+L["InstructionFormat Ctrl Left Click"] = "Ctrl + ЛКМ для %s";
+L["InstructionFormat Ctrl Right Click"] = "Ctrl + ПКМ для %s";
+L["InstructionFormat Alt Left Click"] = "Alt + ЛКМ для %s";
+L["InstructionFormat Alt Right Click"] = "Alt + ПКМ для %s";
+L["Close Frame Format"]= "|cff808080(Закрыть %s)|r";
 
 
 --Plumber AddOn Settings

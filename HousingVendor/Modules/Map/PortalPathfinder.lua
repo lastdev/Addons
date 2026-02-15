@@ -168,7 +168,8 @@ end
 -- @return: portal data or nil
 function PortalPathfinder:GetFirstPortalInPath(startMapID, destMapID, destX, destY)
     -- Get player position
-    local playerPosition = C_Map.GetPlayerMapPosition(startMapID, "player")
+    local posOk, playerPosition = pcall(C_Map.GetPlayerMapPosition, startMapID, "player")
+    if not posOk then playerPosition = nil end
     if not playerPosition then
         return nil
     end

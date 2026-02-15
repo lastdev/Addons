@@ -865,7 +865,7 @@ function private.CraftStringToCraftType(craftString)
 	if not craftString then
 		return "NONE"
 	elseif Profession.IsEnchant(craftString) then
-		return LibTSMUI.IsVanillaClassic() and "ENCHANT" or "ENCHANT_VELLUM"
+		return (LibTSMUI.IsVanillaClassic() or LibTSMUI.IsBCClassic()) and "ENCHANT" or "ENCHANT_VELLUM"
 	elseif Profession.IsSalvage(craftString) then
 		return "SALVAGE"
 	elseif Profession.IsTinker(craftString) then

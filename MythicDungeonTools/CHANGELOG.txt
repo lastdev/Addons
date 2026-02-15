@@ -1,6 +1,3 @@
-## 5.8.1 (2025-12-18)
+## 6.0.7 (2026-02-11)
 
-- 11.2.7 update
-
-
-
+- Fix MoP compatibility by guarding `C_Secrets` usage when sharing routes.

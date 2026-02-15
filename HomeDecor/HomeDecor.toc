@@ -1,0 +1,79 @@
+## Interface: 120000, 120001
+## Title: Home|cffff7d0aDecor
+## Author: Jay
+## Version: v12.0.39
+## X-Website: https://www.curseforge.com/wow/addons/homedecor
+## Notes: Housing & Decor Browser
+## SavedVariables: HomeDecorDB
+## IconTexture: Interface\AddOns\HomeDecor\Media\Icon
+## X-Curse-Project-ID: 1402921
+## X-Wago-ID: O67DjgK3
+## Category-enUS: Housing
+
+Libs\LibStub\LibStub.lua
+Libs\AceAddon-3.0\AceAddon-3.0.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\AceDB-3.0\AceDB-3.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+Libs\HereBeDragons\HereBeDragons-2.0.lua
+Libs\HereBeDragons\HereBeDragons-Pins-2.0.lua
+
+Core\Init.lua
+HomeDecor.xml
+
+Changelog.lua
+
+Systems\NPCNames.lua
+Systems\HousingBootstrap.lua
+Systems\Collection.lua
+Systems\GlobalIndex.lua
+Systems\Changelog.lua
+Systems\MapTracker.lua
+Systems\MapPins.lua
+Systems\Reputation.lua
+Systems\Events.lua
+
+Systems\Vendor\CheckMarks.lua
+Systems\Vendor\DecorCounts.lua
+Systems\Vendor\DecorCounts_System.lua
+Systems\Vendor\VendorChecks.lua
+
+UI\Theme.lua
+UI\Controls.lua
+UI\Options.lua
+UI\Widgets\RowStyles.lua
+UI\ChangelogPopup.lua
+UI\Widgets\FilterPopup.lua
+UI\Widgets\Dropdown.lua
+UI\Layout.lua
+
+UI\Widgets\HeaderController.lua
+UI\Widgets\Filters.lua
+UI\Widgets\DecorIndex.lua
+UI\Widgets\ResizeBar.lua
+UI\Widgets\Navigation.lua
+UI\Widgets\FavoriteStar.lua
+UI\Widgets\Tooltips.lua
+UI\Widgets\DropPanel.lua
+UI\Widgets\ProgressBar.lua
+UI\Widgets\StatusIcon.lua
+UI\Widgets\ItemInteractions.lua
+
+UI\Tracker\Tracker_Util.lua
+UI\Tracker\Tracker_Rows.lua
+UI\Tracker\Tracker_UI.lua
+UI\Tracker\Tracker_Render.lua
+UI\Tracker\Tracker_Events.lua
+UI\Tracker\Tracker.lua
+UI\Tracker\TrackerButton.lua
+
+UI\Viewer\Viewer.lua
+UI\Viewer\Viewer_Util.lua
+UI\Viewer\Viewer_Data.lua
+UI\Viewer\Viewer_Requirements.lua
+UI\Viewer\Viewer_Search.lua
+UI\Viewer\Viewer_Frames.lua
+UI\Viewer\Viewer_Render.lua
+
+UI\MainFrame.lua

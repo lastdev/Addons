@@ -132,6 +132,66 @@ local transmogSets = {
 		{ setID = 1450, tier = "/"},            -- Trial of Style
 		{ setID = 1457, tier = "/"},            -- Time's Keeper (Chromie scenario)
 		{ setID = 1471, tier = 21},             -- Seat of the Triumvirate
+
+		-- Legion remix
+		-- Note: it's a mess below this point for remix sets, Blizz didn't bother properly grouping them .. I made my best.
+		
+		-- { setID = 2656, tier = "/ A"},            -- (P) Dream Defender's Emerald Guardplate
+		-- { setID = 2658, tier = "/"},            -- (M) Fel-Marked Scales	
+		-- { setID = 2337, tier = "/"},            -- (L) Barkbinds of the Archdruid's Nightmare	
+		-- { setID = , tier = "/"},            -- (C) none ?
+
+		-- { setID = 5278, tier = "Sargerei Commander"},            -- 
+		-- { setID = 5279, tier = "/"},            -- 
+		-- { setID = 5280, tier = "/"},            -- 
+		-- { setID = 5281, tier = "/"},            -- 		
+		
+		
+		
+		-- Green, Orange = remix
+		-- Purple, Red = dungeon
+		
+		-- { setID = 4454, tier = "/ B 1"},            -- (P-Green) Val'kyr's Warharness
+		-- { setID = 4492, tier = "/"},            -- (M-Green) Emerald Drake Hunter's Kit
+		-- { setID = 4440, tier = "/"},            -- (L-Green) Skyborne Brigandine
+		-- { setID = 4491, tier = "/"},            -- (C-Green) Verdant Dreamscribed Robes	
+		
+		-- { setID = 4427, tier = "/ B 2"},            -- 
+		
+		-- { setID = 4428, tier = "/"},            -- 
+		
+		
+		-- { setID = 4429, tier = "/"},            -- 
+		-- { setID = 4430, tier = "/"},            -- 
+		-- { setID = 4431, tier = "/"},            -- 
+		-- { setID = 4432, tier = "/"},            -- 
+		-- { setID = 4433, tier = "/"},            -- 
+		-- { setID = 4434, tier = "/"},            -- 
+		-- { setID = 4435, tier = "/"},            -- 
+		-- { setID = 4436, tier = "/"},            -- 
+		-- { setID = 4437, tier = "/"},            -- 
+		-- { setID = 4439, tier = "/"},            -- 
+		-- { setID = 4442, tier = "/"},            -- 
+		-- { setID = 4443, tier = "/"},            -- 
+		-- { setID = 4444, tier = "/"},            -- 
+		-- { setID = 4446, tier = "/"},            -- 
+		-- { setID = 4447, tier = "/"},            -- 
+		-- { setID = 4448, tier = "/"},            -- 
+		-- { setID = 4449, tier = "/"},            -- 
+		-- { setID = 4450, tier = "/"},            -- 
+		-- { setID = 4452, tier = "/"},            -- 
+		-- { setID = 4453, tier = "/"},            -- 
+		-- { setID = 4456, tier = "/"},            -- 
+		-- { setID = 4457, tier = "/"},            -- 
+		-- { setID = 4459, tier = "/"},            -- 
+		-- { setID = 4460, tier = "/"},            -- 
+		-- { setID = 4489, tier = "/"},            -- 
+		-- { setID = 5270, tier = "/"},            -- 
+
+		-- { setID = 5286, tier = "/"},            -- 
+		-- { setID = 4462, tier = "/"},            -- 
+		-- { setID = 4463, tier = "/"},            -- 
+		-- { setID = 4464, tier = "/"},            -- 
 		
 		{ setID = 1137, tier = "19+20", isPVP = true,
 			["DEATHKNIGHT"] = 1163,				-- Manual fix, this set has no proper label in the table returned by the game

@@ -258,5 +258,5 @@ function private.UpdateCurrentCharacterGoldLog(copper)
 end
 
 function private.RoundCopperValue(copper)
-	return Math.Round(copper, COPPER_PER_GOLD * ((ClientInfo.IsRetail() and 1000) or (ClientInfo.IsVanillaClassic() and 1) or 100))
+	return Math.Round(copper, COPPER_PER_GOLD * ((ClientInfo.IsRetail() and 1000) or ((ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic()) and 1) or 100))
 end

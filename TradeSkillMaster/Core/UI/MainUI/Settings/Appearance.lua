@@ -534,7 +534,7 @@ function private.ColorOnMouseUp(frame)
 	ColorPickerFrame.previousValues.r = r
 	ColorPickerFrame.previousValues.g = g
 	ColorPickerFrame.previousValues.b = b
-	if ClientInfo.IsRetail() or ClientInfo.IsVanillaClassic() then
+	if ClientInfo.IsRetail() or ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic() then
 		ColorPickerFrame.swatchFunc = private.ColorPickerCallback
 	else
 		ColorPickerFrame.func = private.ColorPickerCallback

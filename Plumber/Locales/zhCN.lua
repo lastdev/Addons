@@ -14,6 +14,7 @@ BINDING_NAME_PLUMBER_QUESTWATCH_PREVIOUS = "设上一个任务为焦点";
 
 
 --Module Control Panel
+L["Addon Name Colon"] =  "Plumber：";
 L["Module Control"] = "功能选项";
 L["Quick Slot Generic Description"] = "\n\n*快捷按钮是一组在特定情形下出现的、可交互的按钮。";
 L["Quick Slot Edit Mode"] = "更改布局";
@@ -22,10 +23,11 @@ L["Quick Slot Reposition"] = "调整位置";
 L["Quick Slot Layout"] = "布局";
 L["Quick Slot Layout Linear"] = "线性";
 L["Quick Slot Layout Radial"] = "环形";
-L["Restriction Combat"] = "战斗中不可用";    --Indicate a feature can only work when out of combat
+L["Restriction Combat"] = "战斗中不可用";
+L["Restriction Instance"] = "此功能在副本内无效。";
 L["Map Pin Change Size Method"] = "\n\n*如需更改标记大小，请打开 世界地图 - 地图筛选 - Plumber";
 L["Toggle Plumber UI"] = "Plumber界面可见性";
-L["Toggle Plumber UI Tooltip"] = "在编辑模式中显示以下Plumber界面：\n%s\n\n此选项仅控制它们在编辑模式下是否可见，并不会启用或禁用这些功能。";
+L["Toggle Plumber UI Tooltip"] = "在编辑模式中显示以下Plumber界面：\n\n%s\n\n此选项仅控制它们在编辑模式下是否可见，并不会启用或禁用这些功能。";
 L["Remove New Feature Marker"] = "移除新功能标记";
 L["Remove New Feature Marker Tooltip"] = "新功能标记 %s 通常在一周后消失，你也可以现在就移除它们。";
 L["Modules"] = "模块控制";
@@ -33,7 +35,7 @@ L["Release Notes"] = "版本说明";
 L["Option AutoShowChangelog"] = "自动显示版本说明";
 L["Option AutoShowChangelog Tooltip"] = "在插件更新后自动打开版本说明。";
 L["Category Colon"] = "类别：";
-L["Module Wrong Game Version"] = "此模块对当前游戏版本无效。";
+L["Module Wrong Game Version"] = "此功能对当前游戏版本无效。";
 L["Changelog Wrong Game Version"] = "以下更新对当前游戏版本无效。";
 L["Settings Panel"] = "设置界面";
 L["Version"] = "版本";
@@ -42,6 +44,7 @@ L["New Feature Abbr"] = "新";
 L["Format Month Day"] = "%s%d日";
 L["Always On Module"] = "此模块将被一直启用。";
 L["Return To Module List"] = "返回模块列表";
+L["LootUI Addon Conflict"] = "此模块可能与以下功能类似的插件不兼容：";
 
 
 --Settings Category
@@ -178,7 +181,6 @@ L["ModuleDescription BlizzFixEventToast"] = "让事件通知不挡住你的鼠�
 --Talking Head
 L["ModuleName TalkingHead"] = "对话特写头像";
 L["ModuleDescription TalkingHead"] = "用简洁的界面取代默认的对话特写头像。";
-L["EditMode TalkingHead"] = "Plumber: "..L["ModuleName TalkingHead"];
 L["TalkingHead Option InstantText"] = "立即显示文本";   --Should texts immediately, no gradual fading
 L["TalkingHead Option TextOutline"] = "文字描边";
 L["TalkingHead Option Condition Header"] = "隐藏来自以下情形的文字：";
@@ -325,6 +327,7 @@ L["ModuleDescription WorldMapPin_TWW"] = "在卡兹阿加地图上显示额外�
 
 --Delves
 L["Great Vault Tier Format"] = "难度 %s";
+L["Great Vault World Activity Tooltip"] = "难度1和世界活动";
 L["Item Level Format"] = "物品等级%d";
 L["Item Level Abbr"] = "装等";
 L["Delves Reputation Name"] = "地下堡赛季进度";
@@ -382,6 +385,22 @@ L["Click To Disable"] = "点击禁用";
 --NameplateWidget
 L["ModuleName NameplateWidget"] = "姓名板: 钥焰";
 L["ModuleDescription NameplateWidget"] = "在钥焰的姓名板进度条上显示你拥有的光耀残渣的数量。";
+
+
+--NameplateQuestIndicator
+L["ModuleName NameplateQuest"] = "姓名板: 任务标记";
+L["ModuleDescription NameplateQuest"] = "在姓名板上显示任务标记。\n\n-（可选）在目标姓名板上显示任务进度。\n\n-（可选）如果你的队友还没有完成任务，在姓名板上显示任务标记。";
+L["NameplateQuest ShowPartyQuest"] = "显示队友任务";
+L["NameplateQuest ShowPartyQuest Tooltip"] = "如果你的队友还没有完成任务目标，在姓名板上显示 %s 图标。";
+L["NameplateQuest ShowTargetProgress"] = "显示当前目标进度";
+L["NameplateQuest ShowTargetProgress Tooltip"] = "在当前目标姓名板上显示任务进度";
+L["NameplateQuest ShowProgressOnHover"] = "显示鼠标经过的单位进度";
+L["NameplateQuest ShowProgressOnHover Tooltip"] = "在鼠标经过的单位姓名板上显示任务进度。";
+L["NameplateQuest Instruction Find Nameplate"] = "请前往一个有NPC姓名板的地方来调整图标位置。";
+L["NameplateQuest Progress Format"] = "任务进度格式";
+L["Progress Show Icon"] = "显示任务图标";
+L["Progress Format Completed"] = "已完成数量/总数";
+L["Progress Format Remaining"] = "待完成数量";
 
 
 --PartyInviterInfo
@@ -530,7 +549,6 @@ L["Sample Item 4"] = "炫酷的史诗物品";
 L["Sample Item 3"] = "超棒的精良物品";
 L["Sample Item 2"] = "不错的优秀物品";
 L["Sample Item 1"] = "一般的普通物品";
-L["EditMode LootUI"] =  "Plumber: 拾取窗口";
 L["Manual Loot Instruction Format"] = "如想暂时取消一次自动拾取，请按住|cffffffff%s|r键直到拾取窗口出现。";
 L["LootUI Option Hide Window"] = "隐藏Plumber拾取窗口";
 L["LootUI Option Hide Window Tooltip"] = "隐藏Plumber拾取物品提示窗口，但仍然在后台执行其他功能例如强制自动拾取。";
@@ -563,6 +581,14 @@ L["LootUI Option Combine Items"] = "合并相似物品";
 L["LootUI Option Combine Items Tooltip"] = "在同一行显示相似物品。目前支持的分类为：\n\n- 垃圾物品\n- 纪元纪念品（军团再临：幻境新生）";
 L["LootUI Option Low Frame Strata"] = "置于底层";
 L["LootUI Option Low Frame Strata Tooltip"] = "在处于通知模式时，将拾取窗口置于其他界面的后方。\n\n此选项不影响手动拾取模式。";
+L["LootUI Option Show Reputation"] = "显示声望变化";
+L["LootUI Option Show Reputation Tooltip"] = "在拾取窗口内显示获得的声望。\n\n在战斗中或是战场内获得的声望将在结束后合并显示。";
+L["LootUI Option Show All Money"] = "显示任何金钱变动";
+L["LootUI Option Show All Money Tooltip"] = "显示从任何来源获得的金钱，而不仅限于从战利品中拾取到的。";
+L["LootUI Option Show All Currency"] = "显示任何货币变动";
+L["LootUI Option Show All Currency Tooltip"] = "显示从任何来源获得的货币，而不仅限于从战利品中拾取到的。\n\n|cffff4800你可能偶尔会看到不在聊天窗口内显示的货币。|r";
+L["LootUI Option Hide Title"] = "隐藏“你获得了”标题";
+L["LootUI Option Hide Title Tooltip"] = "隐藏拾取窗口上方显示的“你获得了”标题。";
 
 
 --Quick Slot For Third-party Dev
@@ -577,6 +603,7 @@ L["PlumberMacro Drive"] = "Plumber赛车坐骑宏";
 L["PlumberMacro Drawer"] = "Plumber技能收纳宏";
 L["PlumberMacro Housing"] = "Plumber房屋宏";
 L["PlumberMacro Torch"] = "Plumber火把宏";
+L["PlumberMacro Outfit"] = "Plumber幻化外观宏";
 L["PlumberMacro DrawerFlag Combat"] = "技能收纳宏将在你离开战斗后更新。";
 L["PlumberMacro DrawerFlag Stuck"] = "更新技能收纳宏时遇到了错误。";
 L["PlumberMacro Error Combat"] = "战斗中不可用";
@@ -603,11 +630,13 @@ L["Drawer Option Update Frequently"] = "频繁更新";
 L["Drawer Option Update Frequently Tooltip"] = "在你背包或法术书发生变化时更新所有收纳宏。启用此选项可能会略微增加运算量。";
 L["ModuleName DrawerMacro"] = "技能收纳宏";
 L["ModuleDescription DrawerMacro"] = "创建自定义弹出菜单来整理你的物品、法术、宠物、坐骑、玩具。\n\n要创建技能收纳宏, 请先创建一个新宏，然后在宏编辑框中输入 |cffd7c0a3#plumber:drawer|r";
+L["No Slot For New Character Macro Alert"] = "需要一个空的角色专用宏栏位来完成此操作。";
 
 
 --New Expansion Landing Page
 L["ModuleName NewExpansionLandingPage"] = "资料片概要";
 L["ModuleDescription NewExpansionLandingPage"] = "一个显示声望、每周事件和团本进度的界面。你可从以下方式访问：\n\n- 点击小地图上的卡兹阿加概要按钮。\n\n- 在游戏设置-快捷键中设置一个快捷键。";
+L["Abbr NewExpansionLandingPage"] = "资料片概要";
 L["Reward Available"] = "奖励待领取";  --As brief as possible
 L["Paragon Reward Available"] = "巅峰奖励待领取";
 L["Until Next Level Format"] = "离下一级还有 %d";   --Earn x reputation to reach the next level
@@ -631,6 +660,7 @@ L["Warband Weekly Reward Tooltip"] = "你的战团每周只能获取一次此奖
 L["Completed"] = "已完成";
 L["Filter Hide Completed Format"] = "隐藏已完成的条目 (%d)";
 L["Weekly Reset Format"] = "周常重置：%s";
+L["Daily Reset Format"] = "日常重置：%s";
 L["Ready To Turn In Tooltip"] = "可以上交任务。";
 L["Weekly Coffer Key Tooltip"] = "每周获得的前四个周常宝箱里有一把修复的宝匣钥匙。";
 L["Weekly Coffer Key Shards Tooltip"] = "每周获得的前四个周常宝箱里有宝匣钥匙碎片。";
@@ -654,6 +684,8 @@ L["Difficulty Not Accurate"] = "无法准确显示难度，因为你不是队长
 L["Instruction Click To Open Adventure Guide"] = "左键单击：|cffffffff打开冒险指南|r";
 L["Instruction Alt Click To Reset Instance"] = "按住Alt并右键单击：|cffffffff重置所有副本|r";
 L["Instruction Link Progress In Chat"] = "<按住Shift点击将副本进度链接到聊天框内>";
+L["Instance Name"] = "副本名称";
+L["EditMode Instruction InstanceDifficulty"] = "此窗口的实际宽度由选项数量决定。";
 
 
 --TransmogChatCommand
@@ -663,6 +695,14 @@ L["Copy To Clipboard"] = "复制到剪贴板";
 L["Copy Current Outfit Tooltip"] = "复制当前外观方案以在网上分享。";
 L["Missing Appearances Format"] = "%d个外观缺失";
 L["Press Key To Copy Format"] = "按|cffffd100%s|r来复制";
+
+
+--TransmogOutfitSelect
+L["ModuleName TransmogOutfitSelect"] = "快捷访问外观列表";
+L["ModuleDescription TransmogOutfitSelect"] = "允许你随时随地打开外观列表并切换已保存的外观。\n\n要实现这个功能：首先打开幻化界面，然后将|cffd7c0a3“快捷访问”|r按钮拖动到技能栏上。";
+L["Outfit Collection"] = "外观列表";
+L["Quick Access Outfit Button"] = "快捷访问";
+L["Quick Access Outfit Button Tooltip"] = "点击并拖动此按钮到技能栏上，以便随时随地访问外观列表。";
 
 
 --QuestWatchCycle
@@ -678,6 +718,7 @@ L["ModuleDescription CraftSearchExtended"] = "在搜索某些词语时显示更�
 --DecorModelScaleRef
 L["ModuleName DecorModelScaleRef"] = "装饰品: 参照物";
 L["ModuleDescription DecorModelScaleRef"] = "- 为装饰品预览窗口增加一个参照物（一根香蕉），帮助你理解物体的大小。\n\n- 允许你按住鼠标左键并在模型上上下拖动来改变镜头的俯仰角。";
+L["Toggle Banana"] = "勾选香蕉";
 
 
 --Player Housing
@@ -685,6 +726,7 @@ L["ModuleName Housing_Macro"] = "房屋宏";
 L["ModuleDescription Housing_Macro"] = "要创建一个回家宏：请先创建一个新宏，然后在宏编辑框中输入 |cffd7c0a3#plumber:home|r";
 L["Teleport Home"] = "传送到房屋";
 L["Instruction Drag To Action Bar"] = "<可点击并拖动到技能栏>";
+L["Leave Home"] = "返回之前的位置";
 L["Toggle Torch"] = "勾选火把";
 L["ModuleName Housing_DecorHover"] = "编辑器：1 装饰模式";
 L["ModuleDescription Housing_DecorHover"] = "装饰模式下：\n\n- 将光标悬停在装饰物上，可显示其占用空间、名称以及库存数量。\n\n- 允许你按下Alt键来摆放一个同样的物体。\n\n新物体不会继承当前的选择角度和缩放比例。";

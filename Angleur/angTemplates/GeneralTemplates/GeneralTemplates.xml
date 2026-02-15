@@ -293,21 +293,18 @@
         </Frames>
     </Button>
     
-    <CheckButton name="CheckboxTemplate_Angleur" parentKey="Enabled" mixin="Angleur_CheckboxMixin" virtual="true">
-		<Size x="24" y="24"/>
-		<HitRectInsets>
-			<AbsInset left="0" right="0" top="0" bottom="8"/>
-		</HitRectInsets>
-		<Layers>
+    <Frame name="CheckboxFrameTemplate_Angleur" mixin="Angleur_CheckboxFrameMixin" virtual="true">
+        <Size x="1" y="1"/>
+        <Layers>
             <Layer level="ARTWORK">
                 <FontString name="$parent_Text" parentKey="text" hidden="false" inherits="GameFontNormal">
                     <Anchors>
-                        <Anchor point="RIGHT" relativeTo="$parent" relativePoint="LEFT"/>
+                        <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT"/>
                     </Anchors>
                     <Scripts>
                         <OnEnter>
                             if not self.tooltip then return end
-                            GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 0)
+                            GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 3, -3)
                             local colorBlu = CreateColor(0.61, 0.85, 0.92)
                             GameTooltip:AddLine(colorBlu:WrapTextInColorCode(self:GetText()))
                             GameTooltip:AddLine(self.tooltip, 1, 1, 1, 0)
@@ -319,19 +316,51 @@
                         </OnLeave>
                     </Scripts>
                 </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <CheckButton name="$parent_Checkbox" parentKey="checkbox" virtual="true">
+                <Size x="24" y="24"/>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="$parent_Text" relativePoint="RIGHT"/>
+                </Anchors>
+                <HitRectInsets>
+                    <AbsInset left="0" right="0" top="0" bottom="8"/>
+                </HitRectInsets>
+                <Scripts>
+                    <OnEnter>
+                        local text = self:GetParent().text
+                        if not text.tooltip then return end
+                        GameTooltip:SetOwner(text, "ANCHOR_BOTTOMRIGHT", 3, -3)
+                        local colorBlu = CreateColor(0.61, 0.85, 0.92)
+                        GameTooltip:AddLine(colorBlu:WrapTextInColorCode(text:GetText()))
+                        GameTooltip:AddLine(text.tooltip, 1, 1, 1, 0)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        local text = self:GetParent().text
+                        if not text.tooltip then return end
+                        GameTooltip:Hide()
+                    </OnLeave>
+                </Scripts>
+                <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
+                <PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
+                <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
+                <CheckedTexture name="$parentCheckedTexture" file="Interface\Buttons\UI-CheckBox-Check"/>
+                <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
+            </CheckButton>
+        </Frames>
+        <Layers>
+            <Layer level="ARTWORK">
                 <FontString name="$parent_DisabledText" parentKey="disabledText" justifyH="LEFT" hidden="true" inherits="SystemFont_Shadow_Small">
                     <Anchors>
-                        <Anchor point="LEFT" relativeTo="$parent" relativePoint="RIGHT"/>
+                        <Anchor point="LEFT" relativeTo="$parent_Checkbox" relativePoint="RIGHT"/>
                     </Anchors>
                 </FontString>
             </Layer>
         </Layers>
-		<NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
-		<PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
-		<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
-		<CheckedTexture name="$parentCheckedTexture" file="Interface\Buttons\UI-CheckBox-Check"/>
-		<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
-    </CheckButton>
+    </Frame>
+
 
     <Button name="Angleur_UIPanelLargeSilverButton" virtual="true">
 		<Size x="72" y="72"/>

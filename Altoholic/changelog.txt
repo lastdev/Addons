@@ -15,6 +15,10 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+12.0.001 (21/01/2026)
+
+- Update for 12.0 pre-patch.
+
 11.2.007 (19/10/2025)
 
 - Characters Tab -> Fixed mousing over a quest in the quest log not showing the list of alts also on this quest.

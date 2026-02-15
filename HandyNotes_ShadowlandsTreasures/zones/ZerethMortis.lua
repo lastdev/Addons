@@ -319,7 +319,7 @@ ns.RegisterPoints(1970, {
     label="{item:190239}",
     texture=ns.atlas_texture("playerpartyblip", {r=0.6,g=0.6,b=0.1,a=1,scale=0.8}),
     minimap=true,
-    found=ns.conditions.Item(190239, 5),
+    found={ns.conditions.Item(190239, 5), ns.conditions.QuestComplete(65522), any=true},
     group="lostovoid",
     note="Find 5x {item:190239} around the zone and take them to the {npc:185280}. There's a lot of spawn points and they vanish after someone loots them. You're looking for a small brown lump with no sparkles.",
 })
@@ -805,8 +805,8 @@ ns.RegisterPoints(2029, { -- Gravid Repose
     [49004060] = makeSchematic(65396, 189473, MOUNT), -- Schematic: Bronzewing Vespoid
 }, schematic)
 ns.RegisterPoints(2047, { -- Sepulcher of the First Ones: Immortal Hearth
-    [46003070] = makeSchematic(65384, 189461, MOUNT, { -- Schematic: Serenade
-        note="Hanging in a chain-link under the floating island",
+    [45813090] = makeSchematic(65384, 189461, MOUNT, { -- Schematic: Serenade
+        note="Hanging in a chain-link under the floating island", minimap=true,
     }),
 }, schematic)
 ns.RegisterPoints(2061, { -- Sepulcher of the First Ones: Ephemeral Plains
@@ -814,6 +814,21 @@ ns.RegisterPoints(2061, { -- Sepulcher of the First Ones: Ephemeral Plains
         note="Defeat {npc:184915:Halondrus}, then loot this from the second-phase room. You've got a reasonably short time after the boss kill to get it.",
     }),
 }, schematic)
+
+ns.RegisterPoints(2061, { -- Sepulcher of the First Ones: Ephemeral Plains
+    [23923771] = {
+        label="High Value Cache",
+        loot={
+            {189175, note="Token for..."}, -- Mawforged Bridle
+            {187631, mount=true}, -- Darkened Vombata
+            {187667, mount=true}, -- Mawdapted Raptora
+            {187641, mount=true}, -- Reins of the Sundered Zerethsteed
+            {189991, quest=65519, covenant=Enum.CovenantType.NightFae}, -- Snail Soul
+        },
+        hide_before=ns.conditions.Item(190727), -- Security Override Orb
+        note="Kill {npc:185032:Taskmaster Xy'pro} while they have 3x{spell:366919:Synergy} from being near other mobs",
+    },
+})
 
 ns.RegisterPoints(1970, { -- Zereth Mortis
     -- Pulp-Covered Relic
@@ -1259,6 +1274,23 @@ ns.RegisterPoints(1970, {
 -- 65017 empyrean essence
 -- 65005 pollinated extraction
 -- 65015 energized firmament
+
+-- Coming To Terms
+do
+    local TERMS = {
+        label="{npc:185766:Haunting Memory}",
+        achievement=15399,
+        atlas="Vehicle-TempleofKotmogu-OrangeBall",
+        note="Collect 3x {npc:185766:Haunting Memory} before Anduin",
+    }
+    ns.RegisterPoints(2048, { -- Sepulcher of the First Ones: Genesis Cradle
+        [30035395] = {},
+    }, TERMS)
+    ns.RegisterPoints(2061, { -- Sepulcher of the First Ones: Ephemeral Plains
+        [25835422] = {},
+        [36782899] = {note="Accessible before the boss fight"},
+    }, TERMS)
+end
 
 -- Adventurer of Zerith Mortis
 
@@ -1875,6 +1907,6 @@ ns.RegisterPoints(1970, {
         note="Inside the Gravid Repose",
         atlas="flightmaster_progenitorobelisk-taxinode_neutral",
         minimap=true,
-        group="Transportation",
+        group=TUTORIAL_TITLE35, -- Travel
     },
 })

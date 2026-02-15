@@ -207,6 +207,7 @@ function healingClass:ReportSingleDamagePreventedLine (actor, instancia)
 end
 
 function healingClass:RefreshWindow (instancia, tabela_do_combate, forcar, exportar)
+	if not Details222.UpdateIsAllowed() then return end --temporary stop updates in th new dlc
 
 	local showing = tabela_do_combate [class_type] --o que esta sendo mostrado -> [1] - dano [2] - cura
 
@@ -227,6 +228,8 @@ function healingClass:RefreshWindow (instancia, tabela_do_combate, forcar, expor
 	local conteudo = showing._ActorTable
 	local amount = #conteudo
 	local modo = instancia.modo
+
+	Details:ClearSecretFontStrings(instancia)
 
 	--pega qual a sub key que ser� usada
 	if (exportar) then
@@ -595,6 +598,8 @@ function healingClass:RefreshLine(instancia, barras_container, whichRowLine, lug
 		return
 	end
 
+	thisLine.statusbar:SetMinMaxValues(0, 100)
+
 	local tabela_anterior = thisLine.minha_tabela
 
 	thisLine.minha_tabela = self --grava uma refer�ncia dessa classe de dano na barra
@@ -872,6 +877,7 @@ function healingClass:RefreshBarra2 (thisLine, instancia, tabela_anterior, forca
 	if (thisLine.colocacao == 1) then
 		if (not tabela_anterior or tabela_anterior ~= thisLine.minha_tabela or forcar) then
 			thisLine:SetValue(100)
+			thisLine:Show()
 
 			if (thisLine.hidden or thisLine.fading_in or thisLine.faded) then
 				Details.FadeHandler.Fader(thisLine, "out")

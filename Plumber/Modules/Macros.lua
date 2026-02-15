@@ -1056,13 +1056,13 @@ do  --MacroInterpreter
 
             if not processed then
                 if find(line, "/home") then
-                    processed = true;
-                    icon = 7252953;
-                    name = L["Teleport Home"];
-                    id = -1;
-                    actionType = "teleportHome";
-                    macroText = "/script if Plumber_TeleportHome then Plumber_TeleportHome() end";
-                    usable = true;
+                    if addon.Housing then
+                        processed = true;
+                        icon, macroText, name = addon.Housing.GetDynamicTeleportAction();
+                        id = -1;
+                        actionType = "teleportHome";
+                        usable = true;
+                    end
                 end
             end
 
@@ -1921,6 +1921,33 @@ do  --For other modules like Legion Remix
         end
         return success, reason
     end
+
+
+    local function CanPickupOrCreateCommand(command)
+        if not command then return end;
+
+        local _, numCharacterMacros = GetNumMacros();
+        local fromIndex = EL.macroIndexMin2;
+        local toIndex = fromIndex + numCharacterMacros - 1;
+        local body, _command;
+        local macroID;
+
+        if toIndex >= fromIndex then
+            for index = fromIndex, toIndex do
+                body = GetMacroBody(index);
+                if body then
+                    _command = match(body, "#plumber:(%w+)");
+                    if _command == command then
+                        return true
+                    end
+                end
+            end
+        end
+
+        return not IsCharacterMarcoFull()
+    end
+    addon.CanPickupOrCreateCommand = CanPickupOrCreateCommand;
+
 
     local function AcquireCharacterMacro(command, generatorFunc)
         if not command then return end;

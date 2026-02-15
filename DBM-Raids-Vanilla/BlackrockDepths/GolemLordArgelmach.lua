@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod(2666, "DBM-Raids-Vanilla", 5, 1301)
 local L		= mod:GetLocalizedStrings()
 
-mod.statTypes = "lfr,normal,heroic"
+mod.statTypes = "lfr"
 
-mod:SetRevision("20241103123604")
+mod:SetRevision("20251218052442")
 mod:SetCreatureID(230219, 230219, 230217, 230218)--Golem Lord 226306, Arcanotron 230219, Magmatron 230216, Toxitron 230217, Electron 230218
 mod:SetEncounterID(3046)
 --mod:SetUsedIcons(8, 7, 6)

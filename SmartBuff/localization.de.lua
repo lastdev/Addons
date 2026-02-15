@@ -32,8 +32,8 @@ SMARTBUFF_UNDEAD    = "Untot";
 SMARTBUFF_CLASSES = {"Druide", "Jäger", "Magier", "Paladin", "Priester", "Schurke", "Schamane", "Hexenmeister", "Krieger", "Todesritter", "Mönch", "Dämonenjäger", "Evoker", "Jäger Pet", "Hexer Pet", "Todesritter Pet", "Tank", "Heiler", "Schadensverursacher"};
 
 -- Templates and Instances
-SMARTBUFF_TEMPLATES = {"Solo", "Gruppe", "Raid", "Schlachtfeld", "Arena", "ICC", "PDK", "Ulduar", "MC", "Ony", "BWL", "Naxx", "AQ", "ZG", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
-SMARTBUFF_INSTANCES = {"Eiskronenzitadelle", "Prüfung des Kreuzfahrers", "Ulduar", "geschmolzene Kern", "Onyxias Hort", "Pechschwingenhort", "Naxxramas", "Ahn'Qiraj", "Zul'Gurub"};
+SMARTBUFF_TEMPLATES = {"Solo", "Gruppe", "LFG", "Raid", "Mytisk nøgle", "Rædselsvision", "Dyk", "Slagmark", "Arena", "Tomspiret", "Drømmeriften", "March mod Quel'Danas", "Nerub-ar Palads", "Befrielse af Undermine", "Tilpasset 1", "Tilpasset 2", "Tilpasset 3", "Tilpasset 4", "Tilpasset 5"};
+SMARTBUFF_INSTANCES = {"Tomspiret", "Drømmeriften", "March mod Quel'Danas", "Nerub-ar Palads", "Befrielse af Undermine"};
 
 -- Mount
 SMARTBUFF_MOUNT = "Erhöht Tempo um (%d+)%%.";
@@ -118,7 +118,7 @@ SMARTBUFF_OFT_SPLASHMSGSHORT = "Kurze Meldung";
 SMARTBUFF_OFTT               = "Schaltet SmartBuff An/Aus";
 SMARTBUFF_OFTT_AUTO          = "Schaltet die Erinnerung an fehlende Buffs An/Aus";
 SMARTBUFF_OFTT_AUTOTIMER     = "Verzögerung in Sekunden zwischen zwei Checks.";
-SMARTBUFF_OFTT_AUTOCOMBAT    = "Check auch während dem Kampf durchführen.";
+SMARTBUFF_OFTT_AUTOCOMBAT    = "Check auch während dem Kampf durchführen.\nAlle Erinnerungslogik im Kampf ist deaktiviert, sofern die Hauptoption \"im Kampf\" (im Optionenfenster, nicht diese) nicht aktiviert ist.";
 SMARTBUFF_OFTT_AUTOCHAT      = "Zeigt fehlende Buffs als Chat-Meldung an.";
 SMARTBUFF_OFTT_AUTOSPLASH    = "Zeigt fehlende Buffs als Splash-Meldung\nin der mitte des Bildschirms an.";
 SMARTBUFF_OFTT_AUTOSOUND     = "Bei fehlende Buffs erklingt ein Ton.";
@@ -170,7 +170,7 @@ SMARTBUFF_BST_MANALIMIT      = "Grenzwert";
 -- Buffsetup Frame Tooltip Text
 SMARTBUFF_BSTT_SELFONLY      = "Bufft nur deinen eigenen Charakter."; 
 SMARTBUFF_BSTT_SELFNOT       = "Bufft alle anderen selektierte Klassen,\nausser deinen eigenen Charakter.";
-SMARTBUFF_BSTT_COMBATIN      = "Bufft innerhalb des Kampfes.";
+SMARTBUFF_BSTT_COMBATIN      = "Bufft innerhalb des Kampfes.\nAlle Kampflogik ist deaktiviert, sofern die Hauptoption \"im Kampf\" (im Optionenfenster) nicht aktiviert ist.";
 SMARTBUFF_BSTT_COMBATOUT     = "Bufft ausserhalb des Kampfes.";
 SMARTBUFF_BSTT_MAINHAND      = "Bufft die Haupthand.";
 SMARTBUFF_BSTT_OFFHAND       = "Bufft die Schildhand.";

@@ -16,18 +16,18 @@
                     <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="20" y="-28"/>
                 </Anchors>
                 <Frames>
-                    <CheckButton parentKey="checkbox1" inherits="Legolando_CheckboxTemplate_AngleurUnderlight">
+                    <Frame parentKey="checkbox1" inherits="Legolando_CheckboxFrameTemplate_AngleurUnderlight">
                         <Size x="26" y="26"/>
                         <Anchors>
-                            <Anchor point="TOPLEFT" relativeKey="$parent.title" relativePoint="BOTTOMLEFT" x="8" y="-5"/>
+                            <Anchor point="TOPLEFT" relativeKey="$parent.title" relativePoint="BOTTOMLEFT" x="8" y="-12"/>
                         </Anchors>
-                    </CheckButton>
-                    <CheckButton parentKey="checkbox2" inherits="Legolando_CheckboxTemplate_AngleurUnderlight">
+                    </Frame>
+                    <Frame parentKey="checkbox2" inherits="Legolando_CheckboxFrameTemplate_AngleurUnderlight">
                         <Size x="26" y="26"/>
                         <Anchors>
-                            <Anchor point="TOPLEFT" relativeKey="$parent.title" relativePoint="BOTTOMLEFT" x="8" y="-29"/>
+                            <Anchor point="TOPLEFT" relativeKey="$parent.title" relativePoint="BOTTOMLEFT" x="8" y="-36"/>
                         </Anchors>
-                    </CheckButton>
+                    </Frame>
                 </Frames>
             </Frame>
         </Frames>

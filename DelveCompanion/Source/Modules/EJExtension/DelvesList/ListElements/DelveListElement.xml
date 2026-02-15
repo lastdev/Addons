@@ -1,0 +1,27 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/AddOns/Blizzard_SharedXML/UI.xsd">
+    <Frame name="DelveCompanionDelveListElementTemplate"
+        mixin="DelveCompanion_DelveListElementMixin" virtual="true">
+        <Size x="174" y="122" />
+        <Frames>
+            <Button parentKey="InstanceButton" inherits="DelveCompanionDelveInstanceButtonTemplate">
+                <Anchors>
+                    <Anchor point="TOP" />
+                </Anchors>
+            </Button>
+            <Frame parentKey="ProgressWidget"
+                inherits="DelveCompanionDelveProgressWidgetTemplate"
+                hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.InstanceButton"
+                        relativePoint="BOTTOMLEFT" />
+                </Anchors>
+            </Frame>
+        </Frames>
+        <Scripts>
+            <OnShow method="OnShow" />
+            <OnHide method="OnHide" />
+        </Scripts>
+    </Frame>
+</Ui>

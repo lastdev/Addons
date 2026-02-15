@@ -4,7 +4,8 @@
 --  corpse arrow.  Based on code written and adapted by Yssarill.
 -------------------------------------------------------------------------]]--
 
-local L = TomTomLocals
+local addonName, addon = ...
+local L = addon.L
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("PLAYER_ALIVE")

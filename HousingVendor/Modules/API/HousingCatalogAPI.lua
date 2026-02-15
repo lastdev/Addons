@@ -135,7 +135,7 @@ function HousingCatalogAPI:GetCatalogEntryByItemID(itemID)
         return nil
     end)
     
-    if success and results and #results > 0 then
+    if success and results and #results > 0 and type(results[1]) == "table" then
         -- Get the entry info from the first result
         -- Structure may vary: results[1].entryID or results[1].catalogEntryID
         local entryID = results[1].entryID or results[1].catalogEntryID

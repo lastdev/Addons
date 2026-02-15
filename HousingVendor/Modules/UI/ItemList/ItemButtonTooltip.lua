@@ -12,6 +12,7 @@ end
 
 local Tooltip = {}
 local achievementCache = {}
+local vendorItemListCache = {}
 
 local function FormatAchievementDate(month, day, year)
     month = tonumber(month)
@@ -214,6 +215,37 @@ function Tooltip.AttachButton(button, opts)
             -- Increase font size for better readability
             local tooltipFont = GameTooltipText:GetFont()
             GameTooltipText:SetFont(tooltipFont or "Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
+
+            -- Keep the default tooltip compact; hold SHIFT for the full data dump.
+            local showDetails = IsShiftKeyDown()
+
+            local function AddCollectedLine(itemIDNum)
+                itemIDNum = tonumber(itemIDNum)
+                if not itemIDNum then return end
+
+                local apiDisabled = HousingDB and HousingDB.settings and HousingDB.settings.disableApiCalls == true
+                local catalogNotReady = not _G.HousingCatalogSafeToCall
+
+                local isCollected = nil
+                if HousingCollectionAPI and HousingCollectionAPI.IsItemCollected then
+                    local ok, res = pcall(HousingCollectionAPI.IsItemCollected, HousingCollectionAPI, itemIDNum)
+                    if ok then
+                        isCollected = res == true
+                    end
+                end
+
+                if isCollected == true then
+                    GameTooltip:AddLine("|TInterface\\RAIDFRAME\\ReadyCheck-Ready:16|t Collected", 0.2, 1.0, 0.2, 1)
+                else
+                    -- If we're in the early-login safety window (catalog not ready) and API calls aren't disabled,
+                    -- we can't reliably say "not collected" yet. Show an unknown state instead.
+                    if catalogNotReady and not apiDisabled then
+                        GameTooltip:AddLine("|TInterface\\RAIDFRAME\\ReadyCheck-Waiting:16|t Collected: Unknown", 0.7, 0.7, 0.7, 1)
+                    else
+                        GameTooltip:AddLine("|TInterface\\RAIDFRAME\\ReadyCheck-NotReady:16|t Not collected", 1.0, 0.25, 0.25, 1)
+                    end
+                end
+            end
             
             -- Try to show official WoW item tooltip first (if itemID is available)
             local showOfficialTooltip = false
@@ -237,11 +269,14 @@ function Tooltip.AttachButton(button, opts)
                         end
                     end
                     
-                    -- If we have item info, show official tooltip
-                    if itemInfo then
-                        GameTooltip:SetItemByID(numericItemID)
-                        showOfficialTooltip = true
-                    end
+                     -- If we have item info, show official tooltip
+                     if itemInfo then
+                         GameTooltip:SetItemByID(numericItemID)
+                         showOfficialTooltip = true
+                     end
+
+                    -- Always show our collected status line (even when using the official tooltip).
+                    AddCollectedLine(numericItemID)
                 end
             end
             
@@ -279,6 +314,9 @@ function Tooltip.AttachButton(button, opts)
                 end
                 
                 GameTooltip:SetText(displayName, nameColor[1], nameColor[2], nameColor[3], 1, true)
+                if item.itemID and item.itemID ~= "" then
+                    AddCollectedLine(item.itemID)
+                end
                 
                 -- Add API info if available
                 if allInfo.itemInfo and type(allInfo.itemInfo) == "table" then
@@ -313,12 +351,14 @@ function Tooltip.AttachButton(button, opts)
                 end
             end
             
-            -- Type and Category
-            if item.type and item.type ~= "" then
-                GameTooltip:AddLine("Type: " .. item.type, 0.8, 0.8, 0.8, 1)
-            end
-            if item.category and item.category ~= "" then
-                GameTooltip:AddLine("Category: " .. item.category, 0.8, 0.8, 0.8, 1)
+            -- Type and Category (details only)
+            if showDetails then
+                if item.type and item.type ~= "" then
+                    GameTooltip:AddLine("Type: " .. item.type, 0.8, 0.8, 0.8, 1)
+                end
+                if item.category and item.category ~= "" then
+                    GameTooltip:AddLine("Category: " .. item.category, 0.8, 0.8, 0.8, 1)
+                end
             end
             
             GameTooltip:AddLine(" ") -- Spacer
@@ -349,17 +389,25 @@ function Tooltip.AttachButton(button, opts)
             local vendorDisplay = nil
             local zoneDisplay = nil
 
-            local Filters = _G.HousingFilters
-            local filterVendor = Filters and Filters.currentFilters and Filters.currentFilters.vendor or nil
-            local filterZone = Filters and Filters.currentFilters and Filters.currentFilters.zone or nil
-
-            if _G.HousingVendorHelper then
-                vendorDisplay = _G.HousingVendorHelper:GetVendorName(item, filterVendor)
-                zoneDisplay = _G.HousingVendorHelper:GetZoneName(item, filterZone)
-            else
-                vendorDisplay = item.vendorName or item._apiVendor
-                zoneDisplay = item.zoneName or item._apiZone
+             local Filters = _G.HousingFilters
+             local filterVendor = Filters and Filters.currentFilters and Filters.currentFilters.vendor or nil
+             local filterZone = Filters and Filters.currentFilters and Filters.currentFilters.zone or nil
+            local filterMapID = Filters and Filters.currentFilters and Filters.currentFilters.zoneMapID or nil
+            filterMapID = tonumber(filterMapID) or nil
+            if not filterMapID and C_Map and C_Map.GetBestMapForUnit then
+                local ok, mid = pcall(C_Map.GetBestMapForUnit, "player")
+                if ok then
+                    filterMapID = tonumber(mid) or nil
+                end
             end
+ 
+             if _G.HousingVendorHelper then
+                vendorDisplay = _G.HousingVendorHelper:GetVendorName(item, filterVendor, filterZone, filterMapID)
+                zoneDisplay = _G.HousingVendorHelper:GetZoneName(item, filterZone, filterMapID)
+             else
+                 vendorDisplay = item.vendorName or item._apiVendor
+                 zoneDisplay = item.zoneName or item._apiZone
+             end
 
             local expansionDisplay = item._apiExpansion or item.expansionName
 
@@ -384,21 +432,155 @@ function Tooltip.AttachButton(button, opts)
                 end
             end
 
+            local L = _G.HousingVendorL
+
             if vendorDisplay and vendorDisplay ~= "" and not genericVendors[vendorDisplay] then
-                GameTooltip:AddLine("Vendor: " .. vendorDisplay, 1, 0.82, 0, 1)
+                local vendorLabel = (L and L["FILTER_VENDOR"]) or "Vendor:"
+                GameTooltip:AddLine(vendorLabel .. " " .. vendorDisplay, 1, 0.82, 0, 1)
+
+                -- Optional vendor gating/notes compiled from *_Vendors.txt metadata tables
+                do
+                    local Filters = _G.HousingFilters
+                    local filterVendor = Filters and Filters.currentFilters and Filters.currentFilters.vendor or nil
+                    local filterZone = Filters and Filters.currentFilters and Filters.currentFilters.zone or nil
+                    local filterMapID = Filters and Filters.currentFilters and Filters.currentFilters.zoneMapID or nil
+
+                    local npcID = nil
+                    if _G.HousingVendorHelper and _G.HousingVendorHelper.GetVendorNPCID then
+                        npcID = _G.HousingVendorHelper:GetVendorNPCID(item, filterVendor, filterZone, filterMapID)
+                    else
+                        npcID = tonumber(item.npcID)
+                    end
+
+                    local t = _G.HousingVendorExtraByNpcID
+                    local extra = (npcID and t and t[npcID]) or nil
+                    if extra and extra ~= "" and extra ~= "None" then
+                        local notesLabel = (L and L["TOOLTIP_NOTES"]) or "Notes:"
+                        local extraText = (L and L[extra]) or tostring(extra)
+                        GameTooltip:AddLine(notesLabel .. " " .. tostring(extraText), 0.85, 0.85, 0.85, true)
+                    end
+                end
 
                 -- Show vendor items if Shift is held
                 if IsShiftKeyDown() and HousingDataManager then
-                    local vendorItems = {}
-                    -- Search through all items to find ones from this vendor
-                    for _, checkItem in ipairs(allItems) do
-                        local checkVendor = checkItem.vendorName or checkItem._apiVendor  -- Prioritize hardcoded data
-                        if checkVendor == vendorDisplay and checkItem.itemID ~= item.itemID then
-                            table.insert(vendorItems, checkItem)
+                    local allItems = nil
+                    if HousingDataManager.GetAllItems then
+                        local ok, items = pcall(HousingDataManager.GetAllItems, HousingDataManager)
+                        if ok and type(items) == "table" then
+                            allItems = items
                         end
                     end
 
-                    if #vendorItems > 0 then
+                    local util = HousingDataManager and HousingDataManager.Util or nil
+                    local function NormalizeName(name)
+                        if util and util.NormalizeVendorName then
+                            return util.NormalizeVendorName(name)
+                        end
+                        if name == nil then return nil end
+                        local s = tostring(name):lower():gsub("%s+", " "):match("^%s*(.-)%s*$")
+                        if not s or s == "" then return nil end
+                        return s:gsub("[\"']", "")
+                    end
+
+                    local vendorItems = {}
+                    local totalVendorItems = 0
+
+                    local function AddFromAllItems()
+                        if type(allItems) ~= "table" then
+                            return false
+                        end
+                        local normVendor = NormalizeName(vendorDisplay)
+                        for _, checkItem in ipairs(allItems) do
+                            local checkVendor = checkItem and (checkItem.vendorName or checkItem._apiVendor) or nil -- Prioritize hardcoded data
+                            if NormalizeName(checkVendor) == normVendor then
+                                local sameItem = tostring(checkItem.itemID or "") == tostring(item.itemID or "")
+                                if not sameItem then
+                                    totalVendorItems = totalVendorItems + 1
+                                    if #vendorItems < 15 then
+                                        table.insert(vendorItems, checkItem)
+                                    end
+                                end
+                            end
+                        end
+                        return totalVendorItems > 0
+                    end
+
+                    local function AddFromVendorPool()
+                        local ids = HousingDataManager.GetAllItemIDs and HousingDataManager:GetAllItemIDs() or nil
+                        if type(ids) ~= "table" or #ids == 0 then
+                            return false
+                        end
+
+                        local pool = _G.HousingVendorPool
+                        local itemVendorIndex = _G.HousingItemVendorIndex
+                        if type(pool) ~= "table" or type(itemVendorIndex) ~= "table" then
+                            return false
+                        end
+
+                        local normVendor = NormalizeName(vendorDisplay)
+                        if not normVendor then
+                            return false
+                        end
+
+                        local cacheKey = tostring(normVendor) .. "@" .. tostring(filterMapID or 0)
+                        if vendorItemListCache[cacheKey] then
+                            local cached = vendorItemListCache[cacheKey]
+                            totalVendorItems = cached.total or 0
+                            vendorItems = cached.items or {}
+                            return totalVendorItems > 0
+                        end
+
+                        local matchingVendorIndices = {}
+                        for idx, v in pairs(pool) do
+                            local vName = v and (v.name or v.vendorName)
+                            if NormalizeName(vName) == normVendor then
+                                local mid = v and v.coords and tonumber(v.coords.mapID) or nil
+                                if (filterMapID and mid == filterMapID) or (not filterMapID) then
+                                    matchingVendorIndices[idx] = true
+                                end
+                            end
+                        end
+
+                        if not next(matchingVendorIndices) then
+                            vendorItemListCache[cacheKey] = { total = 0, items = {} }
+                            return false
+                        end
+
+                        local want = 15
+                        for _, idNum in ipairs(ids) do
+                            local list = itemVendorIndex[idNum]
+                            if type(list) == "table" then
+                                local matches = false
+                                for _, vIdx in ipairs(list) do
+                                    if matchingVendorIndices[vIdx] then
+                                        matches = true
+                                        break
+                                    end
+                                end
+
+                                if matches then
+                                    local sameItem = tostring(idNum) == tostring(item.itemID or "")
+                                    if not sameItem then
+                                        totalVendorItems = totalVendorItems + 1
+                                        if #vendorItems < want then
+                                            local rec = HousingDataManager.GetItemRecord and HousingDataManager:GetItemRecord(idNum) or nil
+                                            if rec then
+                                                table.insert(vendorItems, rec)
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+
+                        vendorItemListCache[cacheKey] = { total = totalVendorItems, items = vendorItems }
+                        return totalVendorItems > 0
+                    end
+
+                    -- Prefer the fast in-memory list when available; fall back to VendorPool indexing (works even when GetAllItems isn't ready).
+                    local hasVendorItems = AddFromAllItems() or AddFromVendorPool()
+
+                    if hasVendorItems and #vendorItems > 0 then
                         GameTooltip:AddLine(" ", 1, 1, 1, 1) -- Spacer
                         GameTooltip:AddLine("Other items from " .. vendorDisplay .. ":", 0.4, 0.8, 1, 1)
 
@@ -406,7 +588,22 @@ function Tooltip.AttachButton(button, opts)
                         local maxItems = math.min(15, #vendorItems)
                         for i = 1, maxItems do
                             local vendorItem = vendorItems[i]
-                            local itemNameShort = vendorItem.name
+                            local itemNameShort = vendorItem and (vendorItem.name or vendorItem.itemName or vendorItem.ItemName) or nil
+                            if (not itemNameShort or itemNameShort == "") and vendorItem and vendorItem.itemID then
+                                local id = tonumber(vendorItem.itemID)
+                                if id and C_Item and C_Item.GetItemNameByID then
+                                    local ok, n = pcall(C_Item.GetItemNameByID, id)
+                                    if ok then itemNameShort = n end
+                                end
+                                if (not itemNameShort or itemNameShort == "") and id and _G.GetItemInfo then
+                                    local ok, n = pcall(_G.GetItemInfo, id)
+                                    if ok then itemNameShort = n end
+                                end
+                            end
+                            if not itemNameShort or itemNameShort == "" then
+                                itemNameShort = vendorItem and vendorItem.itemID and ("Item " .. tostring(vendorItem.itemID)) or "Unknown Item"
+                            end
+                            itemNameShort = tostring(itemNameShort)
                             if #itemNameShort > 35 then
                                 itemNameShort = itemNameShort:sub(1, 32) .. "..."
                             end
@@ -424,27 +621,27 @@ function Tooltip.AttachButton(button, opts)
                             GameTooltip:AddLine(checkmark .. itemNameShort, 0.9, 0.9, 0.9, 1)
                         end
 
-                        if #vendorItems > maxItems then
-                            GameTooltip:AddLine(string.format("|cFF808080...and %d more items|r", #vendorItems - maxItems), 0.6, 0.6, 0.6, 1)
+                        local more = (totalVendorItems > 0 and (totalVendorItems - maxItems) or (#vendorItems - maxItems))
+                        if more and more > 0 then
+                            GameTooltip:AddLine(string.format("|cFF808080...and %d more items|r", more), 0.6, 0.6, 0.6, 1)
                         end
                     end
                 end
             end
-            if zoneDisplay and zoneDisplay ~= "" and not genericZones[zoneDisplay] then
-                GameTooltip:AddLine("Zone: " .. zoneDisplay, 1, 0.82, 0, 1)
-            end
-            if expansionDisplay and expansionDisplay ~= "" and not genericVendors[expansionDisplay] then
-                local expansionText = expansionDisplay
-                -- Add indicator for Midnight expansion (not yet released)
-                if expansionText == "Midnight" then
-                    expansionText = expansionText .. " (Not Yet Released)"
+            if showDetails then
+                if zoneDisplay and zoneDisplay ~= "" and not genericZones[zoneDisplay] then
+                    local zoneLabel = (L and L["FILTER_ZONE"]) or "Zone:"
+                    GameTooltip:AddLine(zoneLabel .. " " .. zoneDisplay, 1, 0.82, 0, 1)
                 end
-                GameTooltip:AddLine("Expansion: " .. expansionText, 1, 0.82, 0, 1)
-            end
-            
-            -- Coordinates
-            if item.vendorCoords and item.vendorCoords.x and item.vendorCoords.y then
-                GameTooltip:AddLine("Coordinates: " .. string.format("%.1f, %.1f", item.vendorCoords.x, item.vendorCoords.y), 0.7, 0.7, 0.7, 1)
+                if expansionDisplay and expansionDisplay ~= "" and not genericVendors[expansionDisplay] then
+                    local expansionLabel = (L and L["FILTER_EXPANSION"]) or "Expansion:"
+                    GameTooltip:AddLine(expansionLabel .. " " .. expansionDisplay, 1, 0.82, 0, 1)
+                end
+
+                -- Coordinates
+                if item.vendorCoords and item.vendorCoords.x and item.vendorCoords.y then
+                    GameTooltip:AddLine("Coordinates: " .. string.format("%.1f, %.1f", item.vendorCoords.x, item.vendorCoords.y), 0.7, 0.7, 0.7, 1)
+                end
             end
 
             -- Cost information (parse on-demand if not already available)
@@ -535,7 +732,7 @@ function Tooltip.AttachButton(button, opts)
                     catalogData = HousingAPI:GetCatalogData(item.itemID)
                 end
 
-                if catalogData and (catalogData.costRaw or catalogData.cost) then
+                if (not item or not item.cost or item.cost == "") and catalogData and (catalogData.costRaw or catalogData.cost) then
                     local costStr = catalogData.costRaw or catalogData.cost
                     if type(costStr) == "string" then
                         -- If it's formatted (money/currency links), take the first entry as-is
@@ -619,6 +816,25 @@ function Tooltip.AttachButton(button, opts)
 
             if costDisplay then
                 GameTooltip:AddLine("Cost: " .. costDisplay, 1, 0.82, 0, 1)
+
+                -- Show detailed cost breakdown with item/currency names (details only)
+                if showDetails then
+                    local formatter = _G.HousingCostFormatter
+                    if formatter and formatter.GetCostBreakdown then
+                        local breakdown = formatter:GetCostBreakdown(item, item.itemID)
+                        if breakdown and #breakdown > 0 then
+                            for _, costEntry in ipairs(breakdown) do
+                                if costEntry.type == "item" then
+                                    local line = string.format("  %d x %s", costEntry.amount, costEntry.name)
+                                    GameTooltip:AddLine(line, 0.7, 0.9, 0.7, 1)
+                                elseif costEntry.type == "currency" then
+                                    local line = string.format("  %d x %s", costEntry.amount, costEntry.name)
+                                    GameTooltip:AddLine(line, 0.9, 0.8, 0.5, 1)
+                                end
+                            end
+                        end
+                    end
+                end
             end
 
             -- Achievement requirement (prioritize API data)
@@ -628,7 +844,26 @@ function Tooltip.AttachButton(button, opts)
             -- Priority 1: Try from item's AchievementRewards data (has achievementId)
             if item._achievementId then
                 achievementID = item._achievementId
-                achievementText = item._achievementName or ("Achievement #" .. achievementID)
+                achievementText = item._achievementName
+                -- If no name cached, try to get from WoW API
+                if not achievementText or achievementText == "" then
+                    local numAchID = tonumber(achievementID)
+                    if numAchID then
+                        if C_AchievementInfo and C_AchievementInfo.GetAchievementInfo then
+                            local ok, achInfo = pcall(C_AchievementInfo.GetAchievementInfo, numAchID)
+                            if ok and achInfo and achInfo.name and achInfo.name ~= "" then
+                                achievementText = achInfo.name
+                            end
+                        end
+                        if not achievementText and GetAchievementInfo then
+                            local ok, _, name = pcall(GetAchievementInfo, numAchID)
+                            if ok and name and name ~= "" then
+                                achievementText = name
+                            end
+                        end
+                    end
+                end
+                achievementText = achievementText or ("Achievement #" .. achievementID)
             -- Priority 2: Try API data
             elseif item._apiAchievement then
                 -- Parse achievement name from formatted text if needed
@@ -699,105 +934,197 @@ function Tooltip.AttachButton(button, opts)
                  
                 GameTooltip:AddLine("Achievement: " .. displayText, 1, 0.5, 0, 1)
 
-                if achievementEarnedBy and type(achievementEarnedBy) == "string" and achievementEarnedBy ~= "" then
-                    GameTooltip:AddLine("Earned by: " .. achievementEarnedBy, 0.7, 0.7, 0.7, 1)
-                end
+                if showDetails then
+                    if achievementEarnedBy and type(achievementEarnedBy) == "string" and achievementEarnedBy ~= "" then
+                        GameTooltip:AddLine("Earned by: " .. achievementEarnedBy, 0.7, 0.7, 0.7, 1)
+                    end
 
-                if achievementProgress then
-                    if achievementProgress.type == "progress" and achievementProgress.max and achievementProgress.max > 0 then
-                        local pct = (achievementProgress.current or 0) / achievementProgress.max
-                        local r, g, b = 1, 0.65, 0.2
-                        if pct >= 1 then r, g, b = 0, 1, 0
-                        elseif pct >= 0.5 then r, g, b = 0.2, 0.6, 1 end
-                        GameTooltip:AddLine(string.format("Progress: %d / %d", achievementProgress.current or 0, achievementProgress.max), r, g, b, 1)
-                    elseif achievementProgress.type == "criteria" and achievementProgress.total and achievementProgress.total > 0 then
-                        local pct = (achievementProgress.completed or 0) / achievementProgress.total
-                        local r, g, b = 1, 0.65, 0.2
-                        if pct >= 1 then r, g, b = 0, 1, 0
-                        elseif pct >= 0.5 then r, g, b = 0.2, 0.6, 1 end
-                        GameTooltip:AddLine(string.format("Criteria: %d / %d", achievementProgress.completed or 0, achievementProgress.total), r, g, b, 1)
+                    if achievementProgress then
+                        if achievementProgress.type == "progress" and achievementProgress.max and achievementProgress.max > 0 then
+                            local pct = (achievementProgress.current or 0) / achievementProgress.max
+                            local r, g, b = 1, 0.65, 0.2
+                            if pct >= 1 then r, g, b = 0, 1, 0
+                            elseif pct >= 0.5 then r, g, b = 0.2, 0.6, 1 end
+                            GameTooltip:AddLine(string.format("Progress: %d / %d", achievementProgress.current or 0, achievementProgress.max), r, g, b, 1)
+                        elseif achievementProgress.type == "criteria" and achievementProgress.total and achievementProgress.total > 0 then
+                            local pct = (achievementProgress.completed or 0) / achievementProgress.total
+                            local r, g, b = 1, 0.65, 0.2
+                            if pct >= 1 then r, g, b = 0, 1, 0
+                            elseif pct >= 0.5 then r, g, b = 0.2, 0.6, 1 end
+                            GameTooltip:AddLine(string.format("Criteria: %d / %d", achievementProgress.completed or 0, achievementProgress.total), r, g, b, 1)
+                        end
                     end
                 end
                 
                 -- (Preview panel already provides detailed achievement criteria on hover.)
             end
             
-            -- Quest requirement (ALWAYS use Housing Catalog API - it's the authoritative source)
-            local questText = nil
-            local questID = nil
-            
-            -- Priority 1: Try from item's QuestRewards data (has questId)
-            if item._questId then
-                questID = item._questId
-                questText = item._questName or ("Quest #" .. questID)
-            -- Priority 2: Get from Housing Catalog API (most accurate for housing decor)
-            elseif item.itemID then
+            -- Quest requirement (use BOTH static and API sources)
+            local function IsNumericPlaceholder(text)
+                return type(text) == "string" and text:match("^%d+$") ~= nil
+            end
+
+            local function CleanTooltipText(text)
+                if not text or text == "" then return nil end
+                text = tostring(text)
+                text = text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
+                text = text:gsub("|H[^|]*|h", ""):gsub("|h", "")
+                text = text:gsub("|T[^|]*|t", "")
+                text = text:gsub("|n", " ")
+                text = text:match("^%s*(.-)%s*$")
+                if text == "" then return nil end
+                return text
+            end
+
+            local questID = item._questId or item.questID or item.questRequired
+
+            local staticQuestText = item._questName or item.title
+            if IsNumericPlaceholder(staticQuestText) then
+                staticQuestText = nil
+            end
+
+            -- Fallback to first known quest source if multiple exist
+            if (not staticQuestText or staticQuestText == "") and item._allQuests and type(item._allQuests) == "table" then
+                local first = item._allQuests[1]
+                if first and type(first) == "table" then
+                    local t = first.title or first.questName
+                    if t and not IsNumericPlaceholder(t) then
+                        staticQuestText = t
+                    end
+                    questID = first.questId or first.questID or questID
+                end
+            end
+
+            local apiQuestText = item._apiQuest
+            if item.itemID then
                 local numericItemID = tonumber(item.itemID)
-                if numericItemID and HousingAPI then
-                    local catalogData = HousingAPI:GetCatalogData(numericItemID)
-                    if catalogData and catalogData.quest then
-                        questText = catalogData.quest
-                        questID = catalogData.questID
+                if numericItemID and HousingAPI and HousingAPI.GetCatalogData then
+                    local ok, catalogData = pcall(HousingAPI.GetCatalogData, HousingAPI, numericItemID)
+                    if ok and catalogData and catalogData.quest and catalogData.quest ~= "" then
+                        apiQuestText = catalogData.quest
+                        questID = questID or catalogData.questID
                     end
                 end
             end
-            
-            -- Priority 2: Use cached API data if catalog fetch didn't work
-            if not questText and item._apiQuest then
-                questText = item._apiQuest
-            end
-            
-            -- Priority 3: Fallback to static data (least accurate)
-            if not questText and item.questRequired and item.questRequired ~= "" then
-                questText = item.questRequired
-            end
-            
-            -- Only show quest if we have Housing Catalog API data (don't show static data quest)
-            -- This ensures we only show the correct quest that unlocks the item
-            if questText and questText ~= "" and (item._apiDataLoaded or HousingAPI) then
-                -- Strip WoW color codes and formatting from quest text
-                local cleanQuestText = questText
-                -- Remove color codes (|cFFRRGGBB and |r)
-                cleanQuestText = cleanQuestText:gsub("|c%x%x%x%x%x%x%x%x", "")
-                cleanQuestText = cleanQuestText:gsub("|r", "")
-                -- Remove hyperlinks (|H....|h and |h)
-                cleanQuestText = cleanQuestText:gsub("|H[^|]*|h", "")
-                cleanQuestText = cleanQuestText:gsub("|h", "")
-                -- Remove textures/icons (|T....|t)
-                cleanQuestText = cleanQuestText:gsub("|T[^|]*|t", "")
-                -- Remove newlines
-                cleanQuestText = cleanQuestText:gsub("|n", " ")
-                -- Trim whitespace
-                cleanQuestText = cleanQuestText:match("^%s*(.-)%s*$")
-                
-                if cleanQuestText and cleanQuestText ~= "" then
-                    -- Check if quest is completed
-                    local questStatus = ""
-                    if questID then
-                        local numericQuestID = tonumber(questID)
-                        -- If questID is text, try to extract numeric ID
-                        if not numericQuestID and type(questID) == "string" then
-                            numericQuestID = tonumber(string.match(questID, "%d+"))
-                        end
 
-                        if numericQuestID and C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted then
-                            local success, isComplete = pcall(C_QuestLog.IsQuestFlaggedCompleted, numericQuestID)
-                            if success and isComplete then
-                                questStatus = " |cFF00FF00(Completed)|r"
-                            elseif success and not isComplete then
-                                questStatus = " |cFFFF0000(Not Completed)|r"
-                            end
+            local cleanStaticQuestText = CleanTooltipText(staticQuestText)
+            local cleanApiQuestText = CleanTooltipText(apiQuestText)
+            local questText = cleanStaticQuestText or cleanApiQuestText
+
+            -- If we have a quest ID but no readable quest name, try to get it from WoW API
+            local numQuestID = tonumber(questID)
+            if numQuestID and (not questText or questText == "" or IsNumericPlaceholder(questText)) then
+                -- Request quest data to be loaded (async)
+                if C_QuestLog and C_QuestLog.RequestLoadQuestByID then
+                    pcall(C_QuestLog.RequestLoadQuestByID, numQuestID)
+                end
+                -- Try to get the quest title
+                if C_QuestLog and C_QuestLog.GetTitleForQuestID then
+                    local ok, title = pcall(C_QuestLog.GetTitleForQuestID, numQuestID)
+                    if ok and title and title ~= "" then
+                        questText = title
+                    end
+                end
+                -- If still no text, show "Quest #ID" as fallback
+                if not questText or questText == "" or IsNumericPlaceholder(questText) then
+                    questText = "Quest #" .. numQuestID
+                end
+            end
+
+            if questText then
+                local questStatus = ""
+                if questID then
+                    local numericQuestID = tonumber(questID)
+                    if not numericQuestID and type(questID) == "string" then
+                        numericQuestID = tonumber(string.match(questID, "%d+"))
+                    end
+                    if numericQuestID and C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted then
+                        local success, isComplete = pcall(C_QuestLog.IsQuestFlaggedCompleted, numericQuestID)
+                        if success and isComplete then
+                            questStatus = " |cFF00FF00(Completed)|r"
+                        elseif success and not isComplete then
+                            questStatus = " |cFFFF0000(Not Completed)|r"
                         end
                     end
+                end
 
-                    -- Add quest text line with completion status
-                    GameTooltip:AddLine("Quest: " .. cleanQuestText .. questStatus, 0.5, 0.8, 1, 1)
+                GameTooltip:AddLine("Quest: " .. questText .. questStatus, 0.5, 0.8, 1, 1)
 
-                    -- If we have questID, show full quest tooltip on hover
-                    if questID then
-                        -- Add instruction hint
-                        GameTooltip:AddLine(" ", 1, 1, 1, 1)  -- Spacer
-                        GameTooltip:AddLine("|cFF808080(Hover over quest name in preview panel for full details)|r", 0.5, 0.5, 0.5, true)
+                if showDetails then
+                    if cleanStaticQuestText and cleanApiQuestText and cleanStaticQuestText ~= cleanApiQuestText then
+                        GameTooltip:AddLine("  Static: " .. cleanStaticQuestText, 0.7, 0.7, 0.7, true)
+                        GameTooltip:AddLine("  API: " .. cleanApiQuestText, 0.7, 0.7, 0.7, true)
+                    end
+
+                    if item._allQuests and type(item._allQuests) == "table" and #item._allQuests > 1 then
+                        GameTooltip:AddLine(" ", 1, 1, 1, 1)
+                        GameTooltip:AddLine("Quest sources:", 0.7, 0.7, 0.7, 1)
+                        local maxLines = 5
+                        for i = 1, math.min(maxLines, #item._allQuests) do
+                            local q = item._allQuests[i]
+                            if q and type(q) == "table" then
+                                local qid = q.questId or q.questID
+                                local title = CleanTooltipText(q.title or q.questName)
+                                if (not title or title == "" or IsNumericPlaceholder(title)) and qid then
+                                    local numQid = tonumber(qid)
+                                    if numQid then
+                                        if C_QuestLog and C_QuestLog.RequestLoadQuestByID then
+                                            pcall(C_QuestLog.RequestLoadQuestByID, numQid)
+                                        end
+                                        if C_QuestLog and C_QuestLog.GetTitleForQuestID then
+                                            local ok, apiTitle = pcall(C_QuestLog.GetTitleForQuestID, numQid)
+                                            if ok and apiTitle and apiTitle ~= "" then
+                                                title = apiTitle
+                                            end
+                                        end
+                                    end
+                                end
+                                title = title or "Quest"
+                                local line = title
+                                if qid then
+                                    line = line .. " (#" .. tostring(qid) .. ")"
+                                end
+                                GameTooltip:AddLine("  " .. line, 0.7, 0.7, 0.7, true)
+                            end
+                        end
+                        if #item._allQuests > maxLines then
+                            GameTooltip:AddLine(string.format("  ...and %d more", #item._allQuests - maxLines), 0.7, 0.7, 0.7, true)
+                        end
+                    end
+                end
+            end
+
+            -- Rich source details (drops/rewards/etc.)
+            do
+                local rewardTypeText = item.rewardType or item._sourceType
+                local sourceDetailsText = item.sourceDetails or item.dropNotes
+
+                if (not sourceDetailsText or sourceDetailsText == "") and item.itemID and _G.HousingExpansionData then
+                    local expData = _G.HousingExpansionData[tonumber(item.itemID)]
+                    if expData and expData.drop then
+                        local d = expData.drop[1] or expData.drop
+                        if d and d.notes and d.notes ~= "" then
+                            sourceDetailsText = d.notes
+                        end
+                    end
+                end
+
+                local showRewardType = false
+                if item.rewardType and item.rewardType ~= "" then
+                    showRewardType = true
+                elseif item._sourceType and item._sourceType ~= "" and tostring(item._sourceType) ~= "Vendor" then
+                    showRewardType = true
+                end
+
+                if showDetails then
+                    if showRewardType and rewardTypeText and tostring(rewardTypeText) ~= "" then
+                        GameTooltip:AddLine("Reward Type: " .. tostring(rewardTypeText), 0.8, 0.5, 1, 1)
+                    end
+                    if item.source and item.source ~= "" then
+                        GameTooltip:AddLine("Source: " .. tostring(item.source), 0.8, 0.5, 1, 1)
+                    end
+                    if sourceDetailsText and sourceDetailsText ~= "" then
+                        GameTooltip:AddLine("Details: " .. tostring(sourceDetailsText), 0.8, 0.8, 0.8, true)
                     end
                 end
             end
@@ -928,7 +1255,7 @@ function Tooltip.AttachButton(button, opts)
                     GameTooltip:AddLine("Reputation: " .. cleanRepText, repR, repG, repB, 1)
 
                     -- Add progress info if we have progress data
-                    if repProgress and repProgress.max > 0 then
+                    if showDetails and repProgress and repProgress.max > 0 then
                         local progress = math.min(repProgress.current / repProgress.max, 1)
 
                         -- Create progress text with color
@@ -1050,14 +1377,39 @@ function Tooltip.AttachButton(button, opts)
                 end
             elseif item.dropSource and item.dropSource ~= "" then
                 dropText = item.dropSource
+            elseif item._allDrops and type(item._allDrops) == "table" and item._allDrops[1] then
+                local d = item._allDrops[1]
+                if d and type(d) == "table" then
+                    local parts = {}
+                    if d.npcName and d.npcName ~= "" then table.insert(parts, tostring(d.npcName)) end
+                    if d.zone and d.zone ~= "" then table.insert(parts, tostring(d.zone)) end
+                    if #parts > 0 then
+                        dropText = table.concat(parts, " - ")
+                    end
+                end
+            elseif item.itemID and _G.HousingExpansionData then
+                local expData = _G.HousingExpansionData[tonumber(item.itemID)]
+                if expData and expData.drop then
+                    local d = expData.drop[1] or expData.drop
+                    if d and type(d) == "table" then
+                        local parts = {}
+                        if d.npcName and d.npcName ~= "" then table.insert(parts, tostring(d.npcName)) end
+                        if d.zone and d.zone ~= "" then table.insert(parts, tostring(d.zone)) end
+                        if #parts > 0 then
+                            dropText = table.concat(parts, " - ")
+                        end
+                    end
+                end
             end
             
             if dropText and dropText ~= "" then
-                GameTooltip:AddLine("Drops from: " .. dropText, 0.8, 0.5, 1, 1)
+                if showDetails then
+                    GameTooltip:AddLine("Drops from: " .. dropText, 0.8, 0.5, 1, 1)
+                end
             end
             
             -- Faction
-            if item.faction and item.faction ~= "Neutral" then
+            if showDetails and item.faction and item.faction ~= "Neutral" then
                 local factionColor = {1, 1, 1, 1}
                 if item.faction == "Horde" then
                     factionColor = {1, 0.3, 0.3, 1}
@@ -1068,8 +1420,12 @@ function Tooltip.AttachButton(button, opts)
             end
             
             -- Item ID (if available)
-            if item.itemID and item.itemID ~= "" then
+            if showDetails and item.itemID and item.itemID ~= "" then
                 GameTooltip:AddLine("Item ID: " .. item.itemID, 0.5, 0.5, 0.5, 1)
+            end
+
+            if not showDetails then
+                GameTooltip:AddLine("Hold SHIFT for details", 0.6, 0.6, 0.6, 1)
             end
             
             GameTooltip:Show()

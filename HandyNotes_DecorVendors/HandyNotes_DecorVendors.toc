@@ -1,0 +1,11 @@
+## Interface: 120000
+## Title: HandyNotes: Decor Vendors
+## Notes: Shows locations of Decor Vendors because my house looks like a garage sale.
+## Author: Gruzzly
+## Version: 1.0
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_DecorVendorsDB
+## IconTexture: Interface\Icons\talentspec_druid_feral_bear
+## X-Category: Map & Minimap
+
+HandyNotes_DecorVendors.lua

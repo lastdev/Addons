@@ -2,6 +2,7 @@ local _, T = ...
 if T.Mark ~= 50 then return end
 local L, G, E, api = T.L, T.Garrison, T.Evie, T.MissionsUI
 local GameTooltip = T.NotGameTooltip or GameTooltip
+local SetPortraitToTexture = T.SetPortraitToTexture
 
 local ui, core, handle = CreateFrame("Frame", "MPLandingPageAlts", GarrisonLandingPage) do
 	ui:Hide()

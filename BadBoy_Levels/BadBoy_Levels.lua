@@ -92,7 +92,9 @@ function mod:PLAYER_LOGIN(frame, event)
 end
 badboy:RegisterEvent("PLAYER_LOGIN")
 
+local issecretvalue = issecretvalue or function() return false end
 function mod:CHAT_MSG_SYSTEM(_, _, msg)
+	if issecretvalue(msg) then return end
 	if msg == ERR_FRIEND_LIST_FULL then
 		print("|cFF33FF99BadBoy_Levels|r: ", err) --print a warning if we see a friends full message
 	end
@@ -178,6 +180,7 @@ end
 
 function mod:CHAT_MSG_WHISPER(_, _, ...)
 	local _, player, _, _, _, flag, _, _, _, _, id, guid = ...
+	if issecretvalue(player) then return end
 	local trimmedPlayer = Ambiguate(player, "none")
 	if good[trimmedPlayer] or flag == "GM" or flag == "DEV" then return end -- don't filter if good or GM
 
@@ -248,6 +251,7 @@ function mod:CHAT_MSG_WHISPER(_, _, ...)
 end
 
 function mod:CHAT_MSG_WHISPER_INFORM(_,_,msg,player, _, _, _, _, _, _, _, _, id)
+	if issecretvalue(msg) then return end
 	local trimmedPlayer = Ambiguate(player, "none")
 	if good[trimmedPlayer] then return end --Do nothing if on safe list
 	if msg:find("^BadBoy_Levels: ") then
@@ -259,6 +263,7 @@ end
 
 -- whisper filtering function
 local function filter(_, _, _, _, _, _, _, _, _, _, _, _, id)
+	if issecretvalue(id) then return end
 	if type(id) == "number" and idsToFilter[id] then
 		return true --filter everything not good (maybe)
 	end

@@ -112,6 +112,7 @@ HousingTheme.Themes["Alliance"] = {
         sourceVendor = {0.35, 0.80, 0.45, 1.0},
         sourceQuest = {0.80, 0.45, 0.95, 1.0},
         sourceDrop = {0.95, 0.60, 0.25, 1.0},
+        sourceReward = {0.60, 0.80, 1.00, 1.0},
         sourceAchievement = {0.95, 0.80, 0.25, 1.0},
         
         -- Quality colors
@@ -236,12 +237,12 @@ HousingTheme.Themes["Sleek Black"] = {
     }
 }
 
--- Active theme pointer (defaults to Midnight)
-HousingTheme.ActiveThemeName = "Midnight"
+-- Active theme pointer (defaults to Sleek Black)
+HousingTheme.ActiveThemeName = "Sleek Black"
 
 -- Get current theme colors
 function HousingTheme:GetActiveTheme()
-    return self.Themes[self.ActiveThemeName] or self.Themes["Midnight"]
+    return self.Themes[self.ActiveThemeName] or self.Themes["Sleek Black"]
 end
 
 -- Set active theme
@@ -313,10 +314,13 @@ HousingTheme.Fonts = {
 
 HousingTheme.Dimensions = {
     -- Main frame
-    mainFrameWidth = 1100,
+    mainFrameWidth = 910,
     mainFrameHeight = 700,
     mainFrameMinWidth = 900,
     mainFrameMinHeight = 550,
+
+    -- Compact frame
+    compactFrameWidth = 600,
     
     -- Header
     headerHeight = 50,
@@ -628,7 +632,7 @@ function HousingTheme:CreateFilterChip(parent, text, onRemove)
     
     local closeText = closeBtn:CreateFontString(nil, "OVERLAY", self.Fonts.small)
     closeText:SetPoint("CENTER")
-    closeText:SetText("X")
+    closeText:SetText(L["BUTTON_CLOSE_X"] or "X")
     closeText:SetTextColor(unpack(self.Colors.textSecondary))
     
     closeBtn:SetScript("OnEnter", function()

@@ -1,6 +1,5 @@
-## Changed in v71
+## Changed in v72
 
-* Ready for Midnight
+* Add the Amirdrassil portals to their return zones
 * Bring in systems improvements from [my Midnight plugin](https://www.curseforge.com/wow/addons/handynotes-midnight-treasures)
-* Add Amirdrassil's treasures, and the new decor quartermasters
 

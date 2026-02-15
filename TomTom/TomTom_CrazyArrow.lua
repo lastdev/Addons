@@ -8,7 +8,7 @@
 
 local addonName, addon = ...
 
-local L = TomTomLocals
+local L = addon.L
 local ldb = LibStub("LibDataBroker-1.1")
 
 local IMAGE_ARROW = "Interface\\Addons\\TomTom\\Images\\Arrow-1024"

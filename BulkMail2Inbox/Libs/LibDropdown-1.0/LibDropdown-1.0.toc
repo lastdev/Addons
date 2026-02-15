@@ -1,0 +1,9 @@
+## Interface: 110207, 120000, 120001, 50503, 38000, 20505, 11508
+## X-Curse-Project-ID: 17280
+## Title: Lib: Dropdown-1.0
+## Notes: Dropdown library for Ace3 options, extensible to other options formats. Works ok.
+## Author: Antiarc, NeoTron
+## Version: 1.0.@project-date-integer@
+## OptionalDeps: Ace3
+
+LibDropdown-1.0\lib.xml

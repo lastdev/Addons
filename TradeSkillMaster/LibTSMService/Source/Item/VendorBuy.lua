@@ -36,7 +36,7 @@ function VendorBuy.Load(itemsTable, updateCallback)
 	local vendorSellData = nil
 	if LibTSMService.IsRetail() then
 		vendorSellData = VendorSellData.Retail
-	elseif LibTSMService.IsPandaClassic() or LibTSMService.IsVanillaClassic() then
+	elseif LibTSMService.IsPandaClassic() or LibTSMService.IsVanillaClassic() or LibTSMService.IsBCClassic() then
 		vendorSellData = VendorSellData.Classic
 	else
 		error("Unknown game version")

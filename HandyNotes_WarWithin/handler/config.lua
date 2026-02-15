@@ -416,7 +416,11 @@ ns.options = {
                         for uiMapID in pairs(ns.points) do
                             if not values[uiMapID] then
                                 local info = C_Map.GetMapInfo(uiMapID)
-                                if info and info.mapType == 3 then
+                                if info and (
+                                    info.mapType == Enum.UIMapType.Zone or
+                                    info.mapType == Enum.UIMapType.Continent or
+                                    info.mapType == Enum.UIMapType.World
+                                ) then
                                     -- zones only
                                     values[uiMapID] = info.name
                                 end

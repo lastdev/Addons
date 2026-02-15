@@ -26,7 +26,7 @@ function addon.BFAGUIMixin:Init()
     
     self.PrioritiseLethalCheckButton = CreateFrame("CheckButton", "TLDRMissions"..self.followerTypeID.."FramePrioritiseLethalCheckButton", self.AdvancedTabPanel, "UICheckButtonTemplate")
     self.PrioritiseLethalCheckButton:SetPoint("TOPLEFT", self.SkipFullResourcesButton, 0, -25)
-    _G["TLDRMissions"..self.followerTypeID.."FramePrioritiseLethalCheckButtonText"]:SetText("Send 'Lethal' missions first (these will kill your troops)")
+    _G["TLDRMissions"..self.followerTypeID.."FramePrioritiseLethalCheckButtonText"]:SetText(L["SendLethalDesc"])
     
     self.PrioritiseLethalCheckButton:HookScript("OnClick", function()
         self.db.profile.useLethalMissionPriority = self.PrioritiseLethalCheckButton:GetChecked()

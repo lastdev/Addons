@@ -2,7 +2,6 @@ local addonName, addon = ...
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
-LibStub("AceAddon-3.0"):NewAddon("TLDRMissions-AceEvent", "AceEvent-3.0")
 
 function addon.BaseGUIMixin:InitTLDRButton()
     local tldrButton = CreateFrame("Button", "TLDRMissions"..self.followerTypeID.."ToggleButton", self.missionFrame, "UIPanelButtonTemplate")
@@ -265,7 +264,7 @@ function addon.BaseGUIMixin:Init()
 
     self.CompleteMissionsButton = CreateFrame("Button", "TLDRMissions"..self.followerTypeID.."FrameCompleteMissionsButton", self.MainTabPanel, "UIPanelButtonTemplate")
     self.CompleteMissionsButton:SetPoint("BOTTOM", self, "BOTTOM", 0, 10)
-    self.CompleteMissionsButton:SetText(L["CompleteMissionButtonText"])
+    self.CompleteMissionsButton:SetText(L["CompleteMissionsButtonText"])
     _G["TLDRMissions"..self.followerTypeID.."FrameCompleteMissionsButtonText"]:SetScale(1.2)
     self.CompleteMissionsButton:SetWidth(240)
     self.CompleteMissionsButton:SetHeight(25)
@@ -313,7 +312,7 @@ function addon.BaseGUIMixin:Init()
 
     self.AnimaCostLimitLabel = self.AdvancedTabPanel:CreateFontString("TLDRMissions"..self.followerTypeID.."CostLimitLabel", "OVERLAY", "GameFontNormal")
     self.AnimaCostLimitLabel:SetPoint("TOPLEFT", self.LowerBoundLevelRestrictionSlider, -20, -40)
-    self.AnimaCostLimitLabel:SetText("Resource Price Limit")
+    self.AnimaCostLimitLabel:SetText(L["ResourcePriceLimit"])
     self.AnimaCostLimitLabel:SetWordWrap(true)
     self.AnimaCostLimitLabel:SetWidth(300)
 
@@ -391,7 +390,7 @@ function addon.BaseGUIMixin:Init()
 
         self.MinimumTroopsInfoLabel = self.AdvancedTabPanel:CreateFontString("TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsInfoLabel", "OVERLAY", "GameFontNormal")
         self.MinimumTroopsInfoLabel:SetPoint("TOPLEFT", self.MinimumTroopsSlider, "BOTTOMLEFT", 0, -10)
-        self.MinimumTroopsInfoLabel:SetText("Set minimum troops to 3 for 'use as many as possible'.")
+        self.MinimumTroopsInfoLabel:SetText(L["MinimumTroopsDesc"])
         self.MinimumTroopsInfoLabel:SetSize(250, 30)
     end
 

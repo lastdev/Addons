@@ -34,7 +34,7 @@ end
 function SecureMacroActionButton:Acquire()
 	self.__super:Acquire()
 	local frame = self:_GetBaseFrame()
-	frame:RegisterForClicks(LibTSMUI.IsRetail() and GetCVarBool("ActionButtonUseKeyDown") and "LeftButtonDown" or "LeftButtonUp")
+	frame:RegisterForClicks(GetCVarBool("ActionButtonUseKeyDown") and "LeftButtonDown" or "LeftButtonUp")
 end
 
 function SecureMacroActionButton:Release()

@@ -98,6 +98,8 @@
 	end
 
 	function classCustom:RefreshWindow(instanceObject, combatObject, force, export)
+		if not Details222.UpdateIsAllowed() then return end --temporary stop updates in th new dlc
+
 		--get the custom object
 		local customObject = instanceObject:GetCustomObject()
 
@@ -1361,6 +1363,7 @@
 			desc = Loc ["STRING_CUSTOM_HEALTHSTONE_DEFAULT_DESC"],
 			source = false,
 			target = false,
+			apoc = true,
 			script = [[
 				local combatObject, instanceContainer, instanceObject = ...
 				local total, top, amount = 0, 0, 0

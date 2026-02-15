@@ -1,11 +1,11 @@
-## Interface: 110205
+## Interface: 120000
 ## Title: Invasion Timer
 ## Notes: Data broker that provides timetable of time events (including invasions).
 ## Author: LiangYuxuan
-## Version: v11.2.6
+## Version: v12.0.0
 ## SavedVariables: InvasionTimerDB
 ## IconTexture: 369214
-## X-ReleaseDate: 2025-11-07T02:18:45Z
+## X-ReleaseDate: 2026-01-22T03:48:21Z
 ## X-License: GPL-3.0
 ## X-Curse-Project-ID: 311898
 ## X-WoWI-ID: 25933

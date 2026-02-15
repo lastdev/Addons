@@ -12,7 +12,8 @@ local _, LM = ...
 
 local Env = LM.Environment
 
-local C_Spell = LM.C_Spell or C_Spell
+local C_Spell = C_Spell or LM.C_Spell
+local C_ClassColor = C_ClassColor or LM.C_ClassColor
 
 local L = LM.Localize
 
@@ -79,7 +80,7 @@ CONDITIONS["achievement"] = {
 CONDITIONS["activethreat"] = {
     disabled = ( C_QuestLog.GetActiveThreatMaps == nil ),
     handler =
-        function (cond, context, v)
+        function (cond, context)
             local map = C_Map.GetBestMapForUnit('player')
             local activeThreatMaps = C_QuestLog.GetActiveThreatMaps()
             return map ~= nil and activeThreatMaps ~= nil and tContains(activeThreatMaps, map)
@@ -158,15 +159,9 @@ CONDITIONS["canexitvehicle"] = {
 CONDITIONS["channeling"] = {
     -- name = CHANNELING,
     handler =
-        function (cond, context, v)
+        function (cond, context)
             local unit = context.rule.unit or "player"
-            if not v then
-                return UnitChannelInfo(unit) ~= nil
-            elseif tonumber(v) then
-                return select(8, UnitChannelInfo(unit)) == tonumber(v)
-            else
-                return UnitChannelInfo(unit) == v
-            end
+            return UnitChannelInfo(unit) ~= nil
         end
 }
 
@@ -181,8 +176,9 @@ CONDITIONS["class"] = {
     menu = function ()
         local out = { }
         for _, v in ipairs(CLASS_SORT_ORDER) do
-            local name = LOCALIZED_CLASS_NAMES_FEMALE[v]
-            local atlas = GetClassAtlas(v)
+            local color = C_ClassColor.GetClassColor(v)
+            local name = color:WrapTextInColorCode(LOCALIZED_CLASS_NAMES_FEMALE[v])
+            local atlas = WOW_PROJECT_ID == 1 and GetClassAtlas(v)
             if atlas then
                 name = string.format("|A:%s:18:18|a %s", atlas, name)
             end
@@ -400,6 +396,7 @@ CONDITIONS["drivable"] = {
 }
 
 CONDITIONS["driving"] = {
+    disabled = ( IsDrivableArea == nil ),
     handler =
         function (cond, context)
             -- Only one D.R.I.V.E. mount so far. Maybe in the future Blizzard will
@@ -775,18 +772,47 @@ CONDITIONS["instance"] = {
     name = INSTANCE,
     toDisplay =
         function (v)
-            local n = LM.Options:GetInstanceNameByID(tonumber(v))
+            local n = Env:GetInstanceNameByID(tonumber(v))
             if n then
                 return string.format("%s (%s)", n, v)
+            else
+                return v
             end
         end,
     menu =
         function ()
-            local out = { }
-            for id, name in pairs(Env:GetInstances()) do
-                table.insert(out, { val = "instance:" .. id })
+            local seen = {}
+            local dungeonByTier, raidByTier = {}, {}
+            for _, info in pairs(Env:GetEJInstances()) do
+                local tierName = EJ_GetTierInfo(info.tierID)
+                if info.isRaid then
+                    if not raidByTier[info.tierID] then
+                        raidByTier[info.tierID] = { text=tierName, id=info.tierID }
+                    end
+                    table.insert(raidByTier[info.tierID], { val = "instance:"..info.id })
+                else
+                    if not dungeonByTier[info.tierID] then
+                        dungeonByTier[info.tierID] = { text=tierName, id=info.tierID }
+                    end
+                    table.insert(dungeonByTier[info.tierID], { val = "instance:"..info.id })
+                end
+                seen[info.id] = true
             end
-            return out
+            local other = { text=OTHER }
+            for id in pairs(Env:GetInstances()) do
+                if not seen[id] then
+                    table.insert(other, { val = "instance:"..id })
+                end
+            end
+            -- this is assuming dungeonByTier and raidByTier are indexed tables
+            -- (with no gaps) even though above we are initializing them by key
+            local dungeons = GetValuesArray(dungeonByTier)
+            dungeons.text = LFG_TYPE_DUNGEON
+            dungeons.nosort = true
+            local raids = GetValuesArray(raidByTier)
+            raids.text = LFG_TYPE_RAID
+            raids.nosort = true
+            return { nosort=true, dungeons, raids, other }
         end,
     handler =
         function (cond, context, v)
@@ -856,10 +882,14 @@ CONDITIONS["keystone"] = {
         end,
     handler =
         function (cond, context, minLevel, maxLevel)
-            minLevel = tonumber(minLevel) or 0
-            maxLevel = tonumber(maxLevel) or math.huge
-            local keyLevel = C_ChallengeMode.GetActiveKeystoneInfo()
-            return (keyLevel >= minLevel) and (keyLevel <= maxLevel)
+            if C_ChallengeMode.IsChallengeModeActive() then
+                minLevel = tonumber(minLevel) or 0
+                maxLevel = tonumber(maxLevel) or math.huge
+                local keyLevel = C_ChallengeMode.GetActiveKeystoneInfo()
+                return (keyLevel >= minLevel) and (keyLevel <= maxLevel)
+            else
+                return false
+            end
         end
 }
 
@@ -1007,7 +1037,7 @@ CONDITIONS["map"] = {
 
 CONDITIONS["maw"] = {
     handler =
-        function (cond, context, v)
+        function (cond, context)
             return Env.isTheMaw
         end
 }
@@ -1149,7 +1179,7 @@ CONDITIONS["name"] = {
 CONDITIONS["option"] = {
     args = true,
     handler =
-        function (cond, context, setting, ...)
+        function (cond, context, setting)
             if not setting then return end
             setting = setting:lower()
             if setting == "copytargetsmount" then
@@ -1298,6 +1328,7 @@ local RACE_STRINGS = {
     "EarthenDwarf",
     "Gnome",
     "Goblin",
+    "Harronir", -- Haranir
     "HighmountainTauren",
     "Human",
     "KulTiran",
@@ -1654,87 +1685,32 @@ CONDITIONS["waterwalking"] = {
 }
 
 -- See WardrobeSetsTransmogMixin:GetFirstMatchingSetID
+-- The level of black magic shenanigans here is off the charts.
 
-local function GetTransmogLocationSourceID(location)
-    local baseSourceID, _, appliedSourceID = C_Transmog.GetSlotVisualInfo(location)
-    if appliedSourceID == Constants.Transmog.NoTransmogID then
-        return baseSourceID
-    else
-        return appliedSourceID
-    end
-end
-
-local function GetTransmogSetIDByName(name)
-    local usableSets = C_TransmogSets.GetAllSets()
-    for _,info in ipairs(usableSets) do
-        if info.name == name then
-            return info.setID
-        end
-    end
-end
-
-local function GetTransmogOutfitIDByName(name)
-    for _, id in ipairs(C_TransmogCollection.GetOutfits()) do
-        if name == C_TransmogCollection.GetOutfitInfo(id) then
-            return id
-        end
-    end
-end
+local ModelActor = CreateFrame('ModelScene'):CreateActor()
 
 local function IsTransmogSetActive(setID)
     if not C_TransmogSets.GetSetInfo(setID) then
         return false
     end
-    for key, slotInfo in pairs(TRANSMOG_SLOTS) do
-        if not slotInfo.location:IsSecondary() then
-            local sourceIDs = C_TransmogSets.GetSourceIDsForSlot(setID, slotInfo.location.slotID)
-            local activeSourceID = GetTransmogLocationSourceID(slotInfo.location)
-            if #sourceIDs > 0 and not tContains(sourceIDs, activeSourceID) then
+    ModelActor:SetModelByUnit("player")
+    for slotID, slotInfo in ipairs(ModelActor:GetItemTransmogInfoList()) do
+        if slotInfo.appearanceID > 0 then
+            local sourceIDs = C_TransmogSets.GetSourceIDsForSlot(setID, slotID)
+            if #sourceIDs > 0 and not tContains(sourceIDs, slotInfo.appearanceID) then
                 return false
             end
         end
     end
     return true
-end
-
--- This makes me want to kill myself instantly.
--- See WardrobeOutfitDropDownMixin:IsOutfitDressed()
-
-local ExcludeOutfitSlot = {
-    [INVSLOT_MAINHAND] = true, [INVSLOT_OFFHAND] = true, [INVSLOT_RANGED] = true,
-}
-
-local function IsTransmogOutfitActive(outfitID)
-    local outfitInfoList = C_TransmogCollection.GetOutfitItemTransmogInfoList(outfitID)
-    if not outfitInfoList then return end
-
-    local currentInfoList = Env:GetPlayerTransmogInfo()
-    if not currentInfoList then return end
-
-    for slotID, info in ipairs(currentInfoList) do
-        if info.appearanceID ~= Constants.Transmog.NoTransmogID then
-            if not ExcludeOutfitSlot[slotID] and not info:IsEqual(outfitInfoList[slotID]) then
-                return false
-            end
-        end
-    end
-    return true
-end
-
-local function GetTransmogOutfitsMenu()
-    local outfits = { text = TRANSMOG_OUTFIT_HYPERLINK_TEXT:match("|t(.*)") }
-    for _, id in ipairs(C_TransmogCollection.GetOutfits()) do
-        local name = C_TransmogCollection.GetOutfitInfo(id)
-        table.insert(outfits, { val = "xmog:"..name, text = name })
-    end
-    return outfits
 end
 
 local function GetTransmogSetsMenu()
     local byExpansion = { }
     for _,info in ipairs(C_TransmogSets.GetAllSets()) do
         if not byExpansion[info.expansionID] then
-            local name = GetExpansionName(info.expansionID)
+            -- Classic doesn't have GetExpansionName
+            local name = _G["EXPANSION_NAME"..tostring(info.expansionID)]
             byExpansion[info.expansionID] = { text = name }
         end
         local text = info.name
@@ -1750,8 +1726,24 @@ local function GetTransmogSetsMenu()
     return sets
 end
 
--- The args version of this takes slotid/appearanceid and really should be junked
--- now that the other form works. Well, if it reliably did. :(
+local function GetTransmogOutfitsMenu()
+    local outfits = { text = TRANSMOG_OUTFIT_HYPERLINK_TEXT:match("|t(.*)") }
+    for _, info in ipairs(C_TransmogOutfitInfo.GetOutfitsInfo()) do
+        table.insert(outfits, { val = "xmog:"..info.name, text = info.name })
+    end
+    return outfits
+end
+
+local function IsTransmogOutfitActive(name)
+    local id = C_TransmogOutfitInfo.GetActiveOutfitID()
+    if id then
+        local info = C_TransmogOutfitInfo.GetOutfitInfo(id)
+        if info then
+            return info.name == name
+        end
+    end
+    return false
+end
 
 CONDITIONS["xmog"] = {
     name = PERKS_VENDOR_CATEGORY_TRANSMOG,
@@ -1772,17 +1764,15 @@ CONDITIONS["xmog"] = {
         end,
     menu =
         function ()
-            return { GetTransmogOutfitsMenu(), GetTransmogSetsMenu() }
+            return { GetTransmogOutfitsMenu(), GetTransmogSetsMenu(), }
         end,
     handler =
-        function (cond, context, arg1, arg2)
-            local setID = tonumber(arg1) or GetTransmogSetIDByName(arg1)
+        function (cond, context, arg1)
+            local setID = tonumber(arg1)
             if setID then
                 return IsTransmogSetActive(setID)
-            end
-            local outfitID = GetTransmogOutfitIDByName(arg1)
-            if outfitID then
-                return IsTransmogOutfitActive(outfitID)
+            else
+                return IsTransmogOutfitActive(arg1)
             end
         end
 }
@@ -1869,8 +1859,8 @@ end
 
 function LM.Conditions:TestAllConditions()
     LM.Environment:RefreshState()
-    local context = { id = 99 }
-    for name, cond in pairs(CONDITIONS) do
+    local context = { id = 99, rule = {} }
+    for _, cond in pairs(CONDITIONS) do
         if not cond.disabled then
             cond:handler(context)
             cond:handler(context, tostring(math.random(1000000)))

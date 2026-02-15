@@ -1,6 +1,6 @@
-## Interface: 110207, 40402, 11507
+## Interface: 120001, 120000, 110207, 50503, 40402, 30405, 20505, 11508
 ## Title: HandyNotes: WorldMapButton
-## Version: 110207.01-Release
+## Version: 120000.02-Release
 ## Notes: Adds a Button to the Worldmap that can toggle HandyNotes Icons
 ## Notes-deDE: Fügt der Weltkarte einen Button hinzu, mit dem HandyNotes Icons umgeschaltet werden können
 ## Notes-ruRU: Добавляет кнопку на карту мира, которая может переключать значки HandyNotes
@@ -11,6 +11,10 @@
 
 ## X-Curse-Project-ID: 298530
 ## X-Wago-ID: q96dVqGO
+
+## X-Category: |cffff8000fuba
+## Category-enUS: |cffff8000fuba
+## Category-deDE: |cffff8000fuba
 
 #@no-lib-strip@
 # Library files

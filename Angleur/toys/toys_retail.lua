@@ -83,20 +83,24 @@ function retailToys:PickRandomToy(identifier, ownedTable, selectedTable, forceCl
     if next(ownedTable) == nil then return false end
     if #ownedTable == 0 then return false end
     if forceClear then alreadyRandomed[identifier] = false end
-    if alreadyRandomed[identifier] then 
+    if alreadyRandomed[identifier] then
         return true
     end
     local indexedOwnedToys = ownedTable
     -- ownedTable is initially unindexed, so we index it as 1,2,3,4... so we can use math.random()
     indexedOwnedToys = reorderTable(indexedOwnedToys)
-    local bufferToy 
+    local bufferToy
     local newRandomToy
     local leastRemainingCooldown = 0
     while next(indexedOwnedToys) ~= nil do
         local i = math.random(#indexedOwnedToys)
         local randomToyCandidate = indexedOwnedToys[i]
         local startTime, cooldownOfToy = C_Container.GetItemCooldown(randomToyCandidate.toyID)
-        if cooldownOfToy == 0 then
+        if not cooldownOfToy or not startTime then
+            indexedOwnedToys[i] = nil
+            indexedOwnedToys = reorderTable(indexedOwnedToys)
+            Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("Angleur_PickRandomToy: ") .. identifier ..  " cooldown could not be accessed")
+        elseif cooldownOfToy == 0 then
             if #indexedOwnedToys > 1 and lastRandomed[identifier] == randomToyCandidate.name then
                 -- Same toy has been randomed, remove it from the indexed table
                 -- and put it in the 'buffer' to reuse laters in case everything else is in cooldown
@@ -179,6 +183,7 @@ randomToyEventFrame:RegisterEvent("UNIT_SPELLCAST_FAILED")
 randomToyEventFrame:SetScript("OnEvent", function(self, event, unit, ...)
     if AngleurConfig.chosenCrateBobber.name ~= "Random Bobber" and AngleurConfig.chosenRaft.name ~= "Random Raft" then return end
     local arg4, arg5 = ...
+    if issecretvalue(unit) or issecretvalue(arg4) or issecretvalue(arg5) then return end
     if event == "UNIT_SPELLCAST_START" then
         -- Check BOBBER Spell
         for i, v in pairs(angleurToys.ownedCrateBobbers) do

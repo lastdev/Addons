@@ -1,7 +1,6 @@
 local addonName, addon = ...
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
-local AceEvent = LibStub("AceAddon-3.0"):GetAddon("TLDRMissions-AceEvent")
 
 local rewardLimits = {
     [824] = 10000, -- Garrison Resources
@@ -46,10 +45,6 @@ function addon.CompleteMissionsButtonOnClickHandler(button)
             button:SetText(size)
             if size < 1 then
                 button:SetText(DONE.."!")
-                AceEvent:SendMessage("TLDRMISSIONS_COMPLETE_MISSIONS_FINISHED")
-                if WeakAuras then
-                    WeakAuras.ScanEvents("TLDRMISSIONS_COMPLETE_MISSIONS_FINISHED")
-                end
                 C_Timer.After(2, function()
                     if #C_Garrison.GetCompleteMissions(button:GetParent():GetParent().followerTypeID) == 0 then
                         button:Hide()

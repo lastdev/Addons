@@ -93,6 +93,9 @@ function module:RefreshMobData(popup)
 		popup.status:SetFormattedText("%s%s|r", completed and escapes.green or escapes.red, achievement_name or UNKNOWN)
 		break
 	end
+	if ns.mobdb[data.id] and ns.mobdb[data.id].notes then
+		popup.noteIcon:Show()
+	end
 end
 function module:RefreshLootData(popup)
 	local data = popup.data
@@ -101,6 +104,9 @@ function module:RefreshLootData(popup)
 	-- TODO: work out the Treasure of X achievements?
 	popup.status:SetText("")
 	popup.raidIcon:Hide()
+	if ns.vignetteTreasureLookup[data.id] and ns.vignetteTreasureLookup[data.id].notes then
+		popup.noteIcon:Show()
+	end
 end
 
 local models = {
@@ -252,6 +258,14 @@ function module:CreatePopup(look)
 	lootIcon.count = lootIcon:CreateFontString(nil, "OVERLAY", "GameFontHighlightOutline")
 	lootIcon.count:SetAllPoints(lootIcon)
 
+	local noteIcon = CreateFrame("Frame", nil, popup)
+	popup.noteIcon = noteIcon
+	noteIcon:SetSize(16, 16)
+	noteIcon.texture = noteIcon:CreateTexture(nil, "OVERLAY")
+	noteIcon.texture:SetAtlas("profession") -- poi-workorders
+	noteIcon.texture:SetAllPoints(noteIcon)
+	noteIcon:Hide()
+
 	local dead = model:CreateTexture(nil, "OVERLAY")
 	popup.dead = dead
 	dead:SetAtlas([[XMarksTheSpot]])
@@ -366,6 +380,9 @@ function module:CreatePopup(look)
 	popup.lootIcon:SetScript("OnClick", popup.scripts.LootOnClick)
 	popup.lootIcon:SetScript("OnHide", popup.scripts.LootOnHide)
 
+	popup.noteIcon:SetScript("OnEnter", popup.scripts.NoteOnEnter)
+	popup.noteIcon:SetScript("OnLeave", popup.scripts.NoteOnLeave)
+
 	self:ApplyLook(popup, look)
 
 	return popup
@@ -440,7 +457,9 @@ function PopupMixin:Reset()
 	self.dead:SetAlpha(0)
 	self.model:ClearModel()
 
-	if CombatLogGetCurrentEventInfo then
+	if C_EventUtils.IsEventValid("UNIT_DIED") then
+		self:UnregisterEvent("UNIT_DIED")
+	else
 		self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	end
 	self:UnregisterEvent("PLAYER_REGEN_ENABLED")
@@ -462,6 +481,9 @@ PopupMixin.scripts = {
 		if data.type == "mob" then
 			GameTooltip:AddDoubleLine(escapes.leftClick .. " " .. TARGET, escapes.rightClick .. " " .. CLOSE)
 			core:GetModule('Tooltip'):UpdateTooltip(data.id)
+			if ns.mobdb[data.id] and ns.mobdb[data.id].notes then
+				GameTooltip:AddLine(core:RenderString(ns.mobdb[data.id].notes), 1, 1, 1, true)
+			end
 		else
 			GameTooltip:AddDoubleLine(" ", escapes.rightClick .. " " .. CLOSE)
 			-- GameTooltip:AddLine(data.name)
@@ -574,7 +596,9 @@ PopupMixin.scripts = {
 			self.dead.animIn:Play()
 		end
 
-		if CombatLogGetCurrentEventInfo then
+		if C_EventUtils.IsEventValid("UNIT_DIED") then
+			self:RegisterEvent("UNIT_DIED")
+		else
 			self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 		end
 		self:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -662,6 +686,28 @@ PopupMixin.scripts = {
 		end
 		self.window = nil
 	end,
+	-- Notes icon
+	NoteOnEnter = function(self)
+		if self:GetParent().waitingToHide then
+			return
+		end
+		local data = self:GetParent().data
+		if not (data and data.id) then return end
+		local anchor = (self:GetCenter() < (UIParent:GetWidth() / 2)) and "ANCHOR_RIGHT" or "ANCHOR_LEFT"
+		GameTooltip:SetOwner(self, anchor, 0, 0)
+		GameTooltip:SetFrameStrata("TOOLTIP")
+		if data.type == "mob" then
+			GameTooltip:AddLine(core:GetMobLabel(data.id))
+			GameTooltip:AddLine(core:RenderString(ns.mobdb[data.id] and ns.mobdb[data.id].notes or UNKNOWN), 1, 1, 1, true)
+		else
+			GameTooltip:AddDoubleLine(data.name or UNKNOWN, "Loot")
+			GameTooltip:AddLine(core:RenderString(ns.vignetteTreasureLookup[data.id] and ns.vignetteTreasureLookup[data.id].notes or UNKNOWN), 1, 1, 1, true)
+		end
+		GameTooltip:Show()
+	end,
+	NoteOnLeave = function(self)
+		GameTooltip:Hide()
+	end,
 	-- Common animations
 	AnimationHideParent = function(self)
 		self:GetParent():Hide()
@@ -682,17 +728,20 @@ function PopupMixin:COMBAT_LOG_EVENT_UNFILTERED()
 	if subevent ~= "UNIT_DIED" then
 		return
 	end
+	return self:UNIT_DIED("UNIT_DIED", destGUID)
+end
+function PopupMixin:UNIT_DIED(_, unitGUID)
+	if issecretvalue and issecretvalue(unitGUID) then return end
+	if not unitGUID then return end
+	if ns.IdFromGuid(unitGUID) ~= self.data.id then return end
+	self.data.dead = true
+	self.dead.animIn:Play()
 
-	if destGUID and ns.IdFromGuid(destGUID) == self.data.id then
-		self.data.dead = true
-		self.dead.animIn:Play()
+	-- might have changed things like achievement status
+	module:RefreshMobData(self)
 
-		-- might have changed things like achievement status
-		module:RefreshMobData(self)
-
-		if module.db.profile.closeDead then
-			self:HideWhenPossible()
-		end
+	if module.db.profile.closeDead then
+		self:HideWhenPossible()
 	end
 end
 function PopupMixin:PLAYER_REGEN_ENABLED()

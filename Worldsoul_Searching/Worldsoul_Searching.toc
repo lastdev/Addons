@@ -1,0 +1,46 @@
+## Interface: 120001
+## Title: Worldsoul Searching
+## Notes: The War Within Meta Achievement tracker
+## Author: inzenir
+## Version: v1.5.3
+## IconTexture: images\achievement_zone_isleofdorn.jpg
+## SavedVariables: MetaAchievementConfigurationDB
+
+# libs
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+
+# achievement data
+map-zones.lua
+achi-list\WorldSoulSearching.lua
+achi-list\AFarewellToArms.lua
+achi-list\AWorldAwoken.lua
+achi-list\BackFromTheBeyond.lua
+achi-list\WhatALongStrangeTripItsBeen.lua
+achi-list\LightUpTheNight.lua
+
+# logic loading
+logic\data-list.lua
+logic\settings.lua
+logic\debug.lua
+logic\waypoint.lua
+logic\AchievementRequirement.lua
+logic\achievement.lua
+logic\achievement-criteria.lua
+logic\wow-achievements.lua
+logic\achievement-scan.lua
+logic\slash-commands.lua
+
+# map integrations
+map-integration\map-integration.lua
+map-integration\tomtom\tomtom-waypoint.lua
+map-integration\tomtom\tomtom.lua
+
+# drawing loading
+drawing\tree-list.lua
+drawing\main-frame.lua
+drawing\settings-frame.lua
+
+entrypoint.lua

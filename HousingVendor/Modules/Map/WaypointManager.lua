@@ -7,9 +7,54 @@ local WaypointManager = {}
 WaypointManager.__index = WaypointManager
 
 local pendingDestination = nil
+local lastWaypoint = nil
+local activeWaypointContext = nil
+local tomtomWaypointUID = nil
 local eventFrame = CreateFrame("Frame")
 local lastMapID = nil
 local HUB_COORDS = { x = 0.5, y = 0.5 } -- Generic fallback when we only know a hub mapID
+
+local function IsTomTomIntegrationEnabled()
+    return not (HousingDB and HousingDB.settings and HousingDB.settings.useTomTomIntegration == false)
+end
+
+local function AcquireTomTom()
+    local tt = _G.TomTom
+    if tt then
+        return tt
+    end
+
+    -- TomTom is usually loaded at login, but some clients disable it or it may be load-on-demand.
+    -- Attempt a safe load before giving up.
+    if C_AddOns and C_AddOns.LoadAddOn then
+        local loaded = false
+        if C_AddOns.IsAddOnLoaded then
+            loaded = C_AddOns.IsAddOnLoaded("TomTom")
+        end
+        if not loaded then
+            pcall(function()
+                C_AddOns.LoadAddOn("TomTom")
+            end)
+        end
+    elseif LoadAddOn then
+        pcall(function()
+            LoadAddOn("TomTom")
+        end)
+    end
+
+    return _G.TomTom
+end
+
+local function NormalizeCoord01(v)
+    if type(v) ~= "number" then
+        return nil
+    end
+    -- Some callers/data use 0-100. TomTom expects 0-1.
+    if v > 1 and v <= 100 then
+        return v / 100
+    end
+    return v
+end
 local function RegisterZoneEvents()
     if not eventFrame:IsEventRegistered("ZONE_CHANGED_NEW_AREA") then
         eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
@@ -38,10 +83,35 @@ local function UnregisterZoneEvents()
     end
 end
 
+local function BuildMapAncestry(mapID)
+    local ancestry = {}
+    local current = mapID
+    local safety = 0
+    while current and current ~= 0 and safety < 10 do
+        ancestry[current] = true
+        if C_Map and C_Map.GetMapInfo then
+            local info = C_Map.GetMapInfo(current)
+            current = info and info.parentMapID or nil
+        else
+            current = nil
+        end
+        safety = safety + 1
+    end
+    return ancestry
+end
+
 local function GetExpansionFromMapID(mapID)
     if not mapID or mapID == 0 then return nil end
     if HousingMapIDToExpansion and HousingMapIDToExpansion[mapID] then
         return HousingMapIDToExpansion[mapID]
+    end
+    if HousingMapIDToExpansion and C_Map and C_Map.GetMapInfo then
+        local ancestry = BuildMapAncestry(mapID)
+        for ancestorID in pairs(ancestry) do
+            if HousingMapIDToExpansion[ancestorID] then
+                return HousingMapIDToExpansion[ancestorID]
+            end
+        end
     end
     return nil
 end
@@ -52,6 +122,7 @@ local function GetDefaultMapIDForExpansion(expansionName)
     
     -- Map of expansion names to default mapIDs (main hub zones)
     local expansionDefaults = {
+        ["Midnight"] = 2351,        -- Razorwind Shores
         ["The War Within"] = 2339,  -- Dornogal
         ["Dragonflight"] = 2112,    -- Valdrakken
         ["Shadowlands"] = 1670,     -- Oribos
@@ -124,12 +195,16 @@ local function FindPortalForExpansion(currentMapID, destinationExpansion, destin
     -- Get player faction for filtering
     local playerFaction = UnitFactionGroup("player")
 
+    local ancestry = BuildMapAncestry(currentMapID)
+
     -- Find portals in the current zone
     local currentZonePortals = nil
     for zoneName, portals in pairs(HousingPortalData) do
         if portals and #portals > 0 then
             for _, portal in ipairs(portals) do
-                if portal.mapID == currentMapID then
+                local portalMapID = portal.mapID
+                local portalZoneMapID = portal.zoneMapID
+                if (portalMapID and ancestry[portalMapID]) or (portalZoneMapID and ancestry[portalZoneMapID]) then
                     currentZonePortals = portals
                     break
                 end
@@ -161,6 +236,8 @@ local function FindPortalForExpansion(currentMapID, destinationExpansion, destin
         ["Oribos"] = true,
         -- Dragonflight
         ["Valdrakken"] = true,
+        -- Midnight
+        ["Razorwind Shores"] = true,
         -- The War Within
         ["Dornogal"] = true,
         -- The Burning Crusade
@@ -224,10 +301,15 @@ local function FindPortalToDestinationMap(currentMapID, destinationMapID)
 
     local playerFaction = UnitFactionGroup("player")
 
+    local ancestry = BuildMapAncestry(currentMapID)
+
     for _, portals in pairs(HousingPortalData) do
         if portals and type(portals) == "table" then
             for _, portal in ipairs(portals) do
-                if portal.mapID == currentMapID and (portal.destinationMapID == destinationMapID or portal.destMapID == destinationMapID) then
+                local portalMapID = portal.mapID
+                local portalZoneMapID = portal.zoneMapID
+                local matchesZone = (portalMapID and ancestry[portalMapID]) or (portalZoneMapID and ancestry[portalZoneMapID])
+                if matchesZone and (portal.destinationMapID == destinationMapID or portal.destMapID == destinationMapID) then
                     if portal.name and playerFaction == "Alliance" and (portal.name:find("Orgrimmar") or portal.name:find("Horde") or portal.name:find("Durotar")) then
                         -- Skip opposing faction portals
                     elseif portal.name and playerFaction == "Horde" and (portal.name:find("Stormwind") or portal.name:find("Alliance") or portal.name:find("Elwynn")) then
@@ -405,6 +487,19 @@ local function GetNearestFlightPoint(destinationMapID, destX, destY)
     return nearestNode
 end
 
+local function SetLastWaypoint(mapID, x, y, name, npcID)
+    if not mapID or not x or not y then
+        return
+    end
+    lastWaypoint = {
+        mapID = mapID,
+        x = x,
+        y = y,
+        name = name,
+        npcID = npcID,
+    }
+end
+
 local function SetBlizzardWaypoint(mapID, x, y)
     if not C_Map or not C_Map.SetUserWaypoint then
         return false, "Blizzard map API not available"
@@ -424,48 +519,86 @@ local function SetBlizzardWaypoint(mapID, x, y)
             C_Timer.After(0.1, function()
                 C_SuperTrack.SetSuperTrackedUserWaypoint(true)
 
-                -- Debug: Check if super-tracking succeeded
-                if playerMapID ~= mapID then
-                    print(string.format("|cFFF2CC8FHousingVendor:|r Arrow won't show - you're in zone %d, waypoint is in zone %d. Follow the route messages!",
-                        playerMapID or 0, mapID))
+                -- Blizzard's super-tracked waypoint arrow is zone-limited; if TomTom is available it will still guide you cross-zone.
+                if (not TomTom) and playerMapID ~= mapID then
+                    if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+                        _G.HousingVendorLog:Info(string.format(
+                            "Blizzard waypoint arrow only shows in the destination zone (you are in %d, destination is %d).",
+                            playerMapID or 0,
+                            mapID
+                        ))
+                    end
                 end
             end)
         end
     end)
 
     if not success then
+        if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+            _G.HousingVendorLog:Info("TomTom waypoint failed: " .. tostring(err))
+        end
         return false, tostring(err)
     end
 
+    SetLastWaypoint(mapID, x, y,
+        (activeWaypointContext and activeWaypointContext.name) or nil,
+        (activeWaypointContext and activeWaypointContext.npcID) or nil)
     return true, nil
 end
 local function SetTomTomWaypoint(mapID, x, y, title)
-    if not TomTom then
+    if not IsTomTomIntegrationEnabled() then
+        return false, nil
+    end
+
+    local tt = AcquireTomTom()
+    if not tt then
         return false, "TomTom addon not installed"
     end
 
-    if not TomTom.AddWaypoint then
+    if not tt.AddWaypoint then
         return false, "TomTom.AddWaypoint not available"
     end
 
+    mapID = tonumber(mapID)
+    x = NormalizeCoord01(x)
+    y = NormalizeCoord01(y)
+    if not mapID or not x or not y then
+        return false, "Invalid TomTom waypoint parameters"
+    end
+
     local success, err = pcall(function()
-        local waypointUID = TomTom:AddWaypoint(mapID, x, y, {
+        -- Ensure we only keep one active TomTom waypoint from HousingVendor, otherwise minimap fills with old vendor icons.
+        if tomtomWaypointUID and tt.RemoveWaypoint then
+            pcall(function()
+                tt:RemoveWaypoint(tomtomWaypointUID)
+            end)
+            tomtomWaypointUID = nil
+        end
+
+        local waypointUID = tt:AddWaypoint(mapID, x, y, {
             title = title,
             persistent = false,
             minimap = true,
             world = true,
-            crazy = true  -- Enable the "Crazy Arrow" for navigation
+            crazy = (tt.SetCrazyArrow ~= nil), -- Enable the "Crazy Arrow" when available
+            silent = true,
+            from = ADDON_NAME,
         })
 
         if not waypointUID then
             error("TomTom:AddWaypoint returned nil")
         end
+
+        tomtomWaypointUID = waypointUID
     end)
 
     if not success then
         return false, tostring(err)
     end
 
+    SetLastWaypoint(mapID, x, y,
+        (activeWaypointContext and activeWaypointContext.name) or title,
+        (activeWaypointContext and activeWaypointContext.npcID) or nil)
     return true, nil
 end
 function WaypointManager:SetWaypoint(item)
@@ -474,19 +607,40 @@ function WaypointManager:SetWaypoint(item)
         return false
     end
 
-    if not item.coords or not item.coords.x or not item.coords.y then
+    local Filters = _G.HousingFilters
+    local filterVendor = Filters and Filters.currentFilters and Filters.currentFilters.vendor
+    local filterZone = Filters and Filters.currentFilters and Filters.currentFilters.zone
+    local filterMapID = Filters and Filters.currentFilters and Filters.currentFilters.zoneMapID
+
+    local resolvedCoords = nil
+    if _G.HousingVendorHelper and _G.HousingVendorHelper.GetVendorCoords then
+        resolvedCoords = _G.HousingVendorHelper:GetVendorCoords(item, filterVendor, filterZone, filterMapID)
+    end
+    resolvedCoords = resolvedCoords or item.coords or item.vendorCoords
+
+    if not resolvedCoords or not resolvedCoords.x or not resolvedCoords.y then
         print("|cFFE63946HousingVendor:|r No valid coordinates for waypoint")
         return false
     end
 
+    -- Clear any stale pending destination from a previous waypoint request.
+    -- This prevents old pending routes from triggering duplicate messages
+    -- when a new waypoint is requested before the previous route was completed.
+    if pendingDestination then
+        pendingDestination = nil
+        UnregisterZoneEvents()
+    end
+
     -- Handle missing or invalid mapID - use expansion name as fallback
-    local effectiveMapID = item.mapID
+    local effectiveMapID = (resolvedCoords and resolvedCoords.mapID) or item.mapID or nil
     if not effectiveMapID or effectiveMapID == 0 then
         -- Try to get default mapID from expansion name
         if item.expansionName then
             effectiveMapID = GetDefaultMapIDForExpansion(item.expansionName)
             if effectiveMapID then
-                print("|cFFF2CC8FHousingVendor:|r Using default mapID for " .. item.expansionName .. " (item mapID missing)")
+                if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+                    _G.HousingVendorLog:Info("Using default mapID for " .. item.expansionName .. " (item mapID missing)")
+                end
             else
                 print("|cFFE63946HousingVendor:|r No valid map ID for waypoint and no expansion name available")
                 return false
@@ -497,37 +651,92 @@ function WaypointManager:SetWaypoint(item)
         end
     end
 
-    local x = item.coords.x / 100
-    local y = item.coords.y / 100
+    -- Coordinates are expected in percentage format (0-100).
+    -- Some data sources store world-space coordinates (e.g. negative or >1000).
+    -- If so, attempt to convert world coords -> map percent using Blizzard APIs.
+    local xPct = resolvedCoords.x
+    local yPct = resolvedCoords.y
+
+    if xPct < 0 or xPct > 100 or yPct < 0 or yPct > 100 then
+        local converted = false
+
+        if C_Map and C_Map.GetMapPosFromWorldPos and CreateVector2D then
+            local ok, pos = pcall(function()
+                return C_Map.GetMapPosFromWorldPos(effectiveMapID, CreateVector2D(xPct, yPct))
+            end)
+            if ok and pos and pos.x and pos.y then
+                xPct = pos.x * 100
+                yPct = pos.y * 100
+                converted = true
+            end
+        end
+
+        if not converted and HousingVendor and HousingVendor.ConvertAbsoluteToPercent then
+            local ok, cx, cy = pcall(function()
+                return HousingVendor:ConvertAbsoluteToPercent(xPct, yPct, effectiveMapID)
+            end)
+            if ok and cx and cy then
+                xPct = cx
+                yPct = cy
+                converted = true
+            end
+        end
+
+        if not converted then
+            print("|cFFE63946HousingVendor:|r Coordinates appear to be world-space and could not be converted for this map.")
+            return false
+        end
+    end
+
+    -- Convert percent to 0-1 for Blizzard API
+    local x = xPct / 100
+    local y = yPct / 100
+    local coords = string.format("%.1f, %.1f", xPct, yPct)
 
     if x < 0 or x > 1 or y < 0 or y > 1 then
-        print("|cFFE63946HousingVendor:|r Invalid coordinates: " .. tostring(x) .. ", " .. tostring(y))
+        print("|cFFE63946HousingVendor:|r Invalid coordinates: " .. tostring(xPct) .. ", " .. tostring(yPct))
         return false
     end
 
     local currentMapID, currentX, currentY = GetPlayerPosition()
-    
+
+    -- Debug: Log current position
+    if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+        _G.HousingVendorLog:Info(string.format(
+            "SetWaypoint: Player at mapID=%s, x=%.2f, y=%.2f | Destination: mapID=%s",
+            tostring(currentMapID or "nil"),
+            currentX or 0,
+            currentY or 0,
+            tostring(effectiveMapID)
+        ))
+    end
+
     -- Verify we got valid player position
     if not currentMapID then
         print("|cFFE63946HousingVendor:|r Unable to detect current location. Please ensure you're in a valid game zone.")
         -- Try to set waypoint anyway as fallback
         -- Use VendorHelper for faction-aware vendor selection
         local vendorName = nil
+        local npcID = tonumber(item.npcID)
         if _G.HousingVendorHelper then
             local Filters = _G.HousingFilters
             local filterVendor = Filters and Filters.currentFilters and Filters.currentFilters.vendor
-            vendorName = _G.HousingVendorHelper:GetVendorName(item, filterVendor)
+            local filterZone = Filters and Filters.currentFilters and Filters.currentFilters.zone
+            local filterMapID = Filters and Filters.currentFilters and Filters.currentFilters.zoneMapID
+            vendorName = _G.HousingVendorHelper:GetVendorName(item, filterVendor, filterZone, filterMapID)
+            if _G.HousingVendorHelper.GetVendorNPCID then
+                npcID = _G.HousingVendorHelper:GetVendorNPCID(item, filterVendor, filterZone, filterMapID)
+            end
         else
             vendorName = item.vendorName or item._apiVendor  -- Prioritize hardcoded data over API
         end
 
+        activeWaypointContext = { name = vendorName or locationName, npcID = npcID }
         local blizzardSuccess = SetBlizzardWaypoint(effectiveMapID, x, y, vendorName)
         local tomtomSuccess = SetTomTomWaypoint(effectiveMapID, x, y, vendorName or locationName)
 
         if blizzardSuccess or tomtomSuccess then
-            print(string.format("|cFF8A7FD4HousingVendor:|r Waypoint set to |cFF00FF00%s|r at %s",
-                vendorName or "destination",
-                coords))
+            print("|cFF8A7FD4HousingVendor:|r " .. string.format("Waypoint set to %s at %s", vendorName or "destination", coords))
             return true
         end
         return false
@@ -536,18 +745,24 @@ function WaypointManager:SetWaypoint(item)
     -- Use VendorHelper for faction-aware vendor and zone selection
     local vendorName = nil
     local zoneName = nil
+    local npcID = tonumber(item.npcID)
     if _G.HousingVendorHelper then
         local Filters = _G.HousingFilters
         local filterVendor = Filters and Filters.currentFilters and Filters.currentFilters.vendor
         local filterZone = Filters and Filters.currentFilters and Filters.currentFilters.zone
-        vendorName = _G.HousingVendorHelper:GetVendorName(item, filterVendor)
-        zoneName = _G.HousingVendorHelper:GetZoneName(item, filterZone)
+        local filterMapID = Filters and Filters.currentFilters and Filters.currentFilters.zoneMapID
+        vendorName = _G.HousingVendorHelper:GetVendorName(item, filterVendor, filterZone, filterMapID)
+        zoneName = _G.HousingVendorHelper:GetZoneName(item, filterZone, filterMapID)
+        if _G.HousingVendorHelper.GetVendorNPCID then
+            npcID = _G.HousingVendorHelper:GetVendorNPCID(item, filterVendor, filterZone, filterMapID)
+        end
     else
         vendorName = item.vendorName or item._apiVendor  -- Prioritize hardcoded data over API
         zoneName = item.zoneName or item._apiZone  -- Prioritize hardcoded data over API
     end
 
     local locationName = vendorName or item.name or zoneName or "location"
+    activeWaypointContext = { name = vendorName or locationName, npcID = npcID }
     local currentExpansion = GetExpansionFromMapID(currentMapID)
     
     -- Try to get expansion from mapID first, fallback to item.expansionName
@@ -555,13 +770,22 @@ function WaypointManager:SetWaypoint(item)
     if not destinationExpansion and item.expansionName then
         destinationExpansion = item.expansionName
         if effectiveMapID ~= item.mapID then
-            print("|cFFF2CC8FHousingVendor:|r Using expansion name '" .. destinationExpansion .. "' for portal routing")
+            if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+                _G.HousingVendorLog:Info("Using expansion name '" .. destinationExpansion .. "' for portal routing")
+            end
         end
     end
     
     local destinationZoneName = GetZoneNameFromMapID(effectiveMapID) or zoneName or "Unknown Zone"
     local currentZoneName = GetZoneNameFromMapID(currentMapID) or "Unknown Location"
-    local coords = string.format("%.1f, %.1f", item.coords.x, item.coords.y)
+    -- `coords` string already computed from resolved coordinates above.
+
+    -- Consistent route message: Vendor @ Zone (Expansion) - Action
+    local function PrintRoute(action)
+        local vName = vendorName or locationName
+        local expStr = destinationExpansion and (" (" .. destinationExpansion .. ")") or ""
+        print("|cFF8A7FD4HousingVendor:|r " .. vName .. " @ " .. destinationZoneName .. expStr .. " - " .. action)
+    end
 
     -- Check if destination is in Stormwind/Orgrimmar (portal room cities)
     local portalRoom = GetPortalRoom()
@@ -581,6 +805,19 @@ function WaypointManager:SetWaypoint(item)
     -- Determine if cross-expansion travel is needed
     if isDifferentMap and currentExpansion and destinationExpansion and currentExpansion ~= destinationExpansion then
         needsPortalTravel = true
+    end
+
+    -- Check if the PLAYER is in a child/instanced zone whose parent is the destination zone.
+    -- Example: player is in garrison (mapID 582), destination is outdoor Shadowmoon Valley (539).
+    -- HousingMapParents[582] = 539, so the player is already in the right area.
+    -- In this case, clear isDifferentMap so we fall through to set the waypoint directly.
+    -- The child-map adjustment at the end of SetWaypoint (lines 1191-1199) will remap the
+    -- waypoint onto the player's current mapID so the Blizzard arrow works correctly.
+    if isDifferentMap and not needsPortalTravel and HousingMapParents and HousingMapParents[currentMapID] then
+        local playerParent = HousingMapParents[currentMapID]
+        if playerParent == effectiveMapID then
+            isDifferentMap = false
+        end
     end
 
     -- Check for parent map relationships (sub-zones within zones)
@@ -609,10 +846,7 @@ function WaypointManager:SetWaypoint(item)
                 end
             end
 
-            print(string.format("|cFF8A7FD4HousingVendor:|r Route to |cFF00FF00%s|r: Go to %s in %s",
-                vendorName or locationName,
-                entranceName,
-                parentZoneName))
+            PrintRoute("Go to " .. entranceName .. " in " .. parentZoneName)
 
             SetBlizzardWaypoint(parentMapID, entranceX, entranceY, nil)
             SetTomTomWaypoint(parentMapID, entranceX, entranceY, entranceName)
@@ -632,15 +866,12 @@ function WaypointManager:SetWaypoint(item)
         local firstPortal = pathfinder:GetFirstPortalInPath(
             currentMapID,
             effectiveMapID,
-            item.coords.x,
-            item.coords.y
+            resolvedCoords.x,
+            resolvedCoords.y
         )
 
         if firstPortal and firstPortal.name and firstPortal.x and firstPortal.y and firstPortal.mapID then
-            print(string.format("|cFF8A7FD4HousingVendor:|r Route to |cFF00FF00%s|r: Use |cFFFFFF00%s|r > %s",
-                vendorName or locationName,
-                firstPortal.name,
-                destinationZoneName))
+            PrintRoute("Portal: " .. firstPortal.name)
 
             local portalX = firstPortal.x / 100
             local portalY = firstPortal.y / 100
@@ -662,10 +893,7 @@ function WaypointManager:SetWaypoint(item)
     if isDifferentMap and HousingPortalData then
         local directPortal = FindPortalToDestinationMap(currentMapID, effectiveMapID)
         if directPortal and directPortal.mapID and directPortal.x and directPortal.y and directPortal.name then
-            print(string.format("|cFF8A7FD4HousingVendor:|r Route to |cFF00FF00%s|r: Use |cFFFFFF00%s|r > %s",
-                vendorName or locationName,
-                directPortal.name,
-                destinationZoneName))
+            PrintRoute("Portal: " .. directPortal.name)
 
             local portalX = directPortal.x / 100
             local portalY = directPortal.y / 100
@@ -682,6 +910,56 @@ function WaypointManager:SetWaypoint(item)
         end
     end
 
+    -- Same-expansion fallback: if the destination has a known portal in the Stormwind/Orgrimmar portal room,
+    -- guide the user there even when expansions match (useful for nested maps like Founder's Point vs Dornogal).
+    if isDifferentMap and (not needsPortalTravel) and HousingPortalData then
+        local portalRoom = GetPortalRoom()
+        if portalRoom then
+            local portalFromRoom = FindPortalForExpansion(portalRoom.mapID, destinationExpansion, effectiveMapID)
+            if portalFromRoom and portalFromRoom.name then
+                if currentMapID == portalRoom.mapID then
+                    if portalFromRoom.x and portalFromRoom.y then
+                        PrintRoute("Portal: " .. portalFromRoom.name)
+
+                        pendingDestination = { item = item, locationName = locationName }
+                        RegisterZoneEvents()
+
+                        local portalX = portalFromRoom.x / 100
+                        local portalY = portalFromRoom.y / 100
+                        SetBlizzardWaypoint(portalFromRoom.mapID, portalX, portalY, nil)
+                        SetTomTomWaypoint(portalFromRoom.mapID, portalX, portalY, portalFromRoom.name)
+                        return true
+                    end
+                else
+                    local currentZonePortal = FindPortalForExpansion(currentMapID, "Classic")
+                    if currentZonePortal and currentZonePortal.name and currentZonePortal.x and currentZonePortal.y then
+                        PrintRoute("Portal: " .. currentZonePortal.name .. " > " .. portalRoom.zoneName)
+
+                        pendingDestination = { item = item, locationName = locationName }
+                        RegisterZoneEvents()
+
+                        local portalX = currentZonePortal.x / 100
+                        local portalY = currentZonePortal.y / 100
+                        SetBlizzardWaypoint(currentZonePortal.mapID, portalX, portalY, nil)
+                        SetTomTomWaypoint(currentZonePortal.mapID, portalX, portalY, currentZonePortal.name)
+                        return true
+                    end
+
+                    PrintRoute("Go to " .. portalRoom.name .. " > " .. portalFromRoom.name)
+
+                    pendingDestination = { item = item, locationName = locationName }
+                    RegisterZoneEvents()
+
+                    local portalX = portalRoom.x / 100
+                    local portalY = portalRoom.y / 100
+                    SetBlizzardWaypoint(portalRoom.mapID, portalX, portalY, nil)
+                    SetTomTomWaypoint(portalRoom.mapID, portalX, portalY, portalRoom.name)
+                    return true
+                end
+            end
+        end
+    end
+
     -- Special routing for Undermine: ALWAYS route through Dornogal (regardless of expansion)
     -- Undermine is accessed via portal in Dornogal, not SW/Org portal rooms
     if isDifferentMap and destinationExpansion == "The War Within" and IsSpecialTravelDestination(effectiveMapID) then
@@ -693,9 +971,7 @@ function WaypointManager:SetWaypoint(item)
                 local underminePortalRoom = GetPortalRoom()
                 if underminePortalRoom and currentMapID ~= underminePortalRoom.mapID then
                     -- Not in portal room yet, go there first
-                    print(string.format("|cFF8A7FD4HousingVendor:|r Route to |cFF00FF00%s|r: Go to %s, use Portal to Dornogal",
-                        vendorName or locationName,
-                        underminePortalRoom.name))
+                    PrintRoute("Go to " .. underminePortalRoom.name .. " > Portal to Dornogal")
 
                     pendingDestination = {
                         item = item,
@@ -713,10 +989,7 @@ function WaypointManager:SetWaypoint(item)
                     local dornogalPortal = FindPortalForExpansion(currentMapID, "The War Within", 2339)
 
                     if dornogalPortal and dornogalPortal.x and dornogalPortal.y then
-                        print(string.format("|cFF8A7FD4HousingVendor:|r Route to |cFF00FF00%s|r: Use |cFFFFFF00%s|r, then continue to %s",
-                            vendorName or locationName,
-                            dornogalPortal.name,
-                            destinationZoneName))
+                        PrintRoute("Portal: " .. dornogalPortal.name .. " > " .. destinationZoneName)
 
                         pendingDestination = {
                             item = item,
@@ -731,9 +1004,7 @@ function WaypointManager:SetWaypoint(item)
                         return true
                     else
                         -- Fallback if portal not found
-                        print(string.format("|cFF8A7FD4HousingVendor:|r Route to |cFF00FF00%s|r: Use Portal to Dornogal, then continue to %s",
-                            vendorName or locationName,
-                            destinationZoneName))
+                        PrintRoute("Portal to Dornogal > " .. destinationZoneName)
 
                         pendingDestination = {
                             item = item,
@@ -745,9 +1016,7 @@ function WaypointManager:SetWaypoint(item)
                 end
             else
                 -- Already in TWW but different zone, go to Dornogal hub
-                print(string.format("|cFF8A7FD4HousingVendor:|r Route to |cFF00FF00%s|r: Go to |cFFFFFF00Dornogal|r first, then continue to %s",
-                    vendorName or locationName,
-                    destinationZoneName))
+                PrintRoute("Go to Dornogal > " .. destinationZoneName)
 
                 pendingDestination = {
                     item = item,
@@ -765,20 +1034,49 @@ function WaypointManager:SetWaypoint(item)
 
     if needsPortalTravel then
         if portalRoom then
-            -- Check if we're already in the portal room city
-            local isInPortalCity = (currentMapID == portalRoom.mapID)
+            -- Check if we're already in the portal room city or a sub-zone of it
+            -- Build ancestry to handle cases where player is in a phased/instanced version
+            local ancestry = BuildMapAncestry(currentMapID)
+            local isInPortalCity = (currentMapID == portalRoom.mapID) or ancestry[portalRoom.mapID]
+
+            -- Debug: Log portal room detection
+            if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+                _G.HousingVendorLog:Info(string.format(
+                    "Portal routing: isInPortalCity=%s (currentMapID=%s, portalRoom.mapID=%s)",
+                    tostring(isInPortalCity),
+                    tostring(currentMapID),
+                    tostring(portalRoom.mapID)
+                ))
+            end
 
             if isDestinationPortalCity then
                 -- Destination IS Stormwind/Orgrimmar - just set waypoint
                 -- Continue to set waypoint below
             elseif isInPortalCity then
                 -- We're in portal city, destination is another expansion - find and use specific portal
-                local specificPortal = FindPortalForExpansion(currentMapID, destinationExpansion, effectiveMapID)
+                -- Always search using the base portal room mapID, not a potential sub-zone
+                local searchMapID = portalRoom.mapID
+                local specificPortal = FindPortalForExpansion(searchMapID, destinationExpansion, effectiveMapID)
+
+                -- Debug: Log portal search result
+                if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+                    if specificPortal then
+                        _G.HousingVendorLog:Info(string.format(
+                            "Found portal: name=%s, x=%s, y=%s, mapID=%s, worldX=%s, worldY=%s",
+                            specificPortal.name or "nil",
+                            tostring(specificPortal.x),
+                            tostring(specificPortal.y),
+                            tostring(specificPortal.mapID),
+                            tostring(specificPortal.worldX),
+                            tostring(specificPortal.worldY)
+                        ))
+                    else
+                        _G.HousingVendorLog:Info("No portal found for destination")
+                    end
+                end
 
                 if specificPortal and (specificPortal.x or specificPortal.worldX) then
-                    print(string.format("|cFF8A7FD4HousingVendor:|r Route to |cFF00FF00%s|r: Use portal |cFFFFFF00%s|r",
-                        vendorName or locationName,
-                        specificPortal.name))
+                    PrintRoute("Portal: " .. specificPortal.name)
 
                     pendingDestination = {
                         item = item,
@@ -792,16 +1090,47 @@ function WaypointManager:SetWaypoint(item)
                     if specificPortal.x and specificPortal.y then
                         local portalX = specificPortal.x / 100
                         local portalY = specificPortal.y / 100
-                        SetBlizzardWaypoint(specificPortal.mapID, portalX, portalY, nil)
-                        SetTomTomWaypoint(specificPortal.mapID, portalX, portalY, specificPortal.name)
+                        -- Use the portal's mapID (should be the base portal room mapID)
+                        local waypointMapID = specificPortal.mapID or portalRoom.mapID
+
+                        if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+                            _G.HousingVendorLog:Info(string.format(
+                                "Setting waypoint to portal at %.2f, %.2f on mapID %s (currentMapID: %s)",
+                                portalX * 100,
+                                portalY * 100,
+                                tostring(waypointMapID),
+                                tostring(currentMapID)
+                            ))
+                        end
+
+                        local blizzSuccess, blizzErr = SetBlizzardWaypoint(waypointMapID, portalX, portalY, nil)
+                        local tomSuccess, tomErr = SetTomTomWaypoint(waypointMapID, portalX, portalY, specificPortal.name)
+
+                        if not blizzSuccess and not tomSuccess then
+                            print("|cFFE63946HousingVendor:|r Warning: Failed to set waypoint to " .. (specificPortal.name or "portal"))
+                            if blizzErr then
+                                if _G.HousingVendorLog and _G.HousingVendorLog.Warn then
+                                    _G.HousingVendorLog:Warn("Blizzard waypoint error: " .. tostring(blizzErr))
+                                end
+                            end
+                            if tomErr and not TomTom then
+                                print("|cFFFFAA00Tip:|r Install TomTom addon for better cross-zone navigation arrows")
+                            end
+                        end
+                    else
+                        -- Portal only has GPS coordinates, can't set visual waypoint
+                        if _G.HousingVendorLog and _G.HousingVendorLog.Warn then
+                            _G.HousingVendorLog:Warn(string.format(
+                                "Portal '%s' only has GPS coordinates, cannot set visual waypoint",
+                                specificPortal.name or "unknown"
+                            ))
+                        end
                     end
 
                     return true
                 else
                     -- Fallback to generic portal room message if specific portal not found
-                    print(string.format("|cFF8A7FD4HousingVendor:|r Route to |cFF00FF00%s|r: Find portal to %s",
-                        vendorName or locationName,
-                        destinationExpansion or destinationZoneName))
+                    PrintRoute("Find portal to " .. (destinationExpansion or destinationZoneName))
 
                     pendingDestination = {
                         item = item,
@@ -817,10 +1146,7 @@ function WaypointManager:SetWaypoint(item)
 
                 if currentZonePortal and (currentZonePortal.x or currentZonePortal.worldX) then
                     -- Found portal in current zone to Stormwind/Orgrimmar
-                    print(string.format("|cFF8A7FD4HousingVendor:|r Route to |cFF00FF00%s|r: Use |cFFFFFF00%s|r > %s",
-                        vendorName or locationName,
-                        currentZonePortal.name,
-                        portalRoom.zoneName))
+                    PrintRoute("Portal: " .. currentZonePortal.name .. " > " .. portalRoom.zoneName)
 
                     pendingDestination = {
                         item = item,
@@ -842,12 +1168,48 @@ function WaypointManager:SetWaypoint(item)
                 else
                     -- No portal in current zone - navigate to portal city first
                     local specificPortal = FindPortalForExpansion(portalRoom.mapID, destinationExpansion, effectiveMapID)
-                    
+
                     if specificPortal then
-                        print(string.format("|cFF8A7FD4HousingVendor:|r Route to |cFF00FF00%s|r: Go to %s, use |cFFFFFF00%s|r",
-                            vendorName or locationName,
-                            portalRoom.name,
-                            specificPortal.name))
+                        -- Check if player is already very close to portal room coordinates
+                        -- This handles cases where detection might be slightly off
+                        local distanceToPortalRoom = nil
+                        if currentX and currentY then
+                            local dx = (currentX * 100) - portalRoom.x
+                            local dy = (currentY * 100) - portalRoom.y
+                            distanceToPortalRoom = math.sqrt(dx * dx + dy * dy)
+                        end
+
+                        -- If player is within 5 yards of portal room, consider them already there
+                        -- and skip directly to setting portal waypoint
+                        if distanceToPortalRoom and distanceToPortalRoom < 5 then
+                            if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+                                _G.HousingVendorLog:Info(string.format(
+                                    "Player is already at portal room (distance: %.1f), setting portal waypoint directly",
+                                    distanceToPortalRoom
+                                ))
+                            end
+
+                            PrintRoute("Portal: " .. specificPortal.name)
+
+                            pendingDestination = {
+                                item = item,
+                                locationName = locationName
+                            }
+
+                            RegisterZoneEvents()
+
+                            -- Set waypoint to the specific portal (not the portal room)
+                            if specificPortal.x and specificPortal.y then
+                                local portalX = specificPortal.x / 100
+                                local portalY = specificPortal.y / 100
+                                SetBlizzardWaypoint(specificPortal.mapID, portalX, portalY, nil)
+                                SetTomTomWaypoint(specificPortal.mapID, portalX, portalY, specificPortal.name)
+                            end
+
+                            return true
+                        end
+
+                        PrintRoute("Go to " .. portalRoom.name .. " > " .. specificPortal.name)
 
                         pendingDestination = {
                             item = item,
@@ -859,17 +1221,14 @@ function WaypointManager:SetWaypoint(item)
                         -- Set waypoint to the PORTAL ROOM (not the specific portal)
                         local portalX = portalRoom.x / 100
                         local portalY = portalRoom.y / 100
-                        
+
                         local blizzardSuccess, blizzardError = SetBlizzardWaypoint(portalRoom.mapID, portalX, portalY, nil)
                         local tomtomSuccess, tomtomError = SetTomTomWaypoint(portalRoom.mapID, portalX, portalY, portalRoom.name)
 
                         return true
                     else
                         -- Fallback to generic portal room if specific portal not found
-                        print(string.format("|cFF8A7FD4HousingVendor:|r Route to |cFF00FF00%s|r: Go to %s, find portal to %s",
-                            vendorName or locationName,
-                            portalRoom.name,
-                            destinationExpansion or destinationZoneName))
+                        PrintRoute("Go to " .. portalRoom.name .. " > find portal to " .. (destinationExpansion or destinationZoneName))
 
                         pendingDestination = {
                             item = item,
@@ -891,30 +1250,44 @@ function WaypointManager:SetWaypoint(item)
     end
 
     if pendingDestination and pendingDestination.item then
+        if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+            _G.HousingVendorLog:Info("SetWaypoint: Found pending destination, clearing and recursively calling SetWaypoint")
+        end
+
         local pendingItem = pendingDestination.item
         pendingDestination = nil
         UnregisterZoneEvents()
         return self:SetWaypoint(pendingItem)
     end
 
+    -- If you're on a child map of the destination zone (e.g. Founder's Point inside Dornogal),
+    -- prefer placing the waypoint on your current child map so the Blizzard arrow can appear.
+    local waypointMapID = effectiveMapID
+    if C_Map and C_Map.GetMapInfo then
+        local info = C_Map.GetMapInfo(currentMapID)
+        if info and info.parentMapID and info.parentMapID == effectiveMapID then
+            waypointMapID = currentMapID
+        end
+    end
+
     -- Try to set both waypoints and capture results
-    local blizzardSuccess, blizzardError = SetBlizzardWaypoint(effectiveMapID, x, y)
-    local tomtomSuccess, tomtomError = SetTomTomWaypoint(effectiveMapID, x, y, locationName)
+    -- If we're adjusting mapID for the Blizzard arrow, keep TomTom aligned to the same mapID too.
+    if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+        _G.HousingVendorLog:Info(string.format(
+            "SetWaypoint: Setting final waypoint to %s at %.1f, %.1f on mapID %s",
+            locationName or "destination",
+            x * 100,
+            y * 100,
+            tostring(waypointMapID)
+        ))
+    end
+
+    local tomtomSuccess, tomtomError = SetTomTomWaypoint(waypointMapID, x, y, locationName)
+    local blizzardSuccess, blizzardError = SetBlizzardWaypoint(waypointMapID, x, y)
 
     -- Report results
     if blizzardSuccess or tomtomSuccess then
-        local methods = {}
-        if blizzardSuccess then table.insert(methods, "Blizzard") end
-        if tomtomSuccess then table.insert(methods, "TomTom") end
-        
-        -- Show vendor name if available, otherwise just location
-        local vendorInfoDisplay = ""
-        if vendorName and vendorName ~= locationName then
-            vendorInfoDisplay = string.format(" - |cFF00FF00%s|r", vendorName)
-        end
-        
-        print(string.format("|cFF8A7FD4HousingVendor:|r Waypoint set to %s%s (%s)",
-            locationName, vendorInfoDisplay, table.concat(methods, " + ")))
+        PrintRoute("Waypoint set")
         
         -- Show errors for failed methods (only if one failed)
         if not blizzardSuccess and blizzardError and tomtomSuccess then
@@ -927,7 +1300,7 @@ function WaypointManager:SetWaypoint(item)
         return true
     else
         -- Both failed - show errors
-        print("|cFFE63946HousingVendor:|r Failed to set waypoint to " .. locationName)
+        print("|cFFE63946HousingVendor:|r " .. (vendorName or locationName) .. " @ " .. destinationZoneName .. " \xe2\x80\x94 Waypoint failed")
         if blizzardError then
             print("|cFFFF4040  - Blizzard:|r " .. blizzardError)
         end
@@ -940,6 +1313,27 @@ end
 function WaypointManager:ClearPendingDestination()
     if pendingDestination then
         pendingDestination = nil
+        lastWaypoint = nil
+        activeWaypointContext = nil
+
+        if TomTom and tomtomWaypointUID and TomTom.RemoveWaypoint then
+            pcall(function()
+                TomTom:RemoveWaypoint(tomtomWaypointUID)
+            end)
+            tomtomWaypointUID = nil
+        end
+
+        if C_Map and C_Map.ClearUserWaypoint then
+            pcall(function()
+                C_Map.ClearUserWaypoint()
+            end)
+        end
+
+        if C_SuperTrack and C_SuperTrack.SetSuperTrackedUserWaypoint then
+            pcall(function()
+                C_SuperTrack.SetSuperTrackedUserWaypoint(false)
+            end)
+        end
         UnregisterZoneEvents()
         return true
     end
@@ -949,6 +1343,27 @@ end
 
 function WaypointManager:ClearWaypoint()
     pendingDestination = nil
+    lastWaypoint = nil
+    activeWaypointContext = nil
+
+    if TomTom and tomtomWaypointUID and TomTom.RemoveWaypoint then
+        pcall(function()
+            TomTom:RemoveWaypoint(tomtomWaypointUID)
+        end)
+        tomtomWaypointUID = nil
+    end
+
+    if C_Map and C_Map.ClearUserWaypoint then
+        pcall(function()
+            C_Map.ClearUserWaypoint()
+        end)
+    end
+
+    if C_SuperTrack and C_SuperTrack.SetSuperTrackedUserWaypoint then
+        pcall(function()
+            C_SuperTrack.SetSuperTrackedUserWaypoint(false)
+        end)
+    end
     UnregisterZoneEvents()
 end
 
@@ -956,8 +1371,52 @@ function WaypointManager:HasPendingDestination()
     return pendingDestination ~= nil
 end
 
+function WaypointManager:GetActiveWaypointInfo()
+    return lastWaypoint
+end
+
+function WaypointManager:GetActiveWaypointDistance()
+    if not lastWaypoint or not lastWaypoint.mapID then
+        return nil, "No waypoint"
+    end
+
+    if not (C_Map and C_Map.GetBestMapForUnit and C_Map.GetPlayerMapPosition) then
+        return nil, "No map"
+    end
+
+    local playerMapID = C_Map.GetBestMapForUnit("player")
+    if not playerMapID then
+        return nil, "No map"
+    end
+
+    if playerMapID ~= lastWaypoint.mapID then
+        -- Check if player is in a sub-zone (like a Garrison) of the waypoint's zone
+        if HousingMapParents and HousingMapParents[playerMapID] == lastWaypoint.mapID then
+            -- Player is in an instanced sub-zone, show helpful exit message
+            local zoneName = GetZoneNameFromMapID(lastWaypoint.mapID)
+            return nil, "Exit to " .. (zoneName or "parent zone")
+        end
+        return nil, "Different zone"
+    end
+
+    local posOk, pos = pcall(C_Map.GetPlayerMapPosition, lastWaypoint.mapID, "player")
+    if not posOk then pos = nil end
+    if not pos or not pos.x or not pos.y or (pos.x == 0 and pos.y == 0) then
+        return nil, "Unknown"
+    end
+
+    local px, py = pos.x * 100, pos.y * 100
+    local tx, ty = lastWaypoint.x * 100, lastWaypoint.y * 100
+    local dx = px - tx
+    local dy = py - ty
+    return math.sqrt(dx * dx + dy * dy) * 1.25
+end
+
 local function OnZoneChanged()
     if not pendingDestination or not pendingDestination.item then
+        if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+            _G.HousingVendorLog:Info("OnZoneChanged: No pending destination")
+        end
         return
     end
 
@@ -972,19 +1431,44 @@ local function OnZoneChanged()
     end
 
     if not currentMapID then
+        if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+            _G.HousingVendorLog:Info("OnZoneChanged: Could not get current mapID")
+        end
         return
     end
 
     if lastMapID == currentMapID then
+        if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+            _G.HousingVendorLog:Info(string.format("OnZoneChanged: Same mapID (%s), skipping", tostring(currentMapID)))
+        end
         return
+    end
+
+    if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+        _G.HousingVendorLog:Info(string.format(
+            "OnZoneChanged: Moved from mapID %s to %s",
+            tostring(lastMapID or "nil"),
+            tostring(currentMapID)
+        ))
     end
 
     lastMapID = currentMapID
 
     -- Intermediate step support (e.g. guide to a hub first)
     if pendingDestination.nextMapID and currentMapID == pendingDestination.nextMapID then
+        if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+            _G.HousingVendorLog:Info(string.format(
+                "OnZoneChanged: Reached intermediate hub (mapID %s), setting next waypoint in 1.0s",
+                tostring(currentMapID)
+            ))
+        end
+
         C_Timer.After(1.0, function()
             if pendingDestination and pendingDestination.item then
+                if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+                    _G.HousingVendorLog:Info("OnZoneChanged: Setting next waypoint after intermediate hub")
+                end
+
                 local item = pendingDestination.item
                 pendingDestination = nil
                 UnregisterZoneEvents()
@@ -995,38 +1479,76 @@ local function OnZoneChanged()
     end
 
     local currentExpansion = GetExpansionFromMapID(currentMapID)
-    
+
     -- Get effective mapID and expansion for pending destination
     local pendingMapID = pendingDestination.item.mapID
     if not pendingMapID or pendingMapID == 0 then
         pendingMapID = GetDefaultMapIDForExpansion(pendingDestination.item.expansionName)
     end
-    
+
     local destinationExpansion = GetExpansionFromMapID(pendingMapID)
     if not destinationExpansion and pendingDestination.item.expansionName then
         destinationExpansion = pendingDestination.item.expansionName
     end
 
+    if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+        _G.HousingVendorLog:Info(string.format(
+            "OnZoneChanged: currentExp=%s, destExp=%s, pendingMapID=%s, locationName=%s",
+            tostring(currentExpansion or "nil"),
+            tostring(destinationExpansion or "nil"),
+            tostring(pendingMapID or "nil"),
+            tostring(pendingDestination.locationName or "nil")
+        ))
+    end
+
     if currentExpansion and destinationExpansion and currentExpansion == destinationExpansion then
         -- Arrived in destination expansion - set final waypoint
+        if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+            _G.HousingVendorLog:Info("OnZoneChanged: Arrived in destination expansion! Setting final waypoint in 1.5s")
+        end
+
         C_Timer.After(1.5, function()
             if pendingDestination and pendingDestination.item then
+                if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+                    _G.HousingVendorLog:Info("OnZoneChanged: Timer fired, setting final waypoint now")
+                end
+
                 local item = pendingDestination.item
                 pendingDestination = nil
                 UnregisterZoneEvents()
                 WaypointManager:SetWaypoint(item)
+            else
+                if _G.HousingVendorLog and _G.HousingVendorLog.Warn then
+                    _G.HousingVendorLog:Warn("OnZoneChanged: Timer fired but no pending destination!")
+                end
             end
         end)
     elseif currentExpansion == "Classic" and (currentMapID == 84 or currentMapID == 85) then
         -- Arrived in Stormwind/Orgrimmar portal room - set waypoint to expansion portal
+        if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+            _G.HousingVendorLog:Info("OnZoneChanged: Arrived in portal room! Setting portal waypoint in 1.5s")
+        end
+
         C_Timer.After(1.5, function()
             if pendingDestination and pendingDestination.item then
+                if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+                    _G.HousingVendorLog:Info("OnZoneChanged: Timer fired, setting portal waypoint now")
+                end
+
                 local item = pendingDestination.item
                 pendingDestination = nil
                 UnregisterZoneEvents()
                 WaypointManager:SetWaypoint(item)
+            else
+                if _G.HousingVendorLog and _G.HousingVendorLog.Warn then
+                    _G.HousingVendorLog:Warn("OnZoneChanged: Timer fired but no pending destination!")
+                end
             end
         end)
+    else
+        if _G.HousingVendorLog and _G.HousingVendorLog.Info then
+            _G.HousingVendorLog:Info("OnZoneChanged: Not in destination yet, waiting for more zone changes")
+        end
     end
 end
 -- Single event handler function (avoids creating closures)

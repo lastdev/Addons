@@ -11,3 +11,4 @@ L["STRING_PLUGIN_DESC"] = "Details!에서 수집한 데이터를 꺾은선 그�
 L["STRING_PLUGIN_NAME"] = "Chart Viewer"
 L["STRING_TOOLTIP"] = "Chart Viewer 열기"
 L["STRING_TOOSHORTNAME"] = "이름이 너무 짧습니다."
+

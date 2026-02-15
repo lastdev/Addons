@@ -1,16 +1,16 @@
-lightweight tag b275ff4b5e047d8fbe59859ac6bc1a3220f985fd 5.15.1
+lightweight tag 948fc069769d92c9f909b1c5cfe94f1e3c5b903d 5.15.3
 Author:	Remeen <wow@meen.co.uk>
-Date:	Mon Dec 8 08:33:05 2025 +0000
+Date:	Thu Jan 22 19:37:14 2026 +0000
 
-commit b275ff4b5e047d8fbe59859ac6bc1a3220f985fd
+commit 948fc069769d92c9f909b1c5cfe94f1e3c5b903d
 Author: Remeen <wow@meen.co.uk>
-Date:   Mon Dec 8 08:33:05 2025 +0000
+Date:   Thu Jan 22 19:37:14 2026 +0000
 
-    Fix for error when searching
+    Hide house teleports because they currently don't work.
 
-commit 2dfc2396452b3f6637b66d96e1f286c52c218ead
+commit 90d403418341a54f534859e67ac86931f140725e
 Author: Remeen <wow@meen.co.uk>
-Date:   Sun Dec 7 16:55:59 2025 +0000
+Date:   Thu Jan 22 19:36:52 2026 +0000
 
-    Housing unit tests
+    Fix settings menu item.
 

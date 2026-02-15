@@ -1,7 +1,6 @@
 # BadBoy_Levels
 
-## [v11.1.2](https://github.com/funkydude/BadBoy_Levels/tree/v11.1.2) (2025-06-26)
-[Full Changelog](https://github.com/funkydude/BadBoy_Levels/compare/v11.1.1...v11.1.2) [Previous Releases](https://github.com/funkydude/BadBoy_Levels/releases)
+## [v12.0.0](https://github.com/funkydude/BadBoy_Levels/tree/v12.0.0) (2026-01-23)
+[Full Changelog](https://github.com/funkydude/BadBoy_Levels/compare/v11.2.1...v12.0.0) [Previous Releases](https://github.com/funkydude/BadBoy_Levels/releases)
 
-- Bump toc  
-- Update workflow  
+- Fix `CHAT_MSG_SYSTEM` returning secrets, closes #17  

@@ -102,7 +102,7 @@ function MyAuctions.CancelAuction(auctionId)
 end
 
 function MyAuctions.CanCancel(index)
-	if ClientInfo.IsVanillaClassic() then
+	if ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic() then
 		local numPending = private.pendingDB:NewQuery()
 			:Equal("isPending", true)
 			:LessThanOrEqual("index", index)
@@ -114,7 +114,7 @@ function MyAuctions.CanCancel(index)
 end
 
 function MyAuctions.GetNumPending()
-	if ClientInfo.IsVanillaClassic() then
+	if ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic() then
 		return private.pendingDB:NewQuery()
 			:Equal("isPending", true)
 			:CountAndRelease()
@@ -137,6 +137,10 @@ function private.AuctionHouseClosed()
 end
 
 function private.ChatMsgSystemEventHandler(_, msg)
+	if ClientInfo.IsRetail() and issecretvalue(msg) then
+		-- The message is a secret, so just ignore it
+		return
+	end
 	if msg == ERR_AUCTION_REMOVED and #private.pendingHashes > 0 then
 		local hash = tremove(private.pendingHashes, 1)
 		assert(hash)

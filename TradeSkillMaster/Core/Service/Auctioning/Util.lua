@@ -125,7 +125,7 @@ function Util.GetCancelScanResult(subRows, itemString, operationSettings, lowest
 			resultTbl.isPlayerOnlySeller = false
 		end
 	end
-	if not ClientInfo.IsVanillaClassic() and resultTbl.playerLowestItemBuyout then
+	if (not ClientInfo.IsVanillaClassic() and not ClientInfo.IsBCClassic()) and resultTbl.playerLowestItemBuyout then
 		for _, subRow in ipairs(subRows) do
 			local _, itemBuyout = subRow:GetBuyouts()
 			local quantity = subRow:GetQuantities()

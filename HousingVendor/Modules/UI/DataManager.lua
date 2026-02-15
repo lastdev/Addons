@@ -58,7 +58,27 @@ function DataManager:_SortKeys(hashTable)
     for key in pairs(hashTable) do
         table.insert(keys, key)
     end
-    table.sort(keys)
+    local function TypeRank(v)
+        local t = type(v)
+        if t == "number" then return 1 end
+        if t == "string" then return 2 end
+        if t == "boolean" then return 3 end
+        if t == "nil" then return 4 end
+        return 5
+    end
+    table.sort(keys, function(a, b)
+        local ra, rb = TypeRank(a), TypeRank(b)
+        if ra ~= rb then
+            return ra < rb
+        end
+        if ra == 1 or ra == 2 then
+            return a < b
+        end
+        if ra == 3 then
+            return (a and 1 or 0) < (b and 1 or 0)
+        end
+        return tostring(a) < tostring(b)
+    end)
     return keys
 end
 
@@ -70,6 +90,20 @@ function DataManager:GetFilterOptions()
         else
             self:GetAllItems() -- Legacy fallback
         end
+    end
+    -- Return empty arrays if cache is still nil (data not loaded yet)
+    if not self._state.filterOptionsCache then
+        return {
+            expansions = {},
+            vendors = {},
+            zones = {},
+            types = {},
+            categories = {},
+            factions = {},
+            sources = {},
+            qualities = {},
+            requirements = {},
+        }
     end
     return self._state.filterOptionsCache
 end

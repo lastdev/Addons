@@ -196,6 +196,7 @@ do
 	end
 	ns.IdFromGuid = npcIdFromGuid
 	function addon:UnitID(unit)
+		if not unit then return end
 		return npcIdFromGuid(UnitGUID(unit))
 	end
 	function addon:FindUnitWithID(id)
@@ -206,8 +207,8 @@ do
 			return 'mouseover'
 		end
 		for _, nameplate in ipairs(C_NamePlate.GetNamePlates()) do
-			if self:UnitID(nameplate.namePlateUnitToken) == id then
-				return nameplate.namePlateUnitToken
+			if self:UnitID(nameplate.unitToken or nameplate.namePlateUnitToken) == id then
+				return nameplate.unitToken or nameplate.namePlateUnitToken
 			end
 		end
 		if IsInGroup() then
@@ -230,6 +231,7 @@ do
 	-- See: https://warcraft.wiki.gg/wiki/GUID#Creature
 	function addon:GUIDShard(guid)
 		if not guid then return end
+		if issecretvalue and issecretvalue(guid) then return end
 		-- local unitType, _, serverID, instanceID, zoneUID, mobID, spawnUID = strsplit("-", guid)
 		local guidType, _, serverID, instanceID, zoneUID, id, spawnUID = strsplit("-", guid)
 		if not (guidType and valid_types[guidType]) then return end

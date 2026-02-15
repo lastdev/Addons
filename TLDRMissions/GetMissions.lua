@@ -41,6 +41,8 @@ local followerItemIDs = {
     [152447] = true, -- lightburst charge
     [152437] = true, -- Viscid Demon Blood
     [152932] = true, -- Runewarded Lightblade
+    [152933] = true, -- Shadowguard Void Effusion
+    [152445] = true, -- Memento of the Lightforged
     
     -- WOD
     [120301] = true, -- armor enhancement token
@@ -88,6 +90,10 @@ local gearCacheItemIDs = {
     [147510] = true, -- Seal of the Deceiver (normal)
     [147511] = true, -- Seal of the Deceiver (heroic)
     [147512] = true, -- Seal of the Deceiver (mythic)
+    [147501] = true, -- Worshipper's Scrawlings (LFG)
+    [147502] = true, -- Worshipper's Scrawlings (normal)
+    [147503] = true, -- Worshipper's Scrawlings (heroic)
+    [147504] = true, -- Worshipper's Scrawlings (mythic)
 }
 local function gearFilter(reward)
     return reward.itemID and (gearCacheItemIDs[reward.itemID] or C_Item.IsEquippableItem(reward.itemID))
@@ -212,4 +218,20 @@ end
 
 function addon.BaseGUIMixin:GetAugmentRuneMissions()
     return self:GetMissionsMatchingFilter(augmentRuneFilter)
+end
+
+local function veiledArguniteFilter(reward)
+    return reward.currencyID and (reward.currencyID == 1508)
+end
+
+function addon.BaseGUIMixin:GetVeiledArguniteMissions()
+    return self:GetMissionsMatchingFilter(veiledArguniteFilter)
+end
+
+local function wakeningEssenceFilter(reward)
+    return reward.currencyID and (reward.currencyID == 1533)
+end
+
+function addon.BaseGUIMixin:GetWakeningEssenceMissions()
+    return self:GetMissionsMatchingFilter(wakeningEssenceFilter)
 end

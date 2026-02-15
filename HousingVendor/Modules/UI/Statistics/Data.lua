@@ -22,6 +22,7 @@ function StatisticsUI:CalculateStats()
             Achievement = {total = 0, collected = 0, missing = 0, free = 0, goldCost = 0, currencyCost = 0},
             Quest = {total = 0, collected = 0, missing = 0, free = 0, goldCost = 0, currencyCost = 0},
             Drop = {total = 0, collected = 0, missing = 0, free = 0, goldCost = 0, currencyCost = 0},
+            Reward = {total = 0, collected = 0, missing = 0, free = 0, goldCost = 0, currencyCost = 0},
             Vendor = {total = 0, collected = 0, missing = 0, free = 0, goldCost = 0, currencyCost = 0},
             Profession = {total = 0, collected = 0, missing = 0}
         },
@@ -41,6 +42,35 @@ function StatisticsUI:CalculateStats()
 
         -- By Profession
         byProfession = {},
+
+        -- Profession Economics
+        professionEconomics = {
+            totalCraftCost = 0,  -- Total AH cost for all missing craftable items
+            totalMaterialsNeeded = 0,  -- Count of unique materials
+            mostExpensiveProfession = {name = nil, cost = 0},
+            cheapestProfession = {name = nil, cost = 999999999},
+            byProfession = {}  -- Detailed breakdown per profession
+        },
+
+        -- Vendor Economics
+        vendorEconomics = {
+            totalGoldNeeded = 0,  -- Sum of vendor prices for missing items
+            mostExpensiveVendor = {name = nil, total = 0},
+            cheapestZone = {name = nil, total = 999999999},
+            averageItemPrice = 0,
+            byZone = {},  -- Zone-level vendor costs
+            byVendor = {}  -- Vendor-level breakdown
+        },
+
+        -- Actionable Items
+        actionable = {
+            readyQuests = 0,  -- Quests available right now
+            readyAchievements = 0,  -- Achievements you can complete now
+            freeItems = 0,  -- Free uncollected items
+            cheapItems = 0,  -- Items under 100g
+            repLocked = 0,  -- Items requiring reputation you don't have
+            nearCompletionZones = {}  -- Zones with fewest items left
+        },
 
         -- By Quality/Rarity
         byQuality = {},
@@ -102,6 +132,15 @@ function StatisticsUI:CalculateStats()
             questsIncomplete = 0,
             itemsFromQuests = 0,
             byExpansion = {}
+        },
+
+        -- Reputation tracking statistics
+        reputationStats = {
+            totalFactions = 0,
+            itemsRequiringRep = 0,
+            itemsRequiringRenown = 0,
+            byFaction = {},  -- breakdown by faction name
+            byExpansion = {}  -- breakdown by expansion
         },
 
         -- "Unlocked" but not collected yet (requirements met via quest/achievement)
@@ -232,7 +271,15 @@ function StatisticsUI:CalculateStats()
             sourceType = "Drop"
         end
 
-        local goldValue = (item.price and item.price > 0) and item.price or 0
+        -- Get gold value from either 'price' or 'goldCost' fields
+        -- Note: goldCost is in copper (10000 = 1g), price may already be in gold
+        local goldValue = 0
+        if item.price and item.price > 0 then
+            goldValue = item.price
+        elseif item.goldCost and item.goldCost > 0 then
+            -- goldCost is in copper, convert to gold
+            goldValue = item.goldCost / 10000
+        end
 
         -- Determine whether the item is "unlocked" (requirements met) even if not collected yet.
         -- This is intentionally separate from "collected", because some requirements are account-wide.
@@ -289,6 +336,7 @@ function StatisticsUI:CalculateStats()
                     Achievement = {total = 0, collected = 0},
                     Quest = {total = 0, collected = 0},
                     Drop = {total = 0, collected = 0},
+                    Reward = {total = 0, collected = 0},
                     Vendor = {total = 0, collected = 0},
                     Profession = {total = 0, collected = 0}
                 }
@@ -359,6 +407,34 @@ function StatisticsUI:CalculateStats()
                 stats.byProfession[profName].collected = stats.byProfession[profName].collected + 1
             else
                 stats.byProfession[profName].missing = stats.byProfession[profName].missing + 1
+
+                -- Profession Economics: Calculate craft costs for missing items
+                if not stats.professionEconomics.byProfession[profName] then
+                    stats.professionEconomics.byProfession[profName] = {
+                        totalCost = 0,
+                        itemCount = 0,
+                        avgCost = 0,
+                        items = {}
+                    }
+                end
+
+                -- Get AH price for this item (from HousingAuctionHouseAPI)
+                local ahPrice = 0
+                if HousingAuctionHouseAPI and HousingAuctionHouseAPI.GetCachedPrice and itemID then
+                    ahPrice = HousingAuctionHouseAPI:GetCachedPrice(itemID) or 0
+                end
+
+                if ahPrice > 0 then
+                    stats.professionEconomics.byProfession[profName].totalCost = stats.professionEconomics.byProfession[profName].totalCost + ahPrice
+                    stats.professionEconomics.totalCraftCost = stats.professionEconomics.totalCraftCost + ahPrice
+                end
+
+                stats.professionEconomics.byProfession[profName].itemCount = stats.professionEconomics.byProfession[profName].itemCount + 1
+                table.insert(stats.professionEconomics.byProfession[profName].items, {
+                    name = item.name,
+                    itemID = itemID,
+                    price = ahPrice
+                })
             end
         end
 
@@ -377,13 +453,13 @@ function StatisticsUI:CalculateStats()
         end
 
         -- Track housing inventory data (from API)
-        if item._apiNumStored or item._apiNumPlaced then
+        if item._apiDataLoaded == true then
             stats.housingInventory.itemsWithData = stats.housingInventory.itemsWithData + 1
-            if item._apiNumStored then
-                stats.housingInventory.totalStored = stats.housingInventory.totalStored + (item._apiNumStored or 0)
+            if type(item._apiNumStored) == "number" then
+                stats.housingInventory.totalStored = stats.housingInventory.totalStored + item._apiNumStored
             end
-            if item._apiNumPlaced then
-                stats.housingInventory.totalPlaced = stats.housingInventory.totalPlaced + (item._apiNumPlaced or 0)
+            if type(item._apiNumPlaced) == "number" then
+                stats.housingInventory.totalPlaced = stats.housingInventory.totalPlaced + item._apiNumPlaced
             end
         end
 
@@ -489,6 +565,26 @@ function StatisticsUI:CalculateStats()
                 elseif goldValue <= 50 then
                     vendorStats.cheapMissing = vendorStats.cheapMissing + 1
                 end
+
+                -- Vendor Economics: Track costs by zone and vendor
+                if goldValue > 0 then
+                    -- By Zone
+                    if not stats.vendorEconomics.byZone[zoneName] then
+                        stats.vendorEconomics.byZone[zoneName] = {total = 0, itemCount = 0}
+                    end
+                    stats.vendorEconomics.byZone[zoneName].total = stats.vendorEconomics.byZone[zoneName].total + goldValue
+                    stats.vendorEconomics.byZone[zoneName].itemCount = stats.vendorEconomics.byZone[zoneName].itemCount + 1
+
+                    -- By Vendor
+                    if not stats.vendorEconomics.byVendor[vendorName] then
+                        stats.vendorEconomics.byVendor[vendorName] = {total = 0, itemCount = 0, zone = zoneName}
+                    end
+                    stats.vendorEconomics.byVendor[vendorName].total = stats.vendorEconomics.byVendor[vendorName].total + goldValue
+                    stats.vendorEconomics.byVendor[vendorName].itemCount = stats.vendorEconomics.byVendor[vendorName].itemCount + 1
+
+                    -- Total gold needed
+                    stats.vendorEconomics.totalGoldNeeded = stats.vendorEconomics.totalGoldNeeded + goldValue
+                end
             end
         end
 
@@ -498,9 +594,11 @@ function StatisticsUI:CalculateStats()
                 stats.readyMissing = stats.readyMissing + 1
                 if unlockedByAchievement then
                     stats.readyBy.Achievement = stats.readyBy.Achievement + 1
+                    stats.actionable.readyAchievements = stats.actionable.readyAchievements + 1
                 end
                 if unlockedByQuest then
                     stats.readyBy.Quest = stats.readyBy.Quest + 1
+                    stats.actionable.readyQuests = stats.actionable.readyQuests + 1
                 end
 
                 if #stats.readyItems < 30 then
@@ -534,11 +632,27 @@ function StatisticsUI:CalculateStats()
                 end
             else
                 stats.lockedMissing = stats.lockedMissing + 1
+                -- Count reputation-locked items
+                if item.reputationRequired or item.renownRequired then
+                    stats.actionable.repLocked = stats.actionable.repLocked + 1
+                end
+            end
+        end
+
+        -- Track actionable items (not locked by requirements)
+        if not isCollected and not hasRequirement then
+            if goldValue == 0 then
+                stats.actionable.freeItems = stats.actionable.freeItems + 1
+            elseif goldValue > 0 and goldValue <= 100 then
+                stats.actionable.cheapItems = stats.actionable.cheapItems + 1
             end
         end
 
         -- Track by currency type
+        -- Check both 'currency' string and 'currencies' array formats
+        local hasCurrency = false
         if item.currency and item.currency ~= "" then
+            hasCurrency = true
             local currencyName = item.currency
             if not stats.byCurrency[currencyName] then
                 stats.byCurrency[currencyName] = {total = 0, collected = 0, missing = 0}
@@ -548,6 +662,59 @@ function StatisticsUI:CalculateStats()
                 stats.byCurrency[currencyName].collected = stats.byCurrency[currencyName].collected + 1
             else
                 stats.byCurrency[currencyName].missing = stats.byCurrency[currencyName].missing + 1
+            end
+        end
+
+        -- Also check 'currencies' array format from vendor location data
+        if item.currencies and type(item.currencies) == "table" and #item.currencies > 0 then
+            hasCurrency = true
+            for _, currencyEntry in ipairs(item.currencies) do
+                local currencyName = currencyEntry.name or currencyEntry.currencyName or ("Currency " .. tostring(currencyEntry.currencyID or currencyEntry.id or "Unknown"))
+                if not stats.byCurrency[currencyName] then
+                    stats.byCurrency[currencyName] = {total = 0, collected = 0, missing = 0}
+                end
+                stats.byCurrency[currencyName].total = stats.byCurrency[currencyName].total + 1
+                if isCollected then
+                    stats.byCurrency[currencyName].collected = stats.byCurrency[currencyName].collected + 1
+                else
+                    stats.byCurrency[currencyName].missing = stats.byCurrency[currencyName].missing + 1
+                end
+            end
+        end
+
+        -- Track items requiring item costs (crafting materials/tokens)
+        -- These are real costs, just item-based instead of currency-based
+        if item.itemCosts and type(item.itemCosts) == "table" and #item.itemCosts > 0 then
+            for _, itemCostEntry in ipairs(item.itemCosts) do
+                local costItemID = itemCostEntry.itemID or itemCostEntry.id
+                local costAmount = itemCostEntry.amount or 1
+
+                -- Try to get item name if available, otherwise use itemID
+                local costItemName = nil
+                if costItemID then
+                    -- Check if we have cached item info
+                    local itemInfo = nil
+                    if C_Item and C_Item.GetItemInfo then
+                        local infoOk, infoResult = pcall(C_Item.GetItemInfo, costItemID)
+                        if infoOk then itemInfo = infoResult end
+                    end
+                    if itemInfo then
+                        costItemName = itemInfo
+                    elseif GetItemInfo then
+                        costItemName = GetItemInfo(costItemID)
+                    end
+                end
+
+                local currencyName = costItemName or ("Item #" .. tostring(costItemID or "Unknown"))
+                if not stats.byCurrency[currencyName] then
+                    stats.byCurrency[currencyName] = {total = 0, collected = 0, missing = 0, isItemCost = true}
+                end
+                stats.byCurrency[currencyName].total = stats.byCurrency[currencyName].total + 1
+                if isCollected then
+                    stats.byCurrency[currencyName].collected = stats.byCurrency[currencyName].collected + 1
+                else
+                    stats.byCurrency[currencyName].missing = stats.byCurrency[currencyName].missing + 1
+                end
             end
         end
 
@@ -721,11 +888,62 @@ function StatisticsUI:CalculateStats()
             -- Count items from quests
             stats.questStats.itemsFromQuests = stats.questStats.itemsFromQuests + 1
         end
+
+        -- Track reputation statistics
+        -- Check both old field names (reputationRequired) and vendor location field names (factionName/reputationLevel)
+        local factionName = item.reputationRequired or item.factionName
+        local hasRepRequirement = (factionName and factionName ~= "")
+            or (item.reputationLevel and item.reputationLevel ~= "" and item.reputationLevel ~= "None")
+
+        if hasRepRequirement then
+            stats.reputationStats.itemsRequiringRep = stats.reputationStats.itemsRequiringRep + 1
+
+            -- Use factionName if available, fall back to reputationRequired
+            local repFactionName = factionName or "Unknown Faction"
+            if not stats.reputationStats.byFaction[repFactionName] then
+                stats.reputationStats.byFaction[repFactionName] = {
+                    total = 0,
+                    collected = 0,
+                    missing = 0
+                }
+                stats.reputationStats.totalFactions = stats.reputationStats.totalFactions + 1
+            end
+
+            stats.reputationStats.byFaction[repFactionName].total = stats.reputationStats.byFaction[repFactionName].total + 1
+            if isCollected then
+                stats.reputationStats.byFaction[repFactionName].collected = stats.reputationStats.byFaction[repFactionName].collected + 1
+            else
+                stats.reputationStats.byFaction[repFactionName].missing = stats.reputationStats.byFaction[repFactionName].missing + 1
+            end
+
+            -- Track by expansion
+            local expName = item.expansionName or "Other"
+            if not stats.reputationStats.byExpansion[expName] then
+                stats.reputationStats.byExpansion[expName] = {
+                    total = 0,
+                    collected = 0,
+                    factions = {}
+                }
+            end
+            stats.reputationStats.byExpansion[expName].total = stats.reputationStats.byExpansion[expName].total + 1
+            if isCollected then
+                stats.reputationStats.byExpansion[expName].collected = stats.reputationStats.byExpansion[expName].collected + 1
+            end
+            stats.reputationStats.byExpansion[expName].factions[repFactionName] = true
+        end
+
+        -- Track renown items separately
+        -- Check both old field name (renownRequired) and vendor location field name (renownLevel > 0)
+        local hasRenownReq = (item.renownRequired and item.renownRequired ~= "")
+            or (item.renownLevel and tonumber(item.renownLevel) and tonumber(item.renownLevel) > 0)
+        if hasRenownReq then
+            stats.reputationStats.itemsRequiringRenown = stats.reputationStats.itemsRequiringRenown + 1
+        end
     end
     
     -- Sort expensive missing items
     table.sort(stats.expensiveMissing, function(a, b) return a.price > b.price end)
-    
+
     -- Sort easy wins by source type, then price
     table.sort(stats.easyWins, function(a, b)
         if a.price == b.price then
@@ -733,7 +951,68 @@ function StatisticsUI:CalculateStats()
         end
         return a.price < b.price
     end)
-    
+
+    -- Calculate profession economics summaries
+    for profName, profData in pairs(stats.professionEconomics.byProfession) do
+        if profData.itemCount > 0 then
+            profData.avgCost = profData.totalCost / profData.itemCount
+        end
+
+        -- Track most/least expensive professions
+        if profData.totalCost > stats.professionEconomics.mostExpensiveProfession.cost then
+            stats.professionEconomics.mostExpensiveProfession.name = profName
+            stats.professionEconomics.mostExpensiveProfession.cost = profData.totalCost
+        end
+        if profData.totalCost < stats.professionEconomics.cheapestProfession.cost and profData.itemCount > 0 then
+            stats.professionEconomics.cheapestProfession.name = profName
+            stats.professionEconomics.cheapestProfession.cost = profData.totalCost
+        end
+    end
+
+    -- Calculate vendor economics summaries
+    for vendorName, vendorData in pairs(stats.vendorEconomics.byVendor) do
+        if vendorData.total > stats.vendorEconomics.mostExpensiveVendor.total then
+            stats.vendorEconomics.mostExpensiveVendor.name = vendorName
+            stats.vendorEconomics.mostExpensiveVendor.total = vendorData.total
+        end
+    end
+
+    for zoneName, zoneData in pairs(stats.vendorEconomics.byZone) do
+        if zoneData.total < stats.vendorEconomics.cheapestZone.total and zoneData.itemCount > 0 then
+            stats.vendorEconomics.cheapestZone.name = zoneName
+            stats.vendorEconomics.cheapestZone.total = zoneData.total
+        end
+    end
+
+    -- Calculate average item price
+    if stats.vendorEconomics.totalGoldNeeded > 0 then
+        local totalVendorItems = 0
+        for _, zoneData in pairs(stats.vendorEconomics.byZone) do
+            totalVendorItems = totalVendorItems + zoneData.itemCount
+        end
+        if totalVendorItems > 0 then
+            stats.vendorEconomics.averageItemPrice = stats.vendorEconomics.totalGoldNeeded / totalVendorItems
+        end
+    end
+
+    -- Find zones closest to completion (for actionable.nearCompletionZones)
+    local zoneCompletionList = {}
+    for zoneName, zoneData in pairs(stats.travelStats.locationsByZone) do
+        if zoneData.total > 0 then
+            local missing = zoneData.total - zoneData.collected
+            if missing > 0 and missing <= 5 then  -- Only zones with 1-5 items left
+                table.insert(zoneCompletionList, {
+                    zone = zoneName,
+                    missing = missing,
+                    total = zoneData.total,
+                    collected = zoneData.collected
+                })
+            end
+        end
+    end
+    table.sort(zoneCompletionList, function(a, b) return a.missing < b.missing end)
+    stats.actionable.nearCompletionZones = zoneCompletionList
+
     return stats
 end
 

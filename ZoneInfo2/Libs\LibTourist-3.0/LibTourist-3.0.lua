@@ -1,6 +1,6 @@
 --[[
 Name: LibTourist-3.0
-Revision: $Rev: 333 $
+Revision: $Rev: 340 $
 Author(s): Odica (owner), originally created by ckknight and Arrowmaster
 Documentation: https://www.wowace.com/projects/libtourist-3-0/pages/api-reference
 SVN: svn://svn.wowace.com/wow/libtourist-3-0/mainline/trunk
@@ -9,7 +9,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibTourist-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Revision: 333 $"):match("(%d+)"))
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 340 $"):match("(%d+)"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub") end
 local C_Map = C_Map
@@ -52,8 +52,6 @@ do
 	isNeutral = not isAlliance and not isHorde
 end
 
-local isWestern = GetLocale() == "enUS" or GetLocale() == "deDE" or GetLocale() == "frFR" or GetLocale() == "esES"
-
 -- Continents
 local Azeroth = "Azeroth"
 local Kalimdor = "Kalimdor"
@@ -70,8 +68,7 @@ local Kul_Tiras = "Kul Tiras"
 local The_Shadowlands = "The Shadowlands"
 local Dragon_Isles = "Dragon Isles"
 local Khaz_Algar = "Khaz Algar"
-
-
+local Quel_Thalas = "Quel'Thalas"
 
 -- Expansions: use localized names provided by the game
 local Classic = EXPANSION_NAME0
@@ -85,6 +82,7 @@ local Battle_for_Azeroth = EXPANSION_NAME7
 local Shadowlands = EXPANSION_NAME8
 local DragonFlight = EXPANSION_NAME9
 local TheWarWithin = EXPANSION_NAME10
+local Midnight = EXPANSION_NAME11
 
 local expansionToIndex = {
 	[Classic] = 1,
@@ -98,6 +96,7 @@ local expansionToIndex = {
 	[Shadowlands] = 9,
 	[DragonFlight] = 10,
 	[TheWarWithin] = 11,
+	[Midnight] = 12,
 }
 
 local chromieTimeToExpansion = {
@@ -209,14 +208,14 @@ local groupAltSizes = {}
 local factions = {}
 local yardWidths = {}
 local yardHeights = {}
-local yardXOffsets = {}
-local yardYOffsets = {}
-local continentScales = {}
+--local yardXOffsets = {}
+--local yardYOffsets = {}
+--local continentScales = {}
 local battlepet_lows = {}
 local battlepet_highs = {}
 local cost = {}
 local textures = {}
-local textures_rev = {}
+--local textures_rev = {}
 local complexOfInstance = {}
 local zoneComplexes = {}
 local entrancePortals_zone = {}
@@ -231,11 +230,14 @@ local FlightnodeLookupTable = {}
 local gatheringFlightnodes = false
 local flightnodeDataGathered = false
 
-local COSMIC_MAP_ID = 946
-local THE_MAELSTROM_MAP_ID = 948
-local DRAENOR_MAP_ID = 572
-local BROKEN_ISLES_MAP_ID = 619
-local KHAZ_ALGAR_MAP_ID = 2274
+local constants = {
+	COSMIC_MAP_ID = 946,
+	EASTERN_KINGDOMS_MAP_ID = 13,
+	THE_MAELSTROM_MAP_ID = 948,
+	DRAENOR_MAP_ID = 572,
+	BROKEN_ISLES_MAP_ID = 619,
+	KHAZ_ALGAR_MAP_ID = 2274,
+}
 
 --------------------------------------------------------------------------------------------------------
 --                                            Localization                                            --
@@ -2014,12 +2016,15 @@ local MapIdLookupTable = {
 	[2346] = "Undermine",
     [2347] = "The Spiral Weave",
     [2348] = "Zekvir's Lair",
+	[2351] = "Razorwind Shores",
+	[2352] = "Founder's Point",
 	[2354] = "Silithus",
     [2357] = "City of Echoes",
     [2358] = "City of Echoes",
     [2359] = "The Dawnbreaker",
     [2362] = "Blackrock Depths",
     [2363] = "Blackrock Depths", 
+	[2366] = "The Wandering Isle",
 	[2367] = "Vault of Memory",
 	[2368] = "Hall of Awakening",
     [2369] = "Siren Isle",
@@ -2035,26 +2040,44 @@ local MapIdLookupTable = {
     [2384] = "Ny'alotha, the Waking City",
 	[2387] = "Operation: Floodgate",
 	[2388] = "Operation: Floodgate",
+	[2393] = "Silvermoon City",
+	[2394] = "Labyrinth",
+	[2395] = "Eversong Woods",
 	[2396] = "Excavation Site 9",
+	[2397] = "Void Lands BG",
     [2398] = "K'aresh",
+	[2401] = "Alliance Housing District",
+	[2402] = "Horde Housing District",
     [2403] = "Vision of Orgrimmar",
     [2404] = "Vision of Stormwind",
+	[2405] = "Voidstorm",
 	[2406] = "Undermine",
 	[2407] = "Undermine",
 	[2408] = "Undermine",
 	[2409] = "Undermine",
 	[2411] = "Undermine",
+	[2413] = "Harandar",
 	[2418] = "Scarlet Halls",
 	[2420] = "Sidestreet Sluice",
 	[2421] = "Sidestreet Sluice",
 	[2422] = "Sidestreet Sluice",
 	[2423] = "Sidestreet Sluice",
+	[2424] = "Isle of Quel'Danas",
 	[2425] = "Demolition Dome",
 	[2426] = "Demolition Dome",
 	[2428] = "Undermine",
 	[2431] = "Minimap_RingingDeeps_Coreway",
+	[2432] = "Isle of Quel'Danas",
+	[2433] = "Murder Row",
+	[2434] = "Augurs' Terrace",
+	[2435] = "The Illicit Rain",
+	[2437] = "Zul'Aman",
+	[2438] = "Scarlet Halls",
+	[2443] = "12.0 Campaign Finale Scenario",
+	[2444] = "Slayer's Rise",
     [2447] = "Dastardly Dome",
     [2449] = "Eco-Dome Al'dani",
+	[2451] = "Arathi Highlands",
     [2452] = "Archival Assault",
     [2453] = "Archival Assault",
     [2454] = "Archival Assault",
@@ -2074,7 +2097,71 @@ local MapIdLookupTable = {
     [2472] = "Tazavesh",
     [2476] = "Archival Assault",
     [2477] = "Voidscar Cavern",
+	[2479] = "Voidstorm",
+	[2480] = "Harandar",
+	[2481] = "Eastern Kingdoms",
     [2484] = "Voidrazor Sanctuary",
+	[2492] = "Windrunner Spire",
+	[2493] = "Windrunner Spire",
+	[2494] = "Windrunner Spire",
+	[2496] = "Windrunner Spire",
+	[2497] = "Windrunner Spire",
+	[2498] = "Windrunner Spire",
+	[2499] = "Windrunner Spire",
+	[2500] = "The Blinding Vale",
+	[2501] = "Maisara Caverns",
+	[2502] = "The Shadow Enclave", 	-- "Delve_Voidholme_A",
+	[2503] = "Twilight Crypts",  	-- "Delve_TwilightCrypts_A",
+	[2504] = "Twilight Crypts",		-- "Delve_TwilightCrypts_B",
+	[2505] = "The Gulf of Memory",	-- "Delve_GulfOfMemory_A",
+	[2506] = "Shadowguard Point",
+	[2507] = "Torment's Rise",		-- "Delve_TormentsRise_A",
+	[2510] = "The Grudge Pit",
+	[2511] = "Magisters' Terrace",
+	[2513] = "Den of Nalorakk",
+	[2514] = "Den of Nalorakk",
+	[2515] = "Magister's Terrace",
+	[2516] = "Magister's Terrace",
+	[2517] = "Magister's Terrace",
+	[2518] = "Magister's Terrace",
+	[2519] = "Magister's Terrace",
+	[2520] = "Magister's Terrace",
+	[2522] = "Rootlands_Micro_Mega_A",
+	[2523] = "Rootlands_Micro_Mega_B",
+	[2525] = "The Darkway",			-- "Delve_TwilightTunnels_A",
+	[2526] = "Voidlands_Micro_Abundance_A",
+	[2527] = "Voidlands_Micro_Abundance_B",
+	[2528] = "Sunkiller Sanctum",  	-- "Delve_Sunkiller_A",
+	[2529] = "The Voidspire",
+	[2530] = "The Voidspire",
+	[2531] = "The Dreamrift",
+	[2532] = "The Dreamrift",
+	[2533] = "March on Quel'Danas",
+	[2534] = "March on Quel'Danas",
+	[2535] = "Atal'Aman",
+	[2536] = "Atal'Aman",
+	[2537] = "Quel'Thalas",
+	[2540] = "Sunkiller Sanctum",	-- "Delve_Sunkiller_A",
+	[2541] = "Arcantina",
+	[2545] = "Parhelion Plaza",
+	[2547] = "Collegiate Calamity",
+	[2556] = "Nexus_Point_Xenas_A",
+	[2557] = "12_LegionCommandCenter_A",
+	[2558] = "12_LegionCommandCenter_B",
+	[2561] = "Quel'Thalas",
+	[2564] = "Den of Nalorakk",
+	[2565] = "Isle of Quel'Danas",
+	[2566] = "Isle of Quel'Danas",
+	[2567] = "Eversong Woods",
+	[2568] = "Zul'Aman",
+	[2569] = "Isle of Quel'Danas",
+	[2571] = "Sunkiller Sanctum",	-- "Delve_Sunkiller_B",
+	[2572] = "Voidscar Arena",
+	[2573] = "Voidscar Arena",
+	[2574] = "VoidscarArenaDungeon_C",
+	[2575] = "The Gulf of Memory",	-- "Delve_GulfOfMemory_B",
+	[2576] = "Rootlands_Den",
+	[2577] = "Collegiate Calamity",	-- "Delve_Calamity_A",
 }
 
 
@@ -2288,7 +2375,7 @@ local zoneTranslation = {
 		[9992] = "Mugambala",
 		[10497] = "Robodromo",
 		[14083] = "Crogiolo dell'Enigma",
-
+		
 		-- Other
 		[3508] = "Passo degli Amani",
 		[3979] = "Mare Ghiacciato",
@@ -2323,7 +2410,7 @@ local zoneTranslation = {
 		[9992] = "무감발라",
 		[10497] = "로봇 전투장",
 		[14083] = "수수께끼 도가니",
-
+		
 		-- Other
 		[3508] = "아마니 고개",
 		[3979] = "얼어붙은 바다",
@@ -2457,6 +2544,16 @@ local mapInfoLocalizedNameErrata = {
 		["PrimalistRaid_F"] = "Vault of the Incarnates",
 		["PrimalistRaid_G"] = "Vault of the Incarnates",
 		["PrimalistRaid_H"] = "Vault of the Incarnates",
+		["Delve_Voidholme_A"] = "The Shadow Enclave",
+		["Delve_TwilightCrypts_A"] = "Twilight Crypts",
+		["Delve_TwilightCrypts_B"] = "Twilight Crypts",
+		["Delve_GulfOfMemory_A"] = "The Gulf of Memory",
+		["Delve_GulfOfMemory_B"] = "The Gulf of Memory",
+		["Delve_TormentsRise_A"] = "Torment's Rise",
+		["Delve_TwilightTunnels_A"] = "The Darkway",
+		["Delve_Sunkiller_A"] = "Sunkiller Sanctum",
+		["Delve_Sunkiller_B"] = "Sunkiller Sanctum",
+		["Delve_Calamity_A"] = "Collegiate Calamity",
 	},
 	deDE = {
 		["ArcaneNaxus_A"] = "Das Azurblaue Gewölbe",  -- mind the typo in the tag name
@@ -2476,6 +2573,16 @@ local mapInfoLocalizedNameErrata = {
 		["PrimalistRaid_F"] = "Gewölbe der Inkarnationen",
 		["PrimalistRaid_G"] = "Gewölbe der Inkarnationen",
 		["PrimalistRaid_H"] = "Gewölbe der Inkarnationen",	
+		["Delve_Voidholme_A"] = "Die Schattenenklave",
+		["Delve_TwilightCrypts_A"] = "Gruften der Zwielichtklinge",
+		["Delve_TwilightCrypts_B"] = "Gruften der Zwielichtklinge",
+		["Delve_GulfOfMemory_A"] = "Die Kluft der Erinnerung",
+		["Delve_GulfOfMemory_B"] = "Die Kluft der Erinnerung",
+		["Delve_TormentsRise_A"] = "Anhöhe der Qual",
+		["Delve_TwilightTunnels_A"] = "Der Düsterweg",
+		["Delve_Sunkiller_A"] = "Sonnentötersanktum",
+		["Delve_Sunkiller_B"] = "Sonnentötersanktum",
+		["Delve_Calamity_A"] = "Akademischer Aufruhr",
 	},
 	esES = {
 		["ArcaneNaxus_A"] = "Cámara Azur",  -- mind the typo in the tag name
@@ -2495,6 +2602,16 @@ local mapInfoLocalizedNameErrata = {
 		["PrimalistRaid_F"] = "Cámara de las Encarnaciones",
 		["PrimalistRaid_G"] = "Cámara de las Encarnaciones",
 		["PrimalistRaid_H"] = "Cámara de las Encarnaciones",
+		["Delve_Voidholme_A"] = "El Enclave Sombrío",
+		["Delve_TwilightCrypts_A"] = "Criptas Crepusculares",
+		["Delve_TwilightCrypts_B"] = "Criptas Crepusculares",
+		["Delve_GulfOfMemory_A"] = "El Abismo del Recuerdo",
+		["Delve_GulfOfMemory_B"] = "El Abismo del Recuerdo",
+		["Delve_TormentsRise_A"] = "Alto del Tormento",
+		["Delve_TwilightTunnels_A"] = "Pasaje Oscuro",
+		["Delve_Sunkiller_A"] = "Sagrario Matasoles",
+		["Delve_Sunkiller_B"] = "Sagrario Matasoles",
+		["Delve_Calamity_A"] = "Calamidad de Colegiado",
 	},
 	esMX = {
 		["ArcaneNaxus_A"] = "La Bóveda Azur",  -- mind the typo in the tag name
@@ -2514,6 +2631,16 @@ local mapInfoLocalizedNameErrata = {
 		["PrimalistRaid_F"] = "Bóveda de las Encarnaciones",
 		["PrimalistRaid_G"] = "Bóveda de las Encarnaciones",
 		["PrimalistRaid_H"] = "Bóveda de las Encarnaciones",
+		["Delve_Voidholme_A"] = "El Enclave de las Sombras",
+		["Delve_TwilightCrypts_A"] = "Criptas Crepusculares",
+		["Delve_TwilightCrypts_B"] = "Criptas Crepusculares",
+		["Delve_GulfOfMemory_A"] = "El Golfo de la Memoria",
+		["Delve_GulfOfMemory_B"] = "El Golfo de la Memoria",
+		["Delve_TormentsRise_A"] = "Alto del Tormento",
+		["Delve_TwilightTunnels_A"] = "El Paso Oscuro",
+		["Delve_Sunkiller_A"] = "Santuario Matasoles",
+		["Delve_Sunkiller_B"] = "Santuario Matasoles",
+		["Delve_Calamity_A"] = "Calamidad Colegiada",
 	},
 	frFR = {
 		["ArcaneNaxus_A"] = "Caveau d’Azur",  -- mind the typo in the tag name
@@ -2533,6 +2660,16 @@ local mapInfoLocalizedNameErrata = {
 		["PrimalistRaid_F"] = "Caveau des Incarnations",
 		["PrimalistRaid_G"] = "Caveau des Incarnations",
 		["PrimalistRaid_H"] = "Caveau des Incarnations",
+		["Delve_Voidholme_A"] = "L’enclave Ombreuse",
+		["Delve_TwilightCrypts_A"] = "Cryptes du Crépuscule",
+		["Delve_TwilightCrypts_B"] = "Cryptes du Crépuscule",
+		["Delve_GulfOfMemory_A"] = "Le golfe du Souvenir",
+		["Delve_GulfOfMemory_B"] = "Le golfe du Souvenir",
+		["Delve_TormentsRise_A"] = "Éminence du Tourment",
+		["Delve_TwilightTunnels_A"] = "Sombrevoie",
+		["Delve_Sunkiller_A"] = "Sanctum des Tue-Soleil",
+		["Delve_Sunkiller_B"] = "Sanctum des Tue-Soleil",
+		["Delve_Calamity_A"] = "Calamité Universitaire",
 	},
 	itIT = {
 		["ArcaneNaxus_A"] = "Cripta Azzurra",  -- mind the typo in the tag name
@@ -2552,6 +2689,16 @@ local mapInfoLocalizedNameErrata = {
 		["PrimalistRaid_F"] = "Segrete delle Incarnazioni",
 		["PrimalistRaid_G"] = "Segrete delle Incarnazioni",
 		["PrimalistRaid_H"] = "Segrete delle Incarnazioni",
+		["Delve_Voidholme_A"] = "Enclave d'Ombra",
+		["Delve_TwilightCrypts_A"] = "Cripte del Crepuscolo",
+		["Delve_TwilightCrypts_B"] = "Cripte del Crepuscolo",
+		["Delve_GulfOfMemory_A"] = "Golfo della Memoria",
+		["Delve_GulfOfMemory_B"] = "Golfo della Memoria",
+		["Delve_TormentsRise_A"] = "Altura del Tormento",
+		["Delve_TwilightTunnels_A"] = "Passaggio Tetro",
+		["Delve_Sunkiller_A"] = "Sacrario Solestinto",
+		["Delve_Sunkiller_B"] = "Sacrario Solestinto",
+		["Delve_Calamity_A"] = "Calamità Accademica",
 	},
 	koKR = {
 		["ArcaneNaxus_A"] = "하늘빛 보관소",  -- mind the typo in the tag name
@@ -2571,6 +2718,16 @@ local mapInfoLocalizedNameErrata = {
 		["PrimalistRaid_F"] = "현신의 금고",
 		["PrimalistRaid_G"] = "현신의 금고",
 		["PrimalistRaid_H"] = "현신의 금고",
+		["Delve_Voidholme_A"] = "어둠의 은거처",
+		["Delve_TwilightCrypts_A"] = "황혼의 납골당",
+		["Delve_TwilightCrypts_B"] = "황혼의 납골당",
+		["Delve_GulfOfMemory_A"] = "기억의 만",
+		["Delve_GulfOfMemory_B"] = "기억의 만",
+		["Delve_TormentsRise_A"] = "고통의 오름길",
+		["Delve_TwilightTunnels_A"] = "어둠길",
+		["Delve_Sunkiller_A"] = "태양학살자 성소",
+		["Delve_Sunkiller_B"] = "태양학살자 성소",
+		["Delve_Calamity_A"] = "대학 대소동",
 	},
 	ptBR = {
 		["ArcaneNaxus_A"] = "Câmara Lazúli",  -- mind the typo in the tag name
@@ -2590,6 +2747,16 @@ local mapInfoLocalizedNameErrata = {
 		["PrimalistRaid_F"] = "Câmara dos Encarnados",
 		["PrimalistRaid_G"] = "Câmara dos Encarnados",
 		["PrimalistRaid_H"] = "Câmara dos Encarnados",
+		["Delve_Voidholme_A"] = "O Enclave das Sombras",
+		["Delve_TwilightCrypts_A"] = "Criptas Crepusculares",
+		["Delve_TwilightCrypts_B"] = "Criptas Crepusculares",
+		["Delve_GulfOfMemory_A"] = "Golfo da Memória",
+		["Delve_GulfOfMemory_B"] = "Golfo da Memória",
+		["Delve_TormentsRise_A"] = "Alto do Tormento",
+		["Delve_TwilightTunnels_A"] = "A Umbravia",
+		["Delve_Sunkiller_A"] = "Sacrário Matassol",
+		["Delve_Sunkiller_B"] = "Sacrário Matassol",
+		["Delve_Calamity_A"] = "Calamidade Colegiada",
 	},
 	zhCN = {
 		["ArcaneNaxus_A"] = "碧蓝魔馆",  -- mind the typo in the tag name
@@ -2609,6 +2776,16 @@ local mapInfoLocalizedNameErrata = {
 		["PrimalistRaid_F"] = "化身巨龙牢窟",
 		["PrimalistRaid_G"] = "化身巨龙牢窟",
 		["PrimalistRaid_H"] = "化身巨龙牢窟",
+		["Delve_Voidholme_A"] = "聚影领地",
+		["Delve_TwilightCrypts_A"] = "暮光地穴",
+		["Delve_TwilightCrypts_B"] = "暮光地穴",
+		["Delve_GulfOfMemory_A"] = "回忆深沟",
+		["Delve_GulfOfMemory_B"] = "回忆深沟",
+		["Delve_TormentsRise_A"] = "磨难高地",
+		["Delve_TwilightTunnels_A"] = "黑暗回廊",
+		["Delve_Sunkiller_A"] = "戮日圣殿",
+		["Delve_Sunkiller_B"] = "戮日圣殿",
+		["Delve_Calamity_A"] = "学府骚动",
 	},
 	zhTW = {
 		["ArcaneNaxus_A"] = "蒼藍密庫",  -- mind the typo in the tag name
@@ -2628,6 +2805,16 @@ local mapInfoLocalizedNameErrata = {
 		["PrimalistRaid_F"] = "洪荒化身牢獄",
 		["PrimalistRaid_G"] = "洪荒化身牢獄",
 		["PrimalistRaid_H"] = "洪荒化身牢獄",
+		["Delve_Voidholme_A"] = "暗影領區",
+		["Delve_TwilightCrypts_A"] = "暮光墓穴",
+		["Delve_TwilightCrypts_B"] = "暮光墓穴",
+		["Delve_GulfOfMemory_A"] = "回憶裂口",
+		["Delve_GulfOfMemory_B"] = "回憶裂口",
+		["Delve_TormentsRise_A"] = "折磨高地",
+		["Delve_TwilightTunnels_A"] = "黑暗之途",
+		["Delve_Sunkiller_A"] = "戮日者聖所",
+		["Delve_Sunkiller_B"] = "戮日者聖所",
+		["Delve_Calamity_A"] = "學院災禍",
 	},
 }
 
@@ -2643,7 +2830,7 @@ local HERBALISM_SKILL = 182
 local MINING_SKILL = 186
 local SKINNING_SKILL = 393
 
--- Variant Skill IDs, by expansion
+-- Variant Skill IDs, by expansion (from SkillLine table)
 local expansionSkillLineIDs = {
     [1] = { -- Classic (Kalimdor and Eastern Kingdoms)
 			[FISHING_SKILL] = 2592,
@@ -2710,6 +2897,12 @@ local expansionSkillLineIDs = {
 			[HERBALISM_SKILL] = 2877,
 			[MINING_SKILL] = 2881,
 			[SKINNING_SKILL] = 2882,
+		},
+	[12] = { -- Midnight (Quel'Thalas)
+			[FISHING_SKILL] = 2911,
+			[HERBALISM_SKILL] = 2912,
+			[MINING_SKILL] = 2916,
+			[SKINNING_SKILL] = 2917,
 		},
 }
 
@@ -2996,23 +3189,38 @@ local function CreateLocalizedZoneNameLookups()
 end
 
 local function AddDuplicatesToLocalizedLookup()
-	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("The Maelstrom", THE_MAELSTROM_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("The Maelstrom", THE_MAELSTROM_MAP_ID)
-	BZR[Tourist:GetUniqueZoneNameForLookup("The Maelstrom", THE_MAELSTROM_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("The Maelstrom", THE_MAELSTROM_MAP_ID)
+	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("The Maelstrom", constants.THE_MAELSTROM_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("The Maelstrom", constants.THE_MAELSTROM_MAP_ID)
+	BZR[Tourist:GetUniqueZoneNameForLookup("The Maelstrom", constants.THE_MAELSTROM_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("The Maelstrom", constants.THE_MAELSTROM_MAP_ID)
 	
-	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Nagrand", DRAENOR_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Nagrand", DRAENOR_MAP_ID)
-	BZR[Tourist:GetUniqueZoneNameForLookup("Nagrand", DRAENOR_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Nagrand", DRAENOR_MAP_ID)
+	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Nagrand", constants.DRAENOR_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Nagrand", constants.DRAENOR_MAP_ID)
+	BZR[Tourist:GetUniqueZoneNameForLookup("Nagrand", constants.DRAENOR_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Nagrand", constants.DRAENOR_MAP_ID)
 
-	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Shadowmoon Valley", DRAENOR_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Shadowmoon Valley", DRAENOR_MAP_ID)
-	BZR[Tourist:GetUniqueZoneNameForLookup("Shadowmoon Valley", DRAENOR_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Shadowmoon Valley", DRAENOR_MAP_ID)
+	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Shadowmoon Valley", constants.DRAENOR_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Shadowmoon Valley", constants.DRAENOR_MAP_ID)
+	BZR[Tourist:GetUniqueZoneNameForLookup("Shadowmoon Valley", constants.DRAENOR_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Shadowmoon Valley", constants.DRAENOR_MAP_ID)
 	
-	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Hellfire Citadel", DRAENOR_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Hellfire Citadel", DRAENOR_MAP_ID)
-	BZR[Tourist:GetUniqueZoneNameForLookup("Hellfire Citadel", DRAENOR_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Hellfire Citadel", DRAENOR_MAP_ID)
+	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Hellfire Citadel", constants.DRAENOR_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Hellfire Citadel", constants.DRAENOR_MAP_ID)
+	BZR[Tourist:GetUniqueZoneNameForLookup("Hellfire Citadel", constants.DRAENOR_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Hellfire Citadel", constants.DRAENOR_MAP_ID)
 	
-	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Dalaran", BROKEN_ISLES_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Dalaran", BROKEN_ISLES_MAP_ID)
-	BZR[Tourist:GetUniqueZoneNameForLookup("Dalaran", BROKEN_ISLES_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Dalaran", BROKEN_ISLES_MAP_ID)
+	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Dalaran", constants.BROKEN_ISLES_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Dalaran", constants.BROKEN_ISLES_MAP_ID)
+	BZR[Tourist:GetUniqueZoneNameForLookup("Dalaran", constants.BROKEN_ISLES_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Dalaran", constants.BROKEN_ISLES_MAP_ID)
 	
-	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Tazavesh, the Veiled Market", KHAZ_ALGAR_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Tazavesh, the Veiled Market", KHAZ_ALGAR_MAP_ID)
-	BZR[Tourist:GetUniqueZoneNameForLookup("Tazavesh, the Veiled Market", KHAZ_ALGAR_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Tazavesh, the Veiled Market", KHAZ_ALGAR_MAP_ID)
+	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Tazavesh, the Veiled Market", constants.KHAZ_ALGAR_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Tazavesh, the Veiled Market", constants.KHAZ_ALGAR_MAP_ID)
+	BZR[Tourist:GetUniqueZoneNameForLookup("Tazavesh, the Veiled Market", constants.KHAZ_ALGAR_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Tazavesh, the Veiled Market", constants.KHAZ_ALGAR_MAP_ID)
+	
+	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Silvermoon City", constants.EASTERN_KINGDOMS_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Silvermoon City", constants.EASTERN_KINGDOMS_MAP_ID)
+	BZR[Tourist:GetUniqueZoneNameForLookup("Silvermoon City", constants.EASTERN_KINGDOMS_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Silvermoon City", constants.EASTERN_KINGDOMS_MAP_ID)
+
+	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Eversong Woods", constants.EASTERN_KINGDOMS_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Eversong Woods", constants.EASTERN_KINGDOMS_MAP_ID)
+	BZR[Tourist:GetUniqueZoneNameForLookup("Eversong Woods", constants.EASTERN_KINGDOMS_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Eversong Woods", constants.EASTERN_KINGDOMS_MAP_ID)
+
+	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Isle of Quel'Danas", constants.EASTERN_KINGDOMS_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Isle of Quel'Danas", constants.EASTERN_KINGDOMS_MAP_ID)
+	BZR[Tourist:GetUniqueZoneNameForLookup("Isle of Quel'Danas", constants.EASTERN_KINGDOMS_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Isle of Quel'Danas", constants.EASTERN_KINGDOMS_MAP_ID)
+	
+	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Magisters' Terrace", constants.EASTERN_KINGDOMS_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Magisters' Terrace", constants.EASTERN_KINGDOMS_MAP_ID)
+	BZR[Tourist:GetUniqueZoneNameForLookup("Magisters' Terrace", constants.EASTERN_KINGDOMS_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Magisters' Terrace", constants.EASTERN_KINGDOMS_MAP_ID)
+
+	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Zul'Aman", constants.EASTERN_KINGDOMS_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Zul'Aman", constants.EASTERN_KINGDOMS_MAP_ID)
+	BZR[Tourist:GetUniqueZoneNameForLookup("Zul'Aman", constants.EASTERN_KINGDOMS_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Zul'Aman", constants.EASTERN_KINGDOMS_MAP_ID)
 end
 
 local function tablelength(T)
@@ -3239,7 +3447,7 @@ end
 -- Note: GetMapContinents has been removed entirely in 8.0
 -- 8.0.1: returns uiMapID as key
 function Tourist:GetMapContinentsAlt()
-	local continents = C_Map.GetMapChildrenInfo(COSMIC_MAP_ID, Enum.UIMapType.Continent, true)
+	local continents = C_Map.GetMapChildrenInfo(constants.COSMIC_MAP_ID, Enum.UIMapType.Continent, true)
 	local retValue = {}
 	for i, continentInfo in ipairs(continents) do
 		--trace("Continent "..tostring(i)..": "..continentInfo.mapID..": ".. continentInfo.name)
@@ -3288,7 +3496,7 @@ function Tourist:GetMapNameByIDAlt(uiMapID)
 		local zoneName = mapInfo.name
 		local continentMapID = Tourist:GetContinentMapID(uiMapID)
 		--trace("ContinentMap ID for "..tostring(zoneName).." ("..tostring(uiMapID)..") is "..tostring(continentMapID))
-		if uiMapID == THE_MAELSTROM_MAP_ID then
+		if uiMapID == constants.THE_MAELSTROM_MAP_ID then
 			-- Exception for The Maelstrom continent because GetUniqueZoneNameForLookup excpects the zone name and not the continent name
 			return zoneName
 		else
@@ -3343,12 +3551,12 @@ end
 -- Returns a unique localized zone name to be used to lookup data in LibTourist,
 -- based on a localized or English zone name
 function Tourist:GetUniqueZoneNameForLookup(zoneName, continentMapID)
-	if continentMapID == THE_MAELSTROM_MAP_ID then  -- The Maelstrom
+	if continentMapID == constants.THE_MAELSTROM_MAP_ID then  -- The Maelstrom
 		if zoneName == BZ["The Maelstrom"] or zoneName == "The Maelstrom" then
 			zoneName = BZ["The Maelstrom"].." ("..ZONE..")"
 		end
 	end
-	if continentMapID == DRAENOR_MAP_ID then  -- Draenor
+	if continentMapID == constants.DRAENOR_MAP_ID then  -- Draenor
 		if zoneName == BZ["Nagrand"] or zoneName == "Nagrand"  then
 			zoneName = BZ["Nagrand"].." ("..BZ["Draenor"]..")"
 		end
@@ -3359,28 +3567,45 @@ function Tourist:GetUniqueZoneNameForLookup(zoneName, continentMapID)
 			zoneName = BZ["Hellfire Citadel"].." ("..BZ["Draenor"]..")"
 		end
 	end
-	if continentMapID == BROKEN_ISLES_MAP_ID then  -- Broken Isles
+	if continentMapID == constants.BROKEN_ISLES_MAP_ID then  -- Broken Isles
 		if zoneName == BZ["Dalaran"] or zoneName == "Dalaran"  then
 			zoneName = BZ["Dalaran"].." ("..BZ["Broken Isles"]..")"
 		end
 	end
-	if continentMapID == KHAZ_ALGAR_MAP_ID then  -- Khaz Algar
+	if continentMapID == constants.KHAZ_ALGAR_MAP_ID then  -- Khaz Algar
 		if zoneName == BZ["Tazavesh, the Veiled Market"] or zoneName == "Tazavesh, the Veiled Market"  then
 			zoneName = BZ["Tazavesh, the Veiled Market"].." ("..BZ["Khaz Algar"]..")"
 		end
 	end	
+	if continentMapID == constants.EASTERN_KINGDOMS_MAP_ID then -- Eastern Kingdoms
+		if zoneName == BZ["Silvermoon City"] or zoneName == "Silvermoon City" then
+			zoneName = BZ["Silvermoon City"].." ("..The_Burning_Crusade..")"
+		end
+		if zoneName == BZ["Eversong Woods"] or zoneName == "Eversong Woods" then
+			zoneName = BZ["Eversong Woods"].." ("..The_Burning_Crusade..")"
+		end
+		if zoneName == BZ["Isle of Quel'Danas"] or zoneName == "Isle of Quel'Danas" then
+			zoneName = BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")"
+		end		
+		if zoneName == BZ["Magisters' Terrace"] or zoneName == "Magisters' Terrace" then
+			zoneName = BZ["Magisters' Terrace"].." ("..The_Burning_Crusade..")"
+		end
+		if zoneName == BZ["Zul'Aman"] or zoneName == "Zul'Aman" then
+			zoneName = BZ["Zul'Aman"].." ("..The_Burning_Crusade..")"
+		end
+	end
 	return zoneName
 end
 
 -- Returns a unique English zone name to be used to lookup data in LibTourist,
 -- based on a localized or English zone name
 function Tourist:GetUniqueEnglishZoneNameForLookup(zoneName, continentMapID)
-	if continentMapID == THE_MAELSTROM_MAP_ID then  -- The Maelstrom
+	if continentMapID == constants.THE_MAELSTROM_MAP_ID then  -- The Maelstrom
 		if zoneName == BZ["The Maelstrom"] or zoneName == "The Maelstrom" then
 			zoneName = "The Maelstrom (Zone)"
 		end
 	end
-	if continentMapID == DRAENOR_MAP_ID then -- Draenor
+	if continentMapID == constants.DRAENOR_MAP_ID then -- Draenor
 		if zoneName == BZ["Nagrand"] or zoneName == "Nagrand" then
 			zoneName = "Nagrand (Draenor)"
 		end
@@ -3391,15 +3616,32 @@ function Tourist:GetUniqueEnglishZoneNameForLookup(zoneName, continentMapID)
 			zoneName = "Hellfire Citadel (Draenor)"
 		end
 	end
-	if continentMapID == BROKEN_ISLES_MAP_ID then  -- Broken Isles
+	if continentMapID == constants.BROKEN_ISLES_MAP_ID then  -- Broken Isles
 		if zoneName == BZ["Dalaran"] or zoneName == "Dalaran" then
 			zoneName = "Dalaran (Broken Isles)"
 		end	
 	end
-	if continentMapID == KHAZ_ALGAR_MAP_ID then -- Khaz Algar
+	if continentMapID == constants.KHAZ_ALGAR_MAP_ID then -- Khaz Algar
 		if zoneName == BZ["Tazavesh, the Veiled Market"] or zoneName == "Tazavesh, the Veiled Market" then
 			zoneName = "Tazavesh, the Veiled Market (Khaz Algar)"
 		end	
+	end
+	if continentMapID == constants.EASTERN_KINGDOMS_MAP_ID then -- Eastern Kingdoms
+		if zoneName == BZ["Silvermoon City"] or zoneName == "Silvermoon City" then
+			zoneName = "Silvermoon City (The Burning Crusade)"
+		end
+		if zoneName == BZ["Eversong Woods"] or zoneName == "Eversong Woods" then
+			zoneName = "Eversong Woods (The Burning Crusade)"
+		end
+		if zoneName == BZ["Isle of Quel'Danas"] or zoneName == "Isle of Quel'Danas" then
+			zoneName = "Isle of Quel'Danas (The Burning Crusade)"
+		end
+		if zoneName == BZ["Magisters' Terrace"] or zoneName == "Magisters' Terrace" then
+			zoneName = "Magisters' Terrace (The Burning Crusade)"
+		end
+		if zoneName == BZ["Zul'Aman"] or zoneName == "Zul'Aman" then
+			zoneName = "Zul'Aman (The Burning Crusade)"
+		end
 	end
 	return zoneName
 end
@@ -3518,6 +3760,10 @@ function Tourist:GetLevel(zone)
 		-- Find the most suitable bracket. Shadowlands assumption: still 5-level brackets
 		if playerLvl >= MAX_LEVEL then
 			return MAX_LEVEL, MAX_LEVEL, nil
+		elseif playerLvl >= 85 then
+			return 85, 89, nil
+		elseif playerLvl >= 80 then
+			return 80, 84, nil
 		elseif playerLvl >= 75 then
 			return 75, 79, nil
 		elseif playerLvl >= 70 then		
@@ -4387,6 +4633,24 @@ function Tourist:IterateKhazAlgar()
 end
 
 
+local function quelThalasIter(_, position)
+	local k = next(zonesInstances, position)
+	while k ~= nil and continents[k] ~= Quel_Thalas do
+		k = next(zonesInstances, k)
+	end
+	return k
+end
+function Tourist:IterateQuelThalas()
+	if initZonesInstances then
+		initZonesInstances()
+	end
+	return quelThalasIter, nil, nil
+end
+
+
+
+
+
 function Tourist:IterateRecommendedZones()
 	return retNormal, recZones, nil
 end
@@ -4583,6 +4847,10 @@ function Tourist:IsInKhazAlgar(zone)
 	return continents[zone] == Khaz_Algar
 end
 
+function Tourist:IsInQuelThalas(zone)
+	zone = Tourist:GetMapNameByIDAlt(zone) or zone
+	return continents[zone] == Quel_Thalas
+end
 
 function Tourist:GetInstanceGroupSize(instance)
 	instance = Tourist:GetMapNameByIDAlt(instance) or instance
@@ -5011,8 +5279,8 @@ do
 
 	
 	-- Teleports
-	transports["SILVERMOON_UNDERCITY_TELEPORT"] = string.format(X_Y_TELEPORT, BZ["Silvermoon City"], BZ["Undercity"])
-	transports["UNDERCITY_SILVERMOON_TELEPORT"] = string.format(X_Y_TELEPORT, BZ["Undercity"], BZ["Silvermoon City"])
+	transports["SILVERMOON_TBC_UNDERCITY_TELEPORT"] = string.format(X_Y_TELEPORT, BZ["Silvermoon City"].." ("..The_Burning_Crusade..")", BZ["Undercity"])
+	transports["UNDERCITY_SILVERMOON_TBC_TELEPORT"] = string.format(X_Y_TELEPORT, BZ["Undercity"], BZ["Silvermoon City"].." ("..The_Burning_Crusade..")")
 	
 	transports["DALARAN_CRYSTALSONG_TELEPORT"] = string.format(X_Y_TELEPORT, BZ["Dalaran"], BZ["Crystalsong Forest"])
 	transports["CRYSTALSONG_DALARAN_TELEPORT"] = string.format(X_Y_TELEPORT, BZ["Crystalsong Forest"], BZ["Dalaran"])
@@ -5041,7 +5309,7 @@ do
 	transports["DARNASSUS_EXODAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Darnassus"], BZ["The Exodar"])
 	transports["DEEPHOLM_ORGRIMMAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Deepholm"], BZ["Orgrimmar"])
 	transports["DEEPHOLM_STORMWIND_PORTAL"] = string.format(X_Y_PORTAL, BZ["Deepholm"], BZ["Stormwind City"])
-	transports["EASTERNPLAGUE_QUELDANAS_FLIGHTPATH"] = string.format(X_Y_PORTAL, BZ["Eastern Plaguelands"], BZ["Isle of Quel'Danas"])
+	transports["EASTERNPLAGUE_QUELDANAS_TBC_FLIGHTPATH"] = string.format(X_Y_PORTAL, BZ["Eastern Plaguelands"], BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")")
 	transports["ELWYNNFOREST_DARKMOON_PORTAL"] = string.format(X_Y_PORTAL, BZ["Elwynn Forest"], BZ["Darkmoon Island"])
 	transports["EXODAR_STORMWIND_PORTAL"] = string.format(X_Y_PORTAL, BZ["The Exodar"], BZ["Stormwind City"])
 	transports["FROSTWALL_WARSPEAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Frostwall"], BZ["Warspear"])
@@ -5072,7 +5340,7 @@ do
 	transports["ORGRIMMAR_JADEFOREST_PORTAL"] = string.format(X_Y_PORTAL, BZ["Orgrimmar"], BZ["The Jade Forest"])
 	transports["ORGRIMMAR_MOUNTHYJAL_PORTAL"] = string.format(X_Y_PORTAL, BZ["Orgrimmar"], BZ["Mount Hyjal"])
 	transports["ORGRIMMAR_SHATTRATH_PORTAL"] = string.format(X_Y_PORTAL, BZ["Orgrimmar"], BZ["Shattrath City"])
-	transports["ORGRIMMAR_SILVERMOON_PORTAL"] = string.format(X_Y_PORTAL, BZ["Orgrimmar"], BZ["Silvermoon City"])
+	transports["ORGRIMMAR_SILVERMOON_TBC_PORTAL"] = string.format(X_Y_PORTAL, BZ["Orgrimmar"], BZ["Silvermoon City"].." ("..The_Burning_Crusade..")")
 	transports["ORGRIMMAR_TOLBARAD_PORTAL"] = string.format(X_Y_PORTAL, BZ["Orgrimmar"], BZ["Tol Barad Peninsula"])
 	transports["ORGRIMMAR_TWILIGHTHIGHLANDS_PORTAL"] = string.format(X_Y_PORTAL, BZ["Orgrimmar"], BZ["Twilight Highlands"])
 	transports["ORGRIMMAR_ULDUM_PORTAL"] = string.format(X_Y_PORTAL, BZ["Orgrimmar"], BZ["Uldum"])
@@ -5080,16 +5348,16 @@ do
 	transports["ORGRIMMAR_VASHJIR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Orgrimmar"], BZ["Abyssal Depths"])
 	transports["ORGRIMMAR_WARSPEAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Orgrimmar"], BZ["Warspear"])
 	transports["ORGRIMMAR_ZULDAZAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Orgrimmar"], BZ["Dazar'alor"])
-	transports["QUELDANAS_EASTERNPLAGUE_FLIGHTPATH"] = string.format(X_Y_FLIGHTPATH, BZ["Isle of Quel'Danas"], BZ["Eastern Plaguelands"])
-	transports["QUELDANAS_SILVERMOON_FLIGHTPATH"] = string.format(X_Y_FLIGHTPATH, BZ["Isle of Quel'Danas"], BZ["Silvermoon City"])
+	transports["QUELDANAS_TBC_EASTERNPLAGUE_FLIGHTPATH"] = string.format(X_Y_FLIGHTPATH, BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")", BZ["Eastern Plaguelands"])
+	transports["QUELDANAS_TBC_SILVERMOON_TBC_FLIGHTPATH"] = string.format(X_Y_FLIGHTPATH, BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")", BZ["Silvermoon City"].." ("..The_Burning_Crusade..")")
 	transports["SEVENSTARS_STORMWIND_PORTAL"] = string.format(X_Y_PORTAL, BZ["Shrine of Seven Stars"], BZ["Stormwind City"])
 	transports["SHATTRATH_ORGRIMMAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Shattrath City"], BZ["Orgrimmar"])
-	transports["SHATTRATH_QUELDANAS_PORTAL"] = string.format(X_Y_PORTAL, BZ["Shattrath City"], BZ["Isle of Quel'Danas"])
+	transports["SHATTRATH_QUELDANAS_TBC_PORTAL"] = string.format(X_Y_PORTAL, BZ["Shattrath City"], BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")")
 	transports["SHATTRATH_STORMWIND_PORTAL"] = string.format(X_Y_PORTAL, BZ["Shattrath City"], BZ["Stormwind City"])
 	transports["SILITHUS_TIRAGARDESOUND_PORTAL"] = string.format(X_Y_PORTAL, BZ["Silithus"], BZ["Boralus"])
 	transports["SILITHUS_ZULDAZAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Silithus"], BZ["Dazar'alor"])
-	transports["SILVERMOON_ORGRIMMAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Silvermoon City"], BZ["Orgrimmar"])
-	transports["SILVERMOON_QUELDANAS_FLIGHTPATH"] = string.format(X_Y_FLIGHTPATH, BZ["Silvermoon City"], BZ["Isle of Quel'Danas"])
+	transports["SILVERMOON_TBC_ORGRIMMAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Silvermoon City"].." ("..The_Burning_Crusade..")", BZ["Orgrimmar"])
+	transports["SILVERMOON_TBC_QUELDANAS_TBC_FLIGHTPATH"] = string.format(X_Y_FLIGHTPATH, BZ["Silvermoon City"].." ("..The_Burning_Crusade..")", BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")")
 	transports["STORMSHIELD_STORMWIND_PORTAL"] = string.format(X_Y_PORTAL, BZ["Stormshield"], BZ["Stormwind City"])
 	transports["STORMSHIELD_TANAANJUNGLE_PORTAL"] = string.format(X_Y_PORTAL, BZ["Stormshield"], BZ["Tanaan Jungle"])
 	transports["STORMWIND_AZSUNA_PORTAL"] = string.format(X_Y_PORTAL, BZ["Stormwind City"], BZ["Azsuna"])
@@ -5136,7 +5404,7 @@ do
 	transports["WINTERGRASP_DALARAN_FLIGHTPATH"] = string.format(X_Y_FLIGHTPATH, BZ["Wintergrasp"], BZ["Dalaran"])
 	transports["ZULDAZAR_NAZJATAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dazar'alor"], BZ["Nazjatar"])
 	transports["ZULDAZAR_ORGRIMMAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dazar'alor"], BZ["Orgrimmar"])
-	transports["ZULDAZAR_SILVERMOON_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dazar'alor"], BZ["Silvermoon City"])
+	transports["ZULDAZAR_SILVERMOON_TBC_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dazar'alor"], BZ["Silvermoon City"].." ("..The_Burning_Crusade..")")
 	transports["ZULDAZAR_THUNDERBLUFF_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dazar'alor"], BZ["Thunder Bluff"])
 	transports["ZULDAZAR_SILITHUS_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dazar'alor"], BZ["Silithus"])
 	transports["ZULDAZAR_MECHAGON_BOAT"] = string.format(X_Y_BOAT, BZ["Dazar'alor"], BZ["Mechagon Island"])
@@ -5260,6 +5528,27 @@ do
 	transports["KARESH_TAZAVESH_FLIGHTPATH"] = string.format(X_Y_FLIGHTPATH, BZ["K'aresh"], BZ["Tazavesh"])
 	transports["TAZAVESH_KARESH_FLIGHTPATH"] = string.format(X_Y_FLIGHTPATH, BZ["Tazavesh"], BZ["K'aresh"])
 	
+	-- Midnight
+	-- Housing areas
+	transports["ORGRIMMAR_RAZORWINDSHORES_PORTAL"] = string.format(X_Y_PORTAL, BZ["Orgrimmar"], BZ["Razorwind Shores"])
+	transports["RAZORWINDSHORES_ORGRIMMAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Razorwind Shores"], BZ["Orgrimmar"])
+	transports["STORMWIND_FOUNDERSPOINT_PORTAL"] = string.format(X_Y_PORTAL, BZ["Stormwind City"], BZ["Founder's Point"])
+	transports["FOUNDERSPOINT_STORMWIND_PORTAL"] = string.format(X_Y_PORTAL, BZ["Founder's Point"], BZ["Stormwind City"])
+	-- Quel'Thalas
+	transports["ORGRIMMAR_SILVERMOON_PORTAL"] = string.format(X_Y_PORTAL, BZ["Orgrimmar"], BZ["Silvermoon City"])
+	transports["SILVERMOON_ORGRIMMAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Silvermoon City"], BZ["Orgrimmar"])
+	transports["STORMWIND_SILVERMOON_PORTAL"] = string.format(X_Y_PORTAL, BZ["Stormwind City"], BZ["Silvermoon City"])
+	transports["SILVERMOON_STORMWIND_PORTAL"] = string.format(X_Y_PORTAL, BZ["Silvermoon City"], BZ["Stormwind City"])
+	transports["SILVERMOON_HARANDAR_PORTAL"] = string.format(X_Y_PORTAL, BZ["Silvermoon City"], BZ["Harandar"])
+	transports["HARANDAR_SILVERMOON_PORTAL"] = string.format(X_Y_PORTAL, BZ["Harandar"], BZ["Silvermoon City"])
+	transports["SILVERMOON_VOIDSTORM_PORTAL"] = string.format(X_Y_PORTAL, BZ["Silvermoon City"], BZ["Voidstorm"])
+	transports["VOIDSTORM_SILVERMOON_PORTAL"] = string.format(X_Y_PORTAL, BZ["Voidstorm"], BZ["Silvermoon City"])
+	transports["SILVERMOON_QUELDANAS_FLIGHTPATH"] = string.format(X_Y_FLIGHTPATH, BZ["Silvermoon City"], BZ["Isle of Quel'Danas"])
+	transports["QUELDANAS_SILVERMOON_FLIGHTPATH"] = string.format(X_Y_FLIGHTPATH, BZ["Isle of Quel'Danas"], BZ["Silvermoon City"])
+
+	
+	
+	
 	local zones = {}
 
 	-- CONTINENTS ---------------------------------------------------------------
@@ -5357,6 +5646,13 @@ do
 		continent = Khaz_Algar,
 		expansion = TheWarWithin,
 	}		
+
+	zones[BZ["Quel'Thalas"]] = {
+		type = "Continent",
+		continent = Quel_Thalas,
+		expansion = Midnight,
+	}	
+
 	
 	-- TRANSPORTS ---------------------------------------------------------------
 
@@ -5443,9 +5739,9 @@ do
 		type = "Portal",
 	}
 
-	zones[transports["ORGRIMMAR_SILVERMOON_PORTAL"]] = {
+	zones[transports["ORGRIMMAR_SILVERMOON_TBC_PORTAL"]] = {
 		paths = {
-			[BZ["Silvermoon City"]] = true,
+			[BZ["Silvermoon City"].." ("..The_Burning_Crusade..")"] = true,
 		},
 		faction = "Horde",
 		type = "Portal",
@@ -5453,7 +5749,7 @@ do
 
 	zones[transports["ORGRIMMAR_SHATTRATH_PORTAL"]] = {
 		paths = {
-			[BZ["Silvermoon City"]] = true,
+			[BZ["Shattrath City"]] = true,
 		},
 		faction = "Horde",
 		type = "Portal",
@@ -5810,34 +6106,34 @@ do
 	}
 
 
-	zones[transports["EASTERNPLAGUE_QUELDANAS_FLIGHTPATH"]] = {
-		paths = BZ["Isle of Quel'Danas"],
+	zones[transports["EASTERNPLAGUE_QUELDANAS_TBC_FLIGHTPATH"]] = {
+		paths = BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")",
 		faction = "Alliance",
 		type = "Flightpath",
 	}
 
-	zones[transports["QUELDANAS_EASTERNPLAGUE_FLIGHTPATH"]] = {
+	zones[transports["QUELDANAS_TBC_EASTERNPLAGUE_FLIGHTPATH"]] = {
 		paths = BZ["Eastern Plaguelands"],
 		faction = "Alliance",
 		type = "Flightpath",
 	}
 
-	zones[transports["SILVERMOON_QUELDANAS_FLIGHTPATH"]] = {
-		paths = BZ["Isle of Quel'Danas"],
+	zones[transports["SILVERMOON_TBC_QUELDANAS_TBC_FLIGHTPATH"]] = {
+		paths = BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")",
 		faction = "Horde",
 		type = "Flightpath",
 	}
 
-	zones[transports["QUELDANAS_SILVERMOON_FLIGHTPATH"]] = {
-		paths = BZ["Silvermoon City"],
+	zones[transports["QUELDANAS_TBC_SILVERMOON_TBC_FLIGHTPATH"]] = {
+		paths = BZ["Silvermoon City"].." ("..The_Burning_Crusade..")",
 		faction = "Horde",
 		type = "Flightpath",
 	}
 
 
 
-	zones[transports["SHATTRATH_QUELDANAS_PORTAL"]] = {
-		paths = BZ["Isle of Quel'Danas"],
+	zones[transports["SHATTRATH_QUELDANAS_TBC_PORTAL"]] = {
+		paths = BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")",
 		type = "Portal",
 	}
 
@@ -5915,7 +6211,7 @@ do
 		type = "Portal",
 	}	
 
-	zones[transports["SILVERMOON_UNDERCITY_TELEPORT"]] = {
+	zones[transports["SILVERMOON_TBC_UNDERCITY_TELEPORT"]] = {
 		paths = {
 			[BZ["Undercity"]] = true,
 		},
@@ -5923,9 +6219,9 @@ do
 		type = "Portal",
 	}
 
-	zones[transports["UNDERCITY_SILVERMOON_TELEPORT"]] = {
+	zones[transports["UNDERCITY_SILVERMOON_TBC_TELEPORT"]] = {
 		paths = {
-			[BZ["Silvermoon City"]] = true,
+			[BZ["Silvermoon City"].." ("..The_Burning_Crusade..")"] = true,
 		},
 		faction = "Horde",
 		type = "Portal",
@@ -6523,7 +6819,7 @@ do
 	}		
 	
 	
-	zones[transports["SILVERMOON_ORGRIMMAR_PORTAL"]] = {
+	zones[transports["SILVERMOON_TBC_ORGRIMMAR_PORTAL"]] = {
 		paths = {
 			[BZ["Orgrimmar"]] = true,
 		},
@@ -6531,9 +6827,9 @@ do
 		type = "Portal",
 	}		
 	
-	zones[transports["ZULDAZAR_SILVERMOON_PORTAL"]] = {
+	zones[transports["ZULDAZAR_SILVERMOON_TBC_PORTAL"]] = {
 		paths = {
-			[BZ["Silvermoon City"]] = true,
+			[BZ["Silvermoon City"].." ("..The_Burning_Crusade..")"] = true,
 		},
 		faction = "Horde",
 		type = "Portal",
@@ -7216,6 +7512,117 @@ do
 	}
 
 
+	-- Midnight
+	
+	zones[transports["ORGRIMMAR_RAZORWINDSHORES_PORTAL"]] = {
+		paths = {
+			[BZ["Razorwind Shores"]] = true,
+		},
+		type = "Portal",
+		faction = "Horde",
+	}
+	
+	zones[transports["RAZORWINDSHORES_ORGRIMMAR_PORTAL"]] = {
+		paths = {
+			[BZ["Orgrimmar"]] = true,
+		},
+		type = "Portal",
+		faction = "Horde",
+	}
+	
+	zones[transports["STORMWIND_FOUNDERSPOINT_PORTAL"]] = {
+		paths = {
+			[BZ["Founder's Point"]] = true,
+		},
+		type = "Portal",
+		faction = "Alliance",
+	}
+	
+	zones[transports["FOUNDERSPOINT_STORMWIND_PORTAL"]] = {
+		paths = {
+			[BZ["Stormwind City"]] = true,
+		},
+		type = "Portal",
+		faction = "Alliance",
+	}
+	
+	
+	zones[transports["ORGRIMMAR_SILVERMOON_PORTAL"]] = {
+		paths = {
+			[BZ["Silvermoon City"]] = true,
+		},
+		type = "Portal",
+		faction = "Horde",
+	}
+	
+	zones[transports["SILVERMOON_ORGRIMMAR_PORTAL"]] = {
+		paths = {
+			[BZ["Orgrimmar"]] = true,
+		},
+		type = "Portal",
+		faction = "Horde",
+	}
+	
+	zones[transports["STORMWIND_SILVERMOON_PORTAL"]] = {
+		paths = {
+			[BZ["Silvermoon City"]] = true,
+		},
+		type = "Portal",
+		faction = "Alliance",
+	}
+	
+	zones[transports["SILVERMOON_STORMWIND_PORTAL"]] = {
+		paths = {
+			[BZ["Stormwind City"]] = true,
+		},
+		type = "Portal",
+		faction = "Alliance",
+	}
+	
+	
+	zones[transports["SILVERMOON_HARANDAR_PORTAL"]] = {
+		paths = {
+			[BZ["Harandar"]] = true,
+		},
+		type = "Portal",
+	}
+	
+	zones[transports["HARANDAR_SILVERMOON_PORTAL"]] = {
+		paths = {
+			[BZ["Silvermoon City"]] = true,
+		},
+		type = "Portal",
+	}
+	
+	zones[transports["SILVERMOON_VOIDSTORM_PORTAL"]] = {
+		paths = {
+			[BZ["Voidstorm"]] = true,
+		},
+		type = "Portal",
+	}
+	
+	zones[transports["VOIDSTORM_SILVERMOON_PORTAL"]] = {
+		paths = {
+			[BZ["Silvermoon City"]] = true,
+		},
+		type = "Portal",
+	}
+	
+	zones[transports["SILVERMOON_QUELDANAS_FLIGHTPATH"]] = {
+		paths = {
+			[BZ["Isle of Quel'Danas"]] = true,
+		},
+		type = "Flightpath",
+	}
+	
+	zones[transports["QUELDANAS_SILVERMOON_FLIGHTPATH"]] = {
+		paths = {
+			[BZ["Silvermoon City"]] = true,
+		},
+		type = "Flightpath",
+	}
+	
+	
 	
 	-- ZONES, INSTANCES AND COMPLEXES ---------------------------------------------------------
 
@@ -7256,6 +7663,8 @@ do
 			[transports["STORMWIND_WAKINGSHORES_BOAT"]] = true,			
 			[transports["STORMWIND_AMIRDRASSIL_PORTAL"]] = true,
 			[transports["STORMWIND_DORNOGAL_PORTAL"]] = true,
+			[transports["STORMWIND_FOUNDERSPOINT_PORTAL"]] = true,
+			[transports["STORMWIND_SILVERMOON_PORTAL"]] = true,
 		},
 		flightnodes = {
 			[2] = true,      -- Stormwind, Elwynn (A)
@@ -7270,7 +7679,7 @@ do
 		instances = BZ["Ruins of Lordaeron"],
 		paths = {
 			[BZ["Tirisfal Glades"]] = true,
-			[transports["UNDERCITY_SILVERMOON_TELEPORT"]] = true,
+			[transports["UNDERCITY_SILVERMOON_TBC_TELEPORT"]] = true,
 			[transports["UNDERCITY_HELLFIRE_PORTAL"]] = true,
 			[transports["UNDERCITY_KELPTHAR_FLIGHTPATH"]] = true,
 			[BZ["Ruins of Lordaeron"]] = true,
@@ -7298,14 +7707,14 @@ do
 		type = "City",
 	}
 
-	zones[BZ["Silvermoon City"]] = {
+	zones[BZ["Silvermoon City"].." ("..The_Burning_Crusade..")"] = {
 		continent = Eastern_Kingdoms,
 		expansion = The_Burning_Crusade,
 		paths = {
-			[BZ["Eversong Woods"]] = true,
-			[transports["SILVERMOON_UNDERCITY_TELEPORT"]] = true,
-			[transports["SILVERMOON_ORGRIMMAR_PORTAL"]] = true,
-			[transports["SILVERMOON_QUELDANAS_FLIGHTPATH"]] = true,
+			[BZ["Eversong Woods"].." ("..The_Burning_Crusade..")"] = true,
+			[transports["SILVERMOON_TBC_UNDERCITY_TELEPORT"]] = true,
+			[transports["SILVERMOON_TBC_ORGRIMMAR_PORTAL"]] = true,
+			[transports["SILVERMOON_TBC_QUELDANAS_TBC_FLIGHTPATH"]] = true,
 		},
 		flightnodes = {
 			[82] = true,    -- Silvermoon City (H)
@@ -7333,7 +7742,7 @@ do
 		continent = Eastern_Kingdoms,
 		expansion = The_Burning_Crusade,
 		paths = {
-			[BZ["Eversong Woods"]] = true,
+			[BZ["Eversong Woods"].." ("..The_Burning_Crusade..")"] = true,
 		},
 		faction = "Horde",
 	}
@@ -7420,14 +7829,14 @@ do
 		faction = "Alliance",
 	}	
 	
-	zones[BZ["Eversong Woods"]] = {
+	zones[BZ["Eversong Woods"].." ("..The_Burning_Crusade..")"] = {
 		low = 1,
 		high = 30,
 		ct_low = 1,
 		continent = Eastern_Kingdoms,
 		expansion = The_Burning_Crusade,
 		paths = {
-			[BZ["Silvermoon City"]] = true,
+			[BZ["Silvermoon City"].." ("..The_Burning_Crusade..")"] = true,
 			[BZ["Ghostlands"]] = true,
 			[BZ["Sunstrider Isle"]] = true,
 		},
@@ -7539,11 +7948,11 @@ do
 		ct_low = 1,
 		continent = Eastern_Kingdoms,
 		expansion = The_Burning_Crusade,
-		instances = BZ["Zul'Aman"],
+		instances = BZ["Zul'Aman"].." ("..The_Burning_Crusade..")",
 		paths = {
 			[BZ["Eastern Plaguelands"]] = true,
-			[BZ["Zul'Aman"]] = true,
-			[BZ["Eversong Woods"]] = true,
+			[BZ["Zul'Aman"].." ("..The_Burning_Crusade..")"] = true,
+			[BZ["Eversong Woods"].." ("..The_Burning_Crusade..")"] = true,
 		},
 		flightnodes = {
 			[83] = true,     -- Tranquillien, Ghostlands (H)
@@ -7815,8 +8224,9 @@ do
 		paths = {
 			[BZ["Western Plaguelands"]] = true,
 			[BZ["Stratholme"]] = true,
-			[BZ["Ghostlands"]] = true,
-			[transports["EASTERNPLAGUE_QUELDANAS_FLIGHTPATH"]] = true,
+			[BZ["Ghostlands"]] = true, -- TBC
+			[BZ["Eversong Woods"]] = true, -- Midnight
+			[transports["EASTERNPLAGUE_QUELDANAS_TBC_FLIGHTPATH"]] = true,
 		},
 		flightnodes = {
 			[383] = true,     -- Thondroril River, Eastern Plaguelands (N)
@@ -7992,23 +8402,23 @@ do
 		texture = "ScarletEnclave",
 	}
 
-	zones[BZ["Isle of Quel'Danas"]] = {
+	zones[BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")"] = {
 		continent = Eastern_Kingdoms,
 		expansion = The_Burning_Crusade,
 		low = 25,
 		high = 30,
 		ct_low = 30,
 		paths = {
-			[BZ["Magisters' Terrace"]] = true,
+			[BZ["Magisters' Terrace"].." ("..The_Burning_Crusade..")"] = true,
 			[BZ["Sunwell Plateau"]] = true,
-			[transports["QUELDANAS_SILVERMOON_FLIGHTPATH"]] = true,
-			[transports["QUELDANAS_EASTERNPLAGUE_FLIGHTPATH"]] = true,
+			[transports["QUELDANAS_TBC_SILVERMOON_TBC_FLIGHTPATH"]] = true,
+			[transports["QUELDANAS_TBC_EASTERNPLAGUE_FLIGHTPATH"]] = true,
 		},
 		flightnodes = {
 			[213] = true,    -- Shattered Sun Staging Area (N)
 		},
 		instances = {
-			[BZ["Magisters' Terrace"]] = true,
+			[BZ["Magisters' Terrace"].." ("..The_Burning_Crusade..")"] = true,
 			[BZ["Sunwell Plateau"]] = true,
 		},
 	}
@@ -8196,7 +8606,7 @@ do
 			[transports["ORGRIMMAR_JADEFOREST_PORTAL"]] = true,
 			[transports["ORGRIMMAR_ZULDAZAR_PORTAL"]] = true,
 			[transports["ORGRIMMAR_WARSPEAR_PORTAL"]] = true,
-			[transports["ORGRIMMAR_SILVERMOON_PORTAL"]] = true,
+			[transports["ORGRIMMAR_SILVERMOON_TBC_PORTAL"]] = true,
 			[transports["ORGRIMMAR_SHATTRATH_PORTAL"]] = true,
 			[transports["ORGRIMMAR_DALARAN_PORTAL"]] = true,
 			[transports["ORGRIMMAR_AZSUNA_PORTAL"]] = true,
@@ -8205,6 +8615,8 @@ do
 			[transports["ORGRIMMAR_VALDRAKKEN_PORTAL"]] = true,
 			[transports["ORGRIMMAR_WAKINGSHORES_ZEPPELIN"]] = true,
 			[transports["ORGRIMMAR_DORNOGAL_PORTAL"]] = true,
+			[transports["ORGRIMMAR_RAZORWINDSHORES_PORTAL"]] = true,
+			[transports["ORGRIMMAR_SILVERMOON_PORTAL"]] = true,
 		},
 		flightnodes = {
 			[23] = true,     -- Orgrimmar, Durotar (H)
@@ -8919,7 +9331,7 @@ do
 		paths = {
 			[BZ["Terokkar Forest"]] = true,
 			[BZ["Nagrand"]] = true,
-			[transports["SHATTRATH_QUELDANAS_PORTAL"]] = true,
+			[transports["SHATTRATH_QUELDANAS_TBC_PORTAL"]] = true,
 			[transports["SHATTRATH_STORMWIND_PORTAL"]] = true,
 			[transports["SHATTRATH_ORGRIMMAR_PORTAL"]] = true,
 		},
@@ -10430,7 +10842,7 @@ do
 			[transports["ZULDAZAR_ECHOISLES_BOAT"]] = true,
 			[transports["ZULDAZAR_ORGRIMMAR_PORTAL"]] = true,
 			[transports["ZULDAZAR_THUNDERBLUFF_PORTAL"]] = true,
-			[transports["ZULDAZAR_SILVERMOON_PORTAL"]] = true,
+			[transports["ZULDAZAR_SILVERMOON_TBC_PORTAL"]] = true,
 			[transports["ZULDAZAR_SILITHUS_PORTAL"]] = true,
 			[transports["ZULDAZAR_NAZJATAR_PORTAL"]] = true,
 			[transports["ZULDAZAR_MECHAGON_BOAT"]] = true,
@@ -11632,6 +12044,215 @@ do
 		expansion = TheWarWithin,
 	}
 
+	
+	-- Midnight zones
+	
+	-- 15969
+	zones[BZ["Silvermoon City"]] = {
+		instances = {
+			[BZ["Murder Row"]] = true,
+		},
+		paths = {
+			[transports["SILVERMOON_ORGRIMMAR_PORTAL"]] = true,
+			[transports["SILVERMOON_STORMWIND_PORTAL"]] = true,
+			[transports["SILVERMOON_HARANDAR_PORTAL"]] = true,
+			[transports["SILVERMOON_VOIDSTORM_PORTAL"]] = true,
+			[transports["SILVERMOON_QUELDANAS_FLIGHTPATH"]] = true,
+			[BZ["Eversong Woods"]] = true,
+			[BZ["Murder Row"]] = true,
+		},
+		flightnodes = {
+			[3131] = true,   -- Sanctum of Light, Silvermoon City (Neutral)
+			[3132] = true,   -- The Royal Exchange, Silvermoon City (Horde)
+		},
+		type = "City",
+		faction = "Sanctuary",
+		continent = Quel_Thalas,
+		expansion = Midnight,
+	}
+	
+	-- 15968
+	zones[BZ["Eversong Woods"]] = {
+		low = 80,
+		high = 90,
+		instances = {
+			[BZ["Windrunner Spire"]] = true,
+			[BZ["Collegiate Calamity"]] = true,
+			[BZ["The Darkway"]] = true,
+			[BZ["Parhelion Plaza"]] = true,
+			[BZ["The Shadow Enclave"]] = true,
+		},
+		paths = {
+			[BZ["Eastern Plaguelands"]] = true,
+			[BZ["Silvermoon City"]] = true,
+			[BZ["Zul'Aman"]] = true,
+			[BZ["Windrunner Spire"]] = true,
+			[BZ["Collegiate Calamity"]] = true,
+			[BZ["The Darkway"]] = true,
+			[BZ["Parhelion Plaza"]] = true,
+			[BZ["The Shadow Enclave"]] = true,
+		},
+		flightnodes = {
+			[3133] = true,   -- Fairbreeze Village, Eversong Woods (Neutral)
+			[3134] = true,   -- Tranquillien, Eversong Woods (Neutral)
+			[3190] = true,   -- Silverglade Refuge, Eversong Woods (Alliance)
+			[3131] = true,   -- Sanctum of Light, Silvermoon City (Neutral)
+			[3132] = true,   -- The Royal Exchange, Silvermoon City (Horde)			
+		},
+		continent = Quel_Thalas,
+		expansion = Midnight,
+	}
+	
+	-- 16215
+	zones[BZ["Isle of Quel'Danas"]] = {
+		low = 80,
+		high = 83,
+		instances = {
+			[BZ["March on Quel'Danas"]] = true,
+			[BZ["Magisters' Terrace"]] = true,
+		},
+		paths = {
+			[transports["QUELDANAS_SILVERMOON_FLIGHTPATH"]] = true,
+			[BZ["Magisters' Terrace"]] = true,
+		},
+		flightnodes = {
+			[3125] = true,   -- Terrace of the Sun, Isle of Quel'Danas (Neutral)
+		},
+		continent = Quel_Thalas,
+		expansion = Midnight,
+	}
+
+	-- 15947
+	zones[BZ["Zul'Aman"]] = {
+		low = 83,
+		high = 88,
+		instances = {
+			[BZ["Den of Nalorakk"]] = true,
+			[BZ["Maisara Caverns"]] = true,
+			[BZ["Atal'Aman"]] = true,
+			[BZ["Twilight Crypts"]] = true,
+		},
+		paths = {
+			[BZ["Eversong Woods"]] = true,
+			[BZ["Den of Nalorakk"]] = true,
+			[BZ["Maisara Caverns"]] = true,
+			[BZ["Atal'Aman"]] = true,
+			[BZ["Twilight Crypts"]] = true,
+		},
+		flightnodes = {
+			[3106] = true,   -- Camp Stonewash, Zul'Aman (Neutral)
+			[3126] = true,   -- Torntusk Overlook, Zul'Aman (Neutral)
+			[3127] = true,   -- Amani'Zar Village, Zul'Aman (Neutral)
+			[3128] = true,   -- Atal'Aman, Zul'Aman (Neutral)
+			[3129] = true,   -- Shadebasin Watch, Zul'Aman (Neutral)
+			[3130] = true,   -- Witherbark Bluffs, Zul'Aman (Neutral)
+		},
+		continent = Quel_Thalas,
+		expansion = Midnight,
+	}
+	
+	-- 15355
+	zones[BZ["Harandar"]] = {
+		low = 83,
+		high = 88,
+		instances = {
+			[BZ["The Dreamrift"]] = true,
+			[BZ["The Blinding Vale"]] = true,
+			[BZ["The Grudge Pit"]] = true,
+			[BZ["The Gulf of Memory"]] = true,
+		},
+		paths = {
+			[transports["HARANDAR_SILVERMOON_PORTAL"]] = true,
+			[BZ["The Dreamrift"]] = true,
+			[BZ["The Blinding Vale"]] = true,
+			[BZ["The Grudge Pit"]] = true,
+			[BZ["The Gulf of Memory"]] = true,
+		},
+		flightnodes = {
+			[3192] = true,   -- Har'athir, Harandar (Neutral)
+			[3193] = true,   -- The Den, Harandar (Neutral)
+			[3194] = true,   -- Har'kuai, Harandar (Neutral)
+			[3195] = true,   -- Har'alnor, Harandar (Neutral)
+			[3196] = true,   -- Har'mara, Harandar (Neutral)
+		},
+		continent = Quel_Thalas,
+		expansion = Midnight,
+	}	
+
+	-- 15458
+	zones[BZ["Voidstorm"]] = {
+		low = 88,
+		high = 90,
+		instances = {
+			[BZ["The Voidspire"]] = true,
+			[BZ["Voidscar Arena"]] = true,
+			[BZ["Shadowguard Point"]] = true,
+			[BZ["Sunkiller Sanctum"]] = true,
+			[BZ["Slayer's Rise"]] = true,
+		},
+		paths = {
+			[transports["VOIDSTORM_SILVERMOON_PORTAL"]] = true,
+			[BZ["The Voidspire"]] = true,
+			[BZ["Voidscar Arena"]] = true,
+			[BZ["Shadowguard Point"]] = true,
+			[BZ["Sunkiller Sanctum"]] = true,
+			[BZ["Slayer's Rise"]] = true,
+		},
+		flightnodes = {
+			[3119] = true,   -- The Ingress, Voidstorm (Neutral)
+			[3120] = true,   -- Locus Point, Voidstorm (Neutral)
+			[3121] = true,   -- Howling Ridge, Voidstorm (Neutral)
+			[3123] = true,   -- Master's Perch, Voidstorm (Neutral)
+		},
+		continent = Quel_Thalas,
+		expansion = Midnight,
+	}	
+
+
+	-- Housing Areas
+	
+	-- 15524
+	zones[BZ["Razorwind Shores"]] = {
+		paths = {
+			[transports["RAZORWINDSHORES_ORGRIMMAR_PORTAL"]] = true,
+		},
+		flightnodes = {
+			[2972] = true,   -- Entrance Gate, Razorwind Shores (Neutral)
+			[2973] = true,   -- Saltfang Shoals East, Razorwind Shores (Neutral)
+			[2974] = true,   -- Runetotem's Bounty North, Razorwind Shores (Neutral)
+			[2975] = true,   -- Runetotem's Bounty South, Razorwind Shores (Neutral)
+			[2976] = true,   -- The Bluffs, Razorwind Shores (Neutral)
+			[2978] = true,   -- Cragthorn Highlands, Razorwind Shores (Neutral)
+			[2979] = true,   -- The Common, Razorwind Shores (Neutral)
+			[2980] = true,   -- The Bloom, Razorwind Shores (Neutral)
+		},
+		faction = "Sanctuary",
+		continent = Kalimdor,
+		expansion = Midnight,
+	}	
+
+	-- 16105
+	zones[BZ["Founder's Point"]] = {
+		paths = {
+			[transports["FOUNDERSPOINT_STORMWIND_PORTAL"]] = true,
+		},
+		flightnodes = {
+			[3072] = true,   -- Entrance Portal, Founder's Point (Neutral)
+			[3073] = true,   -- Town Center, Founder's Point (Neutral)
+			[3074] = true,   -- Mear's Farm, Founder's Point (Neutral)
+			[3075] = true,   -- The Outer Banks, Founder's Point (Neutral)
+			[3076] = true,   -- Small Aerie, Founder's Point (Neutral)
+			[3077] = true,   -- Gilded Oaks, Founder's Point (Neutral)
+			[3078] = true,   -- Brumewood Hollow, Founder's Point (Neutral)
+			[3079] = true,   -- Stoneveil Ridge, Founder's Point (Neutral)
+		},
+		faction = "Sanctuary",
+		continent = Eastern_Kingdoms,
+		expansion = Midnight,
+	}		
+
+
+
 
 	-- ============= DUNGEONS ===============
 	
@@ -12267,16 +12888,16 @@ do
 		entrancePortal = { BZ["Caverns of Time"], 60.3, 82.8 },
 	}	
 	
-	zones[BZ["Magisters' Terrace"]] = {
+	zones[BZ["Magisters' Terrace"].." ("..The_Burning_Crusade..")"] = {
 		low = 25,
 		high = 30,
 		ct_low = 25,
 		continent = Eastern_Kingdoms,
 		expansion = Wrath_of_the_Lich_King,
-		paths = BZ["Isle of Quel'Danas"],
+		paths = BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")",
 		groupSize = 5,
 		type = "Instance",
-		entrancePortal = { BZ["Isle of Quel'Danas"], 61.3, 30.9 },
+		entrancePortal = { BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")", 61.3, 30.9 },
 	}
 	
 	-- a.k.a. The Opening of the Black Portal
@@ -12474,7 +13095,8 @@ do
 	}
 	
 	-- Note: before Cataclysm, this was a lvl 70 10-man raid
-	zones[BZ["Zul'Aman"]] = {
+	-- As of Midnight, it's a zone (defined separately)
+	zones[BZ["Zul'Aman"].." ("..The_Burning_Crusade..")"] = {
 		low = 35,
 		high = 35,
 		continent = Eastern_Kingdoms,
@@ -13363,6 +13985,96 @@ do
 		entrancePortal = { BZ["Tazavesh"], 36.2, 12.5 },
 	}
 
+
+
+	-- Midnight dungeons
+	
+	-- 16091
+	zones[BZ["Murder Row"]] = {
+		low = 78,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Silvermoon City"],
+		groupSize = 5,
+		type = "Instance",
+		entrancePortal = { BZ["Silvermoon City"], 56.2, 61.1 },
+	}	
+	
+	-- 15808
+	zones[BZ["Windrunner Spire"]] = {
+		low = 78,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Eversong Woods"],
+		groupSize = 5,
+		type = "Instance",
+		entrancePortal = { BZ["Eversong Woods"], 64.4, 61.8 },
+	}	
+
+	
+	-- 15829
+	zones[BZ["Magisters' Terrace"]] = {
+		low = 78,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Isle of Quel'Danas"],
+		groupSize = 5,
+		type = "Instance",
+		entrancePortal = { BZ["Isle of Quel'Danas"], 63.4, 15.3 },
+	}
+
+	-- 16368
+	zones[BZ["Den of Nalorakk"]] = {
+		low = 78,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Zul'Aman"],
+		groupSize = 5,
+		type = "Instance",
+		entrancePortal = { BZ["Zul'Aman"], 31.4, 83.9 },
+	}
+
+	-- 16395
+	zones[BZ["Maisara Caverns"]] = {
+		low = 78,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Zul'Aman"],
+		groupSize = 5,
+		type = "Instance",
+		entrancePortal = { BZ["Zul'Aman"], 44.4, 40.3 },
+	}
+
+	-- 16359
+	zones[BZ["The Blinding Vale"]] = {
+		low = 78,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Harandar"],
+		groupSize = 5,
+		type = "Instance",
+		entrancePortal = { BZ["Harandar"], 27.8, 77.9 },
+	}
+
+	-- 16425
+	zones[BZ["Voidscar Arena"]] = {
+		low = 80,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Voidstorm"],
+		groupSize = 5,
+		type = "Instance",
+		entrancePortal = { BZ["Voidstorm"], 53.7, 34.8 },
+	}
+
+
 	-- ==================RAIDS=====================
 	
 	-- Classic Raids --
@@ -13505,10 +14217,10 @@ do
 		high = 30,
 		continent = Eastern_Kingdoms,
 		expansion = The_Burning_Crusade,
-		paths = BZ["Isle of Quel'Danas"],
+		paths = BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")",
 		groupSize = 25,
 		type = "Instance",
-		entrancePortal = { BZ["Isle of Quel'Danas"], 44.3, 45.7 },
+		entrancePortal = { BZ["Isle of Quel'Danas"].." ("..The_Burning_Crusade..")", 44.3, 45.7 },
 	}
 
 	-- Wrath of the Lich King raids
@@ -14045,6 +14757,48 @@ do
 	}	
 	
 	
+	-- Midnight raids
+	
+	-- 16342
+	zones[BZ["March on Quel'Danas"]] = {
+		low = 90,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		groupSize = 25,
+		type = "Instance",
+		--entrancePortal = { BZ["Isle of Quel'Danas"], 41.8, 21.0 },
+	}	
+	
+	-- 16531
+	zones[BZ["The Dreamrift"]] = {
+		low = 90,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Harandar"],
+		groupMinSize = 10,
+		groupMaxSize = 30,
+		type = "Instance",
+		--entrancePortal = { BZ["Harandar"], 41.8, 21.0 },
+	}		
+	
+	-- 16531
+	zones[BZ["The Voidspire"]] = {
+		low = 90,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Voidstorm"],
+		groupMinSize = 10,
+		groupMaxSize = 30,
+		type = "Instance",
+		--entrancePortal = { BZ["Voidstorm"], 41.8, 21.0 },
+	}	
+	
+	
+	
+	
 	-- ==============BATTLEGROUNDS================
 
 	zones[BZ["Arathi Basin"]] = {
@@ -14152,6 +14906,19 @@ do
 		type = "Battleground",
 		texture = "DeephaulRavine",  -- TODO: verify
 	}
+
+	-- 16423
+	zones[BZ["Slayer's Rise"]] = {
+		low = 90,
+		high = MAX_LEVEL,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Voidstorm"],
+		groupSize = 40,
+		type = "Battleground",
+		--texture = "DeephaulRavine",  -- TODO: verify
+	}
+
 
 
 	-- ==============ARENAS================
@@ -14507,6 +15274,139 @@ do
 	}
 	
 	
+	-- Midnight delves
+	
+	-- 16556
+	zones[BZ["Atal'Aman"]] = {
+		low = 80,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Zul'Aman"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		entrancePortal = { BZ["Zul'Aman"], 24.8, 53.1 },
+	}
+	
+	-- 16545
+	zones[BZ["Collegiate Calamity"]] = {
+		low = 80,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Eversong Woods"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		entrancePortal = { BZ["Eversong Woods"], 49.1, 22.6 },
+	}	
+	
+	-- 16642
+	zones[BZ["The Darkway"]] = {
+		low = 80,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Eversong Woods"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		entrancePortal = { BZ["Eversong Woods"], 46.8, 15.8 },
+	}		
+	
+	-- 16548
+	zones[BZ["The Grudge Pit"]] = {
+		low = 80,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Harandar"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		entrancePortal = { BZ["Harandar"], 70.4, 65.2 },
+	}	
+	
+	-- 16595
+	zones[BZ["The Gulf of Memory"]] = {
+		low = 80,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Harandar"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		entrancePortal = { BZ["Harandar"], 36.2, 49.5 },
+	}		
+	
+	-- 16542
+	zones[BZ["Parhelion Plaza"]] = {
+		low = 80,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Eversong Woods"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		--entrancePortal = { BZ["Eversong Woods"], 0.0, 0.0 },  -- unknown
+	}		
+	
+	-- 16549	
+	zones[BZ["Shadowguard Point"]] = {
+		low = 80,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Voidstorm"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		entrancePortal = { BZ["Voidstorm"], 37.2, 49.1 },
+	}
+	
+	-- 16594
+	zones[BZ["The Shadow Enclave"]] = {
+		low = 80,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Eversong Woods"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		entrancePortal = { BZ["Eversong Woods"], 45.4, 86.2 },
+	}	
+	
+	-- 16592
+	zones[BZ["Sunkiller Sanctum"]] = {
+		low = 80,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Voidstorm"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		entrancePortal = { BZ["Voidstorm"], 54.8, 47.3 },
+	}	
+	
+	-- 16557
+	zones[BZ["Twilight Crypts"]] = {
+		low = 80,
+		high = 90,
+		continent = Quel_Thalas,
+		expansion = Midnight,
+		paths = BZ["Zul'Aman"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		entrancePortal = { BZ["Zul'Aman"], 25.2, 84.6 },
+	}
+	
+	
 	-- ==============COMPLEXES================
 
 	zones[BZ["Dire Maul"]] = {
@@ -14772,7 +15672,7 @@ do
 					-- Set zone mapID. Note: a zone can have multiple map ID's so this might not be entirely accurate
 					zones[uniqueZoneName].zoneMapID = zoneMapID
 					-- Get zone texture ID
-					zones[uniqueZoneName].texture = C_Map.GetMapArtID(continentMapID)
+					zones[uniqueZoneName].texture = C_Map.GetMapArtID(zoneMapID)
 					-- Get zone player and battle pet levels
 					minLvl, maxLvl, minPetLvl, maxPetLvl = C_Map.GetMapLevels(zoneMapID)
 					--if minLvl and minLvl > 0 then zones[uniqueZoneName].low = minLvl end
@@ -14833,9 +15733,9 @@ do
 		textures[k] = v.texture
 		complexOfInstance[k] = v.complex
 		zoneComplexes[k] = v.complexes
-		if v.texture then
-			textures_rev[v.texture] = k
-		end
+--		if v.texture then
+--			textures_rev[v.texture] = k
+--		end
 		zoneMapIDs[k] = v.zoneMapID
 		if v.entrancePortal then
 			entrancePortals_zone[k] = v.entrancePortal[1]

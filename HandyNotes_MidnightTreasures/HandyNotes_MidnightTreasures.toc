@@ -2,7 +2,7 @@
 ## Title: HandyNotes: Midnight Treasures and Rares
 ## Notes: Where are the hidden treasures in Midnight?
 ## Author: Kemayo
-## Version: v7
+## Version: v11
 ## IconTexture: Interface\Icons\Ability_Spy
 ## DefaultState: enabled
 ## X-Category: Map
@@ -30,8 +30,8 @@ achievements\GlyphHunter.lua
 achievements\HighestPeaks.lua
 achievements\LoreHunter.lua
 
-#shared\Delves.lua
-#shared\WorldBosses.lua
+shared\Delves.lua
+shared\WorldBosses.lua
 
 #profession_knowledge\Masters.lua
 #profession_knowledge\Alchemy.lua

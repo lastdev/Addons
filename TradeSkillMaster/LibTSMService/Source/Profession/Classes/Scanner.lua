@@ -737,9 +737,13 @@ function private.GetItemStringAndCraftName(craftString)
 	-- Get the itemString and craft name
 	local itemString, craftName = nil, nil
 	if quality then
-		assert(type(resultItem) == "table")
-		assert(resultItem[quality])
-		itemString = ItemString.ToLevel(ItemString.Get(resultItem[quality]))
+		if type(resultItem) == "table" then
+			assert(resultItem[quality])
+			itemString = ItemString.ToLevel(ItemString.Get(resultItem[quality]))
+		else
+			assert(resultItem)
+			itemString = ItemString.Get(resultItem)
+		end
 		craftName = ItemInfo.GetName(itemString)
 	elseif strfind(resultItem, "enchant:") then
 		itemString = ""

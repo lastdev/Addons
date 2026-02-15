@@ -32,7 +32,8 @@ oop:Create("FilterPipeline", {
 	end,
 
 	Reset = function(self)
-		self.filters = {}
+		self.filters = self.filters or {}
+		wipe(self.filters)
 	end,
 	
 	-- Add a filter function to the pipeline

@@ -1,0 +1,11 @@
+## Interface: 120001
+## Title: LFG Teleport Button Midnight
+## IconTexture: Interface/AddOns/LFGTeleportButtonMidnight/Media/portal.blp
+## Notes: Shows a secure teleport button when your LFG M+ application is invited (Midnight S1 dungeons)
+## Author: Qabhal EU Twisting-Nether
+## Version: 1.0.7
+## SavedVariables: TPB_DB
+## OptionalDeps: LibSharedMedia-3.0, AceGUI-3.0, AceGUI-3.0-SharedMediaWidgets
+LFGTeleportButtonMidnight.lua
+
+

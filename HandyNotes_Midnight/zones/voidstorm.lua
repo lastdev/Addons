@@ -9,6 +9,7 @@ local Map = ns.Map
 local LoreObject = ns.node.LoreObject
 local PT = ns.node.ProfessionTreasures
 local Rare = ns.node.Rare
+local Safari = ns.node.Safari
 local SkyridingGlyph = ns.node.SkyridingGlyph
 local Telescope = ns.node.Telescope
 local Treasure = ns.node.Treasure
@@ -24,6 +25,7 @@ local Spacer = ns.reward.Spacer
 local Toy = ns.reward.Toy
 local Transmog = ns.reward.Transmog
 
+local Entrance = ns.poi.Entrance
 local Path = ns.poi.Path
 local POI = ns.poi.POI
 
@@ -41,9 +43,10 @@ local lop_b = Map({id = 2527, settings = true}) -- Lair of Predaxas - Bottom
 
 map.nodes[29515008] = Rare({
     id = 244272,
-    quest = 94728, -- 90805
+    quest = 90805, -- 94728, -- 90805
     rewards = {
         Achievement({id = 62130, criteria = 111877}),
+        Reputation({id = 2699, gain = 50, quest = 94728}), Spacer(),
         Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
     }
@@ -51,11 +54,12 @@ map.nodes[29515008] = Rare({
 
 map.nodes[34058198] = Rare({
     id = 238498,
-    quest = 94729, -- 91050
+    quest = 91050, -- 94729, -- 91050
     rewards = {
         Achievement({id = 62130, criteria = 111878}),
         Transmog({item = 264564, type = L['mail']}), -- Voidscale Shoulderpads
-        Spacer(), Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
+        Reputation({id = 2699, gain = 50, quest = 94729}), Spacer(),
+        Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
 
     }
@@ -64,20 +68,22 @@ map.nodes[34058198] = Rare({
 map.nodes[36168355] = Rare({
     id = 241443,
     location = L['in_small_cave'],
-    quest = 94730, -- 91048
+    quest = 91048, -- 94730, -- 91048
     rewards = {
         Achievement({id = 62130, criteria = 111879}),
+        Reputation({id = 2699, gain = 50, quest = 94730}), Spacer(),
         Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
     },
-    pois = {POI({35698120})}
+    pois = {Entrance({35698120, 37538455})}
 }) -- Tremora
 
 map.nodes[43665154] = Rare({
     id = 256922,
-    quest = 94731, -- 93966
+    quest = 93966, -- 94731, -- 93966
     rewards = {
         Achievement({id = 62130, criteria = 111880}),
+        Reputation({id = 2699, gain = 50, quest = 94731}), Spacer(),
         Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
     }
@@ -86,9 +92,10 @@ map.nodes[43665154] = Rare({
 map.nodes[47058063] = Rare({
     id = 256923,
     location = L['in_small_cave'],
-    quest = 94732, -- 93946
+    quest = 93946, -- 93946
     rewards = {
         Achievement({id = 62130, criteria = 111881}),
+        Reputation({id = 2699, gain = 50, quest = 94732}), Spacer(),
         Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
     }
@@ -97,9 +104,10 @@ map.nodes[47058063] = Rare({
 map.nodes[39236392] = Rare({
     id = 256924,
     location = L['in_small_cave'],
-    quest = 34751, -- 93944
+    quest = 93944, -- 34751, -- 93944
     rewards = {
         Achievement({id = 62130, criteria = 111882}),
+        Reputation({id = 2699, gain = 50, quest = 94751}), Spacer(),
         Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
     }
@@ -107,9 +115,10 @@ map.nodes[39236392] = Rare({
 
 map.nodes[37897177] = Rare({
     id = 256925,
-    quest = 94758, -- 93947
+    quest = 93947, -- 94758, -- 93947
     rewards = {
         Achievement({id = 62130, criteria = 111883}),
+        Reputation({id = 2699, gain = 50, quest = 94758}), Spacer(),
         Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
     }
@@ -117,11 +126,12 @@ map.nodes[37897177] = Rare({
 
 map.nodes[55727945] = Rare({
     id = 256926,
-    quest = 94761, -- 93934
+    quest = 93934, -- 93934/94761
     rewards = {
         Achievement({id = 62130, criteria = 111884}),
         Transmog({item = 264533, type = L['cloth']}), -- Queen's Tentacle Sash
-        Spacer(), Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
+        Reputation({id = 2699, gain = 50, quest = 94761}), Spacer(),
+        Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
 
     }
@@ -132,6 +142,7 @@ map.nodes[48815326] = Rare({
     quest = 93895, -- 93895
     rewards = {
         Achievement({id = 62130, criteria = 111885}),
+        Reputation({id = 2699, gain = 50, quest = 94763}), Spacer(),
         Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
     }
@@ -142,6 +153,7 @@ slr.nodes[46334094] = Rare({
     quest = 93953, -- 94762, -- 93953
     rewards = {
         Achievement({id = 62130, criteria = 111886}),
+        Reputation({id = 2699, gain = 50, quest = 94762}), Spacer(),
         Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
     },
@@ -151,27 +163,29 @@ slr.nodes[46334094] = Rare({
 map.nodes[35495023] = Rare({
     id = 256770,
     location = L['in_small_cave'],
-    quest = 94752, -- 93884
+    quest = 93884, -- 94752, -- 93884
     rewards = {
         Achievement({id = 62130, criteria = 111887}),
+        Reputation({id = 2699, gain = 50, quest = 94752}), Spacer(),
         Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
     },
     pois = {POI({35604940})}
 }) -- Bilemaw the Gluttonous
 
-slr.nodes[39049231] = Rare({ -- wowhead beta coords
+slr.nodes[40888899] = Rare({ -- wowhead beta coords
     id = 245182,
-    quest = 94754, -- 91047
+    quest = 91047, -- 94754, -- 91047
     rewards = {
         Achievement({id = 62130, criteria = 111888}),
+        Reputation({id = 2699, gain = 50, quest = 94754}), Spacer(),
         Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
     },
     pois = {
         Path({
-            39319097, 39099054, 38559100, 38649176, 39049231, 39499288,
-            39649360, 39759435, 40069375, 39819309, 39579242, 39429173, 39319097
+            41038872, 40888899, 41028949, 41058986, 41139032, 41169061,
+            41479058, 41719037, 41559005, 41428975, 41038872
         })
     },
     parent = map.id
@@ -182,6 +196,7 @@ map.nodes[40174130] = Rare({
     quest = 91051, -- 91051
     rewards = {
         Achievement({id = 62130, criteria = 111889}),
+        Reputation({id = 2699, gain = 50, quest = 94759}), Spacer(),
         Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
     },
@@ -193,6 +208,7 @@ map.nodes[53946272] = Rare({
     quest = 93896, -- 93896
     rewards = {
         Achievement({id = 62130, criteria = 111890}),
+        Reputation({id = 2699, gain = 50, quest = 94755}), Spacer(),
         Section(L['shared_drops']), Mount({item = 257085, id = 2751}), -- Augmented Stormray
         Mount({item = 260635, id = 2827}) -- Sanguine Harrower
     }
@@ -246,16 +262,18 @@ map.nodes[25766728] = Treasure({
 
 map.nodes[64537547] = Treasure({
     quest = 93431,
-    note = L['bloody_sack_note'], -- Collect Dripping Meat from nearby bone piles
+    note = L['bloody_sack_note'],
     rewards = {
-        Achievement({id = 62126, criteria = 111866}), Toy({item = 267139}) -- Hungry Black Hole
+        Achievement({id = 62126, criteria = 111866}), --
+        Toy({item = 267139}) -- Hungry Black Hole
     }
 }) -- Bloody Sack
 
 map.nodes[53364266] = Treasure({
     quest = 93840,
     rewards = {
-        Achievement({id = 62126, criteria = 111867}), Decor({id = 15746}) -- Void Elf Torch
+        Achievement({id = 62126, criteria = 111867}), --
+        Decor({id = 15746}) -- Void Elf Torch
     },
     note = L['malignant_chest_note'],
     pois = {
@@ -269,7 +287,8 @@ map.nodes[53364266] = Treasure({
 slr.nodes[53133228] = Treasure({
     quest = 93996, -- 94005 after you pull out the stash
     rewards = {
-        Achievement({id = 62126, criteria = 111868}), Decor({id = 14597})
+        Achievement({id = 62126, criteria = 111868}), --
+        Decor({id = 14597})
     },
     parent = map.id
 }) -- Stellar Stash
@@ -277,7 +296,8 @@ slr.nodes[53133228] = Treasure({
 lop_b.nodes[23748369] = Treasure({
     quest = 94454,
     rewards = {
-        Achievement({id = 62126, criteria = 111869}), Toy({item = 250319}) -- Shadowgraft
+        Achievement({id = 62126, criteria = 111869}), --
+        Toy({item = 250319}) -- Shadowgraft
     }
 }) -- Forgotten Researcher's Cache
 
@@ -285,7 +305,8 @@ map.nodes[47937851] = Treasure({
     quest = 94454,
     location = L['in_cave'],
     rewards = {
-        Achievement({id = 62126, criteria = 111869}), Toy({item = 250319}) -- Shadowgraft
+        Achievement({id = 62126, criteria = 111869}), --
+        Toy({item = 250319}) -- Shadowgraft
     }
 }) -- Forgotten Researcher's Cache -- Entrance
 -- TODO: recheck on live servers, beta has no translation to main map coords for this map
@@ -293,8 +314,8 @@ map.nodes[47937851] = Treasure({
 slr.nodes[49052012] = Treasure({
     quest = 94387,
     rewards = {
-        Achievement({id = 62126, criteria = 111870}),
-        Transmog({item = 266101, type = L['cosmetic']}) -- Unused Initiates's Bulwark
+        Achievement({id = 62126, criteria = 111870}), --
+        Transmog({item = 266101}) -- Unused Initiates's Bulwark
     },
     parent = map.id
 }) -- Scout's Pack
@@ -302,8 +323,8 @@ slr.nodes[49052012] = Treasure({
 map.nodes[55377542] = Treasure({
     quest = 93553,
     rewards = {
-        Achievement({id = 62126, criteria = 111871}),
-        Transmog({item = 266075, type = L['cosmetic']}) -- Harpoon of Extirpation
+        Achievement({id = 62126, criteria = 111871}), --
+        Transmog({item = 266075}) -- Harpoon of Extirpation
     }
 }) -- Embedded Spear
 
@@ -319,16 +340,16 @@ map.nodes[28337290] = Treasure({
     quest = 93569,
     note = L['exaliburn_note'], -- Use Potion of Unquestionable Strength nearby
     rewards = {
-        Achievement({id = 62126, criteria = 111873}),
-        Transmog({item = 266099, type = L['cosmetic']}) -- Extinguished Exaliburn
+        Achievement({id = 62126, criteria = 111873}), --
+        Transmog({item = 266099}) -- Extinguished Exaliburn
     }
 }) -- Exaliburn
 
 map.nodes[35774141] = Treasure({
     quest = 93496,
     rewards = {
-        Achievement({id = 62126, criteria = 111874}),
-        Transmog({item = 266100, type = L['cosmetic']}) -- Barbed Riftwalker Dirk
+        Achievement({id = 62126, criteria = 111874}), --
+        Transmog({item = 266100}) -- Barbed Riftwalker Dirk
     },
     parent = slr.id
 }) -- Discarded Energy Pike
@@ -336,8 +357,8 @@ map.nodes[35774141] = Treasure({
 map.nodes[43018194] = Treasure({
     quest = 93493,
     rewards = {
-        Achievement({id = 62126, criteria = 111875}),
-        Transmog({item = 266098, type = L['cosmetic']}) -- Faindel's Longbow
+        Achievement({id = 62126, criteria = 111875}), --
+        Transmog({item = 266098}) -- Faindel's Longbow
     }
 }) -- Faindel's Quiver
 
@@ -443,19 +464,51 @@ map.nodes[37815497] = Telescope({
 -------------------------------------------------------------------------------
 
 slr.nodes[41964062] = PT.Alchemy({quest = 89112, id = 238533, parent = map.id}) -- Vial of Voidstorm Oddities
+map.nodes[32794329] = PT.Alchemy({quest = 89118, id = 238539}) -- Failed Experiment
 map.nodes[30516899] = PT.Blacksmithing({quest = 89181, id = 238544}) -- Voidstorm Defense Spear
 map.nodes[35495882] = PT.Enchanting({quest = 89102, id = 238550}) -- Pure Void Crystal
-map.nodes[55486428] = PT.Herbalism({quest = 89156, id = 238474}) -- Peculiar Lotus
-slr.nodes[54814150] = PT.Inscription({
+slr.nodes[54135101] = PT.Engineering({
+    quest = 89137,
+    id = 238560,
+    parent = map.id
+}) -- Ethereal Stormwrench
+slr.nodes[28933903] = PT.Engineering({
+    quest = 89134,
+    id = 238557,
+    parent = map.id
+}) -- Miniaturized Transport Skiff
+map.nodes[34685697] = PT.Herbalism({quest = 89156, id = 238474}) -- Peculiar Lotus
+slr.nodes[60698426] = PT.Inscription({
     quest = 89067,
     id = 238572,
     parent = map.id
-}) -- Void-Touched Quill (Cant loot phasing issue)
+}) -- Void-Touched Quill
 map.nodes[30496904] = PT.Jewelcrafting({quest = 89123, id = 238581}) -- Speculative Voidstorm Crystal
+slr.nodes[54205104] = PT.Jewelcrafting({
+    quest = 89128,
+    id = 238586,
+    parent = map.id
+}) -- Ethereal Gem Pliers
+slr.nodes[62765345] = PT.Jewelcrafting({
+    quest = 89126,
+    id = 238584,
+    parent = map.id
+}) -- Shattered Glass
 map.nodes[34725692] = PT.Leatherworking({quest = 89090, id = 238589}) -- Ethereal Leatherworking Knife
+slr.nodes[53745167] = PT.Leatherworking({
+    quest = 89093,
+    id = 238592,
+    parent = map.id
+}) -- Patterns: Beyond the Void
 map.nodes[41843821] = PT.Mining({quest = 89150, id = 238602}) -- Star Metal Deposit
+slr.nodes[28733856] = PT.Mining({quest = 89148, id = 238600, parent = map.id}) -- Glimmering Void Pearl
+slr.nodes[54245159] = PT.Mining({quest = 89146, id = 238598, parent = map.id}) -- Lost Voidstorm Satchel
 slr.nodes[30486907] = PT.Mining({quest = 89144, id = 238596, parent = map.id}) -- Miner's Guide to Voidstorm
 slr.nodes[45504240] = PT.Skinning({quest = 89169, id = 238631, parent = map.id}) -- Voidstorm Leather Sample
+slr.nodes[62018352] =
+    PT.Tailoring({quest = 89082, id = 238616, parent = map.id}) -- Book of Sin'dorei Stitches
+slr.nodes[61398512] =
+    PT.Tailoring({quest = 89083, id = 238617, parent = map.id}) -- Satin Throw Pillow
 
 -------------------------------------------------------------------------------
 ---------------------------- VOIDSTORM GLYPH HUNTER ---------------------------
@@ -506,3 +559,46 @@ map.nodes[49278746] = SkyridingGlyph({
     rewards = {Achievement({id = 61583, criteria = 110382})}
 }) -- The Gorging Pit, Voidstorm
 
+-------------------------------------------------------------------------------
+-------------------------------- SAFARI ---------------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[40803860] = Safari.DevouringRunt({
+    pois = {POI({27807270, 33106600, 40245078, 40303720, 40803860})}
+})
+map.nodes[30406980] = Safari.Voidcrawler({
+    pois = {POI({28906590, 30406980, 30606640, 39808370})}
+})
+map.nodes[31104390] = Safari.Blistercreepling({
+    pois = {POI({26005122, 31104390, 48607830, 62806720})}
+})
+map.nodes[63307370] = Safari.RiftbladeFamiliar({})
+
+-------------------------------------------------------------------------------
+-------------------------- STORMARION ASSUALT ---------------------------------
+-------------------------------------------------------------------------------
+
+local maps = {
+    ns.maps[2405] -- Voidstorm
+}
+
+for _, m in pairs(maps) do
+    m.groups[#m.groups + 1] = ns.groups.STORMARION_ASSAULT
+    m.groups[ns.groups.STORMARION_ASSAULT] = true
+end
+
+local STORMARION_ASSAULT = {
+    ['stormarion_assault'] = {
+        Achievement({id = 61912, criteria = {111329, 111330, 111331, 111332}}), -- Anchoring the Defense
+        Achievement({id = 61913, criteria = {111335, 111334, 111333}}), -- A Singular Problem
+        Achievement({id = 61922, criteria = {111379}}) -- Ninety Percent is Good Enough
+    }
+}
+local STORMARION_ASSAULT_AREA_POIS = {
+    [8419] = STORMARION_ASSAULT['stormarion_assault'],
+    [8421] = STORMARION_ASSAULT['stormarion_assault'],
+    [8422] = STORMARION_ASSAULT['stormarion_assault']
+}
+
+ns.hooks.areapoievent.Add(ns.groups.STORMARION_ASSAULT,
+    STORMARION_ASSAULT_AREA_POIS)

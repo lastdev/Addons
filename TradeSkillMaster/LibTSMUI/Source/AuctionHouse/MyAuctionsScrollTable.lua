@@ -36,7 +36,7 @@ local COL_INFO = {
 		font = "BODY_BODY3",
 		sortField = "duration",
 	},
-	highBidder = LibTSMUI.IsVanillaClassic() and {
+	highBidder = (LibTSMUI.IsVanillaClassic() or LibTSMUI.IsBCClassic()) and {
 		title = HIGH_BIDDER,
 		justifyH = "LEFT",
 		font = "BODY_BODY3",
@@ -140,7 +140,7 @@ function MyAuctionsScrollTable:SetFilters(name, duration, groups, hasBid, soldOn
 		self._query:Matches("itemName", name)
 	end
 	if duration then
-		if LibTSMUI.IsVanillaClassic() then
+		if LibTSMUI.IsVanillaClassic() or LibTSMUI.IsBCClassic() then
 			self._query:Equal("duration", duration)
 		else
 			if duration == 1 then
@@ -277,7 +277,7 @@ function MyAuctionsScrollTable.__private:_HandleQueryUpdate()
 		else
 			tinsert(self._data.item, itemTexturePrefix..UIUtils.GetQualityColoredText(itemName, itemQuality))
 			tinsert(self._data.stackSize, stackSize)
-			local bidColor = not LibTSMUI.IsVanillaClassic() and highBidder ~= "" and Theme.GetColor("INDICATOR"):GetTextColorPrefix() or nil
+			local bidColor = (not LibTSMUI.IsVanillaClassic() and not LibTSMUI.IsBCClassic()) and highBidder ~= "" and Theme.GetColor("INDICATOR"):GetTextColorPrefix() or nil
 			tinsert(self._data.currentBid, Money.ToStringForAH(currentBid, bidColor))
 			tinsert(self._data.buyout, Money.ToStringForAH(buyout))
 		end
@@ -288,7 +288,7 @@ function MyAuctionsScrollTable.__private:_HandleQueryUpdate()
 		tinsert(self._data.item_tooltip, itemString)
 		if not isSold and isPending then
 			tinsert(self._data.timeLeft, "...")
-		elseif isSold or not LibTSMUI.IsVanillaClassic() then
+		elseif isSold or (not LibTSMUI.IsVanillaClassic() and not LibTSMUI.IsBCClassic()) then
 			local timeLeft = floor(duration - LibTSMUI.GetTime())
 			local timeLeftStr = nil
 			if timeLeft < SECONDS_PER_MIN then
@@ -303,7 +303,7 @@ function MyAuctionsScrollTable.__private:_HandleQueryUpdate()
 				timeLeftColor = "INDICATOR"
 			elseif timeLeft <= 2 * SECONDS_PER_HOUR then
 				timeLeftColor = "FEEDBACK_RED"
-			elseif timeLeft <= (LibTSMUI.IsVanillaClassic() and 8 or 24) * SECONDS_PER_HOUR then
+			elseif timeLeft <= ((LibTSMUI.IsVanillaClassic() or LibTSMUI.IsBCClassic()) and 8 or 24) * SECONDS_PER_HOUR then
 				timeLeftColor = "FEEDBACK_YELLOW"
 			else
 				timeLeftColor = "FEEDBACK_GREEN"
@@ -320,7 +320,7 @@ function MyAuctionsScrollTable.__private:_HandleQueryUpdate()
 				hasExistingSelection = true
 			elseif not nextSelectionAuctionId then
 				local sortValue = self:_GetSortValue(row)
-				if not LibTSMUI.IsVanillaClassic() and sortValue == self._selectionSortValue and auctionId > self._selectionAuctionId then
+				if not LibTSMUI.IsVanillaClassic() and not LibTSMUI.IsBCClassic() and sortValue == self._selectionSortValue and auctionId > self._selectionAuctionId then
 					nextSelectionAuctionId = auctionId
 				elseif sortAscending then
 					nextSelectionAuctionId = sortValue > self._selectionSortValue and auctionId or nil

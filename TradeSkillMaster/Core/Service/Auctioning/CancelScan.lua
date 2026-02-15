@@ -96,7 +96,7 @@ function CancelScan.DoProcess()
 	end
 	local auctionId, itemString, currentBid, buyout = query:GetFirstResultAndRelease()
 	if auctionId then
-		local usedAuctionIndex = not ClientInfo.IsVanillaClassic() and auctionId or (itemString..buyout..currentBid..auctionId)
+		local usedAuctionIndex = (not ClientInfo.IsVanillaClassic() and not ClientInfo.IsBCClassic()) and auctionId or (itemString..buyout..currentBid..auctionId)
 		private.usedAuctionIndex[usedAuctionIndex] = true
 		local result = AuctionHouseWrapper.CancelAuction(auctionId)
 		local isRowDone = cancelRow:GetField("numProcessed") + 1 == cancelRow:GetField("numStacks")

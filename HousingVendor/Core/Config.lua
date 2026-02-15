@@ -14,7 +14,9 @@ _G["HousingDBDefaults"] = {
   settings = {
     showCollected = false,
     usePortalNavigation = true,
+    useTomTomIntegration = true,
     showOutstandingPopup = true,
+    permanentZonePopup = false,  -- Show zone popup continuously while in zone
     autoFilterByZone = false,
   },
   uiScale = 1.0,

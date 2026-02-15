@@ -857,11 +857,12 @@ Prat:AddModuleToLoad(function()
 			self.WontAlias[string.lower(naughtyalias)] = 1
 		end
 
-		self:RawHook('ChatEdit_HandleChatType', true)
 		if _G.ChatFrameEditBoxBaseMixin and _G.ChatFrameEditBoxBaseMixin.HandleChatType then
 			_G.ChatFrame1EditBox.HandleChatType = function(editBox, msg, command, send)
 				return self:ChatEdit_HandleChatType(editBox, msg, command, send)
 			end
+		else
+			self:RawHook('ChatEdit_HandleChatType', true)
 		end
 
 		Prat.RegisterChatCommand("alias", function(argstr)
@@ -1090,7 +1091,11 @@ Prat:AddModuleToLoad(function()
 			end
 			return true
 		end
-		return self.hooks["ChatEdit_HandleChatType"](editBox, msg, command, send)
+		if _G.ChatFrameEditBoxBaseMixin and _G.ChatFrameEditBoxBaseMixin.HandleChatType then
+			return _G.ChatFrameEditBoxMixin.HandleChatType(editBox, msg, command, send)
+		else
+			return self.hooks["ChatEdit_HandleChatType"](editBox, msg, command, send)
+		end
 	end
 
 	return

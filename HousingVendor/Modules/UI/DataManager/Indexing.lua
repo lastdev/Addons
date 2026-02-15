@@ -58,6 +58,13 @@ local function IsItemAvailableByID(itemID)
         return false
     end
 
+    -- Catalog validation: hide items whose decorID isn't in the current game catalog.
+    if _G.HousingCatalogValidation and _G.HousingCatalogValidation.IsScanComplete
+       and _G.HousingCatalogValidation:IsScanComplete()
+       and not _G.HousingCatalogValidation:IsItemInCatalog(idNum) then
+        return false
+    end
+
     -- Items in HousingAllItems are assumed to exist; WoW item APIs can be uncached/unreliable
     -- and should not blank the UI.
     return true
@@ -105,7 +112,7 @@ local function RequestApplyFiltersDebounced(state)
         return
     end
 
-    C_Timer.After(0.35, function()
+    C_Timer.After(0.05, function()
         state._applyFiltersPending = false
         if _G.HousingFilters and _G.HousingFilters.ApplyFilters then
             pcall(_G.HousingFilters.ApplyFilters, _G.HousingFilters)
@@ -203,6 +210,21 @@ local function EnsureDataLoaded()
             _G.HousingDataLoader:LoadData()
         end
     end
+
+    -- Ensure deferred quest/achievement/etc sources are registered before indexing or preview lookups.
+    if _G.HousingDataAggregator and _G.HousingDataAggregator.ProcessPendingData then
+        _G.HousingDataAggregator:ProcessPendingData()
+    end
+
+    -- If new deferred data was processed, invalidate cached indexes/records so quest IDs and sources refresh.
+    local currentRevision = _G.HousingDataAggregatorRevision or 0
+    local s = DataManager._state
+    if s and s._aggregatorRevision ~= currentRevision then
+        if DataManager.InvalidateIndexes then
+            DataManager:InvalidateIndexes()
+        end
+        s._aggregatorRevision = currentRevision
+    end
 end
 
 local function BuildFilterOptionsFromIndexes(state)
@@ -230,6 +252,7 @@ local function BuildFilterOptionsFromIndexes(state)
     filterOptions.sources[INTERNED_STRINGS["Quest"] or "Quest"] = true
     filterOptions.sources[INTERNED_STRINGS["Achievement"] or "Achievement"] = true
     filterOptions.sources[INTERNED_STRINGS["Drop"] or "Drop"] = true
+    filterOptions.sources[INTERNED_STRINGS["Reward"] or "Reward"] = true
     filterOptions.sources[INTERNED_STRINGS["Profession"] or "Profession"] = true
     filterOptions.sources[INTERNED_STRINGS["Reputation"] or "Reputation"] = true
     filterOptions.sources[INTERNED_STRINGS["Renown"] or "Renown"] = true
@@ -430,9 +453,21 @@ end
 function DataManager:GetAllItemIDs()
     EnsureDataLoaded()
 
+    -- Make sure pending vendor/quest/etc data is processed before building indexes.
+    if _G.HousingDataAggregator and _G.HousingDataAggregator.ProcessPendingData then
+        _G.HousingDataAggregator:ProcessPendingData()
+    end
+
     local s = self._state
     if type(s.allItemIDs) == "table" and #s.allItemIDs > 0 then
-        return s.allItemIDs
+        -- If filter options or facet indexes are missing, rebuild to populate dropdowns.
+        if s.filterOptionsCache and s._facetIndex then
+            return s.allItemIDs
+        end
+        s.allItemIDs = nil
+        s._itemMeta = nil
+        s._seenExpansions = nil
+        s._facetIndex = nil
     end
 
     local ids = {}
@@ -501,12 +536,18 @@ function DataManager:GetAllItemIDs()
                     local n = nil
                     if sourcesForName.vendor and sourcesForName.vendor.itemName then
                         n = sourcesForName.vendor.itemName
-                    elseif sourcesForName.quest and sourcesForName.quest.title then
-                        n = sourcesForName.quest.title
-                    elseif sourcesForName.achievement and sourcesForName.achievement.title then
-                        n = sourcesForName.achievement.title
-                    elseif sourcesForName.drop and sourcesForName.drop.title then
-                        n = sourcesForName.drop.title
+                    elseif sourcesForName.quest then
+                        local q = FirstOrSelf(sourcesForName.quest)
+                        n = q and (q.itemName or q.ItemName or q.title or q.name) or nil
+                    elseif sourcesForName.achievement then
+                        local a = FirstOrSelf(sourcesForName.achievement)
+                        n = a and (a.itemName or a.ItemName or a.title or a.name) or nil
+                    elseif sourcesForName.drop then
+                        local d = FirstOrSelf(sourcesForName.drop)
+                        n = d and (d.itemName or d.ItemName or d.title or d.name) or nil
+                    elseif sourcesForName.reward then
+                        local r = FirstOrSelf(sourcesForName.reward)
+                        n = r and (r.itemName or r.ItemName or r.title or r.name) or nil
                     end
                     if type(n) == "string" and n:find("%[DNT%]") then
                         skip = true
@@ -515,8 +556,6 @@ function DataManager:GetAllItemIDs()
             end
 
             if not skip then
-                ids[#ids + 1] = idNum
-
                 local srcType = INTERNED_STRINGS["Vendor"] or "Vendor"
                 local expName = nil
                 local qid, aid = nil, nil
@@ -528,20 +567,24 @@ function DataManager:GetAllItemIDs()
                     local q = FirstOrSelf(sources.quest)
                     local a = FirstOrSelf(sources.achievement)
                     local d = FirstOrSelf(sources.drop)
+                    local r = FirstOrSelf(sources.reward)
 
                     if q then
                         srcType = INTERNED_STRINGS["Quest"] or "Quest"
                         expName = q.expansion or expName
-                        qid = q.questId or qid
+                        qid = q.questId or q.questID or qid
                         requirement = INTERNED_STRINGS["Quest"] or "Quest"
                     elseif a then
                         srcType = INTERNED_STRINGS["Achievement"] or "Achievement"
                         expName = a.expansion or expName
-                        aid = a.achievementId or aid
+                        aid = a.achievementId or a.achievementID or aid
                         requirement = INTERNED_STRINGS["Achievement"] or "Achievement"
                     elseif d then
                         srcType = INTERNED_STRINGS["Drop"] or "Drop"
                         expName = d.expansion or expName
+                    elseif r then
+                        srcType = INTERNED_STRINGS["Reward"] or "Reward"
+                        expName = r.expansion or expName
                     elseif sources.vendor and sources.vendor.vendorDetails then
                         expName = sources.vendor.vendorDetails.expansion or expName
                     end
@@ -558,6 +601,8 @@ function DataManager:GetAllItemIDs()
                         n = FirstOrSelf(sources.achievement).title
                     elseif sources.drop and FirstOrSelf(sources.drop) and FirstOrSelf(sources.drop).title then
                         n = FirstOrSelf(sources.drop).title
+                    elseif sources.reward and FirstOrSelf(sources.reward) and FirstOrSelf(sources.reward).itemName then
+                        n = FirstOrSelf(sources.reward).itemName
                     end
                     inferredType, inferredCategory = InferTypeAndCategoryFromName(n)
                 end
@@ -567,6 +612,23 @@ function DataManager:GetAllItemIDs()
                     srcType = INTERNED_STRINGS["Profession"] or "Profession"
                     expName = InferExpansionFromProfessionSkill(professionData[idNum].skill) or expName
                     requirement = INTERNED_STRINGS["Profession"] or "Profession"
+                end
+
+                -- If expansion is still unknown, infer it from the first known vendor entry.
+                -- This is critical for version gating (e.g., hiding Midnight items on live clients),
+                -- because not all vendor-only items have `HousingExpansionData[*].vendor.vendorDetails.expansion`.
+                if (not expName or expName == "") and vendorIndex and vendorPool then
+                    local indices = vendorIndex[idNum]
+                    if type(indices) == "table" then
+                        for _, idx in ipairs(indices) do
+                            local v = idx and vendorPool[idx] or nil
+                            local vexp = v and v.expansion or nil
+                            if vexp and vexp ~= "" then
+                                expName = vexp
+                                break
+                            end
+                        end
+                    end
                 end
 
                 if repLookup and repLookup[idNum] then
@@ -584,6 +646,11 @@ function DataManager:GetAllItemIDs()
                         requirement = INTERNED_STRINGS["Reputation"] or "Reputation"
                     end
                 end
+
+                if skip then
+                    -- Do not index items from filtered expansions.
+                else
+                    ids[#ids + 1] = idNum
 
                 -- Treat reputation/renown-gated vendor items as their own "source type" so the Source
                 -- filter behaves as users expect (without relying on API enrichment).
@@ -648,6 +715,7 @@ function DataManager:GetAllItemIDs()
                         end
                     end
                 end
+                end
             end
         end
     end
@@ -703,7 +771,7 @@ function DataManager:FilterItemIDs(itemIDs, filters)
     local wantQuality = (filters and filters.quality and filters.quality ~= "" and filters.quality ~= "All Qualities") or false
     local wantApiQuality = wantQuality and ALLOW_API_QUALITY or false
     local wantType = filters and filters.type and filters.type ~= "All Types"
-    local wantCategory = (filters and filters.category and filters.category ~= "All Categorys" and filters.category ~= "All Categories") or (selectedCategories and next(selectedCategories) ~= nil)
+    local wantCategory = (filters and filters.category and filters.category ~= "All Categories") or (selectedCategories and next(selectedCategories) ~= nil)
 
     local wantSource = (filters and filters.source and filters.source ~= "All Sources") or (selectedSources and next(selectedSources) ~= nil)
     local wantExpansion = (filters and filters.expansion and filters.expansion ~= "" and filters.expansion ~= "All Expansions") or (selectedExpansions and next(selectedExpansions) ~= nil)
@@ -882,7 +950,7 @@ function DataManager:FilterItemIDs(itemIDs, filters)
                             end
                         end
                     end
-                elseif filters and filters.category and filters.category ~= "" and filters.category ~= "All Categories" and filters.category ~= "All Categorys" then
+                elseif filters and filters.category and filters.category ~= "" and filters.category ~= "All Categories" then
                     matchesCategory =
                         (filters.category == inferredCategory) or
                         (filters.category == inferredType) or
@@ -1172,15 +1240,30 @@ function DataManager:GetItemRecord(itemID)
     end
 
     local sources = _G.HousingExpansionData and _G.HousingExpansionData[idNum] or nil
+    local function FirstEntry(sourceTable)
+        if type(sourceTable) ~= "table" then
+            return nil
+        end
+        if sourceTable[1] then
+            return sourceTable[1]
+        end
+        return sourceTable
+    end
     if (not itemName or itemName == "" or itemName == "Unknown Item") and sources then
         if sources.vendor and sources.vendor.itemName then
             itemName = sources.vendor.itemName
-        elseif sources.quest and sources.quest.title then
-            itemName = sources.quest.title
-        elseif sources.achievement and sources.achievement.title then
-            itemName = sources.achievement.title
-        elseif sources.drop and sources.drop.title then
-            itemName = sources.drop.title
+        elseif sources.quest then
+            local q = FirstEntry(sources.quest)
+            itemName = q and (q.itemName or q.ItemName or q.title or q.name) or nil
+        elseif sources.achievement then
+            local a = FirstEntry(sources.achievement)
+            itemName = a and (a.itemName or a.ItemName or a.title or a.name) or nil
+        elseif sources.drop then
+            local d = FirstEntry(sources.drop)
+            itemName = d and (d.itemName or d.ItemName or d.title or d.name) or nil
+        elseif sources.reward then
+            local r = FirstEntry(sources.reward)
+            itemName = r and (r.itemName or r.ItemName or r.title or r.name) or nil
         end
     end
     if not itemName or itemName == "" then
@@ -1227,6 +1310,86 @@ function DataManager:GetItemRecord(itemID)
         _apiDataLoaded = false,
     }
 
+    -- Enrich minimal records with static quest details for the preview panel.
+    -- (Indexing mode doesn’t build full item records, so we pull from HousingExpansionData on demand.)
+    if sources and sources.quest and type(sources.quest) == "table" then
+        local questData = sources.quest
+        local firstQuest = nil
+        if questData[1] then
+            firstQuest = questData[1]
+        elseif questData.questId or questData.questID or questData.questName or questData.title then
+            firstQuest = questData
+        end
+
+        if firstQuest and type(firstQuest) == "table" then
+            record._allQuests = questData[1] and questData or { questData }
+
+            local qid = firstQuest.questId or firstQuest.questID
+            if qid ~= nil and qid ~= "" then
+                record._questId = qid
+            end
+
+            local qName = firstQuest.title or firstQuest.questName
+            if type(qName) == "string" and qName ~= "" then
+                record._questName = qName
+            end
+        end
+    end
+
+    -- Multi-source support: Track all applicable sources in _sourceTypes table.
+    -- The primary _sourceType is set with priority (Quest > Achievement > Drop > Reward > Reputation > Vendor).
+    -- This allows items to display multiple types of information (e.g., Quest that requires Reputation).
+    record._sourceTypes = {}
+
+    -- Add all applicable source types
+    if sources then
+        if sources.quest then
+            record._sourceTypes[INTERNED_STRINGS["Quest"] or "Quest"] = true
+        end
+        if sources.achievement then
+            record._sourceTypes[INTERNED_STRINGS["Achievement"] or "Achievement"] = true
+        end
+        if sources.drop then
+            record._sourceTypes[INTERNED_STRINGS["Drop"] or "Drop"] = true
+        end
+        if sources.reward then
+            record._sourceTypes[INTERNED_STRINGS["Reward"] or "Reward"] = true
+        end
+        if sources.vendor or record._vendorIndices then
+            record._sourceTypes[INTERNED_STRINGS["Vendor"] or "Vendor"] = true
+        end
+        if sources.profession or m.isProfession then
+            record._sourceTypes[INTERNED_STRINGS["Profession"] or "Profession"] = true
+        end
+        if sources.reputation then
+            record._sourceTypes[INTERNED_STRINGS["Reputation"] or "Reputation"] = true
+        end
+    end
+
+    -- Check for reputation/renown requirement from vendor lookup
+    if _G.HousingVendorItemToFaction and _G.HousingVendorItemToFaction[idNum] then
+        local repInfo = _G.HousingVendorItemToFaction[idNum]
+        if repInfo and repInfo.rep then
+            local repLower = string_lower(tostring(repInfo.rep))
+            if repLower == "renown" then
+                record._sourceTypes[INTERNED_STRINGS["Renown"] or "Renown"] = true
+            else
+                record._sourceTypes[INTERNED_STRINGS["Reputation"] or "Reputation"] = true
+            end
+        end
+    end
+
+    -- Set primary source type with priority: Quest > Achievement > Drop > Reward > Vendor
+    if sources and sources.quest then
+        record._sourceType = INTERNED_STRINGS["Quest"] or "Quest"
+    elseif sources and sources.achievement then
+        record._sourceType = INTERNED_STRINGS["Achievement"] or "Achievement"
+    elseif sources and sources.drop then
+        record._sourceType = INTERNED_STRINGS["Drop"] or "Drop"
+    elseif sources and sources.reward then
+        record._sourceType = INTERNED_STRINGS["Reward"] or "Reward"
+    end
+
     -- Static inferred facets (works even when Housing APIs are unavailable)
     record.type = m.inferredType
     record.category = m.inferredCategory
@@ -1247,7 +1410,10 @@ function DataManager:GetItemRecord(itemID)
             record._apiNumPlaced = apiData.numPlaced or 0
             record._apiAchievement = apiData.achievement
             record._apiSourceText = apiData.sourceText
-            record._sourceType = apiData.sourceType or record._sourceType
+            -- Only allow the API to set the sourceType when we don't have a stronger static non-vendor source.
+            if apiData.sourceType and (not sources or (not sources.quest and not sources.achievement and not sources.drop and not sources.reward)) then
+                record._sourceType = apiData.sourceType
+            end
             record._apiDataLoaded = true
 
             -- Basic coords
@@ -1261,6 +1427,14 @@ function DataManager:GetItemRecord(itemID)
         elseif ALLOW_API_QUALITY then
             -- Hard-data-only mode: apply ONLY quality (used for display/filtering stability).
             record._apiQuality = apiData.quality
+        end
+    end
+
+    -- Fallback: Get quality from C_Item API if Housing APIs didn't provide it (API safety)
+    if record._apiQuality == nil and idNum and _G.C_Item and _G.C_Item.GetItemQualityByID then
+        local quality = _G.C_Item.GetItemQualityByID(idNum)
+        if quality ~= nil then
+            record._apiQuality = quality
         end
     end
 

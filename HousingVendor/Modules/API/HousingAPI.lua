@@ -35,17 +35,13 @@ end
 -- HELPER FUNCTIONS FOR TEXT PARSING
 ------------------------------------------------------------
 
--- Use shared CleanText from DataManager.Util (moved to Shared.lua to eliminate duplication)
+-- Delegates to shared CleanText in DataManager.Util (Shared.lua, loaded earlier in TOC).
 local function CleanText(text, preserveIcons)
     local DataManager = _G["HousingDataManager"]
     if DataManager and DataManager.Util and DataManager.Util.CleanText then
         return DataManager.Util.CleanText(text, preserveIcons)
     end
-    -- Fallback if Util not available yet
-    if not text then return nil end
-    text = text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):gsub("|H[^|]*|h", ""):gsub("|h", "")
-    if not preserveIcons then text = text:gsub("|T[^|]*|t", "") end
-    return text:gsub("|n", " "):match("^%s*(.-)%s*$")
+    return text
 end
 
 -- Extract field value from sourceText
@@ -164,22 +160,54 @@ function HousingAPI:GetCatalogData(itemID)
 
     -- Step 1: GetCatalogEntryInfoByItem
     local ok, entryInfo = pcall(C_HousingCatalog.GetCatalogEntryInfoByItem, id, true)
-    if not ok or not entryInfo or not entryInfo.entryID then
+    if not ok or not entryInfo then
         return result
     end
 
-    local entryID = entryInfo.entryID
-    if type(entryID) ~= "table" or not entryID.recordID or not entryID.entryType then
-        return result
+    -- Some client builds return the full entry directly from GetCatalogEntryInfoByItem().
+    -- Detect that case and skip the recordID lookup.
+    local fullEntry = nil
+    if entryInfo.name or entryInfo.sourceText or entryInfo.quality or entryInfo.numStored or entryInfo.numPlaced or entryInfo.asset then
+        fullEntry = entryInfo
     end
 
-    local recordID = entryID.recordID
-    local entryType = entryID.entryType
+    if not fullEntry then
+        local entryID = entryInfo.entryID
+        local recordID = nil
+        local entryType = nil
 
-    -- Step 2: GetCatalogEntryInfoByRecordID
-    local ok2, fullEntry = pcall(C_HousingCatalog.GetCatalogEntryInfoByRecordID, entryType, recordID, true)
-    if not ok2 or not fullEntry then
-        return result
+        if type(entryID) == "table" then
+            recordID = entryID.recordID or entryID.recordId
+            entryType = entryID.entryType
+        else
+            recordID = entryInfo.recordID or entryInfo.recordId or entryID
+            entryType = entryInfo.entryType
+        end
+
+        if not recordID or not entryType or not C_HousingCatalog.GetCatalogEntryInfoByRecordID then
+            return result
+        end
+
+        local ok2, fe = pcall(C_HousingCatalog.GetCatalogEntryInfoByRecordID, entryType, recordID, true)
+        if ok2 and fe then
+            fullEntry = fe
+        else
+            -- Some client builds use a different parameter order.
+            local ok3, fe2 = pcall(C_HousingCatalog.GetCatalogEntryInfoByRecordID, recordID, entryType, true)
+            if ok3 and fe2 then
+                fullEntry = fe2
+            elseif type(entryID) == "table" then
+                -- Some client builds accept the entryID struct directly.
+                local ok4, fe3 = pcall(C_HousingCatalog.GetCatalogEntryInfoByRecordID, entryID, true)
+                if ok4 and fe3 then
+                    fullEntry = fe3
+                end
+            end
+        end
+
+        if not fullEntry then
+            return result
+        end
     end
 
     -- Extract basic data
@@ -192,6 +220,11 @@ function HousingAPI:GetCatalogData(itemID)
     result.numPlaced = fullEntry.numPlaced
     result.numStored = fullEntry.numStored
     result.quantity = fullEntry.quantity
+
+    -- Backwards/forwards-compatible quantity fallbacks (some builds only expose `quantity`).
+    if result.numStored == nil and type(fullEntry.quantity) == "number" then
+        result.numStored = fullEntry.quantity
+    end
     
     -- Extract filter tags if available (for expansion, theme, style, etc.)
     if fullEntry.filterTagIDs then

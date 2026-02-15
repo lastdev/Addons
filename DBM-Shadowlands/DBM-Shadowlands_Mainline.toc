@@ -1,5 +1,5 @@
-## Interface: 110107, 110200
-## Version: r26
+## Interface: 110207, 120000, 120001
+## Version: r27
 ## Category: DBM
 
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10World Bosses (Shadowlands)|r

@@ -92,14 +92,22 @@ L["DUNGEON_SHORT_NAME_ID"] = "钢铁码头"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_KR"] = ""--]] 
 L["DUNGEON_SHORT_NAME_LOWR"] = "卡拉赞下层"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_MC"] = ""--]] 
 L["DUNGEON_SHORT_NAME_MISTS"] = "仙林迷雾"
 L["DUNGEON_SHORT_NAME_ML"] = "暴富矿区"
 L["DUNGEON_SHORT_NAME_MOS"] = "噬魂之喉"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_MT"] = ""--]] 
 L["DUNGEON_SHORT_NAME_NELT"] = "奈萨鲁斯"
 L["DUNGEON_SHORT_NAME_NL"] = "巢穴"
 L["DUNGEON_SHORT_NAME_NO"] = "诺库德阻击战"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_NPX"] = ""--]] 
 L["DUNGEON_SHORT_NAME_NW"] = "通灵战潮 "
 L["DUNGEON_SHORT_NAME_PF"] = "凋魂之殇"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_POS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_PSF"] = "圣焰隐修院"
 L["DUNGEON_SHORT_NAME_RISE"] = "永恒：崛起"
 L["DUNGEON_SHORT_NAME_RLP"] = "红玉新生法池"
@@ -111,6 +119,8 @@ L["DUNGEON_SHORT_NAME_SIEGE"] = "围攻"
 L["DUNGEON_SHORT_NAME_SOA"] = "晋升高塔"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_SOTS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_SR"] = ""--]] 
 L["DUNGEON_SHORT_NAME_STRT"] = "集市：天街"
 L["DUNGEON_SHORT_NAME_SV"] = "矶石宝库"
 --[[Translation missing --]]
@@ -127,6 +137,8 @@ L["DUNGEON_SHORT_NAME_VOTW"] = "化身巨龙牢窟"
 L["DUNGEON_SHORT_NAME_VP"] = "旋云之巅"
 L["DUNGEON_SHORT_NAME_WM"] = "维克雷斯庄园"
 L["DUNGEON_SHORT_NAME_WORK"] = "麦卡贡车间"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_WS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_YARD"] = "麦卡贡垃圾场"
 L["ENABLE_AUTO_FRAME_POSITION"] = "自动调整Raider.IO个人页面的位置"
 L["ENABLE_AUTO_FRAME_POSITION_DESC"] = "开启此项将会在地下城查找器或者玩家框体上显示大秘境个人信息的鼠标提示。"
@@ -285,6 +297,8 @@ L["RAID_BOSS_CN_6"] = "伊涅瓦·暗脉女勋爵"
 L["RAID_BOSS_CN_7"] = "猩红议会"
 L["RAID_BOSS_CN_8"] = "泥拳"
 L["RAID_BOSS_CN_9"] = "顽石军团干将"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_DR_1"] = ""--]] 
 L["RAID_BOSS_DS_1"] = "莫卓克"
 L["RAID_BOSS_DS_2"] = "督军佐诺兹"
 L["RAID_BOSS_DS_3"] = "不眠的约萨希"
@@ -365,6 +379,10 @@ L["RAID_BOSS_MFO_5"] = "狩魂猎手"
 L["RAID_BOSS_MFO_6"] = "弗兰克提鲁斯"
 L["RAID_BOSS_MFO_7"] = "节点之王萨哈达尔"
 L["RAID_BOSS_MFO_8"] = "诸界吞噬者迪门修斯"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MQD_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MQD_2"] = ""--]] 
 L["RAID_BOSS_MSV_1"] = "石头守卫"
 L["RAID_BOSS_MSV_2"] = "受诅者魔封"
 L["RAID_BOSS_MSV_3"] = "缚灵者戈拉亚"
@@ -445,6 +463,18 @@ L["RAID_BOSS_VOTI_5"] = "晋升者达瑟雅"
 L["RAID_BOSS_VOTI_6"] = "库洛洛·恐怖图腾"
 L["RAID_BOSS_VOTI_7"] = "巢穴守护者迪乌尔娜"
 L["RAID_BOSS_VOTI_8"] = "莱萨杰丝，噬雷之龙"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_6"] = ""--]] 
 L["RAID_BOT"] = "暮光堡垒"
 L["RAID_BRD"] = "黑石深渊"
 L["RAID_BWD"] = "黑翼血环"
@@ -462,6 +492,8 @@ L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = "史诗"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "普通"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = "10PT"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = "25PT"
+--[[Translation missing --]]
+--[[ L["RAID_DR"] = ""--]] 
 L["RAID_DS"] = "巨龙之魂"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "已击杀团队副本首领"
 L["RAID_FL"] = "火焰之地"
@@ -469,6 +501,8 @@ L["RAID_HOF"] = "恐惧之心"
 L["RAID_ICC"] = "冰冠堡垒"
 L["RAID_LOU"] = "解放安德麦"
 L["RAID_MFO"] = "法力熔炉：欧米伽"
+--[[Translation missing --]]
+--[[ L["RAID_MQD"] = ""--]] 
 L["RAID_MSV"] = "魔古山宝库"
 L["RAID_NP"] = "尼鲁巴尔王宫"
 L["RAID_RS"] = "红玉圣所"
@@ -477,6 +511,8 @@ L["RAID_TOES"] = "永春台"
 --[[Translation missing --]]
 --[[ L["RAID_TOT"] = ""--]] 
 L["RAID_TOTFW"] = "风神王座"
+--[[Translation missing --]]
+--[[ L["RAID_VS"] = ""--]] 
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "能限时%s层的平均分数"
 L["RAIDERIO_BEST_RUN"] = "大秘境最佳成绩"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Raider.IO客户端个性化设置"
@@ -567,10 +603,18 @@ L["SHOW_LEADER_PROFILE"] = "允许Raider.IO个人页面鼠标提示信息的快�
 L["SHOW_LEADER_PROFILE_DESC"] = "按住一个快捷键（Shift/Ctrl/Alt）来开启 个人/队长 的个人页面鼠标提示信息。"
 L["SHOW_MAINS_SCORE"] = "显示玩家大号的大秘分数和副本进度"
 L["SHOW_MAINS_SCORE_DESC"] = "鼠标提示信息中显示玩家大号本赛季的大秘境分数和团本进度。玩家必须在Raider.IO上注册并且选择主要角色。"
+--[[Translation missing --]]
+--[[ L["SHOW_MY_WARBAND_SCORE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SHOW_MY_WARBAND_SCORE_DESC"] = ""--]] 
 L["SHOW_ON_GUILD_ROSTER"] = "在公会名册和社区列表的鼠标提示信息里显示"
 L["SHOW_ON_GUILD_ROSTER_DESC"] = "当你鼠标悬停在公会名册的成员时显示大秘境分数"
 L["SHOW_ON_PLAYER_UNITS"] = "在玩家单位的鼠标提示信息显示"
 L["SHOW_ON_PLAYER_UNITS_DESC"] = "当你鼠标悬停在玩家单位的时候显示大秘境分数"
+--[[Translation missing --]]
+--[[ L["SHOW_OTHER_WARBAND_SCORE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SHOW_OTHER_WARBAND_SCORE_DESC"] = ""--]] 
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE"] = "在个人页面鼠标提示里显示副本首领"
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE_DESC"] = "当设置这个后会在Raider.IO的个人页面鼠标提示信息里显示副本首领进度"
 L["SHOW_RAIDERIO_BESTRUN_FIRST"] = "（测试中）优先显示Raider.IO最佳纪录"

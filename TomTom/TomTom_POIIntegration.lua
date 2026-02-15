@@ -1,4 +1,5 @@
 local addonName, addon = ...
+
 local hbd = LibStub("HereBeDragons-2.0")
 
 if (not addon.WOW_MAINLINE) then
@@ -37,9 +38,6 @@ local modTbl = {
     A = IsAltKeyDown,
     S = IsShiftKeyDown,
 }
-
-local L = TomTomLocals
-
 
 -- Hello, I am the POI waypoint arbiter, I handle the setting and clearing of
 -- temporary waypoints for the POI integration

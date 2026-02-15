@@ -95,6 +95,7 @@ end
 
 local function ported_Angleur_FishingForAttentionAura()
     if InCombatLockdown() then return end
+    if UnitIsDeadOrGhost("player") then return end
     local fishingAura = C_UnitAuras.GetPlayerAuraBySpellID(394009)
     if not fishingAura then return end
     local slots = {C_UnitAuras.GetAuraSlots("player", "HELPFUL|CANCELABLE", 20)}
@@ -128,7 +129,7 @@ function AngleurUnderlight_HandleQueue()
                 print("Angleur_Underlight: Timed out.")
                 print("If this happens too often, please let the author know.")
             end
-            if InCombatLockdown() then
+            if InCombatLockdown() or UnitIsDeadOrGhost("player") then
                 queue.unequip = false
                 queue.equip = nil
                 self:SetScript("OnUpdate", nil)

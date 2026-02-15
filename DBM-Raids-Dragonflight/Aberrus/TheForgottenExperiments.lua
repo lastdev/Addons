@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2530, "DBM-Raids-Dragonflight", 2, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20251016040936")
 mod:SetCreatureID(200912, 200913, 200918)
 mod:SetEncounterID(2693)
 mod:SetUsedIcons(1, 2, 3)
@@ -235,6 +235,7 @@ function mod:SPELL_CAST_START(args)
 		local timer
 		if self:IsMythic() then
 			local unit = self:GetUnitIdFromGUID(args.sourceGUID)
+			if not unit then return end--Won't happen but satisfies LuaLS
 			if UnitPower(unit) < 30 then--It's 7 energy cast
 				timer = 20.9
 			else--It's 55 Energy cast, so next one will be after full rotationof ultimate
@@ -251,6 +252,7 @@ function mod:SPELL_CAST_START(args)
 		local timer
 		if self:IsMythic() then
 			local unit = self:GetUnitIdFromGUID(args.sourceGUID)
+			if not unit then return end--Won't happen but satisfies LuaLS
 			if UnitPower(unit) < 50 then--It's 30 energy cast
 				timer = 19.9
 			else--It's 75 Energy cast, so next one will be after full rotationof ultimate

@@ -214,6 +214,10 @@ end
 -- ============================================================================
 
 function private.ChatMsgLootEventHandler(_, msg)
+	if ClientInfo.IsRetail() and issecretvalue(msg) then
+		-- The message is a secret, so just ignore it
+		return
+	end
 	if not private.pendingSpellId or not private.pendingItemString then
 		return
 	end

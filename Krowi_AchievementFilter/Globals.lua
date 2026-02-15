@@ -187,6 +187,7 @@ function addon.AddToTrackingAchievementsCategories(achievement, update)
         if addon.Options.db.profile.AdjustableCategories.TrackingAchievements[i] then
             local trackingAchievementsCategory = AddTrackingAchievementsCategoriesTree(addon.SpecialCategories.TrackingAchievements[i], achievement);
             trackingAchievementsCategory:AddAchievement(achievement);
+            trackingAchievementsCategory.CountsDirty = true;
         end
     end
     if update ~= false then
@@ -198,7 +199,9 @@ end
 function addon.AddToUncategorizedAchievementsCategories(achievement, update)
     for i = 1, #addon.SpecialCategories.Uncategorized do
         if addon.Options.db.profile.AdjustableCategories.Uncategorized[i] then
-            addon.SpecialCategories.Uncategorized[i]:AddAchievement(achievement);
+            local category = addon.SpecialCategories.Uncategorized[i];
+            category:AddAchievement(achievement);
+            category.CountsDirty = true;
         end
     end
     if update ~= false then
@@ -320,6 +323,35 @@ local function HandleNotCompletedAchievement(characterGuid, achievementInfo, num
     end
 end
 
+local function GetTopMostParentCategory(category)
+    if type(category) ~= "table" then
+        return nil;
+    end
+
+    local visited = {};
+    local current = category;
+    local depth = 0;
+    while type(current) == "table" do
+        if visited[current] then
+            break;
+        end
+        visited[current] = true;
+
+        local parent = current.Parent;
+        if type(parent) ~= "table" or parent == current then
+            break;
+        end
+
+        current = parent;
+        depth = depth + 1;
+        if depth > 1000 then
+            break;
+        end
+    end
+
+    return current;
+end
+
 local function HandleAchievement(characterGuid, achievementInfo)
     if not achievementInfo.Id or addon.Data.SavedData.AchievementData.IgnoreAchievement(achievementInfo) then
         return;
@@ -334,6 +366,15 @@ local function HandleAchievement(characterGuid, achievementInfo)
     if not exists then
         return;
     end
+
+    if addon.Diagnostics.DebugEnabled() and achievement and achievement.BuildVersion and achievement.BuildVersion.Id == "120000" then
+        -- find achievement.Category top most parent (nil-safe + loop-safe)
+        local topMostParent = GetTopMostParentCategory(achievement.Category);
+        if topMostParent and topMostParent.Name == addon.L["Achievements"] then
+            wasAdded = true
+        end
+    end
+
     if wasAdded and achievement then
         AddToUncategorizedCategories(achievement);
     end

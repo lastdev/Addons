@@ -24,64 +24,60 @@
 --
 -------------------------------------------------------------------------------
 
+local ChatEdit_GetActiveWindow = _G.ChatEdit_GetActiveWindow or _G.ChatFrameUtil.GetActiveWindow
+local ChatEdit_ChooseBoxForSend = _G.ChatEdit_ChooseBoxForSend or _G.ChatFrameUtil.ChooseBoxForSend
+
 local ChatFrame_OpenChat = _G.ChatFrame_OpenChat or _G.ChatFrameUtil.OpenChat
+local StripHyperlinks = _G.StripHyperlinks or _G.C_StringUtil.StripHyperlinks
 
 Prat:AddModuleToLoad(function()
+	local PRAT_MODULE = Prat:RequestModuleName("CopyChat")
 
+	if PRAT_MODULE == nil then
+		return
+	end
 
-  local PRAT_MODULE = Prat:RequestModuleName("CopyChat")
+	local module = Prat:NewModule(PRAT_MODULE, "AceHook-3.0", "AceTimer-3.0")
+	local PL = module.PL
 
-  if PRAT_MODULE == nil then
-    return
-  end
+	--[==[@debug@
+	PL:AddLocale(PRAT_MODULE, "enUS", {
+		["CopyChat"] = true,
+		["Copy text from the active chat window."] = true,
+		["Copy Text"] = true,
+		["Copy To Editbox"] = true,
+		["Copy all of the text in the selected chat frame into an edit box"] = true,
+		["showbutton_name"] = "Copy Button",
+		["showbutton_desc"] = "Show a button on the chatframe",
+		buttonpos_name = "Button Location",
+		buttonpos_desc = "Where on the chatframe to show the copy button",
+		["ChatFrame"] = true,
+		[" Text"] = true,
+		["Message From : %s"] = true,
+		["Copy Text Format"] = true,
+		["Should the copied text be plain, or formatted so you can see the colors."] = true,
+		["Plain"] = true,
+		["HTML"] = true,
+		["BBCode"] = true,
+		["Wowace.com Forums"] = true,
+		copytimestamps_name = "Timestamps Copy",
+		copytimestamps_desc = "Copy the chat line when you click on the timestamp",
+		TOPLEFT = "Top, Left",
+		TOPRIGHT = "Top, Right",
+		BOTTOMRIGHT = "Bottom, Right",
+		BOTTOMLEFT = "Bottom, Left",
+		activealpha = "Alpha when mouseover",
+		inactivealpha = "Alpha when mouseout",
+	})
+	--@end-debug@]==]
 
-  local MAX_SCRAPE_TIME = 5 -- seconds
+	-- These Localizations are auto-generated. To help with localization
+	-- please go to http://www.wowace.com/projects/prat-3-0/localization/
+	--@non-debug@
+	do
+		local L
 
-  local module = Prat:NewModule(PRAT_MODULE, "AceHook-3.0", "AceTimer-3.0")
-
-  local PL = module.PL
-
-  --[==[@debug@
-  PL:AddLocale(PRAT_MODULE, "enUS", {
-    ["CopyChat"] = true,
-    ["Copy text from the active chat window."] = true,
-    ["Copy Text"] = true,
-    ["Copy To Editbox"] = true,
-    ["Copy all of the text in the selected chat frame into an edit box"] = true,
-    ["showbutton_name"] = "Copy Button",
-    ["showbutton_desc"] = "Show a button on the chatframe",
-    buttonpos_name = "Button Location",
-    buttonpos_desc = "Where on the chatframe to show the copy button",
-    ["ChatFrame"] = true,
-    [" Text"] = true,
-    ["Message From : %s"] = true,
-    ["Copy Text Format"] = true,
-    ["Should the copied text be plain, or formatted so you can see the colors."] = true,
-    ["Plain"] = true,
-    ["HTML"] = true,
-    ["BBCode"] = true,
-    ["Wowace.com Forums"] = true,
-    copytimestamps_name = "Timestamps Copy",
-    copytimestamps_desc = "Copy the chat line when you click on the timestamp",
-    TOPLEFT = "Top, Left",
-    TOPRIGHT = "Top, Right",
-    BOTTOMRIGHT = "Bottom, Right",
-    BOTTOMLEFT = "Bottom, Left",
-    activealpha = "Alpha when mouseover",
-    inactivealpha = "Alpha when mouseout",
-  })
-  --@end-debug@]==]
-
-  -- These Localizations are auto-generated. To help with localization
-  -- please go to http://www.wowace.com/projects/prat-3-0/localization/
-
-
-  --@non-debug@
-do
-    local L
-
-
-L = {
+		L = {
 	["CopyChat"] = {
 		[" Text"] = true,
 		["activealpha"] = "Alpha when mouseover",
@@ -112,11 +108,9 @@ L = {
 	}
 }
 
-PL:AddLocale(PRAT_MODULE, "enUS", L)
+		PL:AddLocale(PRAT_MODULE, "enUS", L)
 
-
-
-L = {
+		L = {
 	["CopyChat"] = {
 		[" Text"] = "Testo",
 		--[[Translation missing --]]
@@ -172,11 +166,9 @@ L = {
 	}
 }
 
-PL:AddLocale(PRAT_MODULE, "itIT", L)
+		PL:AddLocale(PRAT_MODULE, "itIT", L)
 
-
-
-L = {
+		L = {
 	["CopyChat"] = {
 		[" Text"] = "Texto",
 		--[[Translation missing --]]
@@ -231,10 +223,9 @@ L = {
 	}
 }
 
-PL:AddLocale(PRAT_MODULE, "ptBR", L)
+		PL:AddLocale(PRAT_MODULE, "ptBR", L)
 
-
-L = {
+		L = {
 	["CopyChat"] = {
 		[" Text"] = "Texte",
 		--[[Translation missing --]]
@@ -276,12 +267,9 @@ L = {
 	}
 }
 
-PL:AddLocale(PRAT_MODULE, "frFR",L)
+		PL:AddLocale(PRAT_MODULE, "frFR",L)
 
-
-
-
-L = {
+		L = {
 	["CopyChat"] = {
 		[" Text"] = "Text",
 		["activealpha"] = "Transparenz, wenn mit der Maus darüber gefahren wird",
@@ -312,10 +300,9 @@ L = {
 	}
 }
 
-PL:AddLocale(PRAT_MODULE, "deDE", L)
+		PL:AddLocale(PRAT_MODULE, "deDE", L)
 
-
-L = {
+		L = {
 	["CopyChat"] = {
 		[" Text"] = " 텍스트",
 		--[[Translation missing --]]
@@ -348,9 +335,9 @@ L = {
 	}
 }
 
-PL:AddLocale(PRAT_MODULE, "koKR",L)
+		PL:AddLocale(PRAT_MODULE, "koKR",L)
 
-L = {
+		L = {
 	["CopyChat"] = {
 		--[[Translation missing --]]
 		[" Text"] = " Text",
@@ -407,9 +394,9 @@ L = {
 	}
 }
 
-PL:AddLocale(PRAT_MODULE, "esMX",L)
+		PL:AddLocale(PRAT_MODULE, "esMX",L)
 
-L = {
+		L = {
 	["CopyChat"] = {
 		[" Text"] = " Текст",
 		--[[Translation missing --]]
@@ -442,9 +429,9 @@ L = {
 	}
 }
 
-PL:AddLocale(PRAT_MODULE, "ruRU",L)
+		PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
-L = {
+		L = {
 	["CopyChat"] = {
 		[" Text"] = "文本",
 		--[[Translation missing --]]
@@ -479,9 +466,9 @@ L = {
 	}
 }
 
-PL:AddLocale(PRAT_MODULE, "zhCN",L)
+		PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
-L = {
+		L = {
 	["CopyChat"] = {
 		[" Text"] = "Texto",
 		--[[Translation missing --]]
@@ -523,9 +510,9 @@ L = {
 	}
 }
 
-PL:AddLocale(PRAT_MODULE, "esES",L)
+		PL:AddLocale(PRAT_MODULE, "esES",L)
 
-L = {
+		L = {
 	["CopyChat"] = {
 		[" Text"] = "文字",
 		--[[Translation missing --]]
@@ -564,371 +551,375 @@ L = {
 	}
 }
 
-PL:AddLocale(PRAT_MODULE, "zhTW",L)
-end
---@end-non-debug@
+		PL:AddLocale(PRAT_MODULE, "zhTW",L)
+	end
+	--@end-non-debug@
 
+	Prat:SetModuleDefaults(module.name, {
+		profile = {
+			on = true,
+			showbutton = { ["*"] = true },
+			buttonpos = "TOPLEFT",
+			copyformat = "plain",
+			copytimestamps = true,
+			activealpha = 0.9,
+			inactivealpha = 0.2,
+		}
+	})
 
-  Prat:SetModuleDefaults(module.name, {
-    profile = {
-      on = true,
-      showbutton = { ["*"] = true },
-      buttonpos = "TOPLEFT",
-      copyformat = "plain",
-      copytimestamps = true,
-      activealpha = 0.9,
-      inactivealpha = 0.2,
-    }
-  })
+	Prat:SetModuleOptions(module.name, {
+		name = PL["CopyChat"],
+		desc = PL["Copy text from the active chat window."],
+		type = "group",
+		args = {
+			showbutton = {
+				name = PL["showbutton_name"],
+				desc = PL["showbutton_desc"],
+				type = "multiselect",
+				values = Prat.FrameList,
+				get = "GetSubValue",
+				set = "SetSubValue"
+			},
+			buttonpos = {
+				name = PL.buttonpos_name,
+				desc = PL.buttonpos_desc,
+				type = "select",
+				order = 195,
+				get = "GetValue",
+				set = "SetValue",
+				values = {
+					["TOPLEFT"] = PL.TOPLEFT,
+					["TOPRIGHT"] = PL.TOPRIGHT,
+					["BOTTOMLEFT"] = PL.BOTTOMLEFT,
+					["BOTTOMRIGHT"] = PL.BOTTOMRIGHT
+				},
+			},
+			copy = {
+				name = PL["Copy Text"],
+				desc = PL["Copy all of the text in the selected chat frame into an edit box"],
+				type = "execute",
+				order = 190,
+				func = "MenuScrape"
+			},
+			copyformat = {
+				name = PL["Copy Text Format"],
+				desc = PL["Should the copied text be plain, or formatted so you can see the colors."],
+				type = "select",
+				order = 195,
+				get = "GetValue",
+				set = "SetValue",
+				values = { ["plain"] = PL["Plain"], ["bbcode"] = PL["BBCode"], ["html"] = PL["HTML"], ["wowace"] = PL["Wowace.com Forums"] },
+			},
+			copytimestamps = {
+				name = PL.copytimestamps_name,
+				desc = PL.copytimestamps_desc,
+				type = "toggle",
+				order = 200,
+			},
+			activealpha = {
+				name = PL["activealpha"],
+				type = "range",
+				order = 210,
+				min = 0,
+				max = 1.0,
+				step = 0.1,
+			},
+			inactivealpha = {
+				name = PL["inactivealpha"],
+				type = "range",
+				order = 220,
+				min = 0,
+				max = 1.0,
+				step = 0.1,
+			},
+		}
+	})
 
-  Prat:SetModuleOptions(module.name, {
-    name = PL["CopyChat"],
-    desc = PL["Copy text from the active chat window."],
-    type = "group",
-    args = {
-      showbutton = {
-        name = PL["showbutton_name"],
-        desc = PL["showbutton_desc"],
-        type = "multiselect",
-        values = Prat.FrameList,
-        get = "GetSubValue",
-        set = "SetSubValue"
-      },
-      buttonpos = {
-        name = PL.buttonpos_name,
-        desc = PL.buttonpos_desc,
-        type = "select",
-        order = 195,
-        get = "GetValue",
-        set = "SetValue",
-        values = {
-          ["TOPLEFT"] = PL.TOPLEFT,
-          ["TOPRIGHT"] = PL.TOPRIGHT,
-          ["BOTTOMLEFT"] = PL.BOTTOMLEFT,
-          ["BOTTOMRIGHT"] = PL.BOTTOMRIGHT
-        },
-      },
-      copy = {
-        name = PL["Copy Text"],
-        desc = PL["Copy all of the text in the selected chat frame into an edit box"],
-        type = "execute",
-        order = 190,
-        func = "MenuScrape"
-      },
-      copyformat = {
-        name = PL["Copy Text Format"],
-        desc = PL["Should the copied text be plain, or formatted so you can see the colors."],
-        type = "select",
-        order = 195,
-        get = "GetValue",
-        set = "SetValue",
-        values = { ["plain"] = PL["Plain"], ["bbcode"] = PL["BBCode"], ["html"] = PL["HTML"], ["wowace"] = PL["Wowace.com Forums"] },
-      },
-      copytimestamps = {
-        name = PL.copytimestamps_name,
-        desc = PL.copytimestamps_desc,
-        type = "toggle",
-        order = 200,
-      },
-      activealpha = {
-        name = PL["activealpha"],
-        type = "range",
-        order = 210,
-        min = 0,
-        max = 1.0,
-        step = 0.1,
-      },
-      inactivealpha = {
-        name = PL["inactivealpha"],
-        type = "range",
-        order = 220,
-        min = 0,
-        max = 1.0,
-        step = 0.1,
-      },
-    }
-  })
+	Prat:SetModuleInit(module.name, function(self)
+		PratCCFrameScrollText:SetScript("OnTextChanged", function(this)
+			self:OnTextChanged(this)
+		end)
+		PratCCFrameScrollText:SetScript("OnEscapePressed", function()
+			PratCCFrame:Hide()
+			self.str = nil
+		end)
 
-  Prat:SetModuleInit(module.name,
-    function(module)
-      PratCCFrameScrollText:SetScript("OnTextChanged", function(this) module:OnTextChanged(this) end)
-      PratCCFrameScrollText:SetScript("OnEscapePressed", function(this) PratCCFrame:Hide() module.str = nil end)
+		Prat.RegisterChatCommand("copychat", function()
+			local frame = SELECTED_CHAT_FRAME
+			if frame then
+				self:ScrapeChatFrame(frame)
+			end
+		end)
 
-      Prat.RegisterChatCommand("copychat",
-        function(name)
-          local frame = SELECTED_CHAT_FRAME
+		Prat.RegisterChatCommand("copychatfull",function()
+			local frame = SELECTED_CHAT_FRAME
+			if frame then
+				self:ScrapeFullChatFrame(frame)
+			end
+		end)
 
-          if frame then
-            module:ScrapeChatFrame(frame)
-          end
-        end)
+		Prat.RegisterLinkType({ linkid = "pratcopy", linkfunc = self.CopyLink, handler = module }, self.name)
 
-      Prat.RegisterChatCommand("copychatfull",
-        function(name)
-          local frame = SELECTED_CHAT_FRAME
+		module.timestamps = Prat.Addon:GetModule("Timestamps", true)
 
-          if frame then
-            module:ScrapeFullChatFrame(frame)
-          end
-        end)
+		if self.timestamps then
+			self:RawHook(self.timestamps, "GetTime")
+		end
+	end)
 
-      Prat.RegisterLinkType({ linkid = "pratcopy", linkfunc = module.CopyLink, handler = module }, module.name)
+	function module:OnModuleEnable()
+		self.buttons = {}
+		for k, v in pairs(Prat.Frames) do
+			self.buttons[k] = self:MakeReminder(v:GetID())
+			self:showbutton(k, self.db.profile.showbutton[k])
+		end
 
-      module.timestamps = Prat.Addon:GetModule("Timestamps", true)
+		Prat.RegisterChatEvent(self, Prat.Events.FRAMES_UPDATED)
+	end
 
-      if module.timestamps then
-        module:RawHook(module.timestamps, "GetTime")
-      end
-    end)
+	function module:GetDescription()
+		return PL["Copy text from the active chat window."]
+	end
 
-  function module:OnModuleEnable()
-    self.buttons = {}
-    for k, v in pairs(Prat.Frames) do
-      self.buttons[k] = self:MakeReminder(v:GetID())
-      self:showbutton(k, self.db.profile.showbutton[k])
-    end
+	function module:Prat_FramesUpdated(_, _, chatFrame)
+		local id = chatFrame:GetID()
+		self.buttons[id] = self:MakeReminder(id)
+		self:showbutton(id, self.db.profile.showbutton[1])
+	end
 
-    Prat.RegisterChatEvent(self, Prat.Events.FRAMES_UPDATED)
-  end
+	function module:OnModuleDisable()
+		Prat.UnregisterAllChatEvents(self)
+		self:hidebuttons()
+		PratCCFrame:Hide()
+	end
 
-  function module:GetDescription()
-    return PL["Copy text from the active chat window."]
-  end
+	function module:EnterSelectMode(frame)
+		frame = frame or SELECTED_CHAT_FRAME
 
-  function module:Prat_FramesUpdated(info, name, chatFrame, ...)
-    local id = chatFrame:GetID()
-    self.buttons[id] = self:MakeReminder(id)
-    self:showbutton(id, self.db.profile.showbutton[1])
-  end
+		frame:SetTextCopyable(true)
+		frame:EnableMouse(true)
+		frame:SetOnTextCopiedCallback(function(this)
+			this:SetTextCopyable(false)
+			this:EnableMouse(false)
+			this:SetOnTextCopiedCallback(nil)
+		end)
+	end
 
-  function module:OnModuleDisable()
-    Prat.UnregisterAllChatEvents(self)
-    self:hidebuttons()
-    PratCCFrame:Hide()
-  end
+	local function CleanText(text)
+		text = text:gsub("|K.-|k", "???")
+		return StripHyperlinks(text, false, true)
+	end
 
-  function module:EnterSelectMode(frame)
-    frame = frame or SELECTED_CHAT_FRAME
+	--[[------------------------------------------------
+		Core Functions
+	------------------------------------------------]] --
+	function module:CopyLink(_, frame)
+		if frame and self.db.profile.on and self.db.profile.copytimestamps then
+			for _, visibleLine in ipairs(frame.visibleLines) do
+				if visibleLine:IsMouseOver() then
+					local info = visibleLine.messageInfo
+					if info and info.message then
+						local text = _G.issecretvalue and _G.issecretvalue(info.message) and "<SECRET>" or CleanText(info.message)
+						local editBox = ChatEdit_ChooseBoxForSend(frame);
 
-    frame:SetTextCopyable(true)
-    frame:EnableMouse(true)
-    frame:SetOnTextCopiedCallback(function(frame, text, num_copied)
-      frame:SetTextCopyable(false)
-      frame:EnableMouse(false)
-      frame:SetOnTextCopiedCallback(nil)
-    end)
-  end
+						if (editBox ~= ChatEdit_GetActiveWindow()) then
+							ChatFrame_OpenChat(text, frame);
+						else
+							editBox:SetText(text);
+						end
+					end
+					return false
+				end
+			end
+		end
 
-  local function CleanText(text)
-    text = text:gsub("|K.-|k", "<BNET REMOVED>")
-    return StripHyperlinks(text, false, true)
-  end
+		return false
+	end
 
-  --[[------------------------------------------------
-      Core Functions
-  ------------------------------------------------]] --
+	function module:GetTime(...)
+		local stamp = self.hooks[self.timestamps].GetTime(...)
+		if module.db.profile.on and module.db.profile.copytimestamps then
+			return "|Hpratcopy|h" .. stamp .. "|h"
+		end
 
-  function module:CopyLink(link, frame)
-    if frame and self.db.profile.on and self.db.profile.copytimestamps then
-      for lineIndex, visibleLine in ipairs(frame.visibleLines) do
-        if visibleLine:IsMouseOver() then
-          local info = visibleLine.messageInfo
-          if info and info.message then
-            local text = CleanText(info.message)
+		return stamp
+	end
 
-            local editBox = ChatEdit_ChooseBoxForSend(frame);
+	module.lines = {}
+	module.str = nil
 
-            --DEBUG FIXME - for now, we're not going to remove spaces from names. We need to make sure X-server still works.
-            -- Remove spaces from the server name for slash command parsing
-            --name = gsub(name, " ", "");
+	function module:GetFormattedLine(line, r, g, b)
+		local fmt = self.copyformat or self.db.profile.copyformat
+		local CLR = Prat.CLR
 
-            if (editBox ~= ChatEdit_GetActiveWindow()) then
-              ChatFrame_OpenChat(text, frame);
-            else
-              editBox:SetText(text);
-            end
-          end
-          return false
-        end
-      end
-    end
+		line = line:gsub("|c00000000|r", "")
 
-    return false
-  end
+		if fmt == "plain" then
+			return line
+		end
 
-  function module:GetTime(...)
-    local stamp = self.hooks[self.timestamps].GetTime(...)
-    if module.db.profile.on and module.db.profile.copytimestamps then
-      return "|Hpratcopy|h" .. stamp .. "|h"
-    end
+		if fmt == "bbcode" or fmt == "wowace" then
+			local fline = line:gsub("|c[fF][fF](%w%w%w%w%w%w)", "[color=#%1]"):gsub("|r", "[/color]")
+			return "[color=#" .. CLR:GetHexColor(r, g, b) .. "]" .. fline .. "[/color]"
+		end
 
-    return stamp
-  end
+		if fmt == "html" then
+			local fline = line:gsub("|c[fF][fF](%w%w%w%w%w%w)", "<font color='#%1'>"):gsub("|r", "</font>")
+			return "<p><font color='#" .. CLR:GetHexColor(r, g, b) .. "' face='monospace'>" .. fline .. "</font></p>"
+		end
+	end
 
-  module.lines = {}
-  module.str = nil
+	function module:ScrapeChatFrame(frame, noshow)
+		self:DoCopyChat(frame, noshow)
+	end
 
-  function module:GetFormattedLine(line, r, g, b)
-    local fmt = self.copyformat or self.db.profile.copyformat
-    local CLR = Prat.CLR
+	function module:ScrapeFullChatFrame(frame)
+		self:DoCopyChatScroll(frame)
+	end
 
-    line = line:gsub("|c00000000|r", "")
+	function module:MenuScrape()
+		self:ScrapeChatFrame(SELECTED_CHAT_FRAME)
+	end
 
-    if fmt == "plain" then
-      return line
-    end
+	function module:DoCopyChatScroll(frame)
+		local scrapelines = {}
+		local str
 
-    if fmt == "bbcode" or fmt == "wowace" then
-      local fline = line:gsub("|c[fF][fF](%w%w%w%w%w%w)", "[color=#%1]"):gsub("|r", "[/color]")
+		if frame:GetNumMessages() == 0 then
+			return
+		end
 
-      return "[color=#" .. CLR:GetHexColor(r, g, b) .. "]" .. fline .. "[/color]"
-    end
+		for i = frame:GetNumMessages(), 1, -1 do
+			local msg = frame.historyBuffer:GetEntryAtIndex(i)
+			msg = msg and msg.message
 
-    if fmt == "html" then
-      local fline = line:gsub("|c[fF][fF](%w%w%w%w%w%w)", "<font color='#%1'>"):gsub("|r", "</font>")
+			if msg then
+				scrapelines[#scrapelines + 1] = CleanText(msg)
+			end
+		end
 
-      return "<p><font color='#" .. CLR:GetHexColor(r, g, b) .. "' face='monospace'>" .. fline .. "</font></p>"
-    end
-  end
+		str = table.concat(scrapelines, "\n")
 
-  function module:ScrapeChatFrame(frame, noshow)
-    self:DoCopyChat(frame, noshow)
-  end
+		PratCCFrameScrollText:SetText(str or "")
+		PratCCText:SetText(PL["ChatFrame"] .. frame:GetName():gsub("ChatFrame", "") .. PL[" Text"])
+		PratCCFrame:Show()
+	end
 
-  function module:ScrapeFullChatFrame(frame, no)
-    self:DoCopyChatScroll(frame)
-  end
+	function module:DoCopyChatArg(arg)
+		self:DoCopyChat(unpack(arg))
+	end
 
-  function module:MenuScrape()
-    self:ScrapeChatFrame(SELECTED_CHAT_FRAME)
-  end
+	function module:DoCopyChat(frame, noshow)
+		local lines = {}
 
-  function module:DoCopyChatScroll(frame)
-    local scrapelines = {}
-    local str
+		for i = 1, frame:GetNumMessages() do
+			local msg = frame:GetMessageInfo(i)
 
-    if frame:GetNumMessages() == 0 then return end
+			if msg then
+				if _G.issecretvalue and _G.issecretvalue(msg) then
+					lines[#lines + 1] = "<SECRET>"
+				else
+					lines[#lines + 1] = CleanText(msg)
+				end
+			end
+		end
 
-    for i = frame:GetNumMessages(), 1, -1 do
-      local msg = frame.historyBuffer:GetEntryAtIndex(i)
-      msg = msg and msg.message
+		local str = table.concat(lines, "\n")
 
-      if msg then
-       scrapelines[#scrapelines+1] = CleanText(msg)
-      end
-    end
+		if not noshow then
+			if (self.copyformat and self.copyformat == "wowace") or self.db.profile.copyformat == "wowace" then
+				str = "[bgcolor=black]" .. str .. "[/bgcolor]"
+			end
 
-    str = table.concat(scrapelines, "\n")
+			PratCCFrameScrollText:SetText(str or "")
+			PratCCText:SetText(PL["ChatFrame"] .. frame:GetName():gsub("ChatFrame", "") .. PL[" Text"])
+			PratCCFrame:Show()
+		end
+	end
 
-    PratCCFrameScrollText:SetText(str or "")
-    PratCCText:SetText(PL["ChatFrame"] .. frame:GetName():gsub("ChatFrame", "") .. PL[" Text"])
-    PratCCFrame:Show()
-  end
+	function module:CopyChat()
+		module:ScrapeChatFrame(SELECTED_CHAT_FRAME)
+	end
 
-  function module:DoCopyChatArg(arg)
-    self:DoCopyChat(unpack(arg))
-  end
+	function module:OnTextChanged(this)
+		if self.str and this:GetText() ~= self.str then
+			this:SetText(self.str)
+			self.str = nil
+		end
+		local s = PratCCFrameScrollScrollBar
+		this:GetParent():UpdateScrollChildRect()
+		local _, m = s:GetMinMaxValues()
+		if m > 0 and this.max ~= m then
+			this.max = m
+			s:SetValue(m)
+		end
+	end
 
-  function module:DoCopyChat(frame, noshow)
-    local lines = {}
-    local str
+	function module:hidebuttons()
+		for _, v in pairs(self.buttons) do
+			v:Hide()
+		end
+	end
 
-    for i = 1, frame:GetNumMessages() do
-      local msg = frame:GetMessageInfo(i)
+	function module:showbutton(id, show)
+		local b = self.buttons[id]
+		if show then
+			b:Show()
+		else
+			b:Hide()
+		end
+	end
 
-      if msg then
-        lines[#lines+1] = CleanText(msg)
-      end
-    end
+	do
+		local function reminderOnClick(self, button)
+			PlaySound(SOUNDKIT.IG_CHAT_BOTTOM);
+			if button == "RightButton" then
+				module:EnterSelectMode(self:GetParent())
+			else
+				if (IsShiftKeyDown()) then
+					module:EnterSelectMode(self:GetParent())
+				elseif (IsControlKeyDown()) then
+					module:ScrapeFullChatFrame(self:GetParent())
+				else
+					module:ScrapeChatFrame(self:GetParent())
+				end
+			end
 
-    str = table.concat(lines, "\n")
+			module.copyformat = nil
+		end
 
-    if not noshow then
-      if (self.copyformat and self.copyformat == "wowace") or self.db.profile.copyformat == "wowace" then
-        str = "[bgcolor=black]" .. str .. "[/bgcolor]"
-      end
+		local function reminderOnEnter(self)
+			self:SetAlpha(module.db.profile.activealpha)
+		end
 
-      PratCCFrameScrollText:SetText(str or "")
-      PratCCText:SetText(PL["ChatFrame"] .. frame:GetName():gsub("ChatFrame", "") .. PL[" Text"])
-      PratCCFrame:Show()
-    end
-  end
+		local function reminderOnLeave(self)
+			self:SetAlpha(module.db.profile.inactivealpha)
+		end
 
-  function module:CopyChat()
-    module:ScrapeChatFrame(SELECTED_CHAT_FRAME)
-  end
+		function module:MakeReminder(id)
+			local cf = _G["ChatFrame" .. id]
+			local name = "ChatFrame" .. id .. "PratCCReminder"
+			local b = _G[name]
+			if not b then
+				b = CreateFrame("Button", name, cf)
+				b:SetFrameStrata("MEDIUM")
+				b:SetWidth(24)
+				b:SetHeight(24)
+				b:SetNormalTexture("Interface\\Addons\\Prat-3.0\\textures\\prat-chatcopy2")
+				b:SetPushedTexture("Interface\\Addons\\Prat-3.0\\textures\\prat-chatcopy")
+				b:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight")
+				b:SetPoint(self.db.profile.buttonpos, cf, self.db.profile.buttonpos, 0, 0)
+				b:SetScript("OnClick", reminderOnClick)
+				b:SetScript("OnEnter", reminderOnEnter)
+				b:SetScript("OnLeave", reminderOnLeave)
+				b:SetAlpha(module.db.profile.inactivealpha)
+				b:RegisterForClicks("AnyUp")
+				b:Hide()
+			end
 
-  function module:OnTextChanged(this)
-    if self.str and this:GetText() ~= self.str then
-      this:SetText(self.str)
-      self.str = nil
-    end
-    local s = PratCCFrameScrollScrollBar
-    this:GetParent():UpdateScrollChildRect()
-    local _, m = s:GetMinMaxValues()
-    if m > 0 and this.max ~= m then
-      this.max = m
-      s:SetValue(m)
-    end
-  end
+			return b
+		end
+	end
 
-  function module:hidebuttons()
-    for k, v in pairs(self.buttons) do
-      v:Hide()
-    end
-  end
-
-  function module:showbutton(id, show)
-    local b = self.buttons[id]
-    if show then b:Show() else b:Hide() end
-  end
-
-  do
-    local function reminderOnClick(self, button, down)
-      PlaySound(SOUNDKIT.IG_CHAT_BOTTOM);
-      if button == "RightButton" then
-        module:EnterSelectMode(self:GetParent())
-      else
-        if (IsShiftKeyDown()) then
-          module:EnterSelectMode(self:GetParent())
-        elseif (IsControlKeyDown()) then
-          module:ScrapeFullChatFrame(self:GetParent())
-        else
-          module:ScrapeChatFrame(self:GetParent())
-        end
-      end
-
-      module.copyformat = nil
-    end
-
-    local function reminderOnEnter(self, motion) self:SetAlpha(module.db.profile.activealpha) end
-
-    local function reminderOnLeave(self, motion) self:SetAlpha(module.db.profile.inactivealpha) end
-
-    function module:MakeReminder(id)
-      local cf = _G["ChatFrame" .. id]
-      local name = "ChatFrame" .. id .. "PratCCReminder"
-      local b = _G[name]
-      if not b then
-        b = CreateFrame("Button", name, cf)
-        b:SetFrameStrata("MEDIUM")
-        b:SetWidth(24)
-        b:SetHeight(24)
-        b:SetNormalTexture("Interface\\Addons\\Prat-3.0\\textures\\prat-chatcopy2")
-        b:SetPushedTexture("Interface\\Addons\\Prat-3.0\\textures\\prat-chatcopy")
-        b:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight")
-        b:SetPoint(self.db.profile.buttonpos, cf, self.db.profile.buttonpos, 0, 0)
-        b:SetScript("OnClick", reminderOnClick)
-        b:SetScript("OnEnter", reminderOnEnter)
-        b:SetScript("OnLeave", reminderOnLeave)
-        b:SetAlpha(module.db.profile.inactivealpha)
-        b:RegisterForClicks("AnyUp")
-        b:Hide()
-      end
-
-      return b
-    end
-  end
-
-  return
-end) -- Prat:AddModuleToLoad
+	return
+end)

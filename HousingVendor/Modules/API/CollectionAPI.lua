@@ -11,6 +11,10 @@ _G.HousingCatalogSafeToCall = false
 
 -- Session caches (cleared on reload)
 local sessionCollectionCache = {}  -- itemID -> boolean (is collected)
+local OWNED_DECOR_CACHE_TTL = 600  -- Cache TTL in seconds (refresh every 10 minutes)
+local ownedCacheRefreshInProgress = false
+local decorIDToItemIDCache = nil
+local BuildDecorIDToItemIDMap
 
 -- Persistent cache support (stored in HousingDB.collectedDecor)
 local persistentCacheEnabled = true  -- Enable persistent cache to fix collection detection issues
@@ -20,17 +24,66 @@ local eventHandlersActive = false
 
 -- Helper: Get itemID from decorID using HousingAllItems
 local function GetItemIDFromDecorID(decorID)
-    if not HousingAllItems or not decorID then
+    if not decorID then
         return nil
     end
 
-    -- Search through HousingAllItems to find itemID for this decorID
+    -- Prefer cached map for O(1) lookup.
+    local decorMap = BuildDecorIDToItemIDMap and BuildDecorIDToItemIDMap() or nil
+    if decorMap and decorMap[decorID] then
+        return tonumber(decorMap[decorID])
+    end
+
+    if not HousingAllItems then
+        return nil
+    end
+
+    -- Fallback: linear scan (should be rare)
     for itemID, decorData in pairs(HousingAllItems) do
-        if decorData and decorData.decorID == decorID then
-            return tonumber(itemID)
+        if decorData then
+            local dataDecorID = decorData.decorID or decorData[1]
+            if dataDecorID == decorID then
+                return tonumber(itemID)
+            end
         end
     end
-    
+
+    return nil
+end
+
+local function GetOwnedCountFromTooltip(itemID)
+    if not itemID or not _G.HousingCatalogSafeToCall then
+        return nil
+    end
+    if not (C_TooltipInfo and C_TooltipInfo.GetOwnedItemByID) then
+        return nil
+    end
+    if not (Enum and Enum.TooltipDataLineType and Enum.TooltipDataLineType.None) then
+        return nil
+    end
+    if type(_G.HOUSING_DECOR_OWNED_COUNT_FORMAT) ~= "string" or _G.HOUSING_DECOR_OWNED_COUNT_FORMAT == "" then
+        return nil
+    end
+
+    local ok, tooltip = pcall(C_TooltipInfo.GetOwnedItemByID, itemID)
+    if not ok or not tooltip or type(tooltip.lines) ~= "table" then
+        return nil
+    end
+
+    -- Match ATT's approach: look for the "You own X" line (localized by Blizzard).
+    local needle = _G.HOUSING_DECOR_OWNED_COUNT_FORMAT:gsub("%d+", "%%d")
+    for _, line in ipairs(tooltip.lines) do
+        if line and line.type == Enum.TooltipDataLineType.None and type(line.leftText) == "string" then
+            local unformatted = line.leftText:gsub("%d+", "%%d")
+            if unformatted == needle then
+                local n = tonumber(line.leftText:match("%d+"))
+                if n and n >= 0 and n < 1000000 then
+                    return n
+                end
+            end
+        end
+    end
+
     return nil
 end
 
@@ -93,6 +146,53 @@ local function CacheItemAsCollected(itemID)
     end
 end
 
+local function EnsureOwnedCacheTables()
+    if not HousingDB then
+        HousingDB = {}
+    end
+    if not HousingDB.ownedDecorCache then
+        HousingDB.ownedDecorCache = {
+            lastScan = 0,
+            items = {},
+        }
+    elseif not HousingDB.ownedDecorCache.items then
+        HousingDB.ownedDecorCache.items = {}
+    end
+end
+
+local function GetOwnedCacheEntry(itemID)
+    if HousingDB and HousingDB.ownedDecorCache and HousingDB.ownedDecorCache.items then
+        return HousingDB.ownedDecorCache.items[itemID]
+    end
+    return nil
+end
+
+BuildDecorIDToItemIDMap = function()
+    if decorIDToItemIDCache then
+        return decorIDToItemIDCache
+    end
+
+    local map = {}
+    if HousingAllItems then
+        for itemID, decorData in pairs(HousingAllItems) do
+            local numericItemID = tonumber(itemID)
+            if numericItemID and decorData then
+                local decorID = decorData.decorID or decorData[1]
+                if decorID then
+                    map[decorID] = numericItemID
+                end
+            end
+        end
+    end
+
+    decorIDToItemIDCache = map
+    return map
+end
+
+local function IsApiCallsDisabled()
+    return HousingDB and HousingDB.settings and HousingDB.settings.disableApiCalls == true
+end
+
 -- Prime housing catalog searcher (caches decor data)
 -- Being aggressive with creating searchers is fine - recache on zone transitions and searcher release
 local function PrimeHousingCatalog()
@@ -108,6 +208,88 @@ local function PrimeHousingCatalog()
     if C_HousingCatalog.CreateCatalogSearcher then
         pcall(C_HousingCatalog.CreateCatalogSearcher)
     end
+end
+
+local function ConfigureCatalogSearcherForOwnedDecor(catalogSearcher)
+    if not catalogSearcher then
+        return false
+    end
+
+    catalogSearcher:SetOwnedOnly(true)
+
+    -- SetIncludeMarketEntries may not exist in all game versions
+    if catalogSearcher.SetIncludeMarketEntries then
+        catalogSearcher:SetIncludeMarketEntries(false)
+    end
+
+    catalogSearcher:SetFilteredCategoryID(nil)
+    catalogSearcher:SetFilteredSubcategoryID(nil)
+    catalogSearcher:SetSearchText(nil)
+    catalogSearcher:SetCustomizableOnly(false)
+    catalogSearcher:SetAllowedIndoors(true)
+    catalogSearcher:SetAllowedOutdoors(true)
+    catalogSearcher:SetCollected(true)
+    catalogSearcher:SetUncollected(true)
+    catalogSearcher:SetFirstAcquisitionBonusOnly(false)
+
+    local filterTagGroups = C_HousingCatalog.GetAllFilterTagGroups and C_HousingCatalog.GetAllFilterTagGroups() or nil
+    if filterTagGroups then
+        for _, tagGroup in ipairs(filterTagGroups) do
+            catalogSearcher:SetAllInFilterTagGroup(tagGroup.groupID, true)
+        end
+    end
+
+    return true
+end
+
+local function ExtractOwnedDecorEntriesFromSearcher(catalogSearcher)
+    local entries = {}
+    if not catalogSearcher or not catalogSearcher.GetAllSearchItems then
+        return entries
+    end
+
+    local allItems = catalogSearcher:GetAllSearchItems()
+    if not allItems or #allItems == 0 then
+        return entries
+    end
+
+    local decorMap = BuildDecorIDToItemIDMap()
+
+    for _, entryID in ipairs(allItems) do
+        if type(entryID) == "table" and entryID.entryType == Enum.HousingCatalogEntryType.Decor then
+            local ok, entryInfo = pcall(C_HousingCatalog.GetCatalogEntryInfo, entryID)
+            if ok and entryInfo then
+                local numPlaced = entryInfo.numPlaced or 0
+                local quantity = entryInfo.quantity or 0
+                local remainingRedeemable = entryInfo.remainingRedeemable or 0
+                local stored = quantity + remainingRedeemable
+                local totalOwned = numPlaced + stored
+
+                if totalOwned > 0 then
+                    local itemID = nil
+                    if entryInfo.itemID then
+                        itemID = tonumber(entryInfo.itemID)
+                    elseif entryID.itemID then
+                        itemID = tonumber(entryID.itemID)
+                    elseif entryID.recordID then
+                        itemID = decorMap[entryID.recordID] or GetItemIDFromDecorID(entryID.recordID)
+                    end
+
+                    if itemID then
+                        entries[itemID] = {
+                            numStored = entryInfo.numStored or 0,
+                            numPlaced = numPlaced,
+                            quantity = quantity,
+                            remainingRedeemable = remainingRedeemable,
+                            totalOwned = totalOwned,
+                        }
+                    end
+                end
+            end
+        end
+    end
+
+    return entries
 end
 
 ------------------------------------------------------------
@@ -178,7 +360,7 @@ local function GetCatalogEntryState(numericItemID)
     return state
 end
 
--- Force recache catalog searcher (call on zone transitions and HOUSING_CATALOG_SEARCHER_RELEASED)
+-- Force recache catalog searcher (call on zone transitions)
 local function ForceRecacheCatalogSearcher()
     -- TAINT FIX: Safety check before calling Housing APIs
     if not _G.HousingCatalogSafeToCall then
@@ -191,6 +373,106 @@ local function ForceRecacheCatalogSearcher()
 
     if C_HousingCatalog.CreateCatalogSearcher then
         pcall(C_HousingCatalog.CreateCatalogSearcher)
+    end
+end
+
+------------------------------------------------------------
+-- ATT-style full catalog scan (no owned-only filter)
+-- Searches ALL catalog entries and checks numPlaced + quantity + remainingRedeemable.
+-- This catches collected items that the SetOwnedOnly(true) searcher misses.
+------------------------------------------------------------
+
+local function RunATTStyleCollectionScan(callback)
+    if not _G.HousingCatalogSafeToCall then
+        if callback then callback(0) end
+        return
+    end
+    if not C_HousingCatalog or not C_HousingCatalog.CreateCatalogSearcher then
+        if callback then callback(0) end
+        return
+    end
+
+    local ok, searcher = pcall(C_HousingCatalog.CreateCatalogSearcher)
+    if not ok or not searcher then
+        if callback then callback(0) end
+        return
+    end
+
+    -- ATT-style: search everything (no owned-only filter)
+    pcall(function()
+        if searcher.SetAutoUpdateOnParamChanges then
+            searcher:SetAutoUpdateOnParamChanges(false)
+        end
+        searcher:SetCollected(true)
+        searcher:SetUncollected(true)
+        if searcher.SetAllowedIndoors then searcher:SetAllowedIndoors(true) end
+        if searcher.SetAllowedOutdoors then searcher:SetAllowedOutdoors(true) end
+        if searcher.SetCustomizableOnly then searcher:SetCustomizableOnly(false) end
+        if searcher.SetFirstAcquisitionBonusOnly then searcher:SetFirstAcquisitionBonusOnly(false) end
+    end)
+
+    local function ProcessResults()
+        local getOk, allItems = pcall(searcher.GetAllSearchItems, searcher)
+        if not getOk or not allItems then
+            if searcher.Release then pcall(searcher.Release, searcher) end
+            if callback then callback(0) end
+            return
+        end
+
+        local decorMap = BuildDecorIDToItemIDMap()
+        local found = 0
+
+        for i = 1, #allItems do
+            local entryID = allItems[i]
+            if type(entryID) == "table" and entryID.entryType == Enum.HousingCatalogEntryType.Decor then
+                local entryOk, entryInfo = pcall(C_HousingCatalog.GetCatalogEntryInfo, entryID)
+                if entryOk and entryInfo then
+                    -- ATT formula: numPlaced + quantity + remainingRedeemable
+                    local sum = (entryInfo.numPlaced or 0)
+                              + (entryInfo.quantity or 0)
+                              + (entryInfo.remainingRedeemable or 0)
+
+                    -- Tooltip fallback when counts are 0 (ATT-style)
+                    if sum == 0 and entryInfo.itemID then
+                        local owned = GetOwnedCountFromTooltip(entryInfo.itemID)
+                        if owned and owned > 0 then
+                            sum = owned
+                        end
+                    end
+
+                    if sum > 0 and sum < 1000000 then
+                        local itemID = nil
+                        if entryInfo.itemID then
+                            itemID = tonumber(entryInfo.itemID)
+                        elseif entryID.itemID then
+                            itemID = tonumber(entryID.itemID)
+                        elseif entryID.recordID then
+                            itemID = decorMap[entryID.recordID] or GetItemIDFromDecorID(entryID.recordID)
+                        end
+
+                        if itemID and not IsItemCached(itemID) then
+                            CacheItemAsCollected(itemID)
+                            found = found + 1
+                        end
+                    end
+                end
+            end
+        end
+
+        if searcher.Release then pcall(searcher.Release, searcher) end
+        if callback then callback(found) end
+    end
+
+    if searcher.SetResultsUpdatedCallback and searcher.RunSearch then
+        searcher:SetResultsUpdatedCallback(function()
+            ProcessResults()
+        end)
+        local runOk = pcall(searcher.RunSearch, searcher)
+        if not runOk then
+            ProcessResults()
+        end
+    else
+        ProcessResults()
     end
 end
 
@@ -209,15 +491,23 @@ local function EnsureEventFrame()
 end
 
 local function HandleEvent(self, event, ...)
-    if event == "HOUSING_CATALOG_SEARCHER_RELEASED" then
-        -- Force recache when searcher is released
-        ForceRecacheCatalogSearcher()
-    elseif event == "HOUSING_STORAGE_UPDATED" then
+    -- HOUSING_CATALOG_SEARCHER_RELEASED event removed - it never existed in 12.0.0
+    if event == "HOUSING_STORAGE_UPDATED" then
         -- This event triggers twice, so add delay
         -- Refresh collection status after storage update
         C_Timer.After(2, function()
-            -- Don't clear all - just let it refresh naturally on next check
+            HousingCollectionAPI:RefreshOwnedDecorCache(nil, true)
         end)
+    elseif event == "HOUSE_DECOR_ADDED_TO_CHEST" then
+        -- Mark newly acquired decor as collected immediately (ATT-style).
+        local _, decorID = ...
+        decorID = tonumber(decorID)
+        if decorID and decorID > 0 then
+            local itemID = GetItemIDFromDecorID(decorID)
+            if itemID then
+                CacheItemAsCollected(itemID)
+            end
+        end
     elseif event == "HOUSING_CATALOG_UPDATED" and housingCatalogUpdatedRegistered then
         -- Clear session cache when catalog updates (persistent cache remains)
         -- Only handle if event was successfully registered (Midnight API)
@@ -258,9 +548,16 @@ function HousingCollectionAPI:IsItemCollected(itemID)
         return true
     end
 
+    -- Check owned decor cache (catalog searcher snapshot)
+    local ownedEntry = GetOwnedCacheEntry(numericItemID)
+    if ownedEntry and (ownedEntry.totalOwned or 0) > 0 then
+        CacheItemAsCollected(numericItemID)
+        return true
+    end
+
     -- Skip HousingAPICache - go directly to API calls for more reliable results
     -- (HousingAPICache has TTL which can cause stale data)
-    
+
     -- Fallback to direct API calls
     local isCollected = false
 
@@ -268,22 +565,55 @@ function HousingCollectionAPI:IsItemCollected(itemID)
     -- This is the primary method for filtering and should be tried first
     local state = GetCatalogEntryState(numericItemID)
     if state then
-        local sum = (state.numStored or 0) + (state.numPlaced or 0)
+        local placed = (state.numPlaced or 0)
+        local stored = (state.numStored or 0)
+        local market = (state.quantity or 0) + (state.remainingRedeemable or 0)
+        if market > stored then
+            stored = market
+        end
+        local sum = placed + stored
         if sum > 0 and sum < 1000000 then
             isCollected = true
             CacheItemAsCollected(numericItemID)
+        elseif sum == 0 then
+            -- Tooltip fallback (ATT-style): sometimes catalog counts are 0 but tooltip shows owned.
+            local owned = GetOwnedCountFromTooltip(state.itemID or numericItemID)
+            if owned and owned > 0 then
+                isCollected = true
+                CacheItemAsCollected(numericItemID)
+            end
         end
     end
 
     -- Method 2: Use C_Housing.IsDecorCollected (correct API for housing decor)
     if not isCollected and _G.HousingCatalogSafeToCall and C_Housing and C_Housing.IsDecorCollected then
-        local success, collected = pcall(function()
-            return C_Housing.IsDecorCollected(numericItemID)
-        end)
-        if success and collected ~= nil then
-            isCollected = collected
-            if isCollected then
-                CacheItemAsCollected(numericItemID)
+        local decorID = nil
+
+        -- Prefer HousingAPI lookup (can resolve decorID for non-static items), then static table.
+        if HousingAPI and HousingAPI.GetDecorItemInfoFromItemID then
+            local ok, baseInfo = pcall(HousingAPI.GetDecorItemInfoFromItemID, HousingAPI, numericItemID)
+            if ok and baseInfo and baseInfo.decorID then
+                decorID = tonumber(baseInfo.decorID)
+            end
+        end
+        decorID = decorID or GetDecorIDFromItemID(numericItemID)
+
+        -- Last resort: query catalog entry by itemID to find recordID/decorID.
+        if not decorID and C_HousingCatalog and C_HousingCatalog.GetCatalogEntryByItemID then
+            PrimeHousingCatalog()
+            local ok, entryInfo = pcall(C_HousingCatalog.GetCatalogEntryByItemID, numericItemID)
+            if ok and entryInfo then
+                decorID = tonumber(entryInfo.recordID or entryInfo.decorID or entryInfo.entryID)
+            end
+        end
+
+        if decorID and decorID > 0 then
+            local success, collected = pcall(C_Housing.IsDecorCollected, decorID)
+            if success and collected ~= nil then
+                isCollected = collected
+                if isCollected then
+                    CacheItemAsCollected(numericItemID)
+                end
             end
         end
     end
@@ -310,7 +640,7 @@ function HousingCollectionAPI:IsItemCollected(itemID)
         end
     end
 
-    -- Method 4: Fallback to generic item collection API (for non-decor items)
+    -- Method 5: Fallback to generic item collection API (for non-decor items)
     if not isCollected and _G.HousingCatalogSafeToCall and C_PlayerInfo and C_PlayerInfo.IsItemCollected then
         local success, collected = pcall(function()
             return C_PlayerInfo.IsItemCollected(numericItemID)
@@ -360,8 +690,24 @@ function HousingCollectionAPI:GetCollectionInfo(itemID)
     local numStored = 0
     local numPlaced = 0
 
+    -- Check owned decor cache first for reliable placement counts
+    local ownedEntry = GetOwnedCacheEntry(numericItemID)
+    if ownedEntry then
+        numPlaced = ownedEntry.numPlaced or 0
+        local stored = ownedEntry.numStored or 0
+        local market = (ownedEntry.quantity or 0) + (ownedEntry.remainingRedeemable or 0)
+        if market > stored then
+            stored = market
+        end
+        numStored = stored
+        if (ownedEntry.totalOwned or 0) > 0 then
+            isCollected = true
+            CacheItemAsCollected(numericItemID)
+        end
+    end
+
     -- If cached, try to get quantity info from API
-    if isCollected then
+    if isCollected and not ownedEntry then
         if HousingAPI then
             local state = HousingAPI:GetCatalogEntryInfoByItem(numericItemID)
             if state then
@@ -374,12 +720,45 @@ function HousingCollectionAPI:GetCollectionInfo(itemID)
         local state = GetCatalogEntryState(numericItemID)
 
         if state then
-            numStored = state.numStored or 0
             numPlaced = state.numPlaced or 0
-            local sum = numStored + numPlaced
+            local stored = state.numStored or 0
+            local market = (state.quantity or 0) + (state.remainingRedeemable or 0)
+            if market > stored then
+                stored = market
+            end
+            numStored = stored
+            local sum = numPlaced + numStored
             if sum > 0 and sum < 1000000 then
                 isCollected = true
                 CacheItemAsCollected(numericItemID)
+            elseif sum == 0 then
+                local owned = GetOwnedCountFromTooltip(state.itemID or numericItemID)
+                if owned and owned > 0 then
+                    isCollected = true
+                    CacheItemAsCollected(numericItemID)
+                end
+            end
+        end
+    end
+
+    -- If we still think it's not collected, try the authoritative "collected/unlocked" API.
+    -- Some items can be considered collected even when stored/placed counts are 0.
+    if not isCollected and _G.HousingCatalogSafeToCall and HousingAPI and HousingAPI.IsDecorCollected then
+        local decorID = nil
+        if HousingAPI.GetDecorItemInfoFromItemID then
+            local ok, baseInfo = pcall(HousingAPI.GetDecorItemInfoFromItemID, HousingAPI, numericItemID)
+            if ok and baseInfo and baseInfo.decorID then
+                decorID = tonumber(baseInfo.decorID)
+            end
+        end
+        decorID = decorID or GetDecorIDFromItemID(numericItemID)
+        if decorID and decorID > 0 then
+            local collected = HousingAPI:IsDecorCollected(decorID)
+            if collected ~= nil then
+                isCollected = collected == true
+                if isCollected then
+                    CacheItemAsCollected(numericItemID)
+                end
             end
         end
     end
@@ -546,6 +925,109 @@ function HousingCollectionAPI:RecacheCatalogSearcher()
 end
 
 ------------------------------------------------------------
+-- Public API: Refresh owned decor cache (catalog searcher snapshot)
+------------------------------------------------------------
+
+function HousingCollectionAPI:RefreshOwnedDecorCache(callback, force)
+    if ownedCacheRefreshInProgress then
+        if callback then
+            callback(false, 0, 0, "Scan already in progress")
+        end
+        return
+    end
+
+    if not _G.HousingCatalogSafeToCall then
+        if callback then
+            callback(false, 0, 0, "Housing Catalog API not safe to call yet")
+        end
+        return
+    end
+
+    if not C_HousingCatalog or not C_HousingCatalog.CreateCatalogSearcher then
+        if callback then
+            callback(false, 0, 0, "Housing Catalog API not available")
+        end
+        return
+    end
+
+    EnsureOwnedCacheTables()
+
+    local now = time()
+    local cacheAge = now - (HousingDB.ownedDecorCache.lastScan or 0)
+    if not force and HousingDB.ownedDecorCache.items and next(HousingDB.ownedDecorCache.items) ~= nil and cacheAge < OWNED_DECOR_CACHE_TTL then
+        if callback then
+            callback(true, 0, 0, nil)
+        end
+        return
+    end
+
+    ownedCacheRefreshInProgress = true
+
+    local catalogSearcher = C_HousingCatalog.CreateCatalogSearcher()
+    if not catalogSearcher then
+        ownedCacheRefreshInProgress = false
+        if callback then
+            callback(false, 0, 0, "Failed to create catalog searcher")
+        end
+        return
+    end
+
+    ConfigureCatalogSearcherForOwnedDecor(catalogSearcher)
+
+    catalogSearcher:SetResultsUpdatedCallback(function()
+        local entries = ExtractOwnedDecorEntriesFromSearcher(catalogSearcher)
+
+        local prevCollected = 0
+        if HousingDB and HousingDB.collectedDecor then
+            for _ in pairs(HousingDB.collectedDecor) do
+                prevCollected = prevCollected + 1
+            end
+        end
+
+        HousingDB.ownedDecorCache.items = entries
+        HousingDB.ownedDecorCache.lastScan = time()
+
+        local scanned = 0
+        for itemID, data in pairs(entries) do
+            scanned = scanned + 1
+            if data and (data.totalOwned or 0) > 0 then
+                CacheItemAsCollected(itemID)
+            end
+        end
+
+        local newCollected = 0
+        if HousingDB and HousingDB.collectedDecor then
+            for _ in pairs(HousingDB.collectedDecor) do
+                newCollected = newCollected + 1
+            end
+        end
+
+        ownedCacheRefreshInProgress = false
+        if catalogSearcher.Release then
+            catalogSearcher:Release()
+        end
+
+        if callback then
+            callback(true, scanned, math.max(newCollected - prevCollected, 0), nil)
+        end
+    end)
+
+    if catalogSearcher.RunSearch then
+        pcall(function()
+            catalogSearcher:RunSearch()
+        end)
+    else
+        ownedCacheRefreshInProgress = false
+        if catalogSearcher.Release then
+            catalogSearcher:Release()
+        end
+        if callback then
+            callback(false, 0, 0, "Unable to run catalog search")
+        end
+    end
+end
+
+------------------------------------------------------------
 -- Public API: Batch refresh collection status
 -- Refreshes collection status for a list of itemIDs
 ------------------------------------------------------------
@@ -572,90 +1054,70 @@ function HousingCollectionAPI:BatchRefreshCollectionStatus(itemIDs)
     return refreshed
 end
 
-------------------------------------------------------------
--- Public API: Force scan all housing decor items
--- Scans all items in HousingAllItems and updates collection cache
-------------------------------------------------------------
-
 function HousingCollectionAPI:ScanAllDecorItems(callback)
-    if not HousingAllItems then
-        if callback then
-            callback(false, 0, 0, "HousingAllItems not available")
-        end
-        return
-    end
-    
-    if not _G.HousingCatalogSafeToCall then
-        if callback then
-            callback(false, 0, 0, "Housing Catalog API not safe to call yet")
-        end
-        return
-    end
-
-    if not C_HousingCatalog then
-        if callback then
-            callback(false, 0, 0, "Housing Catalog API not available")
-        end
-        return
-    end
-    
-    -- Prime catalog searcher
-    PrimeHousingCatalog()
-    
-    -- Collect all itemIDs from HousingAllItems
-    local itemIDs = {}
-    for itemID, decorData in pairs(HousingAllItems) do
-        local numericItemID = tonumber(itemID)
-        if numericItemID and decorData and decorData.name then
-            -- Skip [DNT] items
-            if not string.find(decorData.name, "%[DNT%]") then
-                table.insert(itemIDs, numericItemID)
-            end
-        end
-    end
-    
-    local totalItems = #itemIDs
-    local scanned = 0
-    local collected = 0
-    
-    -- Scan in batches to avoid performance issues
-    local batchSize = 50
-    local currentBatch = 1
-    
-    local function ScanBatch()
-        local startIdx = (currentBatch - 1) * batchSize + 1
-        local endIdx = math.min(startIdx + batchSize - 1, totalItems)
-        
-        if startIdx > totalItems then
-            -- All done
-            if callback then
-                callback(true, scanned, collected, nil)
-            end
+    -- Pass 1: Owned-only searcher (SetOwnedOnly=true)
+    self:RefreshOwnedDecorCache(function(success, scanned, newFound, err)
+        if not success or not _G.HousingCatalogSafeToCall then
+            if callback then callback(success, scanned, newFound, err) end
             return
         end
-        
-        -- Scan this batch
-        for i = startIdx, endIdx do
-            local itemID = itemIDs[i]
-            if itemID then
-                -- Force check (bypasses cache)
-                local wasCached = IsItemCached(itemID)
-                local isCollected = self:IsItemCollected(itemID)
-                
-                scanned = scanned + 1
-                if isCollected and not wasCached then
-                    collected = collected + 1
+
+        -- Pass 2: ATT-style full catalog scan (no owned filter).
+        -- Searches ALL catalog entries, checks numPlaced + quantity + remainingRedeemable.
+        -- Catches items the owned-only searcher misses.
+        RunATTStyleCollectionScan(function(attFound)
+            if attFound > 0 and _G.HousingVendorLog and _G.HousingVendorLog.Info then
+                _G.HousingVendorLog:Info("ATT-style scan: found " .. attFound .. " additional collected items.")
+            end
+
+            -- Pass 3: C_Housing.IsDecorCollected verification.
+            -- Catches items that are "unlocked" but have zero counts everywhere.
+            if not C_Housing or not C_Housing.IsDecorCollected or not _G.HousingAllItems then
+                if callback then callback(success, scanned, newFound + attFound, err) end
+                return
+            end
+
+            local uncheckedItems = {}
+            for itemID, decorData in pairs(_G.HousingAllItems) do
+                local id = tonumber(itemID)
+                if id and decorData[1] and not IsItemCached(id) then
+                    uncheckedItems[#uncheckedItems + 1] = { itemID = id, decorID = decorData[1] }
                 end
             end
-        end
-        
-        -- Schedule next batch
-        currentBatch = currentBatch + 1
-        C_Timer.After(0.1, ScanBatch)
-    end
-    
-    -- Start scanning
-    ScanBatch()
+
+            if #uncheckedItems == 0 then
+                if callback then callback(success, scanned, newFound + attFound, err) end
+                return
+            end
+
+            local BATCH_SIZE = 200
+            local index = 1
+            local extraFound = 0
+
+            local function ProcessBatch()
+                local batchEnd = math.min(index + BATCH_SIZE - 1, #uncheckedItems)
+                for i = index, batchEnd do
+                    local entry = uncheckedItems[i]
+                    local ok, collected = pcall(C_Housing.IsDecorCollected, entry.decorID)
+                    if ok and collected then
+                        CacheItemAsCollected(entry.itemID)
+                        extraFound = extraFound + 1
+                    end
+                end
+                index = batchEnd + 1
+                if index <= #uncheckedItems then
+                    C_Timer.After(0.05, ProcessBatch)
+                else
+                    if extraFound > 0 and _G.HousingVendorLog and _G.HousingVendorLog.Info then
+                        _G.HousingVendorLog:Info("Collection verify: found " .. extraFound .. " additional collected items via IsDecorCollected.")
+                    end
+                    if callback then callback(success, scanned, newFound + attFound + extraFound, err) end
+                end
+            end
+
+            ProcessBatch()
+        end)
+    end, true)
 end
 
 function HousingCollectionAPI:StartEventHandlers()
@@ -663,19 +1125,54 @@ function HousingCollectionAPI:StartEventHandlers()
     frame:SetScript("OnEvent", HandleEvent)
 
     -- Register core events
-    frame:RegisterEvent("HOUSING_CATALOG_SEARCHER_RELEASED")
-    frame:RegisterEvent("HOUSING_STORAGE_UPDATED")
+    -- Housing events only exist in beta (12.0+), not in retail (11.0)
+    local vd = _G.HousingVersionDetect or {}
+
+    -- HOUSING_CATALOG_SEARCHER_RELEASED was removed/never existed - do not register
+    -- (Documented as existing in 12.0.0 but appears to be defunct)
+
+    -- HOUSING_STORAGE_UPDATED only exists in beta
+    if vd.HAS_HOUSING_API then
+        pcall(function() frame:RegisterEvent("HOUSING_STORAGE_UPDATED") end)
+    end
+
+    -- Decor collection event (when an item is added to housing storage/chest)
+    do
+        local canRegister = true
+        if _G.C_EventUtils and _G.C_EventUtils.IsEventValid then
+            local ok, valid = pcall(_G.C_EventUtils.IsEventValid, "HOUSE_DECOR_ADDED_TO_CHEST")
+            if ok and valid == false then
+                canRegister = false
+            end
+        end
+        if canRegister then
+            pcall(function() frame:RegisterEvent("HOUSE_DECOR_ADDED_TO_CHEST") end)
+        end
+    end
     frame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
     frame:RegisterEvent("PLAYER_ENTERING_WORLD")
     frame:RegisterEvent("PLAYER_LOGOUT")
 
     -- Conditionally register Midnight API event (only if available)
-    local success = pcall(function()
-        frame:RegisterEvent("HOUSING_CATALOG_UPDATED")
-        housingCatalogUpdatedRegistered = true
-    end)
-    if not success then
-        housingCatalogUpdatedRegistered = false
+    do
+        local canRegister = true
+        if _G.C_EventUtils and _G.C_EventUtils.IsEventValid then
+            local ok, valid = pcall(_G.C_EventUtils.IsEventValid, "HOUSING_CATALOG_UPDATED")
+            if ok and valid == false then
+                canRegister = false
+            end
+        end
+        if canRegister then
+            local success = pcall(function()
+                frame:RegisterEvent("HOUSING_CATALOG_UPDATED")
+                housingCatalogUpdatedRegistered = true
+            end)
+            if not success then
+                housingCatalogUpdatedRegistered = false
+            end
+        else
+            housingCatalogUpdatedRegistered = false
+        end
     end
 
     eventHandlersActive = true  -- Enable EventRegistry callback processing
@@ -743,7 +1240,10 @@ local function RegisterTooltipCallback()
             -- Check collection status from tooltip entryInfo
             -- This provides passive collection updates when users browse the catalog
             if entryInfo.numStored or entryInfo.numPlaced then
-                local sum = (entryInfo.numStored or 0) + (entryInfo.numPlaced or 0)
+                local numStored = entryInfo.numStored or 0
+                local numPlaced = entryInfo.numPlaced or 0
+                local sum = numStored + numPlaced
+
                 if sum > 0 and sum < 1000000 then
                     -- Try multiple methods to get itemID
                     local itemID = nil
@@ -783,6 +1283,7 @@ local function RegisterTooltipCallback()
                         local numericItemID = tonumber(itemID)
                         if numericItemID then
                             CacheItemAsCollected(numericItemID)
+
                         end
                     end
                 end
@@ -873,9 +1374,16 @@ function HousingCollectionAPI:Initialize()
     local REQUIRE_COLLECTIONS_SHOWN = false
     local safeDelayPassed = false
     local collectionsShownOnce = false
+    local SAFE_DELAY_SECONDS = 6
+    if HousingDB and HousingDB.settings and tonumber(HousingDB.settings.catalogSafeDelaySeconds) ~= nil then
+        SAFE_DELAY_SECONDS = tonumber(HousingDB.settings.catalogSafeDelaySeconds) or SAFE_DELAY_SECONDS
+    end
 
     local function TryEnableHousingCatalog()
         if _G.HousingCatalogSafeToCall then
+            return
+        end
+        if IsApiCallsDisabled() then
             return
         end
         if not safeDelayPassed or (REQUIRE_COLLECTIONS_SHOWN and not collectionsShownOnce) then
@@ -906,6 +1414,9 @@ function HousingCollectionAPI:Initialize()
         if HousingDataEnhancer and HousingDataEnhancer.Initialize then
             pcall(HousingDataEnhancer.Initialize, HousingDataEnhancer)
         end
+        if _G.HousingCatalogValidation and _G.HousingCatalogValidation.Initialize then
+            pcall(_G.HousingCatalogValidation.Initialize, _G.HousingCatalogValidation)
+        end
     end
 
     local function MarkCollectionsShown()
@@ -934,10 +1445,34 @@ function HousingCollectionAPI:Initialize()
         end
     end)
 
-    C_Timer.After(6, function()
+    if SAFE_DELAY_SECONDS <= 0 then
         safeDelayPassed = true
         TryEnableHousingCatalog()
-    end)
+    else
+        C_Timer.After(SAFE_DELAY_SECONDS, function()
+            safeDelayPassed = true
+            TryEnableHousingCatalog()
+        end)
+    end
+
+    -- Expose closures so `/hv api on|off` can toggle without a reload.
+    self._tryEnableHousingCatalog = TryEnableHousingCatalog
+end
+
+function HousingCollectionAPI:SetApiEnabled(enabled)
+    if not HousingDB then HousingDB = {} end
+    HousingDB.settings = HousingDB.settings or {}
+
+    if not enabled then
+        HousingDB.settings.disableApiCalls = true
+        _G.HousingCatalogSafeToCall = false
+        return
+    end
+
+    HousingDB.settings.disableApiCalls = false
+    if self._tryEnableHousingCatalog then
+        self._tryEnableHousingCatalog()
+    end
 end
 
 -- Make globally accessible

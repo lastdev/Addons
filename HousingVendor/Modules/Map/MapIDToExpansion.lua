@@ -20,9 +20,9 @@ HousingMapIDToExpansion = {
     [2472] = "The War Within", -- Tazavesh
     [2678] = "The War Within", -- Millennia's Threshold / Mythic Dungeons
     [2266] = "The War Within", -- Mythic Dungeons
-    [2736] = "The War Within", -- Razorwind Shores (continent)
-    [2351] = "The War Within", -- Razorwind Shores
-    [2352] = "The War Within", -- Founder's Point
+    [2736] = "Midnight", -- Razorwind Shores (continent)
+    [2351] = "Midnight", -- Razorwind Shores
+    [2352] = "Midnight", -- Founder's Point
     [2738] = "The War Within", -- Unknown TWW zone
     [2739] = "The War Within", -- Unknown TWW zone
     [2322] = "The War Within", -- Unknown TWW zone
@@ -269,6 +269,16 @@ HousingMapIDToExpansion = {
 -- When routing to a child mapID, the system will first route to the parent mapID
 HousingMapParents = {
     [503] = 85, -- Brawl'gar Arena is inside Orgrimmar
+
+    -- Alliance Garrisons (Lunarfall) → Shadowmoon Valley
+    [579] = 539, -- Garrison Level 3
+    [580] = 539, -- Garrison Level 2
+    [582] = 539, -- Garrison Level 1
+
+    -- Horde Garrisons (Frostwall) → Frostfire Ridge
+    [590] = 525, -- Garrison Level 1
+    [591] = 525, -- Garrison Level 2
+    [592] = 525, -- Garrison Level 3
 }
 
 -- Entrance coordinates for sub-zones within their parent zones

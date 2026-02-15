@@ -4,11 +4,13 @@
 
 -- Whats new info
 SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
-  .."          |cffffffffDragonflight & Classic version by Codermik, additional retail\n"
-  .."          programming by Speedwaystar/MrWizard.\n"
+  .."          |cffffffffMidnight & Classic versions by Codermik, additional retail\n"
+  .."          programming by MrWizard and Speedwaystar.\n"
   .."\n\n"
-  .."          Changes in r34.050925:\n\n"
-  .."             * TWW Ethereal Augment Rune\n"
+  .."          Changes in r38.110226:\n\n"
+  .."             * Fixing chained buffs, apparently they were broken\n"
+  .."             * Assassination rogues can do 4 poisons now\n"
+  .."             * Adding berserker stance for warriors\n"
   .."\n\n"
   .."          |c0000FF96Many thanks to Chris S., Samantha R. and\n"
   .."          Twilight's Sundries for their kind donations.\n"
@@ -16,7 +18,9 @@ SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
 ;
 
 SMARTBUFF_CREDITS = "|cffffffff"
-  .."Retail & Classic by Codermik & Speedwaystar.  Please join and get support via my discord server:\n\n"
+  .."Retail & Classic by Codermik, MrWizard &\n"
+  .."Speedwaystar.  Please join and get support\n"
+  .."via my discord server:\n\n"
   .."|cff00e0ffhttps://discord.gg/R6EkZ94TKK\n\n"
   .."|cffffffffIf you want to help support me and the development of this addon then please always download from Curse or use one of the following links:\n\n"
   .."|cffffffffTwitch: |cff00e0ffhttps://www.twitch.tv/codermik\n"
@@ -42,8 +46,8 @@ SMARTBUFF_UNDEAD    = "Undead";
 SMARTBUFF_CLASSES = {"Druid", "Hunter", "Mage", "Paladin", "Priest", "Rogue", "Shaman", "Warlock", "Warrior", "Death Knight", "Monk", "Demon Hunter", "Evoker", "Hunter Pet", "Warlock Pet", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
 
 -- Templates and Instances
-SMARTBUFF_TEMPLATES = {"Solo", "Party", "LFR", "Raid", "Mythic Keystone", "Horrific Vision", "Delve", "Battleground", "Arena", "Nerub-ar Palace", "Liberation of Undermine", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
-SMARTBUFF_INSTANCES = {"Nerub-ar Palace", "Liberation of Undermine"};
+SMARTBUFF_TEMPLATES = {"Solo", "Party", "LFR", "Raid", "Mythic Keystone", "Horrific Vision", "Delve", "Battleground", "Arena", "The Voidspire", "The Dreamrift", "March on Quel'Danas", "Nerub-ar Palace", "Liberation of Undermine", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
+SMARTBUFF_INSTANCES = {"The Voidspire", "The Dreamrift", "March on Quel'Danas", "Nerub-ar Palace", "Liberation of Undermine"};
 
 -- Mount
 SMARTBUFF_MOUNT = "Increases speed by (%d+)%%.";
@@ -126,7 +130,7 @@ SMARTBUFF_OFT_ICONSIZE       = "Icon Size";
 SMARTBUFF_OFTT               = "Toggles SmartBuff On/Off";
 SMARTBUFF_OFTT_AUTO          = "Toggles the buff reminder On/Off";
 SMARTBUFF_OFTT_AUTOTIMER     = "Delay in seconds between two checks.";
-SMARTBUFF_OFTT_AUTOCOMBAT    = "Run the check also in combat.";
+SMARTBUFF_OFTT_AUTOCOMBAT    = "Run the check also in combat.\nAll reminder logic is disabled in combat unless the main \"in combat\" option (in the options frame, not this one) is enabled.";
 SMARTBUFF_OFTT_AUTOCHAT      = "Displays missing buffs as chat message.";
 SMARTBUFF_OFTT_AUTOSPLASH    = "Displays missing buffs as splash message\nin the middle of the screen.";
 SMARTBUFF_OFTT_AUTOSOUND     = "Plays a sound if buffs are missing.";
@@ -173,7 +177,7 @@ SMARTBUFF_BST_MANALIMIT      = "Lower bound";
 -- Buffsetup Frame Tooltip Text
 SMARTBUFF_BSTT_SELFONLY      = "Buffs only your character.";
 SMARTBUFF_BSTT_SELFNOT       = "Buffs all other selected classes,\nexcept your character.";
-SMARTBUFF_BSTT_COMBATIN      = "Buffs if you are in combat.";
+SMARTBUFF_BSTT_COMBATIN      = "Buffs if you are in combat.\nAll in-combat logic is disabled unless the main \"in combat\" option (in the options frame) is enabled.";
 SMARTBUFF_BSTT_COMBATOUT     = "Buffs if you are out of combat.";
 SMARTBUFF_BSTT_MAINHAND      = "Buffs the Main Hand.";
 SMARTBUFF_BSTT_OFFHAND       = "Buffs the Off Hand.";

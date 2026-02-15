@@ -1,0 +1,18 @@
+lightweight tag 43f639c786043ed21eef84720a8e240860f77a48 20260207.1
+Author:	David Hedbor <neotron@gmail.com>
+Date:	Sat Feb 7 16:06:36 2026 +0100
+
+commit 43f639c786043ed21eef84720a8e240860f77a48
+Author: David Hedbor <neotron@gmail.com>
+Date:   Sat Feb 7 16:06:36 2026 +0100
+
+    * Added Alt-Left Click to select/deselect all items of a specific type.
+    * Added inline documentation of click commands in the dialog.
+    * Made checkbox column fixed width to avoid the window changing size if you select an item.
+
+commit 8ec0b476f66ed1dc3d8e165d58fecbda07b7d927
+Author: David Hedbor <neotron@gmail.com>
+Date:   Sat Feb 7 15:36:27 2026 +0100
+
+    Fixed issue where taking selected items sometimes failed to take the item
+

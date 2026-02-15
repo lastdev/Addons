@@ -156,39 +156,8 @@ function HousingAPICache:GetVendorInfo(decorID)
     return nil
 end
 
--- Get collection status (with caching)
-function HousingAPICache:IsItemCollected(itemID)
-    -- Prefer the centralized HousingCollectionAPI (single source of truth/caching).
-    if _G.HousingCollectionAPI and _G.HousingCollectionAPI.IsItemCollected then
-        return _G.HousingCollectionAPI:IsItemCollected(itemID)
-    end
-
-    local cached = caches.collectionStatus[itemID]
-    if IsCacheValid(cached) then
-        return cached.status
-    end
-
-    -- Not cached or expired, fetch from API
-    if HousingAPI then
-        local baseInfo = HousingAPI:GetDecorItemInfoFromItemID(itemID)
-        if baseInfo and baseInfo.decorID then
-            local status = HousingAPI:IsDecorCollected(baseInfo.decorID)
-            if status ~= nil then
-                caches.collectionStatus[itemID] = {
-                    status = status,
-                    timestamp = GetTime()
-                }
-                if MAX_COLLECTED_ENTRIES then
-                    ClearExpiredEntries(caches.collectionStatus)
-                    TrimCacheToLimit(caches.collectionStatus, MAX_COLLECTED_ENTRIES)
-                end
-                return status
-            end
-        end
-    end
-
-    return false
-end
+-- Removed: HousingAPICache:IsItemCollected (dead code).
+-- Collection detection is handled by HousingCollectionAPI (single source of truth).
 
 -- Get filter tag groups (cached once per session)
 function HousingAPICache:GetFilterTagGroups()

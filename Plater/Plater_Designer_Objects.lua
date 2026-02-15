@@ -37,8 +37,21 @@ function designer.CreateSettings(parentFrame)
             --classcolor = "name_classcolor",
         },
 
+        CastBarTargetName = {
+            size = "castbar_target_text_size",
+            font = "castbar_target_font",
+            color = "castbar_target_color",
+            outline = "castbar_target_outline",
+            shadowcolor = "castbar_target_shadow_color",
+            shadowoffsetx = "castbar_target_shadow_color_offset[1]",
+            shadowoffsety = "castbar_target_shadow_color_offset[2]",
+            anchor = "castbar_target_anchor.side",
+            anchoroffsetx = "castbar_target_anchor.x",
+            anchoroffsety = "castbar_target_anchor.y",
+        },
+
         LifePercent = {
-            --text = "80",
+            text = "80",
             size = "percent_text_size",
             font = "percent_text_font",
             color = "percent_text_color",
@@ -69,6 +82,19 @@ function designer.CreateSettings(parentFrame)
             --classcolor = "name_classcolor",
         },
 
+        CastBarSpark = {
+            texture = "cast_statusbar_spark_texture", --it'll need a feed of textures, perhaps a function
+            width = "cast_statusbar_spark_width",
+            vertexcolor = "cast_statusbar_spark_color",
+            alpha = "cast_statusbar_spark_alpha",
+            --["height"] = 0,
+            --["anchor"] = 0,
+            --["anchoroffsetx"] = 0,
+            --["anchoroffsety"] = 0,
+
+            --cast_statusbar_spark_texture = [[Interface\AddOns\Plater\images\spark1]],
+        },
+
         UnitLevel = {
             --text = "80",
             size = "level_text_size",
@@ -86,14 +112,183 @@ function designer.CreateSettings(parentFrame)
             --layer = "name_layer",
             --classcolor = "name_classcolor",
         },
+
+        SpellCastTime = {
+            --text = "3.2s",
+            size = "spellpercent_text_size",
+            font = "spellpercent_text_font",
+            color = "spellpercent_text_color",
+            outline = "spellpercent_text_outline",
+            shadowcolor = "spellpercent_text_shadow_color",
+            shadowoffsetx = "spellpercent_text_shadow_color_offset[1]",
+            shadowoffsety = "spellpercent_text_shadow_color_offset[2]",
+            anchor = "spellpercent_text_anchor.side",
+            anchoroffsetx = "spellpercent_text_anchor.x",
+            anchoroffsety = "spellpercent_text_anchor.y",
+            --alpha = "spellpercent_text_alpha",
+        },
+
+        BigUnitName = {
+            can_move = false,
+            size = "big_actorname_text_size",
+            font = "big_actorname_text_font",
+            color = "big_actorname_text_color",
+            outline = "big_actorname_text_outline",
+            shadowcolor = "big_actorname_text_shadow_color",
+            shadowoffsetx = "big_actorname_text_shadow_color_offset[1]",
+            shadowoffsety = "big_actorname_text_shadow_color_offset[2]",
+        },
+
+        BigActorTitle = {
+            can_move = false,
+            size = "big_actortitle_text_size",
+            font = "big_actortitle_text_font",
+            outline = "big_actortitle_text_outline",
+            shadowcolor = "big_actortitle_text_shadow_color",
+            shadowoffsetx = "big_actortitle_text_shadow_color_offset[1]",
+            shadowoffsety = "big_actortitle_text_shadow_color_offset[2]",
+        },
+
+        QuestOptions = {},
+
+        CastBar = {
+            --values from PlaterDB.profile.plate_config[unittype]
+            width = "cast_incombat[1]", --plate_config.enemynpc.
+            height = "cast_incombat[2]", --plate_config.enemynpc.
+        },
+
+        HealthBar = {
+            --values from PlaterDB.profile.plate_config[unittype]
+            width = "health_incombat[1]", --plate_config.enemynpc.
+            height = "health_incombat[2]", --plate_config.enemynpc.
+        },
     }
 
     options.WidgetSettingsExtraOptions = {
+        HealthBar = {
+            --[=[
+            {
+                key = "../../../health_statusbar_texture", --the name of the option in the profile table
+                label = "Texture",
+                widget = "selectstatusbartexture",
+                setter = function(widget, value) designer.UpdateAllNameplates() end,
+                tableName = "health_statusbar_texture",
+            },
+            --]=]
+        },
+
+        --tableName is not a field that is used by the designer in the framework
+        --it is here so the Plater_Designer can know which field to update in the profile table
+
+        CastBar = {
+            {
+                key = "castbar_offset_x", --the name of the option in the profile table
+                label = "Offset X",
+                widget = "slider",
+                setter = function(widget, value) designer.UpdateAllNameplates() end,
+                minvalue = -16,
+                maxvalue = 16,
+                step = 1,
+                tableName = "castbar_offset_x",
+            },
+            {
+                key = "castbar_offset", --without Y
+                label = "Offset Y",
+                widget = "slider",
+                setter = function(widget, value) designer.UpdateAllNameplates() end,
+                minvalue = -16,
+                maxvalue = 16,
+                step = 1,
+                tableName = "castbar_offset_y",
+            }
+
+
+        },
+
+        CastBarSpark = {
+            {
+                key = "cast_statusbar_spark_hideoninterrupt", --the name of the option in the profile table
+                label = "Hide Spark On Interrupt",
+                widget = "toggle",
+                setter = function(widget, value) designer.UpdateAllNameplates() end,
+            },
+            {
+                key = "cast_statusbar_spark_half", --the name of the option in the profile table
+                label = "Half Spark",
+                widget = "toggle",
+                setter = function(widget, value) designer.UpdateAllNameplates() end,
+            },
+            {
+                key = "cast_statusbar_spark_offset", --the name of the option in the profile table
+                label = "Offset",
+                widget = "slider",
+                setter = function(widget, value) designer.UpdateAllNameplates() end,
+                minvalue = -16,
+                maxvalue = 16,
+                step = 1,
+            }
+        },
+
+        QuestOptions = {
+            {
+                key = "quest_enabled", --the name of the option in the profile table
+                label = "Enabled",
+                widget = "toggle",
+                setter = function(widget, value) designer.UpdateAllNameplates() end,
+            },
+            {
+                key = "quest_color_enabled", --the name of the option in the profile table
+                label = "Change Color",
+                widget = "toggle",
+                setter = function(widget, value) designer.UpdateAllNameplates() end,
+            },
+            {
+                key = "quest_color_enemy", --the name of the option in the profile table
+                label = "Enemy Quest Color",
+                widget = "color",
+                setter = function(widget, value) designer.UpdateAllNameplates() end,
+            },
+            {
+                key = "quest_color_neutral", --the name of the option in the profile table
+                label = "Neutral Quest Color",
+                widget = "color",
+                setter = function(widget, value) designer.UpdateAllNameplates() end,
+            },
+        },
+
         UnitName = {},
+
+        CastBarTargetName = {
+            {
+                key = "castbar_target_show", --the name of the option in the profile table
+                label = "Enabled",
+                widget = "toggle",
+                setter = function(widget, value) designer.UpdateAllNameplates() end,
+            },
+
+            {
+                key = "castbar_target_notank", --the name of the option in the profile table
+                label = "No Tank",
+                widget = "toggle",
+                setter = function(widget, value) designer.UpdateAllNameplates() end,
+            },
+        },
+
+        BigUnitName = {},
+        BigActorTitle = {},
 
         UnitLevel = {
             {
                 key = "level_text_enabled", --the name of the option in the profile table
+                label = "Enabled",
+                widget = "toggle",
+                setter = function(widget, value) designer.UpdateAllNameplates() end,
+            },
+        },
+
+        SpellCastTime = {
+            {
+                key = "spellpercent_text_enabled", --the name of the option in the profile table
                 label = "Enabled",
                 widget = "toggle",
                 setter = function(widget, value) designer.UpdateAllNameplates() end,

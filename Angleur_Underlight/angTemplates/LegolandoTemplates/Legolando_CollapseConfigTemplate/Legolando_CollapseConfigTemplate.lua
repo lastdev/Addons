@@ -1,8 +1,67 @@
+local function getFolderPath()
+    local stack = debugstack()
+    local _, _, luafilepath = string.find(stack, "[%[](.-)[%]]")
+    -- print("lue file's path: ", luafilepath)
+    local i = 1
+    local lastPart
+    while string.find(luafilepath, "([/].+)", i) do
+        local startPoint, endPoint
+        startPoint, endPoint, lastPart = string.find(luafilepath, "([/].+)", i)
+        i = startPoint + 1
+        -- print(s, startPoint, endPoint, "\n")
+    end
+    -- print("part to remove: ", lastPart)
+    local afterRemoval = string.gsub(luafilepath, lastPart, "")
+    -- print("After removal: ", afterRemoval)
+    return afterRemoval
+end
+
 -- ____________________________________[1]______________________________________________
 --       Templates Ported directly from Blizzard's FrameXML, for classic parity
 -- ____________________________________[1]______________________________________________
 local TabSideExtraSpacing = 20;
 Legolando_PortedTabSystemButtonArtMixin_AngleurUnderlight = {};
+
+function Legolando_PortedTabSystemButtonArtMixin_AngleurUnderlight:OnLoad()
+	local folderPath = getFolderPath()
+    local imagePath =  folderPath .. "/Ported_UIFrameTabs.blp"
+	self.LeftActive:SetTexture(imagePath)
+	self.LeftActive:SetSize(35, 42)
+	self.LeftActive:SetTexCoord(0.015625, 0.5625, 0.496094, 0.660156)
+	
+	self.RightActive:SetTexture(imagePath)
+	self.RightActive:SetSize(37, 42)
+	self.RightActive:SetTexCoord(0.015625, 0.59375, 0.324219, 0.488281)
+
+	self.MiddleActive:SetTexture(imagePath)
+	self.MiddleActive:SetSize(1, 42)
+	self.MiddleActive:SetTexCoord(0, 0.015625, 0.00390625, 0.167969)
+
+	self.Left:SetTexture(imagePath)
+	self.Left:SetSize(35, 36)
+	self.Left:SetTexCoord(0.015625, 0.5625, 0.816406, 0.957031)
+
+	self.Right:SetTexture(imagePath)
+	self.Right:SetSize(37, 36)
+	self.Right:SetTexCoord(0.015625, 0.59375, 0.667969, 0.808594)
+
+	self.Middle:SetTexture(imagePath)
+	self.Middle:SetSize(1, 36)
+	self.Middle:SetTexCoord(0, 0.015625, 0.175781, 0.316406)
+
+	self.LeftHighlight:SetTexture(imagePath)
+	self.LeftHighlight:SetSize(35, 36)
+	self.LeftHighlight:SetTexCoord(0.015625, 0.5625, 0.816406, 0.957031)
+
+	self.RightHighlight:SetTexture(imagePath)
+	self.RightHighlight:SetSize(37, 36)
+	self.RightHighlight:SetTexCoord(0.015625, 0.59375, 0.667969, 0.808594)
+
+	self.MiddleHighlight:SetTexture(imagePath)
+	self.MiddleHighlight:SetSize(1, 36)
+	self.MiddleHighlight:SetTexCoord(0, 0.015625, 0.175781, 0.316406)
+end
+
 function Legolando_PortedTabSystemButtonArtMixin_AngleurUnderlight:HandleRotation()
 	if self.isTabOnTop then
 		for _, texture in ipairs(self.RotatedTextures) do

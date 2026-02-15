@@ -103,16 +103,24 @@ L["DUNGEON_SHORT_NAME_HOV"] = "SdI"
 --[[ L["DUNGEON_SHORT_NAME_KR"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_LOWR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_MC"] = ""--]] 
 L["DUNGEON_SHORT_NAME_MISTS"] = "Brumes"
 L["DUNGEON_SHORT_NAME_ML"] = "Filon"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_MOS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_MT"] = ""--]] 
 L["DUNGEON_SHORT_NAME_NELT"] = "NELT"
 L["DUNGEON_SHORT_NAME_NL"] = "RdN"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_NO"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_NPX"] = ""--]] 
 L["DUNGEON_SHORT_NAME_NW"] = "SN"
 L["DUNGEON_SHORT_NAME_PF"] = "MP"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_POS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_PSF"] = "Prieuré"
 L["DUNGEON_SHORT_NAME_RISE"] = "AdIcdM"
 --[[Translation missing --]]
@@ -127,6 +135,8 @@ L["DUNGEON_SHORT_NAME_SIEGE"] = "SIEGE"
 L["DUNGEON_SHORT_NAME_SOA"] = "FdA"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_SOTS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_SR"] = ""--]] 
 L["DUNGEON_SHORT_NAME_STRT"] = "Rues"
 L["DUNGEON_SHORT_NAME_SV"] = "CAVE"
 --[[Translation missing --]]
@@ -148,6 +158,8 @@ L["DUNGEON_SHORT_NAME_ULD"] = "ULD"
 --[[ L["DUNGEON_SHORT_NAME_VP"] = ""--]] 
 L["DUNGEON_SHORT_NAME_WM"] = "MM"
 L["DUNGEON_SHORT_NAME_WORK"] = "Mécagone"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_WS"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_YARD"] = ""--]] 
 L["ENABLE_AUTO_FRAME_POSITION"] = "Positionner automatiquement le cadre de profil Raider.IO"
@@ -308,6 +320,8 @@ L["RAID_BOSS_CN_6"] = "Dame Inerva Sombreveine"
 L["RAID_BOSS_CN_7"] = "Le Conseil du Sang"
 L["RAID_BOSS_CN_8"] = "Fangepoing"
 L["RAID_BOSS_CN_9"] = "Généraux de la Légion de Pierre"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_DR_1"] = ""--]] 
 L["RAID_BOSS_DS_1"] = "Morchok"
 L["RAID_BOSS_DS_2"] = "Seigneur de guerre Zon’ozz"
 L["RAID_BOSS_DS_3"] = "Yor’sahj l’Insomniaque"
@@ -388,6 +402,10 @@ L["RAID_BOSS_MFO_5"] = "Chasseurs d’âmes"
 L["RAID_BOSS_MFO_6"] = "Fractillus"
 L["RAID_BOSS_MFO_7"] = "Roi-nexus Salhadaar"
 L["RAID_BOSS_MFO_8"] = "Dimensius l’Omni-dévoreur"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MQD_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MQD_2"] = ""--]] 
 L["RAID_BOSS_MSV_1"] = "La garde de pierre"
 L["RAID_BOSS_MSV_2"] = "Feng le Maudit"
 L["RAID_BOSS_MSV_3"] = "Gara’jal le Lieur d’esprit"
@@ -455,6 +473,18 @@ L["RAID_BOSS_VOTI_5"] = "Dathéa, transcendée"
 L["RAID_BOSS_VOTI_6"] = "Kurog Totem-Sinistre"
 L["RAID_BOSS_VOTI_7"] = "Garde-couvée Diurna"
 L["RAID_BOSS_VOTI_8"] = "Raszageth la Mange-tempêtes"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_6"] = ""--]] 
 L["RAID_BOT"] = "Le bastion du Crépuscule"
 L["RAID_BRD"] = "Profondeurs de Rochenoire"
 L["RAID_BWD"] = "Descente de l’Aile noire"
@@ -472,6 +502,8 @@ L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = "M"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "N"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = "N10"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = "N25"
+--[[Translation missing --]]
+--[[ L["RAID_DR"] = ""--]] 
 L["RAID_DS"] = "L’Âme des dragons"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Rencontres de Raid vaincues"
 L["RAID_FL"] = "Terres de Feu"
@@ -479,6 +511,8 @@ L["RAID_HOF"] = "Cœur de la peur"
 L["RAID_ICC"] = "Citadelle de la Couronne de glace"
 L["RAID_LOU"] = "Libération de Terremine"
 L["RAID_MFO"] = "Manaforge Oméga"
+--[[Translation missing --]]
+--[[ L["RAID_MQD"] = ""--]] 
 L["RAID_MSV"] = "Caveaux Mogu’shan"
 L["RAID_NP"] = "Palais des Nérub’ar"
 L["RAID_RS"] = "Le sanctum Rubis"
@@ -486,6 +520,8 @@ L["RAID_ToES"] = "Terrasse Printanière"
 L["RAID_TOES"] = "Terrasse Printanière"
 L["RAID_TOT"] = "Trône du tonnerre"
 L["RAID_TOTFW"] = "Trône des quatre vents"
+--[[Translation missing --]]
+--[[ L["RAID_VS"] = ""--]] 
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Moy. de score Raider.IO sur des +%s"
 L["RAIDERIO_BEST_RUN"] = "Meilleur donjon M+ Raider.IO"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personnalisation du client Raider.IO"
@@ -578,10 +614,18 @@ L["SHOW_LEADER_PROFILE"] = "Autoriser le modificateur d'info-bulle du profil Rai
 L["SHOW_LEADER_PROFILE_DESC"] = "Maintenez enfoncé un modificateur (maj / ctrl / alt) pour basculer l'info-bulle de profil entre le profil personnel / leader."
 L["SHOW_MAINS_SCORE"] = "Afficher le score du personnage principal"
 L["SHOW_MAINS_SCORE_DESC"] = "Afficher le score du personnage principal du joueur pour la saison actuelle. Ces joueurs doivent avoir un compte sur Raider.IO où il a définit un personnage comme son personnage principal."
+--[[Translation missing --]]
+--[[ L["SHOW_MY_WARBAND_SCORE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SHOW_MY_WARBAND_SCORE_DESC"] = ""--]] 
 L["SHOW_ON_GUILD_ROSTER"] = "Afficher dans l'onglet guilde"
 L["SHOW_ON_GUILD_ROSTER_DESC"] = "Afficher le score Mythique+ lorsqu'on survole un joueur dans la liste des membres de la guilde."
 L["SHOW_ON_PLAYER_UNITS"] = "Afficher sur les cadres d'unité"
 L["SHOW_ON_PLAYER_UNITS_DESC"] = "Afficher le score Mythique+ lorsqu'on survole le cadre d'un joueur. "
+--[[Translation missing --]]
+--[[ L["SHOW_OTHER_WARBAND_SCORE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SHOW_OTHER_WARBAND_SCORE_DESC"] = ""--]] 
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE"] = "Afficher les rencontres de raid dans l'infobulle du joueur"
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE_DESC"] = "Une fois défini, cela affichera la progression de raid dans les infobulles du profil Raider.IO."
 L["SHOW_RAIDERIO_BESTRUN_FIRST"] = "(Expérimental) Prioriser l'affichage de la meilleure clé de Raider.IO"

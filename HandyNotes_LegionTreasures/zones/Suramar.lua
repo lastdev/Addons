@@ -1,5 +1,7 @@
 local myname, ns = ...
 
+-- skyhold unlock: 44062 or 43954 @33094821
+
 ns.map_spellids[680] = 199416
 
 local grapple = ns.nodeMaker{
@@ -39,9 +41,9 @@ ns.RegisterPoints(680, { -- Suramar
     [50068061] = {quest=44325, label=ns.CHEST, note="Upstairs"},
     [51503859] = {quest=43855, label=ns.CHEST_SM},
     [51908214] = {quest=43868, label=ns.CHEST},
-    [52272989] = {quest=43854, label=ns.CHEST},
-    [52733130] = {quest=40767, label="Dusty Coffer"},
-    [49503390] = ns.path{quest={43854,40767}},
+    [52272989] = {quest=43854, label=ns.CHEST, route=49503390},
+    [52733130] = {quest=40767, label="Dusty Coffer", route=49503390},
+    [49503390] = ns.path{quest={43854,40767}, routes={{49503390,52272989},{49503390,52733130}}},
     [54326033] = {quest=43875, label=ns.CHEST},
     [55685480] = {quest=43871, label=ns.CHEST_SM},
     [57326039] = {quest=43873, label=ns.CHEST},
@@ -75,6 +77,10 @@ ns.RegisterPoints(686, { -- Elor'shan
     [49301730] = {quest=43743, loot={141655}, label="Shimmering Ancient Mana Cluster"},
 }, {achievement=11260})
 
+ns.RegisterPoints(ns.SURAMAR, {
+    [58653375] = {quest=40692, label="Warp Cache", loot={139890,139786,138783}, note="In the cave high up, accessible via flight or Telemancy to \"Storage\""},
+})
+
 -- Why Can't I Hold All This Mana?
 
 local MANA = {
@@ -82,7 +88,7 @@ local MANA = {
     atlas="VignetteLootElite", scale=1.2,
 }
 ns.RegisterPoints(680, { -- Suramar
-    [21425446] = {quest=42842, loot={{136269, quest=42842}},}, -- Kel'danath's Manaflask
+    [21425446] = {quest=42842, loot={{136269, quest=42842}},}, -- Kel'danath's Manaflask (hide before 41212 maybe? Or 40326 scattered memories)
     [26877073] = {quest=43987, loot={{140327, quest=43987}}, note="Cave entrance @ 27.3, 72.9", path=27307290}, -- Kyrtos's Research Notes
     [35561209] = {quest=43989, loot={{140329, quest=43989}}, label="Arcane Power Unit"}, -- Infinite Stone
     [44803100] = {quest=43986, loot={{140326, quest=43986}}, note="Doesn't stand out much; by the bench, upper level"}, -- Enchanted Burial Urn
@@ -96,44 +102,53 @@ ns.RegisterPoints(684, { -- Temple of Fal'adora, Suramar
 -- Adventurer
 ns.RegisterPoints(680, { -- Suramar
     [13515344] = {quest=44124, npc=112802, criteria=33371, loot={140949}, vignette=1642}, -- Mar'tura
-    [16552655] = {quest=43996, npc=103841, criteria=33348, loot={140401}}, -- Shadowquill
+    [16472666] = {quest=43996, npc=103841, criteria=33348, loot={140401}, vignette=1610}, -- Shadowquill
     [18686106] = {quest=43542, npc=110824, criteria=33360, loot={140399}, vignette=1510}, -- Tideclaw
     [22165179] = {quest=41319, npc=99792, criteria=33342, loot={121806}, vignette=1263}, -- Elfbane
     [23982553] = {quest=43484, npc=105547, criteria=33349, loot={121759}, vignette=1508}, -- Rauren
     [24413517] = {quest=44071, npc=112497, criteria=33370, loot={139897}, vignette=1617}, -- Maia the White
-    [24494727] = {quest=43449, npc=110577, criteria=33357, loot={140388}, vignette=1505}, -- Oreth the Vile
+    [24604744] = {quest=43449, npc=110577, criteria=33357, loot={140388}, vignette=1505}, -- Oreth the Vile
     [26254120] = {quest=42831, npc=109054, criteria=33352, loot={139926}, vignette=1442}, -- Shal'an
     [27756545] = {quest=43992, npc=110832, criteria=33361, loot={121747}, note="Portal Key"}, -- Gorgroth
     [33665177] = {quest=43954, npc=111197, criteria=33365, loot={{140934, pet=1934}}, vignette=1541}, -- Anax
-    [33801510] = {quest=43717, npc=106351, criteria=33350, loot={140372}}, -- Artificer Lothaire
-    [34156099] = {quest=43351, npc=110024, criteria=33354, loot={140386}}, -- Mal'Dreth the Corruptor
+    [33591495] = {quest=43717, npc=106351, criteria=33350, loot={140372}, vignette=1547}, -- Artificer Lothaire
+    [34156099] = {quest=43351, npc=110024, criteria=33354, loot={140386}, vignette=1498}, -- Mal'Dreth the Corruptor
     [36183384] = {quest=43718, npc=111329, criteria=33366, loot={140390}, vignette=1548}, -- Matron Hagatha
     [36972110] = {quest=43369, npc=110438, criteria=33356, loot={140406}, vignette=1500}, -- Siegemaster Aedrin
-    [40953280] = {quest=43358, npc=110340, criteria=33355, loot={ns.rewards.Recipe(133816, 201500), 121739}}, -- Myonix
-    [42068013] = {quest=43348, npc=109954, criteria=33353, loot={140405}}, -- Magister Phaedris
+    [40943277] = {quest=43358, npc=110340, criteria=33355, loot={ns.rewards.Recipe(133816, 201500), 121739}, vignette=1499}, -- Myonix
+    [42068013] = {quest=43348, npc=109954, criteria=33353, loot={140405}, vignette=1497}, -- Magister Phaedris
     [42255658] = {quest=43580, npc=110870, criteria=33362, loot={121754}, vignette=1511}, -- Apothecary Faldren
     [48535666] = {quest=40905, npc=102303, criteria=33376, loot={121735}, vignette=1684}, -- Lieutenant Strathmar
-    [49607900] = {quest=43603, npc=111007, criteria=33364, loot={140396}}, -- Randril
+    [49657898] = {quest=43603, npc=111007, criteria=33364, loot={140396}, vignette=1518}, -- Randril
     [53203020] = {quest=40897, npc=99610, criteria=33341, loot={121755}}, -- Garvrulg
     [54425612] = {quest=43792, npc=111651, criteria=33368, loot={121808}, vignette=1558}, -- Degren (Noble Blademaster)
     [54576371] = {quest=43794, npc=111649, criteria=33367, loot={139918}, vignette=1560}, -- Ambassador D'vwinn
-    [61005300] = {quest=43597, npc=110944, criteria=33363, loot={140404}, note="Wanders a bit"}, -- Guardian Thor'el
-    [61653960] = {quest=43993, npc=103223, criteria=33346, loot={121737}}, -- Hertha Grimdottir
+    [57995112] = {quest=43597, npc=110944, criteria=33363, loot={140404}, vignette=1515, note="Wanders a bit"}, -- Guardian Thor'el
+    [61283968] = {quest=43993, npc=103223, criteria=33346, loot={121737}, vignette=1251}, -- Hertha Grimdottir
     [62506370] = {quest=43793, npc=111653, criteria=33369, loot={121810}}, -- Miasu
     [62554810] = {quest=43495, npc=110726, criteria=33359, loot={139969}}, -- Cadraeus
     [65555915] = {quest=43481, npc=110656, criteria=33358, loot={140403}}, -- Arcanist Lylandre
     [66656715] = {quest=43968, npc=107846, criteria=33351, loot={140402,{140314, toy=true}}}, -- Pinchshank
     [67657105] = {quest=41136, npc=103214, criteria=33345, loot={140381}, note="Cave entrance @ 72.4, 68.1", path=72406810}, -- Har'kess the Insatiable
     [68155895] = {quest=41135, npc=100864, criteria=33343, loot={139952}, note="Cave entrance @ 69.9, 57.0", path=69905700}, -- Cora'Kar
-    [75505730] = {quest=44003, npc=103575, criteria=33347, loot={121801}}, -- Reef Lord Raj'his
-    [80157000] = {quest=40680, npc=103183, criteria=33344, loot={140019}, note="Wanders along the underwater trench"}, -- Rok'nash
+    [77485783] = {quest=44003, npc=103575, criteria=33347, loot={121801}, vignette=1259}, -- Reef Lord Raj'his
+    [79807221] = {quest=40680, npc=103183, criteria=33344, loot={140019}, vignette=1220, note="Wanders along the underwater trench"}, -- Rok'nash
 }, {achievement=11265})
 
 ns.RegisterPoints(680, { -- Suramar
     [35386700] = {quest=44675, npc=106526, loot={141866}, vignette=1691}, -- Lady Rivantas
     [29455333] = {quest=44676, npc=113368, loot={138839}, note="Cave entrance @ 29.3, 50.7", path=29305070, vignette=1692}, -- Llorian
-    [87856250] = {quest=41786, npc=103827, loot={140384}}, -- King Morgalash
+    [87456235] = {quest=41786, npc=103827, loot={140384}, vignette=1281}, -- King Morgalash / Sea Giant King
     [37987039] = {quest=44569, npc=106532, loot={}, vignette=1685}, -- Inquisitor Volitix
+})
+
+ns.RegisterPoints(685, { -- Falanaar Tunnels
+    [64405060] = { -- Broodmother Shu'malis
+        quest=93441,
+        npc=105632,
+        vignette=7361,
+        -- parent=true,
+    },
 })
 
 -- Leylines!
@@ -154,7 +169,7 @@ ns.RegisterPoints(680, { -- Suramar
     [35702410] = {criteria=31915, quest=43590}, -- Moonwhisper Gulch
 }, LEYLINES)
 ns.RegisterPoints(685, { -- Falanaar Tunnels
-    [65105210] = {criteria=31916, quest=43592}, -- Falanaar North
+    [66505302] = {criteria=31916, quest=43592}, -- Falanaar North
     [58107520] = {criteria=31917, quest=43593}, -- Falanaar South
 }, LEYLINES)
 ns.RegisterPoints(686, { -- Elor'shan
@@ -185,7 +200,7 @@ local Portal = function(questid, label, data) return ns.Getterize(ns.merge({
 
 ns.RegisterPoints(680, { -- Suramar
     -- These crop up at points in the storyline
-    [36204710] = Portal(40956, "{area:8173:Ruins of Elune'eth}", {hide_before=ns.conditions.QuestComplete(40956)}), -- Ruins of Elune'eth, storyline: Survey Says...
+    [36204710] = Portal(40956, "{area:8173:Ruins of Elune'eth}", {hide_before=ns.conditions.QuestComplete(40956), outdoors_only=true}), -- Ruins of Elune'eth, storyline: Survey Says...
     [22903580] = Portal(42230, "{area:7843:Falanaar}", {hide_before=ns.conditions.QuestComplete(42228)}), -- Falanaar, storyline: Valewalker's Burden, hidden until Hidden City
     [47508200] = Portal(42487, "{area:8382:Waning Crescent}", {require=ns.conditions.QuestIncomplete(43569), hide_before=ns.conditions.QuestComplete(42486), }), --Waning Crescent, storyline: Friends on the Outside, hidden until Little One Lost, hidden after Arluin's Request
     [64006040] = Portal(44084, "{area:8149:Twilight Vineyards}", {hide_before=ns.conditions.QuestComplete(42838)}), -- Twilight Vineyards, storyline: Vengeance for Margaux, hidden until Reversal
@@ -218,11 +233,11 @@ ns.RegisterPoints(693, { -- lower level
     [32506440]={ quest=43145, loot={140450}, label="Glimmering Treasure Chest", note="Withered Berserker. Requires 10 withered.", },
     [36603240]={ quest=43135, loot={139028}, label="Glimmering Treasure Chest", note="Withered Starcaller. Requires 10 withered.", },
     [44205350]={ quest=43134, loot={139027}, label="Glimmering Treasure Chest", note="Withered Spellseer. Requires 10 withered.", },
-    [45704610]={ quest=43143, loot={141313}, label="Treasure Chest", note="Artifact power. Requires 5 withered.", },
-    [48707980]={ quest=43141, loot={136914}, label="Treasure Chest", note="Pet. Requires 5 withered.", },
+    [45704610]={ quest=43143, loot={141313}, label="Treasure Chest", note="Requires 5 withered.", },
+    [48707980]={ quest=43141, loot={{136914, pet=true}}, label="Treasure Chest", note="Requires 5 withered.", },
     [51802930]={ quest=43111, loot={139017}, label="Treasure Chest", note="Reduces fear rate. Requires 5 withered.", },
     [60507310]={ quest=43148, loot={140448}, label="Treasure Chest", note="+25% damage. Requires 5 withered.", },
     [62206200]={ quest=43128, loot={139019}, label="Glimmering Treasure Chest", note="Withered Mana-Rager. Requires 10 withered.", },
-    [62409010]={ quest=43142, loot={141314}, label="Treasure Chest", note="Artifact power. Requires 5 withered.", },
-    [67305140]={ quest=43144, loot={141296}, label="Treasure Chest", note="Toy. Requires 5 withered.", },
+    [62409010]={ quest=43142, loot={141314}, label="Treasure Chest", note="Requires 5 withered.", },
+    [67305140]={ quest=43144, loot={{141296, toy=true}}, label="Treasure Chest", note="Requires 5 withered.", },
 }, {group="withered"})

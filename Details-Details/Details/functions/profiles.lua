@@ -867,6 +867,9 @@ local default_profile = {
 	fade_speed = 0.15,
 	use_self_color = false,
 
+	damage_meter_type = 0,
+	damage_meter_position = {},
+
 	--minimap
 		minimap = {hide = false, radius = 160, minimapPos = 220, onclick_what_todo = 1, text_type = 1, text_format = 3},
 		data_broker_text = "",
@@ -1357,6 +1360,10 @@ local default_player_data = {
 
 	--death panel buttons
 		on_death_menu = false,
+	--damage meter sessions
+		damage_meter_sessions = {},
+	--misc data about a session
+		damage_meter_session_info = {},
 }
 
 Details.default_player_data = default_player_data
@@ -1575,6 +1582,7 @@ local default_global_data = {
 			{["atributo"] = 1, ["sub_atributo"] = 6}, --enemies
 			{["atributo"] = 4, ["sub_atributo"] = 5}, --deaths
 		}},
+		switch_post_apoc = false,
 		report_pos = {1, 1},
 
 	--tutorial

@@ -1,4 +1,4 @@
-local VERSION = 118
+local VERSION = 119
 
 --[[
 Special icons for rares, pvp or pet battle quests in list
@@ -2086,7 +2086,7 @@ do
 			return unpack(cache[questID])
 		end
 		for mapID,mapCoord in pairs(mapCoords) do
-			local taskInfo = C_TaskQuest.GetQuestsForPlayerByMapID(mapID)
+			local taskInfo = C_TaskQuest.GetQuestsOnMap(mapID)
 			for _,info in pairs(taskInfo or WorldQuestList.NULLTable) do
 				if info.questID == questID then
 					cache[questID] = {
@@ -2100,11 +2100,11 @@ do
 	end
 	function WorldQuestList:GetQuestCoord(questID)
 		for mapID,mapCoord in pairs(mapCoords) do
-			local taskInfo = C_TaskQuest.GetQuestsForPlayerByMapID(mapID)
+			local taskInfo = C_TaskQuest.GetQuestsOnMap(mapID)
 			for _,info in pairs(taskInfo or WorldQuestList.NULLTable) do
 				if info.questID == questID then
 					if info.mapID then
-						local taskInfo = C_TaskQuest.GetQuestsForPlayerByMapID(info.mapID)
+						local taskInfo = C_TaskQuest.GetQuestsOnMap(info.mapID)
 						for _,info in pairs(taskInfo or WorldQuestList.NULLTable) do
 							if info.questID == questID then
 								return info.x, info.y, info.mapID
@@ -3260,8 +3260,9 @@ do
 
 	WorldQuestList.footer = CreateFrame("Button",nil,WorldQuestList)
 	local line = WorldQuestList.footer
+	line:SetHeight(WorldQuestList.FOOTER_HEIGHT)
 	line:SetPoint("BOTTOMLEFT",0,0)
-	line:SetPoint("TOPRIGHT",WorldQuestList,"BOTTOMRIGHT",0,WorldQuestList.FOOTER_HEIGHT)
+	line:SetPoint("BOTTOMRIGHT",0,0)
 
 	line.BorderTop = line:CreateTexture(nil,"BACKGROUND")
 	line.BorderTop:SetColorTexture(unpack(WorldQuestList.backdrop.BorderColor))
@@ -3339,7 +3340,17 @@ ViewAllButton.Argus:SetScript("OnEnter",function(self) self.b:SetColorTexture(0.
 ViewAllButton.Argus:SetScript("OnLeave",function(self) self.b:SetColorTexture(0.28,0.08,0.08,1) end)
 
 ViewAllButton.Update = function()
-	if UnitLevel'player' >= 71 then
+	if UnitLevel'player' >= 81 then
+		ViewAllButton:SetScript("OnClick",function()
+			OpenWorldMap(2537)
+		end)
+		ViewAllButton.t:SetText("World Quests List: "..(EXPANSION_NAME11 or "MN"))
+
+		ViewAllButton.Argus:SetScript("OnClick",function()
+			OpenWorldMap(947)
+		end)
+		ViewAllButton.Argus.t:SetText("World Quests List: "..WorldQuestList:GetMapName(947))
+	elseif UnitLevel'player' >= 71 then
 		ViewAllButton:SetScript("OnClick",function()
 			OpenWorldMap(2274)
 		end)
@@ -3606,6 +3617,9 @@ do
 
 	list[#list+1] = {text = EXPANSION_NAME10, padding = 16, subMenu = {}}
 	CreateFactionFilterSubmenu(list[#list].subMenu,{2594,2600,2607,2605,2601,2590,2570, 2653,2673,2669,2675,2677,2685,2658})
+
+	list[#list+1] = {text = EXPANSION_NAME11 or "MN", padding = 16, subMenu = {}}
+	CreateFactionFilterSubmenu(list[#list].subMenu,{2699,2704,2770,2710,2696,2764})
 
 	list[#list+1] = {text = CLOSE,			func = function() ELib.ScrollDropDown.Close() end,		padding = 16,	}
 
@@ -4199,6 +4213,7 @@ do
 		{text = EXPANSION_NAME8, padding = 16, subMenu = CreateFactionHighlightSubmenu({2465,2410,2413,2407,2478})},
 		{text = EXPANSION_NAME9, padding = 16, subMenu = CreateFactionHighlightSubmenu({2510,2507,2503,2511,2564,2615,2574})},
 		{text = EXPANSION_NAME10, padding = 16, subMenu = CreateFactionHighlightSubmenu({2594,2600,2607,2605,2601,2590,2570, 2653,2673,2669,2675,2677,2685, 2658})},
+		{text = EXPANSION_NAME11 or "MN", padding = 16, subMenu = CreateFactionHighlightSubmenu({2699,2704,2770,2710,2696,2764})},
 	}
 
 	list[#list+1] = {
@@ -4361,6 +4376,8 @@ do
 		},
 	}}
 
+	local opt_name_goblinonmap = WorldQuestList:GetMapName(2346).." quests on main map"
+	local opt_name_kareshonmap = WorldQuestList:GetMapName(2371).." quests on main map"
 	list[#list+1] = {text = EXPANSION_NAME10, padding = 16, subMenu = {
 		{
 			text = LOCALE.repAccAlert,
@@ -4368,7 +4385,64 @@ do
 				VWQL.DisableReputationAccAlert = not VWQL.DisableReputationAccAlert
 			end,
 			checkable = true,
-		}
+		},
+		{
+			text = opt_name_goblinonmap,
+			func = function()
+				VWQL.OnMap2346 = not VWQL.OnMap2346
+				ELib.ScrollDropDown.Close()
+				if GetCurrentMapID() == 2274 then
+					OpenWorldMap(885)
+					OpenWorldMap(2274)
+				end
+				WorldQuestList_Update()
+			end,
+			checkable = true,
+		},
+		{
+			text = opt_name_kareshonmap,
+			func = function()
+				VWQL.OnMap2371 = not VWQL.OnMap2371
+				ELib.ScrollDropDown.Close()
+				if GetCurrentMapID() == 2274 then
+					OpenWorldMap(885)
+					OpenWorldMap(2274)
+				end
+				WorldQuestList_Update()
+			end,
+			checkable = true,
+		},
+	}}
+
+	local opt_name_stormonmap = WorldQuestList:GetMapName(2405).." quests on main map"
+	local opt_name_harandaronmap = WorldQuestList:GetMapName(2413).." quests on main map"
+	list[#list+1] = {text = EXPANSION_NAME11 or "MN", padding = 16, subMenu = {
+		{
+			text = opt_name_stormonmap,
+			func = function()
+				VWQL.OnMap2405 = not VWQL.OnMap2405
+				ELib.ScrollDropDown.Close()
+				if GetCurrentMapID() == 2537 then
+					OpenWorldMap(885)
+					OpenWorldMap(2537)
+				end
+				WorldQuestList_Update()
+			end,
+			checkable = true,
+		},
+		{
+			text = opt_name_harandaronmap,
+			func = function()
+				VWQL.OnMap2413 = not VWQL.OnMap2413
+				ELib.ScrollDropDown.Close()
+				if GetCurrentMapID() == 2537 then
+					OpenWorldMap(885)
+					OpenWorldMap(2537)
+				end
+				WorldQuestList_Update()
+			end,
+			checkable = true,
+		},
 	}}
 
 
@@ -4434,6 +4508,15 @@ do
 			entry.checkState = not VWQL.DisableReputationAccAlert
 		elseif entry.sub_arg == 1001 then
 			entry.checkState = VWQL.DisableWQScale_Hidden
+		elseif entry.text == opt_name_goblinonmap then
+			entry.checkState = not VWQL.OnMap2346
+		elseif entry.text == opt_name_kareshonmap then
+			entry.checkState = not VWQL.OnMap2371
+		elseif entry.text == opt_name_stormonmap then
+			entry.checkState = not VWQL.OnMap2405
+		elseif entry.text == opt_name_harandaronmap then
+			entry.checkState = not VWQL.OnMap2413
+
 		end
 	end
 	function WorldQuestList.optionsDropDown.Button:additionalToggle()
@@ -4743,7 +4826,7 @@ do
 				end
 				GameTooltip:Show()
 			end
-		elseif GetCurrentRegion and GetCurrentRegion() == 3 and self.mapID == 619 and C_RemixArtifactUI and C_RemixArtifactUI.ItemInSlotIsRemixArtifact and (C_RemixArtifactUI.ItemInSlotIsRemixArtifact(16) or C_RemixArtifactUI.ItemInSlotIsRemixArtifact(17)) then
+		elseif GetCurrentRegion and GetCurrentRegion() == 3 and self.mapID == 619 and PlayerGetTimerunningSeasonID and PlayerGetTimerunningSeasonID() == 2 then
 			local currTime = GetServerTime()
 			local firstInvasionEU = 1491375600 + 10 * 3600
 			local next = firstInvasionEU
@@ -4757,7 +4840,7 @@ do
 				GameTooltip:AddDoubleLine("Active Invasion", date("%d.%m.%Y %H:%M",now) .. " - " ..date("%H:%M",now + 3600 * 6))
 			end
 			GameTooltip:AddDoubleLine("Next Invasion", date("%d.%m.%Y %H:%M",next).. " - " ..date("%H:%M",next + 3600 * 6))
-			GameTooltip:AddDoubleLine("2nd Next Invasion", date("%d.%m.%Y %H:%M",next + 60 * 60 * 18.5).. " - " ..date("%H:%M",next + 60 * 60 * 18.5 + 3600 * 6))
+			GameTooltip:AddDoubleLine("2nd Next Invasion", date("%d.%m.%Y %H:%M",next + 60 * 60 * 14.5).. " - " ..date("%H:%M",next + 60 * 60 * 14.5 + 3600 * 6))
 			GameTooltip:Show()
 		end
 	end
@@ -4827,7 +4910,38 @@ end
 
 WorldQuestList.oppositeContinentButton.Update = function(self) 
 	local level = UnitLevel'player'
-	if level > 70 and self.State ~= 80 then
+	if level > 80 and self.State ~= 90 then
+		self.Button6.mapID = 619
+		self.Button6.t:SetTexCoord(0,1,0,1)
+		self.Button6.t:SetAtlas("worldquest-icon-burninglegion")
+		self.Button6.t:SetDesaturated(false)
+
+		self.Button5.mapID = 876
+		self.Button5.t:SetTexCoord(0,1,0,1)
+		self.Button5.t:SetAtlas("worldquest-icon-alliance")
+		self.Button5.t:SetSize(17,17)
+
+		self.Button4.mapID = 875
+		self.Button4.t:SetAtlas("worldquest-icon-horde")
+		self.Button4.t2:SetTexture("")
+		self.Button4.t3:SetTexture("")
+		self.Button4.t:SetSize(17,17)
+
+		self.Button3.mapID = 1550
+		self.Button3.t:SetAtlas("dragon-rostrum")
+		self.Button3.t2:SetTexture("")
+		self.Button3.t3:SetTexture("")
+		self.Button3.t:SetSize(14,14)
+
+		self.Button2.mapID = 2274
+		self.Button2.t:SetAtlas("warwithin-landingbutton-up")
+		self.Button2.t:SetSize(17,17)
+
+		self.Button1.mapID = 2537
+		self.Button1.t:SetTexture(255136)
+
+		self.State = 90
+	elseif level > 70 and level <= 80 and self.State ~= 80 then
 		self.Button6.mapID = 619
 		self.Button6.t:SetTexCoord(0,1,0,1)
 		self.Button6.t:SetAtlas("worldquest-icon-burninglegion")
@@ -5351,7 +5465,7 @@ local function WorldQuestList_Leveling_Update()
 
 
 	local currMapID = GetCurrentMapID()
-	local taskInfo = C_TaskQuest.GetQuestsForPlayerByMapID(currMapID)
+	local taskInfo = C_TaskQuest.GetQuestsOnMap(currMapID)
 	if UnitLevel'player' < 50 then
 		for _,info in pairs(taskInfo or WorldQuestList.NULLTable) do
 			if HaveQuestData(info.questID) and QuestUtils_IsQuestWorldQuest(info.questID) then
@@ -6128,10 +6242,14 @@ local GENERAL_MAPS = {	--1: continent A, 2: azeroth, 3: argus, 4: continent B
 	[1550] = 1,
 	[1978] = 1,
 	[2274] = 1,
+	[2537] = 1,
 }
 WorldQuestList.GeneralMaps = GENERAL_MAPS
 
-local ArgusZonesList = {830,885,882}
+local ZonesList = {
+	Argus={830,885,882},
+	Midnight={2437,2395,2424,2393,2405,2413},
+}
 
 WorldQuestList.RewardSpecialSortTypes = {
 	[30.1716] = 130,	--Service Medal
@@ -6216,7 +6334,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 		nextResearch = nil,
 	}
 
-	local taskInfo = C_TaskQuest.GetQuestsForPlayerByMapID(mapAreaID)
+	local taskInfo = C_TaskQuest.GetQuestsOnMap(mapAreaID)
 	taskInfo = taskInfo or {}
 
 	if GENERAL_MAPS[mapAreaID] then
@@ -6224,7 +6342,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 		O.generalMapType = GENERAL_MAPS[mapAreaID]
 
 		if VWQL.OppositeContinent and (mapAreaID == 875 or mapAreaID == 876) then
-			local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(mapAreaID == 875 and 876 or 875)
+			local oppositeMapQuests = C_TaskQuest.GetQuestsOnMap(mapAreaID == 875 and 876 or 875)
 			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
 				taskInfo[#taskInfo+1] = info
 				info.dX,info.dY,info.dMap = info.x,info.y,mapAreaID == 875 and 876 or 875
@@ -6232,8 +6350,8 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 			end
 		end
 		if not VWQL.OppositeContinentArgus and (mapAreaID == 619 or mapAreaID == 947) then
-			for _,mapID in pairs(ArgusZonesList) do
-				local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(mapID)
+			for _,mapID in pairs(ZonesList.Argus) do
+				local oppositeMapQuests = C_TaskQuest.GetQuestsOnMap(mapID)
 				for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
 					taskInfo[#taskInfo+1] = info
 					info.dX,info.dY,info.dMap = info.x,info.y,mapID
@@ -6242,7 +6360,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 			end
 		end
 		if not VWQL.OppositeContinentNazjatar and (mapAreaID == 875 or mapAreaID == 876) then
-			local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(1355)
+			local oppositeMapQuests = C_TaskQuest.GetQuestsOnMap(1355)
 			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
 				taskInfo[#taskInfo+1] = info
 				info.dX,info.dY,info.dMap = info.x,info.y,1355
@@ -6250,7 +6368,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 			end
 		end
 		if (mapAreaID == 947) then
-			local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(1355)
+			local oppositeMapQuests = C_TaskQuest.GetQuestsOnMap(1355)
 			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
 				taskInfo[#taskInfo+1] = info
 				info.dX,info.dY,info.dMap = info.x,info.y,1355
@@ -6258,7 +6376,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 			end
 		end
 		if (mapAreaID == 1550) then
-			local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(1970)
+			local oppositeMapQuests = C_TaskQuest.GetQuestsOnMap(1970)
 			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
 				taskInfo[#taskInfo+1] = info
 				info.dX,info.dY,info.dMap = info.x,info.y,1970
@@ -6266,7 +6384,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 			end
 		end
 		if (mapAreaID == 1978) then
-			local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(2133)
+			local oppositeMapQuests = C_TaskQuest.GetQuestsOnMap(2133)
 			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
 				taskInfo[#taskInfo+1] = info
 				info.dX,info.dY,info.dMap = info.x,info.y,2133
@@ -6276,7 +6394,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 					info.x,info.y = nil
 				end
 			end
-			local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(2200)
+			local oppositeMapQuests = C_TaskQuest.GetQuestsOnMap(2200)
 			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
 				taskInfo[#taskInfo+1] = info
 				info.dX,info.dY,info.dMap = info.x,info.y,2200
@@ -6288,22 +6406,22 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 			end
 		end
 		if (mapAreaID == 2274) then
-			local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(2346)
+			local oppositeMapQuests = C_TaskQuest.GetQuestsOnMap(2346)
 			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
 				taskInfo[#taskInfo+1] = info
 				info.dX,info.dY,info.dMap = info.x,info.y,2346
-				if not VWQL.DFCaveMap then	--reverse opt
+				if not VWQL.OnMap2346 then	--reverse opt
 					info.x,info.y = 0.82, 0.72
 				else
 					info.x,info.y = nil
 				end
 			end
 
-			local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(2371)
+			local oppositeMapQuests = C_TaskQuest.GetQuestsOnMap(2371)
 			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
 				taskInfo[#taskInfo+1] = info
 				info.dX,info.dY,info.dMap = info.x,info.y,2371
-				if not VWQL.DFCaveMap then	--reverse opt
+				if not VWQL.OnMap2371 then	--reverse opt
 					info.x,info.y = 0.175, 0.195
 				else
 					info.x,info.y = nil
@@ -6317,10 +6435,10 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 
 		local moddedMap
 		if not VWQL.ArgusMap then
-			moddedMap = C_TaskQuest.GetQuestsForPlayerByMapID(994)
+			moddedMap = C_TaskQuest.GetQuestsOnMap(994)
 		end
-		for _,mapID in pairs(ArgusZonesList) do
-			local mapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(mapID) or WorldQuestList.NULLTable
+		for _,mapID in pairs(ZonesList.Argus) do
+			local mapQuests = C_TaskQuest.GetQuestsOnMap(mapID) or WorldQuestList.NULLTable
 			for _,info in pairs(mapQuests) do
 				taskInfo[#taskInfo+1] = info
 				info.dX,info.dY,info.dMap = info.x,info.y,mapID
@@ -6341,11 +6459,39 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 				end
 			end
 		end
+	elseif mapAreaID == 2537 then	--Midnight
+		for _,mapID in pairs(ZonesList.Midnight) do
+			local mapQuests = C_TaskQuest.GetQuestsOnMap(mapID) or WorldQuestList.NULLTable
+			for _,info in pairs(mapQuests) do
+				local isPass = true
+				for _,info2 in pairs(taskInfo) do
+					if info2.questID == info.questID then
+						isPass = false
+						break
+					end	
+				end
+				if isPass then
+					taskInfo[#taskInfo+1] = info
+					info.dX,info.dY,info.dMap = info.x,info.y,mapID
+					if mapID == 2405 then
+						info.x,info.y = 0.525,0.23
+						if VWQL.OnMap2405 then	--reverse opt
+							info.x,info.y = nil
+						end
+					elseif mapID == 2413 then
+						info.x,info.y = 0.825,0.17
+						if VWQL.OnMap2413 then	--reverse opt
+							info.x,info.y = nil
+						end
+					end
+				end
+			end
+		end
 	end
 
 	if mapAreaID == 1163 then
 		--[[
-		taskInfo = C_TaskQuest.GetQuestsForPlayerByMapID(875)
+		taskInfo = C_TaskQuest.GetQuestsOnMap(875)
 		for _,info in pairs(taskInfo) do
 			info.dX,info.dY,info.dMap = info.x,info.y,875
 			info.x,info.y = nil
@@ -6356,7 +6502,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 	end
 
 	if mapAreaID == 905 or mapAreaID == 830 or mapAreaID == 885 or mapAreaID == 882 or (not VWQL.OppositeContinentArgus and (mapAreaID == 619 or (mapAreaID == 947 and not VWQL.HideLegion))) then
-		for _,mapID in pairs((mapAreaID == 905 or mapAreaID == 619 or mapAreaID == 947) and ArgusZonesList or {mapAreaID}) do
+		for _,mapID in pairs((mapAreaID == 905 or mapAreaID == 619 or mapAreaID == 947) and ZonesList.Argus or {mapAreaID}) do
 			local pois = C_AreaPoiInfo.GetAreaPOIForMap(mapID)
 			for i=1,#pois do
 				local poiData = C_AreaPoiInfo.GetAreaPOIInfo(mapID,pois[i])
@@ -6390,7 +6536,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 	end
 	do
 		--local mapID = mapAreaID == 947 and 424 or mapAreaID
-		for _,smapAreaID in pairs(mapAreaID == 2274 and {2274,2248,2215,2214,2255,2374,2371} or {mapAreaID}) do
+		for _,smapAreaID in pairs(mapAreaID == 2274 and {2274,2248,2215,2214,2255,2374,2371} or mapAreaID == 2537 and ZonesList.Midnight or {mapAreaID}) do
 			local pois = C_AreaPoiInfo.GetAreaPOIForMap(smapAreaID)
 			for i=1,#pois do
 				local poiData = C_AreaPoiInfo.GetAreaPOIInfo(smapAreaID,pois[i])
@@ -7503,6 +7649,14 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 						(mapAreaID == 2274 and info.x == 0.175 and info.y == 0.195)
 					then
 						info = WorldQuestList:GetRadiantWQPosition(info,result,0.05)
+					elseif
+						(mapAreaID == 2537 and info.x == 0.525 and info.y == 0.23)
+					then
+						info = WorldQuestList:GetRadiantWQPosition(info,result,0.05)
+					elseif
+						(mapAreaID == 2537 and info.x == 0.825 and info.y == 0.17)
+					then
+						info = WorldQuestList:GetRadiantWQPosition(info,result,0.05)
 					end
 					pinsToRemove[info.questID] = nil
 					local pin = WorldQuestList.WMF_activePins[info.questID]
@@ -7865,7 +8019,7 @@ local function UpdateDB()
 	local questsList = {}
 
 	for _,mapID in pairs(listZonesToUpdateDB) do
-		local z = C_TaskQuest.GetQuestsForPlayerByMapID(mapID)
+		local z = C_TaskQuest.GetQuestsOnMap(mapID)
 		for i, info  in pairs(z or WorldQuestList.NULLTable) do
 			local questID = info.questID
 			if HaveQuestData(questID) and QuestUtils_IsQuestWorldQuest(questID) then
@@ -8951,7 +9105,7 @@ FlightMap:SetScript("OnEvent",function (self, event, arg)
 			local mapID = GetTaxiMapID()
 			local x_count = 0
 			if mapID and (not VWQL or not VWQL.DisableTaxiX) then
-				local mapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(mapID)
+				local mapQuests = C_TaskQuest.GetQuestsOnMap(mapID)
 				local questsWatched = C_QuestLog.GetNumWorldQuestWatches()
 				for _,questData in pairs(mapQuests or WorldQuestList.NULLTable) do
 					for i=1,questsWatched do

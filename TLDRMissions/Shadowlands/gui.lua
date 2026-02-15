@@ -76,6 +76,7 @@ gui.MainTabButton:SetScript("OnClick", function()
     PanelTemplates_SetTab(gui, 1)
     gui.AdvancedTabPanel:Hide()
     gui.MainTabPanel:Show()
+    gui.AlertsTabPanel:Hide()
 end)
 gui.MainTabButton:SetID(1)
 
@@ -279,7 +280,7 @@ end
 
 gui.CompleteMissionsButton = CreateFrame("Button", "TLDRMissionsFrameCompleteMissionsButton", gui.MainTabPanel, "UIPanelButtonTemplate")
 gui.CompleteMissionsButton:SetPoint("BOTTOM", gui, "BOTTOM", 0, 10)
-gui.CompleteMissionsButton:SetText(L["CompleteMissionButtonText"])
+gui.CompleteMissionsButton:SetText(L["CompleteMissionsButtonText"])
 TLDRMissionsFrameCompleteMissionsButtonText:SetScale(1.2)
 gui.CompleteMissionsButton:SetWidth(240)
 gui.CompleteMissionsButton:SetHeight(25)
@@ -300,6 +301,7 @@ gui.AdvancedTabButton:SetScript("OnClick", function()
     PanelTemplates_SetTab(gui, 2)
     gui.AdvancedTabPanel:Show()
     gui.MainTabPanel:Hide()
+    gui.AlertsTabPanel:Hide()
 end)
 gui.AdvancedTabButton:SetID(2)
 
@@ -407,6 +409,14 @@ gui.FollowerXPSpecialTreatmentCheckButton:SetScript("OnEnter", function()
     GameTooltip:Show()
 end)
 gui.FollowerXPSpecialTreatmentCheckButton:SetScript("OnLeave", function()
+    GameTooltip:Hide()
+end)
+TLDRMissionsFrameFollowerXPSpecialTreatmentCheckButtonText:SetScript("OnEnter", function()
+    GameTooltip:SetOwner(gui.FollowerXPSpecialTreatmentCheckButton, "ANCHOR_RIGHT")
+    GameTooltip:SetText(L["FollowerXPSpecialTreatmentTooltip"], 1, 1, 1,  0.75, true)
+    GameTooltip:Show()
+end)
+TLDRMissionsFrameFollowerXPSpecialTreatmentCheckButtonText:SetScript("OnLeave", function()
     GameTooltip:Hide()
 end)
 
@@ -607,7 +617,7 @@ gui.IgnoreDeadFollowersButton:HookScript("OnClick", function()
 end)
 
 --
--- Tab 3
+-- Profiling Tab
 --
 
 gui.ProfileTabButton = CreateFrame("Button", "TLDRMissionsFrameTab3", gui, "PanelTabButtonTemplate")
@@ -618,8 +628,28 @@ gui.ProfileTabButton:SetScript("OnClick", function()
 end)
 
 --
+-- Alerts Tab
+--
+
+gui.AlertsTabButton = CreateFrame("Button", "TLDRMissionsFrameTab4", gui, "PanelTabButtonTemplate")
+gui.AlertsTabButton:SetPoint("TOPLEFT", gui.ProfileTabButton, "TOPRIGHT", 0, 0)
+gui.AlertsTabButton:SetText(LOCALE_AUDIO_LABEL)
+
+gui.AlertsTabPanel = CreateFrame("Frame", "TLDRMissionsFrameAlertsPanel", gui)
+gui.AlertsTabPanel:SetPoint("TOPLEFT", gui, "TOPLEFT")
+gui.AlertsTabPanel:Hide()
+
+gui.AlertsTabButton:SetScript("OnClick", function()
+    PanelTemplates_SetTab(gui, 4)
+    gui.AlertsTabPanel:Show()
+    gui.MainTabPanel:Hide()
+    gui.AdvancedTabPanel:Hide()
+end)
+gui.AlertsTabButton:SetID(4)
+
+--
 --
 --
 
-PanelTemplates_SetNumTabs(gui, 3)
+PanelTemplates_SetNumTabs(gui, 4)
 PanelTemplates_SetTab(gui, 1)

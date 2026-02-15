@@ -1,0 +1,28 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+    <!-- Classic -->
+    <Script file="Classic/EasternKingdoms.lua"/>
+    <Script file="Classic/Kalimdor.lua"/>
+
+    <!-- MoP -->
+    <Script file="MistsOfPandaria/Pandaria.lua"/>
+
+    <!-- WoD -->
+    <Script file="WarlordsOfDraenor/Draenor.lua"/>
+
+    <!-- Legion -->
+    <Script file="Legion/BrokenIsles.lua"/>
+
+    <!-- BfA -->
+    <Script file="BattleForAzeroth/KulTiras.lua"/>
+
+    <!-- Dragonflight -->
+    <Script file="Dragonflight/DragonIsles.lua"/>
+
+    <!-- The War Within -->
+    <Script file="TheWarWithin/KhazAlgar.lua"/>
+
+    <!-- Global decorID -> mob list mapping (built automatically at runtime) -->
+    <Script file="DropSources.lua"/>
+
+</Ui>

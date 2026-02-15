@@ -14,6 +14,7 @@ BINDING_NAME_PLUMBER_QUESTWATCH_PREVIOUS = "Focus On Previous Quest";
 
 
 --Module Control Panel
+L["Addon Name Colon"] =  "Plumber: ";
 L["Module Control"] = "Module Control";
 L["Quick Slot Generic Description"] = "\n\n*Quick Slot is a set of clickable buttons that appear under certain conditions.";
 L["Quick Slot Edit Mode"] = HUD_EDIT_MODE_MENU or "Edit Mode";
@@ -23,9 +24,10 @@ L["Quick Slot Layout"] = "Layout";
 L["Quick Slot Layout Linear"] = "Linear";
 L["Quick Slot Layout Radial"] = "Radial";
 L["Restriction Combat"] = "Does not work in combat";    --Indicate a feature can only work when out of combat
+L["Restriction Instance"] = "This feature does not work in instances.";
 L["Map Pin Change Size Method"] = "\n\n*You can change the pin size in World Map> Map Filter> Plumber";
 L["Toggle Plumber UI"] = "Toggle Plumber UI";
-L["Toggle Plumber UI Tooltip"] = "Show the following Plumber UI in the Edit Mode:\n%s\n\nThis checkbox only controls their visibility in the Edit Mode. It will not enable or disable these modules.";
+L["Toggle Plumber UI Tooltip"] = "Show the following Plumber UI in the Edit Mode:\n\n%s\n\nThis checkbox only controls their visibility in the Edit Mode. It will not enable or disable these modules.";
 L["Remove New Feature Marker"] = "Remove New Feature Marker";
 L["Remove New Feature Marker Tooltip"] = "New Feature Markers %s disappear after a week. But you can click this button to remove them now.";
 L["Modules"] = "Modules";
@@ -33,7 +35,7 @@ L["Release Notes"] = "Release Notes";
 L["Option AutoShowChangelog"] = "Auto Show Release Notes";
 L["Option AutoShowChangelog Tooltip"] = "Automatically show release notes after an update.";
 L["Category Colon"] = (CATEGORY or "Category")..": ";
-L["Module Wrong Game Version"] = "This module is ineffective for your current game version.";
+L["Module Wrong Game Version"] = "This feature is ineffective for your current game version.";
 L["Changelog Wrong Game Version"] = "The following changes do not apply to your current game version.";
 L["Settings Panel"] = "Settings Panel";
 L["Version"] = "Version";
@@ -42,6 +44,7 @@ L["New Feature Abbr"] = "New";
 L["Format Month Day"] = EVENT_SCHEDULER_DAY_FORMAT or "%s %d";
 L["Always On Module"] = "This module is always enabled.";
 L["Return To Module List"] = "Return to List";
+L["Generic Addon Conflict"] = "This module might be incompatible with addons of similar functionalities:";
 
 
 --Settings Category
@@ -178,7 +181,6 @@ L["ModuleDescription BlizzFixEventToast"] = "Modify the behavior of Event Toasts
 --Talking Head
 L["ModuleName TalkingHead"] = HUD_EDIT_MODE_TALKING_HEAD_FRAME_LABEL or "Talking Head";
 L["ModuleDescription TalkingHead"] = "Replace the default Talking Head UI with a clean, headless one.";
-L["EditMode TalkingHead"] = "Plumber: "..L["ModuleName TalkingHead"];
 L["TalkingHead Option InstantText"] = "Instant Text";   --Should texts immediately, no gradual fading
 L["TalkingHead Option TextOutline"] = "Text Outline";   --Added a stroke/outline to the letter
 L["TalkingHead Option Condition Header"] = "Hide Texts From Source:";
@@ -325,6 +327,7 @@ L["ModuleDescription WorldMapPin_TWW"] = "Show additional pins on Khaz Algar con
 
 --Delves
 L["Great Vault Tier Format"] = GREAT_VAULT_WORLD_TIER or "Tier %s";
+L["Great Vault World Activity Tooltip"] = "Tier 1 and World Activities";
 L["Item Level Format"] = ITEM_LEVEL or "Item Level %d";
 L["Item Level Abbr"] = ITEM_LEVEL_ABBR or "iLvl";
 L["Delves Reputation Name"] = "Delver's Journey";
@@ -382,6 +385,22 @@ L["Click To Disable"] = "Click to disable";
 --NameplateWidget
 L["ModuleName NameplateWidget"] = "Nameplate: Keyflame";
 L["ModuleDescription NameplateWidget"] = "Show the number of owned Radiant Remnant on the nameplate.";
+
+
+--NameplateQuestIndicator
+L["ModuleName NameplateQuest"] = "Nameplate: Quest Indicator";
+L["ModuleDescription NameplateQuest"] = "Show quest indicator on nameplates.\n\n- (Optional) Show quest objective progress for your target.\n\n- (Optional) Show quest indicator if your party members haven't completed the objective.";
+L["NameplateQuest ShowPartyQuest"] = "Show Party Member's Quest";
+L["NameplateQuest ShowPartyQuest Tooltip"] = "Show a marker %s if one of your party members hasn't completed the quest objective.";
+L["NameplateQuest ShowTargetProgress"] = "Show Progress on Target";
+L["NameplateQuest ShowTargetProgress Tooltip"] = "Show the quest objective progress on your target's nameplate.";
+L["NameplateQuest ShowProgressOnHover"] = "Show Progress on Hover";
+L["NameplateQuest ShowProgressOnHover Tooltip"] = "Show the quest objective progress when you hover the cursor over a nameplate or a unit.";
+L["NameplateQuest Instruction Find Nameplate"] = "To adjust the icon position, go to a place with visible NPC nameplates.";
+L["NameplateQuest Progress Format"] = "Progress Format";
+L["Progress Show Icon"] = "Show Icon";
+L["Progress Format Completed"] = "Completed/Required";
+L["Progress Format Remaining"] = "Remaining";
 
 
 --PartyInviterInfo
@@ -459,7 +478,6 @@ L["SoftTargetName HideName"] = "Hide Object Name";
 L["SoftTargetName HideName Tooltip"] = "Hide the soft target object name when you are in a house."
 
 
-
 --LegionRemix
 L["ModuleName LegionRemix"] = "Legion Remix";
 L["ModuleDescription LegionRemix"] = "- Automatically learn traits.\n\n- Add a widget to the Paper Doll that provides various types of info. You can click this widget to open a new Artifact UI.";
@@ -531,7 +549,6 @@ L["Sample Item 4"] = "Awesome Epic Item";
 L["Sample Item 3"] = "Awesome Rare Item";
 L["Sample Item 2"] = "Awesome Uncommon Item";
 L["Sample Item 1"] = "Common Item";
-L["EditMode LootUI"] =  "Plumber: "..(HUD_EDIT_MODE_LOOT_FRAME_LABEL or "Loot Window");
 L["Manual Loot Instruction Format"] = "To temporarily cancel auto loot on a specific pickup, press and hold |cffffffff%s|r key until the loot window appears.";
 L["LootUI Option Hide Window"] = "Hide Plumber Loot Window";
 L["LootUI Option Hide Window Tooltip"] = "Hide Plumber Loot Notification Window, but still enable any features such as Force Auto Loot in the background.";
@@ -564,6 +581,14 @@ L["LootUI Option Combine Items"] = "Combine Similar Items";
 L["LootUI Option Combine Items Tooltip"] = "Display similar items on a single row. Supported Categories:\n\n- Junk Items\n- Epoch Mementos (Legion Remix)";
 L["LootUI Option Low Frame Strata"] = "Send to Back";
 L["LootUI Option Low Frame Strata Tooltip"] = "While in Loot Notification Mode, place the loot window behind other UI.\n\nThis option doesn't affect Manual Loot Mode.";
+L["LootUI Option Show Reputation"] = "Show Reputation Changes";
+L["LootUI Option Show Reputation Tooltip"] = "Display any reputation increases in the loot window.\n\nReputations earned during combat or in PvP instances will be displayed afterwards.";
+L["LootUI Option Show All Money"] = "Show Any Money Changes";
+L["LootUI Option Show All Money Tooltip"] = "Show money earned from all sources, not just loot.";
+L["LootUI Option Show All Currency"] = "Show Any Currency Changes";
+L["LootUI Option Show All Currency Tooltip"] = "Show currencies earned from all sources, not just loot.\n\n|cffff4800You may sometimes see currencies that are not displayed in the chat window.|r";
+L["LootUI Option Hide Title"] = "Hide \"You Received\" Text";
+L["LootUI Option Hide Title Tooltip"] = "Hide the \"You received\" text on the top of the loot window.";
 
 
 --Quick Slot For Third-party Dev
@@ -578,6 +603,7 @@ L["PlumberMacro Drive"] = "Plumber D.R.I.V.E. Macro";
 L["PlumberMacro Drawer"] = "Plumber Drawer Macro";
 L["PlumberMacro Housing"] = "Plumber Housing Macro";
 L["PlumberMacro Torch"] = "Plumber Torch Macro";
+L["PlumberMacro Outfit"] = "Plumber Outfit Macro";
 L["PlumberMacro DrawerFlag Combat"] = "The drawer will be updated after leaving combat.";
 L["PlumberMacro DrawerFlag Stuck"] = "Something went wrong when updating the drawer.";
 L["PlumberMacro Error Combat"] = "Unavailable in combat";
@@ -604,11 +630,13 @@ L["Drawer Option Update Frequently"] = "Update Frequently";
 L["Drawer Option Update Frequently Tooltip"] = "Attempt to update the button states whenever there is a change in your bags or spellbooks. Enabling this option may slightly increase resource usage.";
 L["ModuleName DrawerMacro"] = "Drawer Macro";
 L["ModuleDescription DrawerMacro"] = "Create a custom flyout menu to manage your items, spells, pets, mounts, toys.\n\nTo make a Drawer Macro, create a new macro first, then enter |cffd7c0a3#plumber:drawer|r in the command editbox.";
+L["No Slot For New Character Macro Alert"] = "You need to have a spare Character Specific Macro slot to complete this action.";
 
 
 --New Expansion Landing Page
 L["ModuleName NewExpansionLandingPage"] = "Expansion Summary";
-L["ModuleDescription NewExpansionLandingPage"] = "A UI that displays factions, weekly activities, and raid lockouts. You can open it by:\n\n- Click Khaz Algar Summary button on the minimap.\n\n- Set a hotkey in Game Setting> Keybindings.";
+L["ModuleDescription NewExpansionLandingPage"] = "A UI that displays factions, weekly activities, and raid lockouts. You can open it by:\n\n- Set a hotkey in Game Settings> Keybindings> Plumber Addon.\n\n- Use the Addon Compartment under the Calendar button.";
+L["Abbr NewExpansionLandingPage"] = "Expansion Summary";    --An abbreviated version of the same phrase. Affects German.
 L["Reward Available"] = "Reward Available";  --As brief as possible
 L["Paragon Reward Available"] = "Paragon Reward Available";
 L["Until Next Level Format"] = "%d until next level";   --Earn x reputation to reach the next level
@@ -687,6 +715,8 @@ L["Difficulty Not Accurate"] = "Difficulty is inaccurate because you are not the
 L["Instruction Click To Open Adventure Guide"] = "Left-Click: |cffffffffOpen Adventure Guide|r";
 L["Instruction Alt Click To Reset Instance"] = "Alt Right-Click: |cffffffffReset all instances|r";
 L["Instruction Link Progress In Chat"] = "<Shift click to post progress in chat>";
+L["Instance Name"] = "Instance Name";   --Dungeon/Raid Name
+L["EditMode Instruction InstanceDifficulty"] = "The frame width is affected by the number of available options.";
 
 
 --TransmogChatCommand
@@ -696,6 +726,15 @@ L["Copy To Clipboard"] = "Copy To Clipboard";
 L["Copy Current Outfit Tooltip"] = "Copy the current outfit to share online.";
 L["Missing Appearances Format"] = "%d |4appearance:appearances; missing";
 L["Press Key To Copy Format"] = "Press |cffffd100%s|r to Copy";
+
+
+--TransmogOutfitSelect
+L["ModuleName TransmogOutfitSelect"] = "Outfit Collection: Quick Access";
+L["ModuleDescription1 TransmogOutfitSelect"] = "Allows you open the outfit collection and enable saved appearance anywhere.";
+L["ModuleDescription2 TransmogOutfitSelect"] = "To do this: open the Transmog UI, then drag the |cffd7c0a3Quick Access|r button above the outfit list to your action bars.";
+L["Outfit Collection"] = "Outfit Collection";
+L["Quick Access Outfit Button"] = "Quick Access";
+L["Quick Access Outfit Button Tooltip"] = "Click and drag this button to your action bars so you can change outfits anywhere.";
 
 
 --QuestWatchCycle
@@ -711,6 +750,7 @@ L["ModuleDescription CraftSearchExtended"] = "Shows more results when searching 
 --DecorModelScaleRef
 L["ModuleName DecorModelScaleRef"] = "Decor Preview: Banana For Scale"; --See HOUSING_DASHBOARD_CATALOG_TOOLTIP
 L["ModuleDescription DecorModelScaleRef"] = "- Add a size reference (a banana) to the decor preview window, allowing you to gauge the size of the objects.\n\n- Also allow you to change the camera pitch by holding down the Left Button and moving vertically.";
+L["Toggle Banana"] = "Toggle Banana";
 
 
 --Player Housing
@@ -718,6 +758,7 @@ L["ModuleName Housing_Macro"] = "Housing Macros";
 L["ModuleDescription Housing_Macro"] = "You can create a Teleport Home macro: create a new macro first, then enter |cffd7c0a3#plumber:home|r in the command editbox.";
 L["Teleport Home"] = "Teleport Home";
 L["Instruction Drag To Action Bar"] = "<Click and Drag this to your Action Bars>";
+L["Leave Home"] = HOUSING_DASHBOARD_RETURN or "Return to Previous Location";
 L["Toggle Torch"] = "Toggle Torch";
 L["ModuleName Housing_DecorHover"] = "Editor: 1 Decorate Mode";
 L["ModuleDescription Housing_DecorHover"] = "In Decorate Mode:\n\n- Hover the cursor over a decor to display its placement cost, name, and its item count in storage.\n\n- Allows you to \"duplicate\" a decor by pressing Alt.\n\nThe new object will not inherit the current angles and scales.";

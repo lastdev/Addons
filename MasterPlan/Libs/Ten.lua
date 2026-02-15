@@ -42,3 +42,14 @@ do -- T.CreateEdge
 		end
 	end
 end
+
+function T.SetPortraitToTexture(w, tex)
+	w:SetTexture(tex)
+	local mt = w:GetMaskTexture(1)
+	if not mt then
+		mt = w:GetParent():CreateMaskTexture()
+		mt:SetAllPoints(w)
+		w:AddMaskTexture(mt)
+	end
+	mt:SetTexture("Interface/Masks/CircleMaskScalable")
+end

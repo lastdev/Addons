@@ -498,7 +498,8 @@ local instanceMixins = {
 	---@param attributeId attributeid
 	---@param subAttributeId attributeid
 	---@param modeId modeid
-	SetDisplay = function(instance, segmentId, attributeId, subAttributeId, modeId)
+	---@param quickMode boolean?
+	SetDisplay = function(instance, segmentId, attributeId, subAttributeId, modeId, quickMode)
 		--change the mode of the window if the mode is different
 		---@type modeid
 		local currentModeId = instance:GetMode()
@@ -553,9 +554,11 @@ local instanceMixins = {
 
 					bHasMainAttributeChanged = true
 
-					instance:ChangeIcon()
-					Details:InstanceCall(Details.CheckPsUpdate)
-					Details:SendEvent("DETAILS_INSTANCE_CHANGEATTRIBUTE", nil, instance, attributeId, subAttributeId)
+					if not quickMode then
+					    instance:ChangeIcon()
+						Details:InstanceCall(Details.CheckPsUpdate)
+						Details:SendEvent("DETAILS_INSTANCE_CHANGEATTRIBUTE", nil, instance, attributeId, subAttributeId)
+					end
 				end
 			end
 		end
@@ -563,23 +566,27 @@ local instanceMixins = {
 		if (type(subAttributeId) == "number" and subAttributeId ~= currentSubAttributeId or bHasMainAttributeChanged) then
 			instance.sub_atributo = subAttributeId
 			instance.sub_atributo_last[instance.atributo] = instance.sub_atributo
-			instance:ChangeIcon()
-			Details:InstanceCall(Details.CheckPsUpdate)
-			Details:SendEvent("DETAILS_INSTANCE_CHANGEATTRIBUTE", nil, instance, attributeId, subAttributeId)
+			if not quickMode then
+				instance:ChangeIcon()
+				Details:InstanceCall(Details.CheckPsUpdate)
+				Details:SendEvent("DETAILS_INSTANCE_CHANGEATTRIBUTE", nil, instance, attributeId, subAttributeId)
+			end
 		end
 
-		if (Details.BreakdownWindowFrame:IsShown() and instance == Details.BreakdownWindowFrame.instancia) then
-			---@type combat
-			local combatObject = instance:GetCombat()
-			if (not combatObject or instance.atributo > 4) then
-				Details:CloseBreakdownWindow()
-			else
-				---@type actor
-				local actorObject = Details:GetActorObjectFromBreakdownWindow()
-				if (actorObject) then
-					Details:OpenBreakdownWindow(instance, actorObject, true)
-				else
+		if not quickMode then
+			if (Details.BreakdownWindowFrame:IsShown() and instance == Details.BreakdownWindowFrame.instancia) then
+				---@type combat
+				local combatObject = instance:GetCombat()
+				if (not combatObject or instance.atributo > 4) then
 					Details:CloseBreakdownWindow()
+				else
+					---@type actor
+					local actorObject = Details:GetActorObjectFromBreakdownWindow()
+					if (actorObject) then
+						Details:OpenBreakdownWindow(instance, actorObject, true)
+					else
+						Details:CloseBreakdownWindow()
+					end
 				end
 			end
 		end
@@ -588,10 +595,12 @@ local instanceMixins = {
 		--if there's no combat object to show, freeze the window
 		---@type combat
 		local combatObject = instance:GetCombat()
-		if (not combatObject) then
-			instance:Freeze()
-			return false
-		end
+		--if not quickMode then
+			if (not combatObject) then
+				instance:Freeze()
+				return false
+			end
+		--end
 
 		instance.v_barras = true
 		combatObject[attributeId].need_refresh = true
@@ -612,7 +621,58 @@ local instanceMixins = {
 			Details:Msg("no actor found in line index", index)
 		end
 	end,
+
+	CheckForSecretsAndAspects = function(self)
+		Details:ClearSecretFontStrings(self) --only affect strings from 11 to 14
+
+		local lines = self.barras
+		local needRefreshRows = false
+		for i = 1, #lines do
+			local line = lines[i]
+			if line.lineText1:HasAnySecretAspect() or line.lineText1:HasSecretValues() then
+				needRefreshRows = true
+			end
+
+			if line.lineText2:HasAnySecretAspect() or line.lineText2:HasSecretValues() then
+				needRefreshRows = true
+			end
+
+			if line.lineText3:HasAnySecretAspect() or line.lineText3:HasSecretValues() then
+				needRefreshRows = true
+			end
+
+			if line.lineText4:HasAnySecretAspect() or line.lineText4:HasSecretValues() then
+				needRefreshRows = true
+			end
+
+			if (needRefreshRows) then
+				line.lineText1:SetToDefaults()
+				line.lineText1:SetFontObject("GameFontHighlight")
+				line.lineText1:SetText("defaults")
+				line.lineText2:SetToDefaults()
+				line.lineText3:SetToDefaults()
+				line.lineText4:SetToDefaults()
+			end
+		end
+
+		if (needRefreshRows) then
+			self:InstanceRefreshRows()
+		end
+	end
 }
+
+function Details:ClearSecretFontStrings(instance)
+	local bars = instance.barras
+	for i = 1, #bars do
+		local thisLine = bars[i]
+		if thisLine.lineText11 then
+			thisLine.lineText11:SetText("")
+			thisLine.lineText12:SetText("")
+			thisLine.lineText13:SetText("")
+			thisLine.lineText14:SetText("")
+		end
+	end
+end
 
 function Details:DumpActorInfo(actor)
 	local tableToDump = Details:GenerateActorInfo(actor)

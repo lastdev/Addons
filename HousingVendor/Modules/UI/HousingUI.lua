@@ -65,6 +65,20 @@ function HousingUI:Initialize()
     end
     
     isInitialized = true
+
+	    if _G.HousingPlanManager and _G.HousingPlanManager.RegisterListener then
+	        _G.HousingPlanManager:RegisterListener("HousingUI_PlanButton", function(event, _, _, count)
+	            if event ~= "plan_changed" and event ~= "plan_cleared" and event ~= "plan_loaded" then
+	                return
+	            end
+	            if self._planButton and self._planButton.label and type(count) == "number" then
+	                self._planButton.label:SetText(string.format(L["PLAN_BUTTON_FMT"] or "Craft List (%d)", tonumber(count) or 0))
+            elseif self._planButton and self._planButton.label then
+                local c = _G.HousingPlanManager.GetCount and _G.HousingPlanManager:GetCount() or 0
+                self._planButton.label:SetText(string.format(L["PLAN_BUTTON_FMT"] or "Craft List (%d)", tonumber(c) or 0))
+            end
+        end)
+    end
 end
 
 --------------------------------------------------------------------------------
@@ -74,13 +88,16 @@ end
 function HousingUI:CreateMainFrame()
     local frame = CreateFrame("Frame", "HousingFrameNew", UIParent, "BackdropTemplate")
     
-    -- Use theme dimensions or defaults
+    -- Use theme dimensions or defaults (reduced width for compact layout)
     local dims = Theme.Dimensions or {}
-    frame:SetSize(dims.mainFrameWidth or 1100, dims.mainFrameHeight or 700)
+    frame:SetSize(dims.mainFrameWidth or 800, dims.mainFrameHeight or 700)  -- Narrower to fit button edge
     frame:SetPoint("CENTER")
     frame:SetFrameStrata("HIGH")
     frame:Hide()
-    
+
+    -- Add to UISpecialFrames so ESC key closes the window
+    table.insert(UISpecialFrames, "HousingFrameNew")
+
     -- Apply saved scale
     if HousingDB and HousingDB.uiScale then
         frame:SetScale(HousingDB.uiScale)
@@ -174,135 +191,86 @@ function HousingUI:CreateHeader(parent)
     local dims = Theme.Dimensions or {}
     local headerHeight = dims.headerHeight or 50
     
-    -- Get player faction
-    local playerFaction = UnitFactionGroup("player") -- "Alliance" or "Horde"
-    local factionColor, factionIcon
-    
-    if playerFaction == "Alliance" then
-        factionColor = CreateColor(0.12, 0.35, 0.65, 0.95)  -- Alliance blue
-        factionIcon = "Interface\\Icons\\Achievement_PVP_A_A"  -- Alliance icon
-    elseif playerFaction == "Horde" then
-        factionColor = CreateColor(0.60, 0.08, 0.08, 0.95)  -- Horde red
-        factionIcon = "Interface\\Icons\\Achievement_PVP_H_H"  -- Horde icon
-    else
-        factionColor = CreateColor(0.12, 0.08, 0.20, 0.95)  -- Neutral purple
-        factionIcon = "Interface\\Icons\\INV_Misc_Map02"  -- Default icon
-    end
-    
     -- Header container
     local header = CreateFrame("Frame", nil, parent, "BackdropTemplate")
     header:SetPoint("TOPLEFT", 2, -2)
     header:SetPoint("TOPRIGHT", -2, -2)
     header:SetHeight(headerHeight)
     
-    -- Header background with faction-colored gradient
+    -- Use theme colors instead of faction colors
+    local bgPrimary = HousingTheme.Colors.bgPrimary
+    local bgSecondary = HousingTheme.Colors.bgSecondary
+    local accentPrimary = HousingTheme.Colors.accentPrimary
+    
+    -- Header background with dark gradient
     local headerBg = header:CreateTexture(nil, "BACKGROUND")
     headerBg:SetTexture("Interface\\Buttons\\WHITE8x8")
     headerBg:SetAllPoints()
+    headerBg:SetGradient("HORIZONTAL", 
+        CreateColor(bgPrimary[1], bgPrimary[2], bgPrimary[3], 0.98),
+        CreateColor(bgSecondary[1], bgSecondary[2], bgSecondary[3], 0.95))
     
-    if playerFaction == "Alliance" then
-        headerBg:SetGradient("HORIZONTAL", 
-            CreateColor(0.12, 0.35, 0.65, 0.95),  -- Alliance blue
-            CreateColor(0.08, 0.25, 0.50, 0.95))
-    elseif playerFaction == "Horde" then
-        headerBg:SetGradient("HORIZONTAL", 
-            CreateColor(0.60, 0.08, 0.08, 0.95),  -- Horde red
-            CreateColor(0.45, 0.06, 0.06, 0.95))
-    else
-        headerBg:SetGradient("HORIZONTAL", 
-            CreateColor(0.12, 0.08, 0.20, 0.95),  -- Neutral purple
-            CreateColor(0.08, 0.06, 0.15, 0.95))
-    end
-    
-    -- Bottom accent line (faction colored)
+    -- Bottom accent line (cyan/theme colored)
     local accentLine = header:CreateTexture(nil, "BORDER")
     accentLine:SetTexture("Interface\\Buttons\\WHITE8x8")
     accentLine:SetPoint("BOTTOMLEFT", 0, 0)
     accentLine:SetPoint("BOTTOMRIGHT", 0, 0)
     accentLine:SetHeight(2)
-    
-    if playerFaction == "Alliance" then
-        accentLine:SetVertexColor(0.30, 0.60, 0.95, 0.8)  -- Bright Alliance blue
-    elseif playerFaction == "Horde" then
-        accentLine:SetVertexColor(0.90, 0.15, 0.15, 0.8)  -- Bright Horde red
-    else
-        local accent = HousingTheme.Colors.accentPrimary
-        accentLine:SetVertexColor(accent[1], accent[2], accent[3], 0.8)
-    end
-    
-    -- Faction icon (instead of generic map icon) - Full height
-    local titleIcon = header:CreateTexture(nil, "ARTWORK")
-    titleIcon:SetSize(headerHeight - 4, headerHeight - 4)  -- Full height minus padding
-    titleIcon:SetPoint("LEFT", 8, 0)
-    titleIcon:SetTexture(factionIcon)
-    titleIcon:SetTexCoord(0.08, 0.92, 0.08, 0.92) -- Trim icon borders
-    
-    -- Icon border glow (faction colored)
-    local iconGlow = header:CreateTexture(nil, "BACKGROUND")
-    iconGlow:SetSize(headerHeight, headerHeight)  -- Full header height
-    iconGlow:SetPoint("CENTER", titleIcon, "CENTER")
-    iconGlow:SetTexture("Interface\\Buttons\\WHITE8x8")
-    
-    if playerFaction == "Alliance" then
-        iconGlow:SetVertexColor(0.30, 0.60, 0.95, 0.3)
-    elseif playerFaction == "Horde" then
-        iconGlow:SetVertexColor(0.90, 0.15, 0.15, 0.3)
-    else
-        local accent = HousingTheme.Colors.accentPrimary
-        iconGlow:SetVertexColor(accent[1], accent[2], accent[3], 0.3)
-    end
+    accentLine:SetVertexColor(accentPrimary[1], accentPrimary[2], accentPrimary[3], 0.8)
     
     -- Main title
-    local title = header:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-    title:SetPoint("LEFT", titleIcon, "RIGHT", 12, 2)
-    title:SetText(L["HOUSING_VENDOR_TITLE"] or "Housing Decor Locations")
+    local title = header:CreateFontString(nil, "ARTWORK", "GameFontNormalHuge")
+    title:SetPoint("LEFT", 12, 0)
+    title:SetText(L["HOUSING_VENDOR_TITLE"] or "Housing Vendor")
     local textPrimary = HousingTheme.Colors.textPrimary
     title:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
     title:SetShadowOffset(1, -1)
     title:SetShadowColor(0, 0, 0, 0.8)
-    
-    -- Subtitle
-    local subtitle = header:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-    subtitle:SetPoint("LEFT", titleIcon, "RIGHT", 12, -10)
-    subtitle:SetText("Midnight Edition")
-    local textMuted = HousingTheme.Colors.textMuted
-    subtitle:SetTextColor(textMuted[1], textMuted[2], textMuted[3], 1)
-    
-    -- Right side buttons container
-    local buttonsContainer = CreateFrame("Frame", nil, header)
-    buttonsContainer:SetSize(360, 32)
-    buttonsContainer:SetPoint("RIGHT", -50, 0)
 
-    -- Statistics button
-    local statsBtn = self:CreateHeaderButton(buttonsContainer, L["BUTTON_STATISTICS"] or "Statistics", 85)
-    statsBtn:SetPoint("RIGHT", -275, 0)
-    statsBtn:SetScript("OnClick", function()
-        if HousingStatisticsUI then
-            HousingStatisticsUI:Show()
-        end
-    end)
-
-    -- Zone popup button
-    local zoneBtn = self:CreateHeaderButton(buttonsContainer, L["BUTTON_ZONE_POPUP"] or "Zone Popup", 95)
-    zoneBtn:SetPoint("RIGHT", -175, 0)
-    zoneBtn:SetScript("OnClick", function()
-        if not HousingOutstandingItemsUI or not HousingOutstandingItemsUI.TogglePopup then
-            print("|cFFFF4040HousingVendor:|r OutstandingItemsUI module not available")
-            return
-        end
-        HousingOutstandingItemsUI:TogglePopup()
-    end)
-    
-    -- Settings button
-    local configBtn = self:CreateHeaderButton(buttonsContainer, L["BUTTON_SETTINGS"] or "Settings", 80)
-    configBtn:SetPoint("RIGHT", 0, 0)
-    configBtn:SetScript("OnClick", function()
-        if HousingConfigUI then
-            HousingConfigUI:Show()
-        end
-    end)
+    -- Navigation buttons row below title
+    self:CreateHeaderNavButtons(parent, header)
     
     parent.header = header
+end
+
+function HousingUI:CreateHeaderNavButtons(parent, header)
+    -- No buttons in header anymore
+    -- Items and Zone buttons removed, Settings moved to footer
+end
+
+--------------------------------------------------------------------------------
+-- VERTICAL NAVIGATION SIDEBAR (REMOVED - navigation now in header)
+--------------------------------------------------------------------------------
+
+-- Show main items view (default view)
+function HousingUI:ShowItemsView()
+    -- Hide all other views
+    if HousingAchievementsUI and HousingAchievementsUI.Hide then
+        HousingAchievementsUI:Hide()
+    end
+    if HousingEndeavorsUI and HousingEndeavorsUI.Hide then
+        HousingEndeavorsUI:Hide()
+    end
+    if HousingReputationUI and HousingReputationUI.Hide then
+        HousingReputationUI:Hide()
+    end
+    if HousingStatisticsUI and HousingStatisticsUI.Hide then
+        HousingStatisticsUI:Hide()
+    end
+    if HousingAuctionHouseUI and HousingAuctionHouseUI.Hide then
+        HousingAuctionHouseUI:Hide()
+    end
+    
+    -- Show main item list and filters
+    if HousingItemList and HousingItemList.Show then
+        HousingItemList:Show()
+    end
+    if HousingFilters and HousingFilters.Show then
+        HousingFilters:Show()
+    end
+    if HousingPreviewPanel and HousingPreviewPanel.Show then
+        HousingPreviewPanel:Show()
+    end
 end
 
 -- Create styled header button
@@ -382,7 +350,7 @@ function HousingUI:CreateCloseButton(parent)
     -- X text
     local closeText = closeBtn:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     closeText:SetPoint("CENTER", 0, 1)
-    closeText:SetText("X")
+    closeText:SetText(L["BUTTON_CLOSE_X"] or "X")
     local textSecondary = HousingTheme.Colors.textSecondary
     closeText:SetTextColor(textSecondary[1], textSecondary[2], textSecondary[3], 1)
     closeBtn.closeText = closeText
@@ -473,11 +441,23 @@ function HousingUI:CreateFooter(parent)
     
     -- Version (right side)
     local versionText = footer:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    versionText:SetPoint("RIGHT", -12, 0)
+    versionText:SetPoint("RIGHT", -110, 0)  -- Moved left to make room for Settings button
     versionText:SetJustifyH("RIGHT")
     local textMuted = HousingTheme.Colors.textMuted
     versionText:SetTextColor(textMuted[1], textMuted[2], textMuted[3], 1)
     versionText:SetText("v" .. ADDON_VERSION)
+    
+    -- Settings button (bottom-right corner of footer)
+    local settingsBtn = self:CreateHeaderButton(footer, "Settings", 90)
+    settingsBtn:SetSize(90, 24)  -- Slightly smaller for footer
+    settingsBtn:SetPoint("BOTTOMRIGHT", footer, "BOTTOMRIGHT", -6, 4)
+    settingsBtn:SetScript("OnClick", function()
+        if HousingConfigUI and HousingConfigUI.ShowEmbedded then
+            HousingConfigUI:ShowEmbedded()
+        elseif HousingConfigUI and HousingConfigUI.Show then
+            HousingConfigUI:Show()
+        end
+    end)
     
     parent.footer = footer
 end
@@ -519,6 +499,50 @@ function HousingUI:Show()
     
     mainFrame:Show()
 
+    -- Apply user appearance settings to all addon frames (some are UIParent popouts).
+    if HousingDB then
+        if HousingDB.uiScale and self.ApplyScale then
+            self:ApplyScale(HousingDB.uiScale)
+        end
+        if HousingDB.fontSize and self.ApplyFontSize then
+            self:ApplyFontSize(HousingDB.fontSize)
+        end
+    end
+
+    -- Ensure we always return to the default (items) view when reopening the main UI.
+    -- If the UI was closed while an embedded panel (Endeavors/Achievements/etc.) was open,
+    -- its container could remain shown and overlap with the main list on next open.
+    pcall(function()
+        if HousingEndeavorsUI and HousingEndeavorsUI.Hide then
+            HousingEndeavorsUI:Hide()
+        end
+    end)
+    pcall(function()
+        if HousingAchievementsUI and HousingAchievementsUI.Hide then
+            HousingAchievementsUI:Hide()
+        end
+    end)
+    pcall(function()
+        if HousingReputationUI and HousingReputationUI.Hide then
+            HousingReputationUI:Hide()
+        end
+    end)
+    pcall(function()
+        if HousingStatisticsUI and HousingStatisticsUI.Hide then
+            HousingStatisticsUI:Hide()
+        end
+    end)
+    pcall(function()
+        if HousingAuctionHouseUI and HousingAuctionHouseUI.Hide then
+            HousingAuctionHouseUI:Hide()
+        end
+    end)
+    pcall(function()
+        if HousingPlanUI and HousingPlanUI.Hide then
+            HousingPlanUI:Hide()
+        end
+    end)
+
     if HousingDataManager and HousingDataManager.SetUIActive then
         HousingDataManager:SetUIActive(true)
     end
@@ -557,6 +581,22 @@ function HousingUI:Show()
 
         if HousingDataManager and HousingDataManager.ClearCache then
             HousingDataManager:ClearCache()
+        end
+    end
+
+    -- Auto-refresh owned decor cache (catalog snapshot) when UI opens (optional; can be disabled to reduce CPU spikes).
+    if HousingCollectionAPI and HousingCollectionAPI.RefreshOwnedDecorCache then
+        local settings = HousingDB and HousingDB.settings
+        local wantsRefresh = not settings or settings.refreshOwnedDecorOnOpen ~= false
+        local apiDisabled = settings and settings.disableApiCalls
+        if wantsRefresh and not apiDisabled then
+            HousingCollectionAPI:RefreshOwnedDecorCache(function(success)
+                if success and mainFrame and mainFrame:IsVisible() and HousingDataManager and HousingFilters and HousingItemList then
+                    local allItems = HousingDataManager.GetAllItemIDs and HousingDataManager:GetAllItemIDs() or HousingDataManager:GetAllItems()
+                    local filters = HousingFilters:GetFilters()
+                    HousingItemList:UpdateItems(allItems, filters)
+                end
+            end, false)
         end
     end
 
@@ -604,6 +644,36 @@ function HousingUI:Show()
             end
         end
         
+        -- Initialize achievements UI
+        if HousingAchievementsUI then
+            local success, err = pcall(function()
+                HousingAchievementsUI:Initialize(mainFrame)
+            end)
+            if not success then
+                print("|cFF8A7FD4HousingVendor:|r Error initializing achievements UI: " .. tostring(err))
+            end
+        end
+
+        -- Initialize endeavors UI
+        if HousingEndeavorsUI then
+            local success, err = pcall(function()
+                HousingEndeavorsUI:Initialize(mainFrame)
+            end)
+            if not success then
+                print("|cFF8A7FD4HousingVendor:|r Error initializing endeavors UI: " .. tostring(err))
+            end
+        end
+
+        -- Initialize reputation UI
+        if HousingReputationUI then
+            local success, err = pcall(function()
+                HousingReputationUI:Initialize(mainFrame)
+            end)
+            if not success then
+                print("|cFF8A7FD4HousingVendor:|r Error initializing reputation UI: " .. tostring(err))
+            end
+        end
+
         -- Initialize statistics UI
         if HousingStatisticsUI then
             local success, err = pcall(function()
@@ -614,6 +684,45 @@ function HousingUI:Show()
             end
         end
         
+        -- Initialize plan UI
+        if HousingPlanUI then
+            local success, err = pcall(function()
+                HousingPlanUI:Initialize(mainFrame)
+            end)
+            if not success then
+                print("|cFF8A7FD4HousingVendor:|r Error initializing plan UI: " .. tostring(err))
+            end
+        end
+        
+        -- Initialize materials tracker UI
+        if HousingMaterialsTrackerUI then
+            local success, err = pcall(function()
+                HousingMaterialsTrackerUI:Initialize(mainFrame)
+            end)
+            if not success then
+                print("|cFF8A7FD4HousingVendor:|r Error initializing materials tracker UI: " .. tostring(err))
+            end
+        end
+        
+        -- Initialize model viewer UI
+        if HousingModelViewer then
+            local success, err = pcall(function()
+                HousingModelViewer:Initialize(mainFrame)
+            end)
+            if not success then
+                print("|cFF8A7FD4HousingVendor:|r Error initializing model viewer UI: " .. tostring(err))
+            end
+        end
+
+        if HousingAuctionHouseUI then
+            local success, err = pcall(function()
+                HousingAuctionHouseUI:Initialize(mainFrame)
+            end)
+            if not success then
+                print("|cFF8A7FD4HousingVendor:|r Error initializing auction UI: " .. tostring(err))
+            end
+        end
+
         -- Initialize preview panel
         if HousingPreviewPanel then
             local success, err = pcall(function()
@@ -658,6 +767,10 @@ function HousingUI:Show()
     if HousingAPICache and HousingAPICache.StartCleanupTimer then
         HousingAPICache:StartCleanupTimer()
     end
+
+    if self._planButton and self._planButton.label and _G.HousingPlanManager and _G.HousingPlanManager.GetCount then
+        self._planButton.label:SetText(string.format(L["PLAN_BUTTON_FMT"] or "Craft List (%d)", tonumber(_G.HousingPlanManager:GetCount() or 0) or 0))
+    end
 end
 
 function HousingUI:Hide()
@@ -673,6 +786,26 @@ function HousingUI:CleanupAfterClose()
     isCleaningUp = true
 
     pcall(function()
+        -- Hide embedded panels to avoid overlap on next open and stop their event handlers/timers.
+        if HousingEndeavorsUI and HousingEndeavorsUI.Hide then
+            HousingEndeavorsUI:Hide()
+        end
+        if HousingAchievementsUI and HousingAchievementsUI.Hide then
+            HousingAchievementsUI:Hide()
+        end
+        if HousingReputationUI and HousingReputationUI.Hide then
+            HousingReputationUI:Hide()
+        end
+        if HousingStatisticsUI and HousingStatisticsUI.Hide then
+            HousingStatisticsUI:Hide()
+        end
+        if HousingAuctionHouseUI and HousingAuctionHouseUI.Hide then
+            HousingAuctionHouseUI:Hide()
+        end
+        if HousingPlanUI and HousingPlanUI.Hide then
+            HousingPlanUI:Hide()
+        end
+
         -- CRITICAL: Stop all background processing first
         if HousingDataManager and HousingDataManager.SetUIActive then
             HousingDataManager:SetUIActive(false)
@@ -727,11 +860,12 @@ function HousingUI:CleanupAfterClose()
             HousingPreviewPanel:StopTimers()
         end
 
-        -- Keep zone popup handlers running only if setting is enabled
-        if HousingOutstandingItemsUI and HousingOutstandingItemsUI.StopEventHandlers then
-            if not (HousingDB and HousingDB.settings and HousingDB.settings.showOutstandingPopup) then
-                HousingOutstandingItemsUI:StopEventHandlers()
-            end
+        -- Don't stop zone popup handlers when main UI closes
+        -- Zone popups should work independently and continue showing when zoning
+        -- They are only stopped when the setting is disabled (handled in ConfigUI)
+
+        if HousingAuctionHouseUI and HousingAuctionHouseUI.Hide then
+            HousingAuctionHouseUI:Hide()
         end
 
         -- Aggressive cleanup: return to near-baseline memory/CPU after closing the UI.
@@ -782,8 +916,102 @@ function HousingUI:Toggle()
 end
 
 function HousingUI:ApplyScale(scale)
-    if mainFrame then
-        mainFrame:SetScale(scale or 1.0)
+    scale = scale or 1.0
+
+    local function ApplyScaleTo(frame)
+        if frame and frame.SetScale then
+            frame:SetScale(scale)
+        end
+    end
+
+    ApplyScaleTo(mainFrame)
+    ApplyScaleTo(_G["HousingVendorConfigFrame"])
+    ApplyScaleTo(_G["HousingVendorMarkerFrame"])
+    ApplyScaleTo(_G["HousingOutstandingPopup"])
+    ApplyScaleTo(_G["HousingOutstandingFrame"])
+
+    -- Filter dropdown list frames are UIParent children; keep them aligned with the scaled main frame.
+    for k, v in pairs(_G) do
+        if type(k) == "string" and k:match("^Housing.+ListFrame$") and v and v.SetScale then
+            v:SetScale(scale)
+        end
+    end
+end
+
+local DEFAULT_BASE_FONT_SIZE = 12
+local MIN_FONT_SIZE = 8
+local MAX_FONT_SIZE = 32
+
+local function Clamp(n, lo, hi)
+    if n < lo then return lo end
+    if n > hi then return hi end
+    return n
+end
+
+local function ApplyFontSizeToFontString(fs, desiredBaseSize)
+    if not (fs and fs.GetFont and fs.SetFont) then
+        return
+    end
+
+    local fontPath, fontSize, fontFlags = fs:GetFont()
+    if not (fontPath and fontSize) then
+        return
+    end
+
+    if not fs._hvBaseFont then
+        fs._hvBaseFont = { path = fontPath, size = fontSize, flags = fontFlags }
+    end
+
+    local baseSize = fs._hvBaseFont.size or fontSize
+    local scaled = (baseSize / DEFAULT_BASE_FONT_SIZE) * desiredBaseSize
+    local newSize = Clamp(math.floor(scaled + 0.5), MIN_FONT_SIZE, MAX_FONT_SIZE)
+    fs:SetFont(fs._hvBaseFont.path or fontPath, newSize, fs._hvBaseFont.flags or fontFlags)
+end
+
+local function ApplyFontSizeToFrameTree(root, desiredBaseSize, visited)
+    if not root then
+        return
+    end
+    if not visited then
+        visited = {}
+    end
+    if visited[root] then
+        return
+    end
+    visited[root] = true
+
+    if root.GetRegions then
+        local regions = { root:GetRegions() }
+        for i = 1, #regions do
+            local region = regions[i]
+            if region and region.GetObjectType and region:GetObjectType() == "FontString" then
+                ApplyFontSizeToFontString(region, desiredBaseSize)
+            end
+        end
+    end
+
+    if root.GetChildren then
+        local children = { root:GetChildren() }
+        for i = 1, #children do
+            ApplyFontSizeToFrameTree(children[i], desiredBaseSize, visited)
+        end
+    end
+end
+
+function HousingUI:ApplyFontSize(fontSize)
+    fontSize = tonumber(fontSize) or (HousingDB and HousingDB.fontSize) or DEFAULT_BASE_FONT_SIZE
+
+    local visited = {}
+    ApplyFontSizeToFrameTree(mainFrame, fontSize, visited)
+    ApplyFontSizeToFrameTree(_G["HousingVendorConfigFrame"], fontSize, visited)
+    ApplyFontSizeToFrameTree(_G["HousingVendorMarkerFrame"], fontSize, visited)
+    ApplyFontSizeToFrameTree(_G["HousingOutstandingPopup"], fontSize, visited)
+    ApplyFontSizeToFrameTree(_G["HousingOutstandingFrame"], fontSize, visited)
+
+    for k, v in pairs(_G) do
+        if type(k) == "string" and k:match("^Housing.+ListFrame$") then
+            ApplyFontSizeToFrameTree(v, fontSize, visited)
+        end
     end
 end
 
@@ -818,6 +1046,17 @@ function HousingUI:ApplyTheme()
     if HousingOutstandingItemsUI and HousingOutstandingItemsUI.ApplyTheme then
         HousingOutstandingItemsUI:ApplyTheme()
     end
+
+    -- Refresh Materials Tracker popout
+    if HousingMaterialsTrackerUI and HousingMaterialsTrackerUI.ApplyTheme then
+        HousingMaterialsTrackerUI:ApplyTheme()
+    end
+
+    -- Refresh vendor waypoint/marker popout
+    if HousingVendorMarker and HousingVendorMarker.ApplyTheme then
+        HousingVendorMarker:ApplyTheme()
+    end
+
 end
 
 --------------------------------------------------------------------------------

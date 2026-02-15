@@ -7,7 +7,6 @@ addon.WODGUI.rewardStrings = {
     "garrison-resources",
     "follower-items",
     "pet-charms",
-    "reputation",
     "followerxp",
     "gear",
     "apexis",

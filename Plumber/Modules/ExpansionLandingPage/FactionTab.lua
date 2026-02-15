@@ -146,7 +146,9 @@ do
             tooltip:AddLine(" ");
             tooltip:AddLine(description, 1, 0.82, 0, true);
 
-            GameTooltip_AddQuestRewardsToTooltip(tooltip, rewardQuestID);
+            if rewardQuestID then
+                GameTooltip_AddQuestRewardsToTooltip(tooltip, rewardQuestID);
+            end
         end
 
         ReputationTooltipScripts.AppendClickInstruction(tooltip, factionID, true);
@@ -465,7 +467,7 @@ do
         --See Blizzard_UIPanels_Game/ReputationFrame.lua
         self.UpdateTooltip = nil;
 
-        if C_Reputation.IsFactionParagon(self.factionID) then
+        if (self.reputationType == 3 and C_MajorFactions.HasMaximumRenown(self.factionID)) or (self.reputationType ~= 3 and C_Reputation.IsFactionParagon(self.factionID)) then
             ReputationTooltipScripts.ShowParagonRewardsTooltip(self);
         elseif self.reputationType == 2 then    --Friendship
             ReputationTooltipScripts.ShowFriendshipReputationTooltip(self);

@@ -1,11 +1,11 @@
-## Interface: 50501
+## Interface: 50503
 ## Notes: An addon for tracking the completion/faliure of instance achievements.
 ## Title:Instance Achievement Tracker
 ## Author: Whizzey
-## Version: 5.40.0
+## Version: 6.4.0
 ## IconTexture: Interface/AddOns/InstanceAchievementTracker/Images/icon.jpg
-## OptionalDeps: LibStub, CallbackHandler-1.0, LibDBIcon-1.0, LibInspect, LibRangeCheck-3.0, LibWindow-1.1
-## SavedVariables: AchievementTrackerOptions, AchievementTrackerDebug, AchievementTrackerNPCCache, AchievementTrackerNPCCacheClassic
+## OptionalDeps: LibStub, CallbackHandler-1.0, LibDBIcon-1.0, LibInspect, LibWindow-1.1
+## SavedVariables: AchievementTrackerOptions, AchievementTrackerDebug, AchievementTrackerNPCCache, AchievementTrackerNPCCacheClassic, IATTrackedAchievements
 ## X-Curse-Project-ID: 286675
 ## X-WoWI-ID: 24756
 ## X-Wago-ID: RBKpXaKE
@@ -16,12 +16,12 @@ Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
 Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
 Libs\UTF8\utf8.lua
 Libs\UTF8\utf8data.lua
-Libs\LibRangeCheck-3.0\LibRangeCheck-3.0.lua
 Libs\LibWindow-1.1\LibWindow-1.1.lua
 Libs\LibDetours-1.0\LibDetours-1.0.lua
 Libs\LibClassicInspector\LibClassicInspector.lua
 Libs\LibDBCompartment\LibDBCompartment-1.0.lua
 Libs\TaintLess\TaintLess.xml
+Libs\HereBeDragons\HereBeDragons-2.0.lua
 
 Localization.lua
 Localization.enUS.lua
@@ -117,10 +117,14 @@ LichKingDungeons\UtgardePinnacle.lua
 
 Templates.xml
 
+IATDB.lua
+Tracker.lua
+Navigation.lua
 InstancesPandaria.lua
 ItemCache.lua
 NPCCache.lua
 InfoFrame.lua
+InfoFrameV2.lua
 Options.lua
 GUI.lua
 MobCounter.lua

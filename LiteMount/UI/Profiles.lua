@@ -101,6 +101,29 @@ local function ClickImportProfile(self, arg1, arg2, check)
     LiteMountOptionsPanel_PopOver(LiteMountProfileImport, LiteMountProfilesPanel)
 end
 
+local function GetScrollExtent()
+    local _, y = GetPhysicalScreenSize()
+    return math.floor(y/3)
+end
+
+--[[------------------------------------------------------------------------]]--
+
+local function ProfileSort(a, b)
+    if a == "Default" then
+        return true
+    elseif b == "Default" then
+        return false
+    else
+        return a < b
+    end
+end
+
+local function GetSortedProfiles()
+    local dbProfiles = LM.db:GetProfiles() or {}
+    sort(dbProfiles, ProfileSort)
+    return dbProfiles
+end
+
 
 --[[------------------------------------------------------------------------]]--
 
@@ -108,16 +131,15 @@ local ChangeProfileMixin = {}
 
 function ChangeProfileMixin.Generate(owner, rootDescription)
     local currentProfile = LM.db:GetCurrentProfile()
-    local dbProfiles = LM.db:GetProfiles() or {}
-    tDeleteItem(dbProfiles, "Default")
-    sort(dbProfiles)
-    tinsert(dbProfiles, 1, "Default")
+    local dbProfiles = GetSortedProfiles()
 
     for i,p in ipairs(dbProfiles) do
         local function IsSelected() return p == currentProfile end
         local function SetSelected() LM.db:SetProfile(p) end
         rootDescription:CreateRadio(GetProfileNameText(p), IsSelected, SetSelected, i)
     end
+
+    rootDescription:SetScrollMode(GetScrollExtent())
 end
 
 
@@ -142,7 +164,7 @@ local DeleteProfileMixin = {}
 
 function DeleteProfileMixin.Generate(owner, rootDescription)
     local currentProfile = LM.db:GetCurrentProfile()
-    local dbProfiles = LM.db:GetProfiles() or {}
+    local dbProfiles = GetSortedProfiles()
     tDeleteItem(dbProfiles, "Default")
     tDeleteItem(dbProfiles, currentProfile)
 
@@ -153,6 +175,8 @@ function DeleteProfileMixin.Generate(owner, rootDescription)
     for _, p in ipairs(dbProfiles) do
         rootDescription:CreateButton(GetProfileNameText(p), OnClick, p)
     end
+
+    rootDescription:SetScrollMode(GetScrollExtent())
 end
 
 --[[------------------------------------------------------------------------]]--
@@ -160,7 +184,7 @@ end
 local ExportProfileMixin = {}
 
 function ExportProfileMixin.Generate(owner, rootDescription)
-    local dbProfiles = LM.db:GetProfiles() or {}
+    local dbProfiles = GetSortedProfiles()
 
     local function OnClick(data)
         LiteMountProfileExport:SetProfile(data)
@@ -170,6 +194,8 @@ function ExportProfileMixin.Generate(owner, rootDescription)
     for _, p in ipairs(dbProfiles) do
         rootDescription:CreateButton(p, OnClick, p)
     end
+
+    rootDescription:SetScrollMode(GetScrollExtent())
 end
 
 
@@ -198,8 +224,8 @@ function LiteMountProfilesPanelMixin:OnLoad()
 
     self.CurrentProfileLabel:SetText(L.LM_CURRENT_PROFILE .. " :")
 
-    local function OnClick(self)
-        MenuUtil.CreateContextMenu(self, self.Generate)
+    local function OnClick(button)
+        MenuUtil.CreateContextMenu(button, button.Generate)
     end
 
     Mixin(self.ChangeProfile, ChangeProfileMixin)

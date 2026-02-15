@@ -50,7 +50,7 @@ function HousingMinimapButton:CreateButton()
   
   local icon = button:CreateTexture(nil, "BACKGROUND")
   icon:SetSize(20, 20)
-  icon:SetTexture("Interface\\Icons\\INV_Misc_Map02")
+  icon:SetTexture("Interface\\AddOns\\HousingVendor\\Data\\Media\\HousingVendor_Icon64.tga")
   icon:SetPoint("TOPLEFT", 7, -5)
   
   -- Set button position

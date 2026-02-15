@@ -160,7 +160,7 @@ AppHelper:OnModuleLoad(function()
 		elseif ClientInfo.IsVanillaClassic() and SessionInfo.IsSeasonOfDiscovery() then
 			private.addonRegion = region.."-SoD"
 			private.appDataRegion = "SoD-"..region
-		elseif ClientInfo.IsVanillaClassic() and SessionInfo.IsFresh() then
+		elseif (ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic()) and SessionInfo.IsFresh() then
 			private.addonRegion = region.."-Fresh"
 			private.appDataRegion = "Fresh-"..region
 		elseif ClientInfo.IsVanillaClassic() then

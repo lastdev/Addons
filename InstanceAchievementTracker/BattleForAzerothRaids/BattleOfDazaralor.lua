@@ -54,6 +54,8 @@ function core._2070:ChampionOfTheLight()
 
     --On initial pull lets make sure everyone in the group has the Jani Favor debuff otherwise achievement cannot be completed
     if inititalDebuffScan == false then
+        if core:checkRestrictions() then return end
+
         inititalDebuffScan = true
         core:sendDebugMessage("Starting Initital Scan For Debuff")
         if core.groupSize > 1 then
@@ -313,13 +315,6 @@ function core._2070:Opulence()
 	if core:has_value(core.currentBosses[1].players, L["GUI_NoPlayersNeedAchievement"]) == false then
 		InfoFrame_UpdatePlayersOnInfoFramePersonal()
         InfoFrame_SetHeaderCounter(L["Shared_PlayersWhoNeedAchievement"],playersCompletedAchievement,#core.currentBosses[1].players)
-        -- if rangeCheckCooldown == false then
-        --     InfoFrame_GetRangeCheck(25)
-        --     rangeCheckCooldown = true
-        --     C_Timer.After(3, function()
-        --         rangeCheckCooldown = false
-        --     end)
-        -- end
 	else
 		InfoFrame_SetHeaderCounter(L["Shared_PlayersWhoNeedAchievement"],playersCompletedAchievement,0)
 		core.IATInfoFrame:SetText1(L["GUI_NoPlayersNeedAchievement"])
@@ -430,6 +425,8 @@ end
 
 function core._2070.Events:CHAT_MSG_TEXT_EMOTE(self, message, sender, lineID, senderGUID)
     if core.Instances[core.expansion][core.instanceType][core.instance]["boss4"].enabled == true then
+        if core:checkRestrictions() then return end
+
         --Lets get the target they praised
         if UnitIsPlayer(sender) then
             if sender == UnitName("Player") then

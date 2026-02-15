@@ -227,6 +227,14 @@ ns.RegisterPoints(ns.HALLOWFALL, {
     },
 })
 
+-- Assorted shadowed loot
+local SHADOWED = ns.nodeMaker{
+    note="Only visible with a light source ({item:211872:Patrol Torch}, {item:220756:Flickering Torch}, {item:217344:Sentry Flare Launcher}, etc)",
+    minimap=true, scale=0.9,
+    hide_before=ns.WORLDQUESTS,
+    group="shadowed",
+}
+
 ns.RegisterPoints(ns.HALLOWFALL, {
     [62013176] = {
         label="Hillhelm Lunchbox",
@@ -258,15 +266,18 @@ ns.RegisterPoints(ns.HALLOWFALL, {
         quest=84337,
         vignette=6533,
     },
-}, {
+    [66142802] = {
+        label="Farm Satchel",
+        quest=81988,
+        vignette=6178,
+        additional={64872564},
+    },
+}, SHADOWED{
     loot={
         226019, -- Darkened Arathi Shoulderguards (cosmetic)
         206350, -- Radiant Remnant
         ns.rewards.Currency(ns.CURRENCY_RESONANCE, 3),
     },
-    note="Only visible with a light source ({item:211872:Patrol Torch}, {item:220756:Flickering Torch}, {item:217344:Sentry Flare Launcher}, etc)",
-    minimap=true, scale=0.9,
-    hide_before=ns.WORLDQUESTS,
 })
 
 ns.RegisterPoints(ns.HALLOWFALL, {
@@ -296,15 +307,80 @@ ns.RegisterPoints(ns.HALLOWFALL, {
         quest=84339,
         vignette=6534,
     },
-}, {
+}, SHADOWED{
     loot={
         226016, -- Darkened Tabard of the Arathi (cosmetic)
     },
-    note="Only visible with a light source ({item:211872:Patrol Torch}, {item:220756:Flickering Torch}, {item:217344:Sentry Flare Launcher}, etc)",
-    minimap=true, scale=0.9,
-    hide_before=ns.WORLDQUESTS,
 })
 
+-- Nightfarm Growthling
+ns.RegisterPoints(ns.HALLOWFALL, {
+    [61403180] = {},
+    [63403110] = {},
+    [64203160] = {},
+    [65203340] = {},
+    [65203350] = {},
+}, SHADOWED{
+    loot={
+        {221546, pet=true}, -- Nightfarm Growthling
+    },
+    texture=ns.atlas_texture("VignetteLoot", {r=1, g=0.5, b=1})
+})
+
+-- Thunder
+ns.RegisterPoints(ns.HALLOWFALL, {
+    [64451880] = {
+        label="{npc:212419:Attica Whiskervale}",
+        note="Talk until they offer {quest:82007:Tale of Tales}",
+    },
+}, SHADOWED{
+    quest=82007,
+    atlas="banker",
+    loot={
+        {220782, pet=true}, -- Thunder
+    },
+})
+ns.RegisterPoints(ns.HALLOWFALL, {
+    [66311569] = {label="{npc:222373:Beef}", note="In cave", path=65831877}, -- Beef
+}, SHADOWED{
+    quest=82007,
+    atlas="WildBattlePet", minimap=true, scale=0.9,
+    requires=ns.conditions.OnQuest(82007), -- Tale of Tales
+    -- hide_before=ns.conditions.QuestComplete(82006), -- quest for finishing Attica's dialog
+})
+ns.RegisterPoints(ns.HALLOWFALL, {
+    [63901970] = {label="{npc:222372:Beans}"}, -- Beans
+    [61982078] = {label="{npc:222375:Thunder}"}, -- Thunder
+    [66702100] = {label="{npc:222374:Cap'n Elaena}"}, -- Cap'n Elaena
+}, {
+    quest=82007,
+    atlas="WildBattlePet",
+    requires=ns.conditions.OnQuest(82007), -- Tale of Tales
+})
+
+-- Life on the Farm
+local FARMLIFE = {
+    achievement=40360, 
+    atlas="QuestNormal",
+}
+ns.RegisterPoints(ns.HALLOWFALL, {
+    [64752653] = { -- Lil Piggy
+        criteria=68012, quest=82963, onquest=82963, loot={224457},
+        additional={
+            63802643,
+            64022592,
+            64502736,
+            64752732,
+        },
+        note="Various spawn points near here",
+    },
+}, SHADOWED(FARMLIFE))
+ns.RegisterPoints(2312, { -- Mycomancer Cavern
+    [39292127] = {criteria=68271, quest=83278, onquest=83278, loot={225336},}, -- Lost Shoe
+    [58913111] = {criteria=68272, quest=83282, onquest=83282, loot={225339},}, -- Chicken Eggs
+}, FARMLIFE)
+
+-- Sky-Captain's Sunken Cache (Treasures)
 ns.RegisterPoints(ns.HALLOWFALL, {
     [62754689] = {
         label="{npc:222333:Sky-Captain Dornald}, The Mighty Lynx",
@@ -366,7 +442,7 @@ ns.RegisterPoints(ns.HALLOWFALL, {
         },
     },
 }, {
-    achievement=40848,
+    achievement=40848, -- Treasures
     criteria=69700,
     atlas="Vehicle-Air-Occupied", scale=1.5,
     note="Find the ship on the route and talk to the captain",

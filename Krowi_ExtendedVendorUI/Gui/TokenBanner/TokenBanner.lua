@@ -231,12 +231,18 @@ function tokenBanner:CreateOptionsMenu(menuObj, menuBuilder)
 
     local tokenBannerMenu = menuBuilder:CreateSubmenuButton(menuObj, addon.L['Token Banner'])
 
-	local lib = LibStub('Krowi_Currency-1.0')
-	lib:CreateMoneyOptionsMenu(tokenBannerMenu, menuBuilder, profile)
+    menuBuilder:CreateTitle(tokenBannerMenu, addon.L['Token Format'])
+	menuBuilder:CreateRadio(tokenBannerMenu, addon.L['Need'], profile, {'Format'}, 'Need')
+	menuBuilder:CreateRadio(tokenBannerMenu, addon.L['Have'], profile, {'Format'}, 'Have')
+	menuBuilder:CreateRadio(tokenBannerMenu, addon.L['Both'], profile, {'Format'}, 'Both')
+	
+    menuBuilder:CreateDivider(tokenBannerMenu)
+
+	addon.CurrencyLib:CreateMoneyOptionsMenu(tokenBannerMenu, menuBuilder, profile)
 
 	menuBuilder:CreateDivider(tokenBannerMenu)
 
-	lib:CreateCurrencyOptionsMenu(tokenBannerMenu, menuBuilder, profile)
+	addon.CurrencyLib:CreateCurrencyOptionsMenu(tokenBannerMenu, menuBuilder, profile)
 
     menuBuilder:AddChildMenu(menuObj, tokenBannerMenu)
 end

@@ -1,106 +1,112 @@
 local _, addon = ...
-local L = TomTomLocals
+local L = addon.L
 
 local ldb = LibStub("LibDataBroker-1.1")
 local ldbicon = LibStub("LibDBIcon-1.0")
 
-
 local function initPasteWindow()
-    if addon.pasteWindow then
-        return addon.pasteWindow
-    end
+	if addon.pasteWindow then
+		return addon.pasteWindow
+	end
 
-    addon.pasteWindow = CreateFrame("Frame", "TomTomPaste", UIParent, "DefaultPanelTemplate,ClickToDragTemplate")
+	addon.pasteWindow = CreateFrame("Frame", "TomTomPaste", UIParent, "DefaultPanelTemplate,ClickToDragTemplate")
 
-    local frame = addon.pasteWindow
-    frame:SetHeight(450)
-    frame:SetWidth(465)
-    frame:SetFrameStrata("HIGH")
-    frame:ClearAllPoints()
-    frame.TitleContainer.TitleText:SetText(L["TomTom Paste"])
-    frame:SetPoint("CENTER", 0, 200)
-    frame:Hide()
+	local frame = addon.pasteWindow
+	frame:SetHeight(450)
+	frame:SetWidth(465)
+	frame:SetFrameStrata("HIGH")
+	frame:ClearAllPoints()
+	frame.TitleContainer.TitleText:SetText(L["TomTom Paste"])
+	frame:SetPoint("CENTER", 0, 200)
+	frame:Hide()
 
-    -- Edit box time!
-    frame.EditBox = CreateFrame("Frame", "TomTomPasteEditBox", frame, "TomTomScrollingEditBoxTemplate")
-    local editBox = frame.EditBox
+	-- Edit box time!
+	frame.EditBox = CreateFrame("Frame", "TomTomPasteEditBox", frame, "TomTomScrollingEditBoxTemplate")
+	local editBox = frame.EditBox
 
-    editBox:SetPoint("TOPLEFT", frame, "TOPLEFT", 14, -80)
-    editBox:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 40)
+	editBox:SetPoint("TOPLEFT", frame, "TOPLEFT", 14, -80)
+	editBox:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 40)
 
-    editBox:SetWidth(435)
-    editBox:SetHeight(85)
+	editBox:SetWidth(435)
+	editBox:SetHeight(85)
 
-    local label = L["Add several /way commands here and click Paste"]
-    editBox.Label = editBox:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-    editBox.Label:SetPoint("BOTTOMLEFT", editBox, "TOPLEFT", 0, 5)
-    editBox.Label:SetPoint("BOTTOMRIGHT", editBox, "TOPRIGHT", 0, 5)
-    editBox.Label:SetWordWrap(true)
-    editBox.Label:SetMaxLines(9)
-    editBox.Label:SetJustifyV("BOTTOM")
-    editBox.Label:SetJustifyH("LEFT")
-    editBox.Label:SetText(label)
+	local label = L["Add several /way commands here and click Paste"]
+	editBox.Label = editBox:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+	editBox.Label:SetPoint("BOTTOMLEFT", editBox, "TOPLEFT", 0, 5)
+	editBox.Label:SetPoint("BOTTOMRIGHT", editBox, "TOPRIGHT", 0, 5)
+	editBox.Label:SetWordWrap(true)
+	editBox.Label:SetMaxLines(9)
+	editBox.Label:SetJustifyV("BOTTOM")
+	editBox.Label:SetJustifyH("LEFT")
+	editBox.Label:SetText(label)
 
-    local function OnTextChanged(o, editBox, userChanged)
-        local text = editBox:GetText()
-    end
+	local function OnTextChanged(o, editBox, userChanged)
+		local text = editBox:GetText()
+	end
 
-    local function OnEscapePressed(o, editBox)
-        editBox:ClearFocus()
-    end
+	local function OnEscapePressed(o, editBox)
+		editBox:ClearFocus()
+	end
 
-    local function OnEnterPressed(o, editBox)
-        local text = editBox:GetText()
-        text = text .. "\n"
-        editBox:SetText(text)
-     end
+	local function OnEnterPressed(o, editBox)
+		if IsControlKeyDown() then
+			editBox:ClearFocus()
+			frame.PasteButton:Click()
+			return
+		end
 
-    editBox.ScrollingEditBox:RegisterCallback("OnTextChanged", OnTextChanged, editBox)
-    editBox.ScrollingEditBox:RegisterCallback("OnEscapePressed", OnEscapePressed, editBox)
-    editBox.ScrollingEditBox:RegisterCallback("OnEnterPressed", OnEnterPressed, editBox)
+		local text = editBox:GetText()
+		text = text .. "\n"
+		editBox:SetText(text)
+	end
 
-    local scrollBox = editBox.ScrollingEditBox:GetScrollBox()
-    ScrollUtil.RegisterScrollBoxWithScrollBar(scrollBox, editBox.ScrollBar)
+	editBox.ScrollingEditBox:RegisterCallback("OnTextChanged", OnTextChanged, editBox)
+	editBox.ScrollingEditBox:RegisterCallback("OnEscapePressed", OnEscapePressed, editBox)
+	editBox.ScrollingEditBox:RegisterCallback("OnEnterPressed", OnEnterPressed, editBox)
 
-    local scrollBoxAnchorsWithBar = {
-        CreateAnchor("TOPLEFT", editBox.ScrollingEditBox, "TOPLEFT", 0, 0),
-        CreateAnchor("BOTTOMRIGHT", editBox.ScrollingEditBox, "BOTTOMRIGHT", -18, -1),
-    }
-    local scrollBoxAnchorsWithoutBar = {
-        scrollBoxAnchorsWithBar[1],
-        CreateAnchor("BOTTOMRIGHT", editBox.ScrollingEditBox, "BOTTOMRIGHT", -2, -1),
-    }
-    ScrollUtil.AddManagedScrollBarVisibilityBehavior(scrollBox, editBox.ScrollBar, scrollBoxAnchorsWithBar, scrollBoxAnchorsWithoutBar)
+	local scrollBox = editBox.ScrollingEditBox:GetScrollBox()
+	ScrollUtil.RegisterScrollBoxWithScrollBar(scrollBox, editBox.ScrollBar)
 
-    frame.CloseButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
-    frame.CloseButton:SetText(L["Close"])
-    frame.CloseButton:SetHeight(23)
-    frame.CloseButton:SetWidth(100)
-    frame.CloseButton:ClearAllPoints()
-    frame.CloseButton:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -6, 5)
-    frame.CloseButton:SetScript("OnClick", function(button)
-        frame:SetShown(false)
-    end)
+	local scrollBoxAnchorsWithBar = {
+		CreateAnchor("TOPLEFT", editBox.ScrollingEditBox, "TOPLEFT", 0, 0),
+		CreateAnchor("BOTTOMRIGHT", editBox.ScrollingEditBox, "BOTTOMRIGHT", -18, -1),
+	}
+	local scrollBoxAnchorsWithoutBar = {
+		scrollBoxAnchorsWithBar[1],
+		CreateAnchor("BOTTOMRIGHT", editBox.ScrollingEditBox, "BOTTOMRIGHT", -2, -1),
+	}
+	ScrollUtil.AddManagedScrollBarVisibilityBehavior(scrollBox, editBox.ScrollBar, scrollBoxAnchorsWithBar, scrollBoxAnchorsWithoutBar)
 
-    frame.PasteButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
-    frame.PasteButton:SetText(L["Paste"])
-    frame.PasteButton:SetHeight(23)
-    frame.PasteButton:SetWidth(100)
-    frame.PasteButton:ClearAllPoints()
-    frame.PasteButton:SetPoint("RIGHT", frame.CloseButton, "LEFT", 0, 0)
-    frame.PasteButton:SetScript("OnClick", function(button)
-        local text = frame.EditBox.ScrollingEditBox:GetText()
-        local lines = {string.split("\n", text)}
+	frame.CloseButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+	frame.CloseButton:SetText(L["Close"])
+	frame.CloseButton:SetHeight(23)
+	frame.CloseButton:SetWidth(100)
+	frame.CloseButton:ClearAllPoints()
+	frame.CloseButton:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -6, 5)
+	frame.CloseButton:SetScript("OnClick", function(button)
+		frame:SetShown(false)
+	end)
 
-        for idx, line in ipairs(lines) do
-            -- remove the first token from the commands
-            line = line:gsub("^%S+", "")
+	frame.PasteButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+	frame.PasteButton:SetText(L["Paste"])
+	frame.PasteButton:SetHeight(23)
+	frame.PasteButton:SetWidth(100)
+	frame.PasteButton:ClearAllPoints()
+	frame.PasteButton:SetPoint("RIGHT", frame.CloseButton, "LEFT", 0, 0)
+	frame.PasteButton:SetScript("OnClick", function(button)
+		local text = frame.EditBox.ScrollingEditBox:GetText()
+		local lines = {string.split("\n", text)}
 
-            addon.SlashWayCommand(line)
-        end
-    end)
+		for idx, line in ipairs(lines) do
+			-- remove the first token from the commands
+			line = line:gsub("^%S+", "")
+			if line:match("%S+") then
+				addon.SlashWayCommand(line)
+			end
+		end
+	end)
 
-    return addon.pasteWindow
+	return addon.pasteWindow
 end
 
 --[[--------------------------------------------------------------------------
@@ -123,9 +129,44 @@ local function getMinimapPasteButton()
                 local window = initPasteWindow()
                 window:SetShown(not window:IsShown())
             end,
+            showInCompartment = false,
         })
 
         ldbicon:Register(iconName, ldb_feed, addon.db.profile.paste)
+    end
+end
+
+addon.compartmentButtonObject = {
+    text = L["TomTom Paste"],
+    icon = "interface/icons/inv_misc_note_03",
+    notCheckable = true,
+    func = function(button, menuInputData, menu)
+        local window = initPasteWindow()
+        window:SetShown(not window:IsShown())
+    end,
+    funcOnEnter = function(button)
+        MenuUtil.ShowTooltip(button, function(tooltip)
+            tooltip:SetText(L["Open the TomTom Paste window"])
+        end)
+    end,
+    funcOnLeave = function(button)
+        MenuUtil.HideTooltip(button)
+    end,
+}
+
+local function updateCompartmentButton(show)
+    if not AddonCompartmentFrame then return end
+
+    if show then
+        AddonCompartmentFrame:RegisterAddon(addon.compartmentButtonObject)
+    else
+        for idx, obj in ipairs(AddonCompartmentFrame.registeredAddons) do
+            if obj == addon.compartmentButtonObject then
+                table.remove(AddonCompartmentFrame.registeredAddons, idx)
+                AddonCompartmentFrame:UpdateDisplay()
+                return
+            end
+		end
     end
 end
 
@@ -141,6 +182,9 @@ function addon:PasteConfigChanged()
         getMinimapPasteButton()
         ldbicon:Hide(iconName)
     end
+
+    local showCompartment = addon.profile.paste.addon_compartment_button
+    updateCompartmentButton(showCompartment)
 end
 
 --[[--------------------------------------------------------------------------

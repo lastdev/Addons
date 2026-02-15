@@ -46,6 +46,8 @@ FullScan:OnModuleLoad(function()
 		else
 			private.gameVersion = "Classic Era"
 		end
+	elseif ClientInfo.IsBCClassic() and SessionInfo.IsFresh() then
+		private.gameVersion = "Classic Era - Fresh"
 	elseif ClientInfo.IsPandaClassic() then
 		private.gameVersion = "Wrath"
 		private.popupDialog = StaticPopupDialog.New()

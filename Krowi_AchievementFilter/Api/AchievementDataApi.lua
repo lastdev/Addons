@@ -5,6 +5,7 @@ KrowiAF.Enum.Faction = EnumUtil.MakeEnum(
     "Alliance",
     "Horde"
 );
+-- EnumUtil.GenerateNameTranslation
 KrowiAF.Enum.RewardType = EnumUtil.MakeEnum(
     "NotCategorized",
     "Other",
@@ -21,7 +22,8 @@ KrowiAF.Enum.RewardType = EnumUtil.MakeEnum(
     "Transmog",
     "WarbandCampsite",
     "RemixInfiniteKnowledge",
-    "HousingDecor"
+    "HousingDecor",
+    "KeystoneResilience"
 );
 
 KrowiAF.AchievementData = {};

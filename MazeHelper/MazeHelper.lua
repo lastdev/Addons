@@ -32,28 +32,6 @@ local RESERVED_BUTTONS_SEQUENCE = {
     [4] = false,
 };
 
-local nameplatesMarkers = {};
-
-local USED_MARKERS = {
-    [1] = false,
-    [2] = false,
-    [3] = false,
-    [4] = false,
-    [5] = false,
-    [6] = false,
-    [7] = false,
-    [8] = false,
-};
-
-local MARKER_UNITS = {
-    'player',
-    'party1',
-    'party2',
-    'party3',
-    'party4',
-    'boss1',
-};
-
 local SOLUTION_PLAYER_MARKER = 4; -- GREEN
 local SKULL_MARKER = 8;
 
@@ -96,7 +74,6 @@ local ANNOUNCED_BUTTON_ID;
 
 local MOTS_INSTANCE_ID = 2290;
 local MISTCALLER_ENCOUNTER_ID = 2392;
-local ILLUSIONARY_CLONE_ID = 165108;
 local DEPLETED_ANIMA_SEED_IDS = {
     [173702] = true,
     [357703] = true,
@@ -110,15 +87,6 @@ local EVENTS_INSTANCE = {
     'ENCOUNTER_START',
     'ENCOUNTER_END',
     'CHAT_MSG_MONSTER_SAY',
-};
-
-local EVENTS_SKULLMARKER = {
-    'PLAYER_TARGET_CHANGED',
-};
-
-local EVENTS_AUTOMARKER = {
-    'NAME_PLATE_UNIT_ADDED',
-    'NAME_PLATE_UNIT_REMOVED',
 };
 
 local DEFAULT_COLORS = {
@@ -854,16 +822,6 @@ settingsScrollChild.Data.UseCloneAutoMarker:SetLabel(L['SETTINGS_USE_CLONE_AUTOM
 settingsScrollChild.Data.UseCloneAutoMarker:SetTooltip(L['SETTINGS_USE_CLONE_AUTOMARKER_TOOLTIP']);
 settingsScrollChild.Data.UseCloneAutoMarker:SetScript('OnClick', function(self)
     MHMOTSConfig.UseCloneAutoMarker = self:GetChecked();
-
-    if MHMOTSConfig.UseCloneAutoMarker and inEncounter then
-        for _, event in ipairs(EVENTS_AUTOMARKER) do
-            MazeHelper.frame:RegisterEvent(event);
-        end
-    else
-        for _, event in ipairs(EVENTS_AUTOMARKER) do
-            MazeHelper.frame:UnregisterEvent(event);
-        end
-    end
 end);
 
 settingsScrollChild.Data.SetMarkerOnTargetClone = E.CreateRoundedCheckButton(settingsScrollChild);
@@ -872,16 +830,6 @@ settingsScrollChild.Data.SetMarkerOnTargetClone:SetLabel(L['SETTINGS_SKULLMARKER
 settingsScrollChild.Data.SetMarkerOnTargetClone:SetTooltip(L['SETTINGS_SKULLMARKER_CLONE_TOOLTIP']);
 settingsScrollChild.Data.SetMarkerOnTargetClone:SetScript('OnClick', function(self)
     MHMOTSConfig.SetMarkerOnTargetClone = self:GetChecked();
-
-    if MHMOTSConfig.SetMarkerOnTargetClone and inEncounter then
-        for _, event in ipairs(EVENTS_SKULLMARKER) do
-            MazeHelper.frame:RegisterEvent(event);
-        end
-    else
-        for _, event in ipairs(EVENTS_SKULLMARKER) do
-            MazeHelper.frame:UnregisterEvent(event);
-        end
-    end
 
     if MHMOTSConfig.SetMarkerOnTargetClone then
         settingsScrollChild.Data.SetMarkerOnTargetCloneUseModifier:SetEnabled(true);
@@ -1715,58 +1663,6 @@ function MazeHelper:ToggleShown()
     end
 end
 
-local function GetFreeMarkerIndex()
-    for i = 1, #USED_MARKERS do
-        if USED_MARKERS[i] == false then
-            return i;
-        end
-    end
-
-    return false;
-end
-
-local function SetFreeMarkerIndex(index)
-    USED_MARKERS[index] = false;
-end
-
-local function SetUnfreeMarkerIndex(index)
-    USED_MARKERS[index] = true;
-end
-
-local function IndexMarkerExists(index)
-    if USED_MARKERS[index] ~= nil then
-        return true;
-    end
-
-    return false;
-end
-
-local function UpdateUsedMarkers()
-    for i = 1, #USED_MARKERS do
-        SetFreeMarkerIndex(i);
-    end
-
-    local index;
-
-    for _, unit in ipairs(MARKER_UNITS) do
-        if UnitExists(unit) then
-            index = GetRaidTargetIndex(unit);
-            if index then
-                SetUnfreeMarkerIndex(index);
-            end
-        end
-    end
-
-    for _, frame in pairs(C_NamePlate.GetNamePlates()) do
-        if UnitExists(frame.namePlateUnitToken) then
-            index = GetRaidTargetIndex(frame.namePlateUnitToken);
-            if index then
-                SetUnfreeMarkerIndex(index);
-            end
-        end
-    end
-end
-
 local function UpdateShown()
     if MHMOTSConfig.AutoToggleVisibility then
         if inMOTS and GetMinimapZoneText() == L['ZONE_NAME'] then
@@ -1831,43 +1727,12 @@ local function UpdateState()
         for _, event in ipairs(EVENTS_INSTANCE) do
             MazeHelper.frame:RegisterEvent(event);
         end
-
-        if inEncounter then
-            if MHMOTSConfig.UseCloneAutoMarker then
-                for _, event in ipairs(EVENTS_AUTOMARKER) do
-                    MazeHelper.frame:RegisterEvent(event);
-                end
-            end
-
-            if MHMOTSConfig.SetMarkerOnTargetClone then
-                for _, event in ipairs(EVENTS_SKULLMARKER) do
-                    MazeHelper.frame:RegisterEvent(event);
-                end
-            end
-        else
-            for _, event in ipairs(EVENTS_AUTOMARKER) do
-                MazeHelper.frame:UnregisterEvent(event);
-            end
-
-            for _, event in ipairs(EVENTS_SKULLMARKER) do
-                MazeHelper.frame:UnregisterEvent(event);
-            end
-        end
     else
         for _, event in ipairs(EVENTS_INSTANCE) do
             MazeHelper.frame:UnregisterEvent(event);
         end
-
-        for _, event in ipairs(EVENTS_AUTOMARKER) do
-            MazeHelper.frame:UnregisterEvent(event);
-        end
-
-        for _, event in ipairs(EVENTS_SKULLMARKER) do
-            MazeHelper.frame:UnregisterEvent(event);
-        end
     end
 
-    UpdateUsedMarkers();
     UpdateShown();
 end
 
@@ -1879,29 +1744,6 @@ local function UpdateBossState(encounterId, inFight, killed)
     inEncounter = inFight;
     bossKilled  = killed;
 
-    if inEncounter then
-        if MHMOTSConfig.UseCloneAutoMarker then
-            for _, event in ipairs(EVENTS_AUTOMARKER) do
-                MazeHelper.frame:RegisterEvent(event);
-            end
-        end
-
-        if MHMOTSConfig.SetMarkerOnTargetClone then
-            for _, event in ipairs(EVENTS_SKULLMARKER) do
-                MazeHelper.frame:RegisterEvent(event);
-            end
-        end
-    else
-        for _, event in ipairs(EVENTS_AUTOMARKER) do
-            MazeHelper.frame:UnregisterEvent(event);
-        end
-
-        for _, event in ipairs(EVENTS_SKULLMARKER) do
-            MazeHelper.frame:UnregisterEvent(event);
-        end
-    end
-
-    UpdateUsedMarkers();
     ResetAll();
     UpdateShown();
 end
@@ -2000,55 +1842,6 @@ end
 
 function MazeHelper.frame:ENCOUNTER_END(encounterId, _, _, _, success)
     UpdateBossState(encounterId, false, success == 1);
-end
-
-function MazeHelper.frame:NAME_PLATE_UNIT_ADDED(unit)
-    if not inEncounter then
-        return;
-    end
-
-    local npcId = GetNpcId(unit);
-    if not npcId or npcId ~= ILLUSIONARY_CLONE_ID then
-        return;
-    end
-
-    if not GetRaidTargetIndex(unit) then
-        local index = GetFreeMarkerIndex();
-        if index then
-            SetRaidTarget(unit, index);
-            SetUnfreeMarkerIndex(index);
-            nameplatesMarkers[unit] = index;
-        end
-    end
-end
-
-function MazeHelper.frame:NAME_PLATE_UNIT_REMOVED(unit)
-    if not inEncounter or not nameplatesMarkers[unit] or not IndexMarkerExists(nameplatesMarkers[unit]) then
-        return;
-    end
-
-    SetFreeMarkerIndex(nameplatesMarkers[unit]);
-    nameplatesMarkers[unit] = nil;
-end
-
-function MazeHelper.frame:PLAYER_TARGET_CHANGED()
-    if MHMOTSConfig.SetMarkerOnTargetCloneUseModifier and not MODIFIERS[MHMOTSConfig.SetMarkerOnTargetCloneModifier]() then
-        return;
-    end
-
-    if not UnitExists('target') then
-        return;
-    end
-
-    local npcId = GetNpcId('target');
-    if not npcId or npcId ~= ILLUSIONARY_CLONE_ID then
-        return;
-    end
-
-    local targetIndex = GetRaidTargetIndex('target');
-    if not targetIndex or targetIndex ~= SKULL_MARKER then
-        SetRaidTarget('target', SKULL_MARKER);
-    end
 end
 
 function MazeHelper.frame:GOSSIP_SHOW()

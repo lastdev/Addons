@@ -33,8 +33,8 @@ SMARTBUFF_UNDEAD    = "No-muerto";
 SMARTBUFF_CLASSES = {"Druida", "Cazador", "Mago", "Palad\195\173n", "Sacerdote", "P\195\173caro", "Cham\195\161n", "Brujo", "Guerrero", "Caballero de la Muerte", "Monje", "Cazador de demonios", "Evoker", "Mascota de cazador", "Mascota de brujo", "Mascota de caballero de la Muerte", "Tanque", "Sanador", "Infligir da\195\177o"};
 
 -- Templates and Instances
-SMARTBUFF_TEMPLATES = {"Solo", "Grupo", "Banda", "Campos de batalla", "Arena", "CCH", "PdC", "Ulduar", "MC", "Ony", "BWL", "Naxx", "AQ", "ZG", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
-SMARTBUFF_INSTANCES = {"Ciudadela de la Corona de Hielo", "Prueba del Cruzado", "Ulduar", "N\195\186cleo de Magma", "Guarida de Onyxia", "Guarida alanegra", "Naxxramas", "Ahn'Qiraj", "Zul'Gurub"};
+SMARTBUFF_TEMPLATES = {"En solitario", "Grupo", "BdB", "Banda", "Piedra angular mítica", "Visión horrífica", "Sondaje", "Campo de batalla", "Arena", "La Aguja del Vacío", "La Grieta de los Sueños", "Marcha sobre Quel'Danas", "Palacio de Nerub-ar", "Liberación de Submina", "Personalizado 1", "Personalizado 2", "Personalizado 3", "Personalizado 4", "Personalizado 5"};
+SMARTBUFF_INSTANCES = {"La Aguja del Vacío", "La Grieta de los Sueños", "Marcha sobre Quel'Danas", "Palacio de Nerub-ar", "Liberación de Submina"};
 
 -- Mount
 SMARTBUFF_MOUNT = "Aumenta la velocidad en un (%d+)%%.";
@@ -114,7 +114,7 @@ SMARTBUFF_OFT_REQ_RELOAD     = "Las nuevas versiones requieren una recarga de la
 SMARTBUFF_OFTT               = "Alterna SmartBuff On/Off";
 SMARTBUFF_OFTT_AUTO          = "Alterna el recordatorio de buff On/Off";
 SMARTBUFF_OFTT_AUTOTIMER     = "Retraso en segundos entre dos comprobaciones.";
-SMARTBUFF_OFTT_AUTOCOMBAT    = "Ejecutar comprobaci\195\179n tambi\195\169n en combate.";
+SMARTBUFF_OFTT_AUTOCOMBAT    = "Ejecutar comprobaci\195\179n tambi\195\169n en combate.\nToda la l\195\179gica de recordatorio en combate est\195\161 desactivada a menos que la opci\195\179n principal \"en combate\" (en la ventana de opciones, no esta) est\195\169 activada.";
 SMARTBUFF_OFTT_AUTOCHAT      = "Muestra los buffs perdidos como mensajes en el chat.";
 SMARTBUFF_OFTT_AUTOSPLASH    = "Muestra los buffs perdidos como mensajes en medio de la pantalla.";
 SMARTBUFF_OFTT_AUTOSOUND     = "Toca un sonido cuando se pierden los buffs.";
@@ -167,7 +167,7 @@ SMARTBUFF_BST_MANALIMIT      = "M\195\173nimo obligado";
 -- Buffsetup Frame Tooltip Text
 SMARTBUFF_BSTT_SELFONLY      = "Buffar s\195\179lo tu personaje.";
 SMARTBUFF_BSTT_SELFNOT       = "Buffar todas las clases seleccionadas excepto tu personaje.";
-SMARTBUFF_BSTT_COMBATIN      = "Buffar si est\195\161s en combate.";
+SMARTBUFF_BSTT_COMBATIN      = "Buffar si est\195\161s en combate.\nToda la l\195\179gica en combate est\195\161 desactivada a menos que la opci\195\179n principal \"en combate\" (en la ventana de opciones) est\195\169 activada.";
 SMARTBUFF_BSTT_COMBATOUT     = "Buffar si est\195\161s fuera de combate.";
 SMARTBUFF_BSTT_MAINHAND      = "Buffar Mano principal.";
 SMARTBUFF_BSTT_OFFHAND       = "Buffar Una mano.";

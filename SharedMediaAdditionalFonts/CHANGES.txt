@@ -1,10 +1,10 @@
-lightweight tag 7cb080d24762429641200fe5d9ca1eb4729cd4e4 11.1.7
+lightweight tag 3be9fb806758c80355521cc210755031b68a5959 12.0.0c
 Author:	All-in-one Mighty <mighty@allinonemighty.com>
-Date:	Thu Jun 19 15:20:48 2025 -0700
+Date:	Sat Jan 24 15:22:49 2026 -0800
 
-commit 7cb080d24762429641200fe5d9ca1eb4729cd4e4
+commit 3be9fb806758c80355521cc210755031b68a5959
 Author: All-in-one Mighty <mighty@allinonemighty.com>
-Date:   Thu Jun 19 15:20:48 2025 -0700
+Date:   Sat Jan 24 15:21:48 2026 -0800
 
-    Adding Verdana font and updating TOC
+    Fixing URL to LibSharedMedia-3.0
 

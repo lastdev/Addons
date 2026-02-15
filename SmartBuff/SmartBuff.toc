@@ -1,20 +1,28 @@
-## Interface: 110200, 110205
+## Interface: 120000, 120001
 ## Title: SmartBuff |cff0099ffRetail|r
-## Version: 34.110105
+## Version: 38.120000
 ## Author: |cff20d2ffCodermik & Aeldra|r (EU-Proudmoore)
 ## Contributing Author: |cff20d2ffSpeedwaystar
 ## Notes: Cast the most important buffs on you or party/raid members/pets. Use /sbm for options menu.
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## LoadSavedVariablesFirst: true
-## SavedVariables: SMARTBUFF_OptionsGlobal
-## SavedVariablesPerCharacter: SMARTBUFF_Options, SMARTBUFF_Buffs
+## LoadSavedVariablesFirst: 1
+## SavedVariables: SMARTBUFF_OptionsGlobal, SmartBuffItemSpellCache, SmartBuffBuffRelationsCache, SmartBuffToyCache
+## SavedVariablesPerCharacter: SMARTBUFF_Options, SMARTBUFF_Buffs, SmartBuffBuffListCache, SmartBuffValidSpells
 ## IconTexture: Interface\Addons\Smartbuff\Icons\IconEnabled.tga
+
+## Load order (do not reorder):
+## 1) Libs (Stub, CallbackHandler, SharedMedia)
+## 2) SmartBuff.globals.lua  - globals, SMARTBUFF_GLOBALS, SMARTBUFF_ExpectedData, cache structures
+## 3) SmartBuff.cache.lua    - cache load/save/invalidate helpers (uses globals)
+## 4) SmartBuff.xml         - localizations, SmartBuff.buffs.lua, SmartBuff.lua
+## 5) Broker (optional)     - LDB data broker
 
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
 Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
 SmartBuff.globals.lua
+SmartBuff.cache.lua
 SmartBuff.xml
 
 Libs\Broker_SmartBuff\LibDataBroker-1.1.lua

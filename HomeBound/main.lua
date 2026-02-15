@@ -4,6 +4,12 @@ local STAR2_TEXTURE = "Interface\\AddOns\\HomeBound\\Assets\\star2"
 local HORDE_ICON_TEXTURE = "Interface\\AddOns\\HomeBound\\Assets\\horde"
 local ALLIANCE_ICON_TEXTURE = "Interface\\AddOns\\HomeBound\\Assets\\alliance"
 local COLLECTED_ICON_TEXTURE = "Interface\\AddOns\\HomeBound\\Assets\\collected2"
+local DROP_REMINDER_TEXTURE = "Interface\\AddOns\\HomeBound\\Assets\\drop"
+
+local TWITCH_DROP_ITEM_ID = 263301
+local TWITCH_DROP_DECOR_ID = 15151
+local TWITCH_DROP_END_TIME = 1771351200 
+local TWITCH_DROP_URL = "https://worldofwarcraft.blizzard.com/en-gb/news/24244883/twitch-drop-now-live-get-the-cuddly-green-grrgle-housing-decor-item"
 
 hb_settings = hb_settings or {
 	scale = 1.0,
@@ -18,14 +24,18 @@ hb_settings = hb_settings or {
 	favorites = {},
 	showMinimapButton = true,
 	tabFilters = {},
-	showVendorCheckmarks = true
+	showVendorCheckmarks = true,
+	showMerchantCheckmarks = false,
+	hideTwitchDrop = false
 }
 dbHB = {minimap = {hide = false}}
 
 local vendorSessionCache = {}
 local activeWidgets = {}
 local collapsedHeaders = {}
-local itemNameCache = {} 
+local itemNameCache = {}
+local npcNameCache = {}
+local pendingNpcRequests = {}
 local collectionCache = {} 
 local widgetPool = { headers = {}, lines = {} } 
 
@@ -38,6 +48,29 @@ local hb_options_category = nil
 local currentSearchQuery = ""
 local currentPopupNpcID = nil
 local currentPopupNpcName = nil
+local isRebuilding = false
+
+local MAX_ITEMS_PER_PAGE = 36
+local currentVendorPage = 1
+local vendorFilteredItems = {}
+
+local QuestEventListener = CreateFrame("Frame")
+QuestEventListener.callbacks = {}
+QuestEventListener:RegisterEvent("QUEST_DATA_LOAD_RESULT")
+QuestEventListener:SetScript("OnEvent", function(self, event, questID, success)
+	if self.callbacks[questID] then
+		for _, callback in ipairs(self.callbacks[questID]) do
+			callback(questID, success)
+		end
+		self.callbacks[questID] = nil 
+	end
+end)
+
+function QuestEventListener:AddCallback(questID, func)
+	if not self.callbacks[questID] then self.callbacks[questID] = {} end
+	table.insert(self.callbacks[questID], func)
+	C_QuestLog.RequestLoadQuestByID(questID) 
+end
 
 local function ApplyBackdrop(f, r, g, b, a)
 	f:SetBackdrop({
@@ -69,6 +102,7 @@ local function RequestUpdate()
 end
 
 local function GetCachedItemName(itemID)
+	if not itemID then return "Unknown Item", false end
 	if itemNameCache[itemID] then return itemNameCache[itemID], false end
 	local item = Item:CreateFromItemID(itemID)
 	if not item:IsItemEmpty() then
@@ -77,11 +111,46 @@ local function GetCachedItemName(itemID)
 			RequestUpdate() 
 		end)
 	end
-	return "Loading Item...", true
+	return db.L_LOADING_ITEM, true
+end
+
+local function GetCachedNpcName(npcID)
+	if npcNameCache[npcID] then return npcNameCache[npcID], false end
+	local link = "unit:Creature-0-0-0-0-" .. npcID
+	local data = C_TooltipInfo.GetHyperlink(link)
+	if data and data.lines and data.lines[1] then
+		local lineText = data.lines[1].leftText
+		if lineText and lineText ~= "" and lineText ~= UNKNOWN and lineText ~= "Unknown" then
+			npcNameCache[npcID] = lineText
+			return lineText, false
+		end
+	end
+	pendingNpcRequests[npcID] = true
+	return db.L_LOADING_VENDOR, true
+end
+
+local function VendorMatchesQuery(npcID, query)
+	local vendorName, isVendorLoading = GetCachedNpcName(npcID)
+	if vendorName and vendorName ~= db.L_LOADING_VENDOR and string.find(string.lower(vendorName), query, 1, true) then
+		return true
+	end
+
+	local items = db.vendorItems[npcID]
+	if items then
+		for _, itemID in ipairs(items) do
+			local itemName, isItemLoading = GetCachedItemName(itemID)
+			if not isItemLoading and itemName and itemName ~= db.L_LOADING_ITEM then
+				if string.find(string.lower(itemName), query, 1, true) then
+					return true
+				end
+			end
+		end
+	end
+
+	return false
 end
 
 local function ItemPassesRequirements(itemID)
-	
 	local filters = hb_settings.tabFilters["vendors"]
 	if not filters then return true end
 	
@@ -244,7 +313,7 @@ whGradient:SetColorTexture(1, 1, 1, 1)
 whGradient:SetGradient("VERTICAL", CreateColor(0.12, 0.12, 0.12, 1), CreateColor(0.05, 0.05, 0.05, 1))
 
 local wowheadPopupTitle = wowheadPopup:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-wowheadPopupTitle:SetPoint("TOP", 0, -14); wowheadPopupTitle:SetText("Ctrl + C to copy"); wowheadPopupTitle:SetTextColor(1, 0.82, 0)
+wowheadPopupTitle:SetPoint("TOP", 0, -14); wowheadPopupTitle:SetText(db.L_CTRL_C_COPY); wowheadPopupTitle:SetTextColor(1, 0.82, 0)
 
 local wowheadPopupEditBox = CreateFrame("EditBox", nil, wowheadPopup, "InputBoxTemplate")
 wowheadPopupEditBox:SetSize(300, 20); wowheadPopupEditBox:SetPoint("CENTER", 0, -5); wowheadPopupEditBox:SetAutoFocus(false)
@@ -290,7 +359,7 @@ vendorCheckmarkToggle:SetPoint("RIGHT", vendorPopupTitle, "LEFT", -6, 0)
 vendorCheckmarkToggle.text:Hide()
 vendorCheckmarkToggle:SetScript("OnEnter", function(self)
 	GameTooltip:SetOwner(self, "ANCHOR_TOP")
-	GameTooltip:SetText("Include Checkmarks")
+	GameTooltip:SetText(db.L_INCLUDE_CHECKMARKS)
 	GameTooltip:Show()
 end)
 vendorCheckmarkToggle:SetScript("OnLeave", function() GameTooltip:Hide() end)
@@ -311,12 +380,53 @@ vendorPopupHiddenText:SetPoint("TOP", vendorPopupTitle, "BOTTOM", 0, -2)
 vendorPopupHiddenText:Hide()
 vendorPopup.hiddenText = vendorPopupHiddenText
 
+local vendorPrevBtn = CreateFrame("Button", nil, vendorPopup)
+vendorPrevBtn:SetSize(32, 32)
+vendorPrevBtn:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up")
+vendorPrevBtn:SetPushedTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Down")
+vendorPrevBtn:SetDisabledTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Disabled")
+vendorPrevBtn:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
+vendorPrevBtn:SetPoint("BOTTOMLEFT", 10, 8)
+vendorPrevBtn:Hide()
+
+local vendorNextBtn = CreateFrame("Button", nil, vendorPopup)
+vendorNextBtn:SetSize(32, 32)
+vendorNextBtn:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up")
+vendorNextBtn:SetPushedTexture("Interface\\Buttons\\UI-SpellbookIcon-NextPage-Down")
+vendorNextBtn:SetDisabledTexture("Interface\\Buttons\\UI-SpellbookIcon-NextPage-Disabled")
+vendorNextBtn:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
+vendorNextBtn:SetPoint("BOTTOMRIGHT", -10, 8)
+vendorNextBtn:Hide()
+
+local vendorPageText = vendorPopup:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+vendorPageText:SetFont(STANDARD_TEXT_FONT, 12)
+vendorPageText:SetTextColor(0.9, 0.9, 0.9, 1)
+vendorPageText:SetPoint("CENTER", vendorPopup, "BOTTOM", 0, 24)
+vendorPageText:Hide()
+
+local UpdateVendorPopup
+
+vendorPrevBtn:SetScript("OnClick", function()
+	if currentVendorPage > 1 then
+		currentVendorPage = currentVendorPage - 1
+		UpdateVendorPopup()
+	end
+end)
+
+vendorNextBtn:SetScript("OnClick", function()
+	local totalPages = math.ceil(#vendorFilteredItems / MAX_ITEMS_PER_PAGE)
+	if currentVendorPage < totalPages then
+		currentVendorPage = currentVendorPage + 1
+		UpdateVendorPopup()
+	end
+end)
+
 local titleSeparator = vendorPopup:CreateTexture(nil, "ARTWORK")
 titleSeparator:SetHeight(2); titleSeparator:SetColorTexture(0.4, 0.4, 0.4, 0.8)
 titleSeparator:SetPoint("TOPLEFT", 10, -36); titleSeparator:SetPoint("TOPRIGHT", -10, -36)
 
 local recipeTitle = vendorPopup:CreateFontString(nil, "OVERLAY")
-recipeTitle:SetFont(STANDARD_TEXT_FONT, 14); recipeTitle:SetText("Recipe:"); recipeTitle:Hide()
+recipeTitle:SetFont(STANDARD_TEXT_FONT, 14); recipeTitle:SetText(db.L_RECIPE); recipeTitle:Hide()
 
 local vendorPopupCloseBtn = CreateFrame("Button", nil, vendorPopup, "UIPanelCloseButton")
 vendorPopupCloseBtn:SetPoint("TOPRIGHT", 0, 0); vendorPopupCloseBtn:SetSize(30, 30)
@@ -482,6 +592,51 @@ local function LayoutPopupItems(items, typeStr, startIndex, startX, startY, vert
 	return i, totalHeight
 end
 
+UpdateVendorPopup = function()
+	for _, frame in pairs(popupIconCache) do frame:Hide() end
+	
+	local itemsToShow = {}
+	local totalItems = #vendorFilteredItems
+	local totalPages = math.ceil(totalItems / MAX_ITEMS_PER_PAGE)
+	
+	if totalPages > 1 then
+		local startIndex = (currentVendorPage - 1) * MAX_ITEMS_PER_PAGE + 1
+		local endIndex = math.min(startIndex + MAX_ITEMS_PER_PAGE - 1, totalItems)
+		for i = startIndex, endIndex do
+			table.insert(itemsToShow, vendorFilteredItems[i])
+		end
+		
+		vendorPrevBtn:Show()
+		vendorNextBtn:Show()
+		vendorPageText:Show()
+		vendorPageText:SetText(string.format(db.L_PAGE_NUM, currentVendorPage, totalPages))
+		
+		if currentVendorPage <= 1 then vendorPrevBtn:Disable() else vendorPrevBtn:Enable() end
+		if currentVendorPage >= totalPages then vendorNextBtn:Disable() else vendorNextBtn:Enable() end
+	else
+		itemsToShow = vendorFilteredItems
+		vendorPrevBtn:Hide()
+		vendorNextBtn:Hide()
+		vendorPageText:Hide()
+	end
+	
+	local topOffset = -48
+	if vendorPopup.hiddenText:IsShown() then
+		topOffset = -62
+	end
+
+	local tileSize, margin = 50, 12
+	local columns = 6
+	local _, height = LayoutPopupItems(itemsToShow, "vendor", 0, 25, topOffset, tileSize + margin)
+	local totalWidth = (25 * 2) + (columns * (tileSize + margin)) - margin
+	
+	if totalPages > 1 then
+		height = math.abs(topOffset) + (6 * (tileSize + margin)) + 40
+	end
+	
+	vendorPopup:SetSize(totalWidth, height + 4)
+end
+
 local function ShowVendorPopup(npcID, vendorName)
 	if not npcID or not db.vendorItems or not db.vendorItems[npcID] then return end
 	
@@ -490,55 +645,53 @@ local function ShowVendorPopup(npcID, vendorName)
 
 	local allItems = db.vendorItems[npcID]
 	
-	local addedItems = {}
-	local totalCount = #allItems
+	vendorFilteredItems = {}
 	local hiddenCount = 0
 	
 	for _, itemID in ipairs(allItems) do
 		if ItemPassesRequirements(itemID) then
-			table.insert(addedItems, itemID)
+			table.insert(vendorFilteredItems, itemID)
 		else
 			hiddenCount = hiddenCount + 1
 		end
 	end
 
-	vendorPopupTitle:SetText((currentPopupNpcName or "Vendor") .. " sells:")
-	
+	vendorPopupTitle:SetText(string.format(db.L_VENDOR_SELLS, currentPopupNpcName or "Vendor"))
+
 	vendorCheckmarkToggle:Show()
 	vendorCheckmarkToggle:SetChecked(hb_settings.showVendorCheckmarks)
 	
 	recipeTitle:Hide()
-	for _, frame in pairs(popupIconCache) do frame:Hide() end
 	
-	local topOffset = -48
 	if hiddenCount > 0 then
-		vendorPopup.hiddenText:SetText("(" .. hiddenCount .. " hidden)")
+		vendorPopup.hiddenText:SetText(string.format(db.L_NUM_HIDDEN, hiddenCount))
 		vendorPopup.hiddenText:Show()
 		titleSeparator:SetPoint("TOPLEFT", 10, -50)
 		titleSeparator:SetPoint("TOPRIGHT", -10, -50)
-		topOffset = -62
 	else
 		vendorPopup.hiddenText:Hide()
 		titleSeparator:SetPoint("TOPLEFT", 10, -36)
 		titleSeparator:SetPoint("TOPRIGHT", -10, -36)
 	end
 	
-	local tileSize, margin = 50, 12
-	local columns = 6
-	local _, height = LayoutPopupItems(addedItems, "vendor", 0, 25, topOffset, tileSize + margin)
-	local totalWidth = (25 * 2) + (columns * (tileSize + margin)) - margin
-	vendorPopup:SetSize(totalWidth, height + 4)
+	currentVendorPage = 1
+	UpdateVendorPopup()
+	
 	vendorPopup:Show()
 end
 
 local function ShowReagentsPopup(itemData)
 	local reagents = itemData.reagents
 	if not reagents then return end
-	vendorPopupTitle:SetText("Reagents required:")
+	vendorPopupTitle:SetText(db.L_REAGENTS_REQ)
 	
 	vendorCheckmarkToggle:Hide()
-	
 	vendorPopup.hiddenText:Hide()
+	
+	vendorPrevBtn:Hide()
+	vendorNextBtn:Hide()
+	vendorPageText:Hide()
+	
 	titleSeparator:SetPoint("TOPLEFT", 10, -36)
 	titleSeparator:SetPoint("TOPRIGHT", -10, -36)
 	
@@ -569,10 +722,12 @@ previewFrame:Hide()
 local previewTitle = previewFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 previewTitle:SetFont(STANDARD_TEXT_FONT, 15); previewTitle:SetPoint("TOP", 0, -12); previewTitle:SetText("Decor Reward")
 previewTitle:SetWidth(280); previewTitle:SetTextColor(1, 0.82, 0)
+previewFrame.title = previewTitle
 
 previewFrame.currentReward = nil
 previewFrame.currentRewardIndex = 1
 previewFrame.totalRewards = 0
+previewFrame.isRotating = true
 
 local previewTexture = previewFrame:CreateTexture(nil, "ARTWORK")
 previewTexture:SetSize(288, 288); previewTexture:SetPoint("BOTTOM", 0, 6)
@@ -580,14 +735,19 @@ previewTexture:SetTexCoord(0.08, 0.92, 0.08, 0.92); previewFrame.texture = previ
 
 local previewModel = CreateFrame("PlayerModel", nil, previewFrame)
 previewModel:SetSize(288, 288); previewModel:SetPoint("BOTTOM", 0, 6)
+previewModel.currentModelID = nil
 previewModel:SetScript("OnModelLoaded", function(self)
-	self:MakeCurrentCameraCustom()
-	local modelID = self:GetModelFileID()
-	local posData = db.modelPositions[modelID]
-	if posData then
-		self:SetPosition(posData.model_x, 0, posData.model_z); self:SetCameraPosition(0, 0, posData.camera_y); self:SetCameraDistance(posData.zoom)
+	if currentTab == "vendors" then
+		self:SetPosition(0, 0, 0); self:SetRotation(0); self:SetPortraitZoom(0)
 	else
-		self:SetPosition(0, 0, 0); self:SetCameraPosition(0, 0, 4); self:SetCameraDistance(10)
+		self:MakeCurrentCameraCustom()
+		local modelID = self:GetModelFileID()
+		local posData = db.modelPositions[modelID]
+		if posData then
+			self:SetPosition(posData.model_x, 0, posData.model_z); self:SetCameraPosition(0, 0, posData.camera_y); self:SetCameraDistance(posData.zoom)
+		else
+			self:SetPosition(0, 0, 0); self:SetCameraPosition(0, 0, 4); self:SetCameraDistance(10)
+		end
 	end
 end)
 previewFrame.model = previewModel; previewModel:Hide()
@@ -603,7 +763,7 @@ smallPreviewTexture:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 local rotation = 0
 local rotationSpeed = 0.5
 previewFrame:SetScript("OnUpdate", function(self, elapsed)
-	if self:IsShown() and self.model:IsShown() then
+	if self:IsShown() and self.model:IsShown() and self.isRotating then
 		rotation = rotation + (rotationSpeed * elapsed)
 		if rotation >= (math.pi * 2) then rotation = rotation - (math.pi * 2) end
 		self.model:SetFacing(rotation)
@@ -621,7 +781,7 @@ supportTitleBg:SetTexture("Interface\\Buttons\\WHITE8x8")
 supportTitleBg:SetPoint("TOPLEFT", 4, -4); supportTitleBg:SetPoint("TOPRIGHT", -4, -4); supportTitleBg:SetHeight(40)
 supportTitleBg:SetGradient("VERTICAL", CreateColor(0.15, 0.15, 0.15, 1), CreateColor(0.08, 0.08, 0.08, 1))
 local supportTitle = supportFrame:CreateFontString(nil, "OVERLAY")
-supportTitle:SetFont(STANDARD_TEXT_FONT, 16, "OUTLINE"); supportTitle:SetPoint("TOP", 0, -16); supportTitle:SetText("Community & Support"); supportTitle:SetTextColor(1, 0.85, 0, 1)
+supportTitle:SetFont(STANDARD_TEXT_FONT, 16, "OUTLINE"); supportTitle:SetPoint("TOP", 0, -16); supportTitle:SetText(db.L_COMMUNITY); supportTitle:SetTextColor(1, 0.85, 0, 1)
 local supportCloseBtn = CreateFrame("Button", nil, supportFrame, "UIPanelCloseButton")
 supportCloseBtn:SetPoint("TOPRIGHT", -2, -2); supportCloseBtn:SetSize(28, 28)
 
@@ -633,9 +793,9 @@ local function CreateSupportEditBox(text, url, yOffset)
 	box:SetScript("OnEscapePressed", function(self) self:ClearFocus() end); box:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
 end
 
-CreateSupportEditBox("Join the community on Discord!", "https://dsc.gg/homebound", -54)
-CreateSupportEditBox("Share this addon with your friends!", "https://www.curseforge.com/wow/addons/home-bound", -110)
-CreateSupportEditBox("You can leave a tip if you like", "https://buymeacoffee.com/bettiold", -166)
+CreateSupportEditBox(db.L_LINK1, "https://dsc.gg/homebound", -54)
+CreateSupportEditBox(db.L_LINK2, "https://www.curseforge.com/wow/addons/home-bound", -110)
+CreateSupportEditBox(db.L_LINK3, "https://buymeacoffee.com/bettiold", -166)
 
 frame:SetScript("OnHide", function()
 	if wowheadPopup and wowheadPopup:IsShown() then wowheadPopup:Hide() end
@@ -652,7 +812,7 @@ local title = frame:CreateFontString(nil, "OVERLAY")
 title:SetFont(STANDARD_TEXT_FONT, 16, "OUTLINE"); title:SetPoint("TOP", 0, -14); title:SetText("Home Bound"); title:SetTextColor(1, 0.85, 0, 1)
 
 local subtitle = frame:CreateFontString(nil, "OVERLAY")
-subtitle:SetFont(STANDARD_TEXT_FONT, 11); subtitle:SetPoint("TOP", title, "BOTTOM", 0, -2); subtitle:SetText("Track your Player Housing rewards"); subtitle:SetTextColor(0.7, 0.7, 0.7, 1)
+subtitle:SetFont(STANDARD_TEXT_FONT, 11); subtitle:SetPoint("TOP", title, "BOTTOM", 0, -2); subtitle:SetText(db.L_DESCRIPTION); subtitle:SetTextColor(0.7, 0.7, 0.7, 1)
 
 local infoIcon = CreateFrame("Button", nil, frame)
 infoIcon:SetSize(24, 24); infoIcon:SetPoint("TOPLEFT", 8, -8)
@@ -661,10 +821,8 @@ iconTexture:SetTexture("Interface\\BUTTONS\\UI-GuildButton-PublicNote-Up"); icon
 infoIcon:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD")
 infoIcon:SetScript("OnEnter", function(self)
 	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT")
-	GameTooltip:AddLine("Home Bound Tips", 1, 0.82, 0)
-	GameTooltip:AddLine("\nYou can right-click to get a Wowhead link.", 1, 1, 1, true)
-	GameTooltip:AddLine("Left-click an achievement to open it in the achievement panel.", 1, 1, 1, true)
-	GameTooltip:AddLine("\nFor accurate achievement completion data, log in to at least one Alliance and one Horde character.", 1, 1, 1, true)
+	GameTooltip:AddLine(db.L_TIPS_TITLE, 1, 0.82, 0)
+	GameTooltip:AddLine(db.L_TIPS, 1, 1, 1, true)
 	GameTooltip:Show()
 end)
 infoIcon:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
@@ -676,8 +834,8 @@ supportIconTexture:SetTexture("Interface\\AddOns\\HomeBound\\Assets\\discord"); 
 supportIcon:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD")
 supportIcon:SetScript("OnEnter", function(self)
 	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT")
-	GameTooltip:AddLine("Community & Support", 1, 0.82, 0)
-	GameTooltip:AddLine("\nClick to share the addon!", 1, 1, 1, true)
+	GameTooltip:AddLine(db.L_COMMUNITY, 1, 0.82, 0)
+	GameTooltip:AddLine("\n" .. db.L_CLICK_TO_SHARE, 1, 1, 1, true)
 	GameTooltip:Show()
 end)
 supportIcon:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
@@ -685,6 +843,71 @@ supportIcon:SetScript("OnClick", function() supportFrame:Show() end)
 
 local closeBtn = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
 closeBtn:SetPoint("TOPRIGHT", -2, -2); closeBtn:SetSize(28, 28)
+
+local twitchDropFrame = CreateFrame("Button", "HB_TwitchDropFrame", frame)
+twitchDropFrame:SetSize(140, 46)
+twitchDropFrame:SetPoint("TOPRIGHT", -39, -7)
+twitchDropFrame:Hide()
+
+local twitchDropBg = twitchDropFrame:CreateTexture(nil, "BACKGROUND")
+twitchDropBg:SetAllPoints()
+twitchDropBg:SetTexture(DROP_REMINDER_TEXTURE)
+
+local twitchDropTitle = twitchDropFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+twitchDropTitle:SetFont(STANDARD_TEXT_FONT, 14, "OUTLINE")
+twitchDropTitle:SetPoint("TOP", 19, -8)
+twitchDropTitle:SetText(db.L_TWITCH_DROP)
+twitchDropTitle:SetTextColor(1, 0.82, 0)
+
+local twitchDropTimer = twitchDropFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+twitchDropTimer:SetFont(STANDARD_TEXT_FONT, 12, "OUTLINE")
+twitchDropTimer:SetPoint("TOPLEFT", twitchDropTitle, "BOTTOMLEFT", 0, -1)
+twitchDropTimer:SetTextColor(0.9, 0.9, 0.9)
+
+local function UpdateTwitchDrop()
+	if hb_settings.hideTwitchDrop then
+		twitchDropFrame:Hide()
+		return
+	end
+
+	local info = C_HousingCatalog.GetCatalogEntryInfoByRecordID(1, TWITCH_DROP_DECOR_ID, true)
+	if info and (info.quantity > 0 or info.remainingRedeemable > 0) then
+		twitchDropFrame:Hide()
+		return
+	end
+
+	local currentTime = GetServerTime()
+	local timeLeft = TWITCH_DROP_END_TIME - currentTime
+	
+	if timeLeft <= 0 then
+		twitchDropFrame:Hide()
+	else
+		local daysLeft = math.ceil(timeLeft / 86400)
+		if daysLeft == 1 then
+			twitchDropTimer:SetText(db.L_1_DAY_LEFT)
+		else
+			twitchDropTimer:SetText(string.format(db.L_NUM_DAYS_LEFT, daysLeft))
+		end
+		twitchDropFrame:Show()
+	end
+end
+
+twitchDropFrame:SetScript("OnEnter", function(self)
+	GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
+	GameTooltip:SetItemByID(TWITCH_DROP_ITEM_ID)
+	GameTooltip:Show()
+end)
+twitchDropFrame:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+twitchDropFrame:SetScript("OnClick", function(self)
+	if IsControlKeyDown() then
+		DressUpItemLink("item:" .. TWITCH_DROP_ITEM_ID)
+	else
+		wowheadPopupEditBox:SetText(TWITCH_DROP_URL)
+		wowheadPopup:Show()
+		wowheadPopupEditBox:SetFocus()
+		wowheadPopupEditBox:HighlightText()
+	end
+end)
 
 local tabs = {}
 local currentTabX = 0
@@ -726,10 +949,10 @@ local function CreateBottomTab(id, text, iconPath)
 	return tab
 end
 
-local tabDecor = CreateBottomTab("Decor", "Unlockables", "Interface\\Icons\\INV_Crate_03")
-local tabVendors = CreateBottomTab("Vendors", "Vendors", "Interface\\Icons\\INV_Misc_Bag_10")
-local tabDrops = CreateBottomTab("Drops", "Drops", "Interface\\Icons\\Achievement_Boss_Onyxia") 
-local tabProfessions = CreateBottomTab("Professions", "Professions", "Interface\\Icons\\Trade_Alchemy")
+local tabDecor = CreateBottomTab("Decor", db.L_TAB1_UNLOCKABLES, "Interface\\Icons\\INV_Crate_03")
+local tabVendors = CreateBottomTab("Vendors", db.L_TAB2_VENDORS, "Interface\\Icons\\INV_Misc_Bag_10")
+local tabDrops = CreateBottomTab("Drops", db.L_TAB3_DROPS, "Interface\\Icons\\Achievement_Boss_Onyxia") 
+local tabProfessions = CreateBottomTab("Professions", db.L_TAB4_PROFESSIONS, "Interface\\Icons\\Trade_Alchemy")
 UpdateTabStyles()
 
 local function RefreshVendorPopup()
@@ -739,32 +962,32 @@ local function RefreshVendorPopup()
 end
 
 local filterButton = CreateFrame("DropdownButton", "HB_FilterButton", frame, "WowStyle1FilterDropdownTemplate")
-filterButton:SetSize(120, 24); filterButton:SetPoint("TOPLEFT", 10, -60); filterButton:SetText("Filters")
+filterButton:SetSize(120, 24); filterButton:SetPoint("TOPLEFT", 10, -60); filterButton:SetText(db.L_FILTERS)
 filterButton.Text:ClearAllPoints(); filterButton.Text:SetPoint("CENTER")
 filterButton:SetupMenu(function(dropdown, rootDescription)
 	local activeFilters = hb_settings.tabFilters[currentTab] or {}
-	rootDescription:CreateCheckbox("Hide Completed", function() return hb_settings.hideCompleted end, function() hb_settings.hideCompleted = not hb_settings.hideCompleted; BuildUI() end)
-	rootDescription:CreateCheckbox("Hide Non-Favorited", function() return hb_settings.hideNonFavorited end, function() hb_settings.hideNonFavorited = not hb_settings.hideNonFavorited; BuildUI() end)
+	rootDescription:CreateCheckbox(db.L_HIDE_COMPLETED, function() return hb_settings.hideCompleted end, function() hb_settings.hideCompleted = not hb_settings.hideCompleted; BuildUI() end)
+	rootDescription:CreateCheckbox(db.L_HIDE_NONFAVORITED, function() return hb_settings.hideNonFavorited end, function() hb_settings.hideNonFavorited = not hb_settings.hideNonFavorited; BuildUI() end)
 	rootDescription:CreateDivider()
 	if currentTab == "decor" then
-		rootDescription:CreateCheckbox("Achievements", function() return activeFilters.achievement end, function() activeFilters.achievement = not activeFilters.achievement; BuildUI() end)
-		rootDescription:CreateCheckbox("Quests", function() return activeFilters.quest end, function() activeFilters.quest = not activeFilters.quest; BuildUI() end)
+		rootDescription:CreateCheckbox(db.L_ACHIEVEMENTS, function() return activeFilters.achievement end, function() activeFilters.achievement = not activeFilters.achievement; BuildUI() end)
+		rootDescription:CreateCheckbox(db.L_QUESTS, function() return activeFilters.quest end, function() activeFilters.quest = not activeFilters.quest; BuildUI() end)
 		rootDescription:CreateDivider()
 	end
-	local factionMenu = rootDescription:CreateButton("Faction")
-	factionMenu:CreateCheckbox("Neutral", function() return activeFilters.neutral end, function() activeFilters.neutral = not activeFilters.neutral; BuildUI() end)
-	factionMenu:CreateCheckbox("Alliance", function() return activeFilters.alliance end, function() activeFilters.alliance = not activeFilters.alliance; BuildUI() end)
-	factionMenu:CreateCheckbox("Horde", function() return activeFilters.horde end, function() activeFilters.horde = not activeFilters.horde; BuildUI() end)
+	local factionMenu = rootDescription:CreateButton(db.L_FACTION)
+	factionMenu:CreateCheckbox(db.L_NEUTRAL, function() return activeFilters.neutral end, function() activeFilters.neutral = not activeFilters.neutral; BuildUI() end)
+	factionMenu:CreateCheckbox(db.L_ALLIANCE, function() return activeFilters.alliance end, function() activeFilters.alliance = not activeFilters.alliance; BuildUI() end)
+	factionMenu:CreateCheckbox(db.L_HORDE, function() return activeFilters.horde end, function() activeFilters.horde = not activeFilters.horde; BuildUI() end)
 	
 	if currentTab == "vendors" then
-		local reqMenu = rootDescription:CreateButton("Requires")
-		reqMenu:CreateCheckbox("Achievement", function() return activeFilters.achievement end, function() activeFilters.achievement = not activeFilters.achievement; BuildUI(); RefreshVendorPopup() end)
-		reqMenu:CreateCheckbox("Quest", function() return activeFilters.quest end, function() activeFilters.quest = not activeFilters.quest; BuildUI(); RefreshVendorPopup() end)
-		reqMenu:CreateCheckbox("Reputation", function() return activeFilters.reputation end, function() activeFilters.reputation = not activeFilters.reputation; BuildUI(); RefreshVendorPopup() end)
+		local reqMenu = rootDescription:CreateButton(db.L_REQUIRES)
+		reqMenu:CreateCheckbox(db.L_ACHIEVEMENT, function() return activeFilters.achievement end, function() activeFilters.achievement = not activeFilters.achievement; BuildUI(); RefreshVendorPopup() end)
+		reqMenu:CreateCheckbox(db.L_QUEST, function() return activeFilters.quest end, function() activeFilters.quest = not activeFilters.quest; BuildUI(); RefreshVendorPopup() end)
+		reqMenu:CreateCheckbox(db.L_REPUTATION, function() return activeFilters.reputation end, function() activeFilters.reputation = not activeFilters.reputation; BuildUI(); RefreshVendorPopup() end)
 	end
 
 	rootDescription:CreateDivider()
-	rootDescription:CreateButton("Reset Filters", function() 
+	rootDescription:CreateButton(db.L_RESET_FILTERS, function()
 		activeFilters.neutral = true; activeFilters.alliance = true; activeFilters.horde = true; 
 		if currentTab == "decor" then activeFilters.achievement = true; activeFilters.quest = true; end
 		if currentTab == "vendors" then activeFilters.achievement = true; activeFilters.quest = true; activeFilters.reputation = true; end
@@ -800,7 +1023,7 @@ optionsBtn:SetScript("OnClick", function()
 	if hb_options_category then Settings.OpenToCategory(hb_options_category:GetID()) end 
 end)
 optionsBtn:SetScript("OnEnter", function(self) 
-	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT"); GameTooltip:SetText("Options"); GameTooltip:Show() 
+	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT"); GameTooltip:SetText(db.L_OPTIONS); GameTooltip:Show() 
 end)
 optionsBtn:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
@@ -871,8 +1094,10 @@ local function ClearWidgets()
 end
 
 local function CreateHeader(parent, group, total, completed, y)
-	if collapsedHeaders[group.name] == nil then collapsedHeaders[group.name] = true end
-	local collapsed = collapsedHeaders[group.name]
+	if not collapsedHeaders[currentTab] then collapsedHeaders[currentTab] = {} end
+	if collapsedHeaders[currentTab][group.name] == nil then collapsedHeaders[currentTab][group.name] = true end
+	
+	local collapsed = collapsedHeaders[currentTab][group.name]
 	local percent = total > 0 and math.floor((completed / total) * 100) or 0
 	local header = AcquireHeader(parent)
 	header:SetPoint("TOPLEFT", 0, y)
@@ -881,7 +1106,10 @@ local function CreateHeader(parent, group, total, completed, y)
 	header.text:SetText(group.name); header.text:SetTextColor(1, 1, 1, 1)
 	local color = (percent == 100) and CreateColor(0.2, 1, 0.2, 1) or ((percent >= 50) and CreateColor(1, 0.82, 0, 1) or CreateColor(0.9, 0.9, 0.9, 1))
 	header.progress:SetText(string.format("%d/%d (%d%%)", completed, total, percent)); header.progress:SetTextColor(color:GetRGBA())
-	header:SetScript("OnClick", function() collapsedHeaders[group.name] = not collapsed; BuildUI() end)
+	header:SetScript("OnClick", function() 
+		collapsedHeaders[currentTab][group.name] = not collapsed
+		BuildUI() 
+	end)
 	header:SetScript("OnEnter", function(self) self.bg:SetGradient("HORIZONTAL", CreateColor(0.18, 0.18, 0.18, 1), CreateColor(0.12, 0.12, 0.12, 1)) end)
 	header:SetScript("OnLeave", function(self) self.bg:SetGradient("HORIZONTAL", CreateColor(0.12, 0.12, 0.12, 0.8), CreateColor(0.08, 0.08, 0.08, 0.8)) end)
 	table.insert(activeWidgets, header)
@@ -892,23 +1120,59 @@ local function UpdatePreviewDisplay()
 	if not previewFrame.currentReward or not previewFrame:IsShown() then return end
 	local reward = previewFrame.currentReward
 	local index = previewFrame.currentRewardIndex
-	local titleText = (type(reward.title) == "table") and reward.title[index] or reward.title or "Decor Reward"
-	previewTitle:SetText(titleText)
-	local hasPreview = false
-	if reward.model3D then
-		local modelId = (type(reward.model3D) == "table") and reward.model3D[index] or reward.model3D
-		if modelId then
-			previewFrame.model:Show(); previewFrame.texture:Hide(); previewFrame.model:SetModel(modelId); rotation = 0; hasPreview = true
+	
+	if currentTab == "vendors" then
+		previewFrame.title:Hide(); previewFrame:SetHeight(300); previewFrame.isRotating = false
+		if reward.model3D then
+			previewFrame.model:Show(); previewFrame.texture:Hide()
+			if previewFrame.model.currentModelID ~= reward.model3D then
+				previewFrame.model:SetDisplayInfo(reward.model3D)
+				previewFrame.model.currentModelID = reward.model3D
+			end
+		else
+			previewFrame:Hide()
 		end
-	elseif reward.texture then
-		local textureId = (type(reward.texture) == "table") and reward.texture[index] or reward.texture
-		if textureId and textureId ~= "" then
-			previewFrame.model:Hide(); previewFrame.texture:Show()
-			local fullTexturePath = GetFullTexturePath(tostring(textureId))
-			if fullTexturePath then previewFrame.texture:SetTexture(fullTexturePath); hasPreview = true end
+	else
+		previewFrame.title:Show(); previewFrame:SetHeight(330); previewFrame.isRotating = true
+
+		local titleText = db.L_LOADING_ITEM
+		local itemIDForName = reward.itemID
+		
+		if type(itemIDForName) == "table" then
+			itemIDForName = itemIDForName[index]
 		end
+		
+		if itemIDForName then
+			titleText = GetCachedItemName(itemIDForName)
+		else
+			titleText = (type(reward.title) == "table") and reward.title[index] or reward.title or "Decor Reward"
+		end
+		
+		previewTitle:SetText(titleText)
+		
+		local hasPreview = false
+		if reward.model3D then
+			local modelId = (type(reward.model3D) == "table") and reward.model3D[index] or reward.model3D
+			if modelId then
+				previewFrame.model:Show(); previewFrame.texture:Hide(); 
+				
+				if previewFrame.model.currentModelID ~= modelId then
+					previewFrame.model:SetModel(modelId)
+					previewFrame.model.currentModelID = modelId
+					rotation = 0
+				end
+				hasPreview = true
+			end
+		elseif reward.texture then
+			local textureId = (type(reward.texture) == "table") and reward.texture[index] or reward.texture
+			if textureId and textureId ~= "" then
+				previewFrame.model:Hide(); previewFrame.texture:Show()
+				local fullTexturePath = GetFullTexturePath(tostring(textureId))
+				if fullTexturePath then previewFrame.texture:SetTexture(fullTexturePath); hasPreview = true end
+			end
+		end
+		if not hasPreview then previewFrame:Hide() end
 	end
-	if not hasPreview then previewFrame:Hide() end
 end
 
 local function CycleReward(direction)
@@ -979,8 +1243,10 @@ local function CleanupLineState(line, isFavorited)
 	ResetCursor()
 	GameTooltip:Hide()
 	smallPreviewFrame:Hide()
-	if previewFrame then
-		previewFrame:Hide(); previewFrame.model:Hide(); previewFrame.texture:Hide(); previewFrame.currentReward = nil; 
+	if previewFrame and not isRebuilding then
+		previewFrame:Hide(); previewFrame.model:Hide(); 
+		previewFrame.texture:Hide(); previewFrame.currentReward = nil;
+		previewFrame.model.currentModelID = nil 
 		if line.nextButton then line.nextButton:Hide() end
 	end
 	if not isFavorited then
@@ -1009,6 +1275,7 @@ local function StandardizeLineScripts(line, onEnter, onClick, onLeave, isFavorit
 	end)
 	line:SetScript("OnClick", onClick)
 	line:SetScript("OnLeave", function(self)
+		if isRebuilding then return end
 		if self.starButton:IsMouseOver() then return end
 		CleanupLineState(self, isFavorited)
 		if onLeave then onLeave(self) end
@@ -1018,8 +1285,13 @@ end
 local function CreateVendorLine(parent, vendor, y)
 	local isComplete, missingCount = GetVendorStatus(vendor.id)
 	local line = AcquireLine(parent); line:SetPoint("TOPLEFT", 10, y)
-	local nameText = vendor.title or "Unknown NPC"
-	if not isComplete and missingCount > 0 then nameText = nameText .. " (" .. missingCount .. " missing)" end
+	
+	local realName, isLoading = GetCachedNpcName(vendor.id)
+	local nameText = realName
+	if not isLoading and not isComplete and missingCount > 0 then 
+		nameText = string.format("%s " .. db.L_NUM_MISSING, nameText, missingCount)
+	end
+
 	local mapName = "Unknown Zone"
 	if vendor.mapID then
 		local mapInfo = C_Map.GetMapInfo(vendor.mapID); if mapInfo and mapInfo.name then mapName = mapInfo.name end
@@ -1029,13 +1301,24 @@ local function CreateVendorLine(parent, vendor, y)
 	StandardizeLineScripts(line, function(self)
 		if not self.starButton:IsMouseOver() then SetCursor("BUY_CURSOR") end
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		GameTooltip:AddLine(vendor.title, 1, 1, 1)
+		
+		local tipName = npcNameCache[vendor.id] or vendor.title
+		GameTooltip:AddLine(tipName, 1, 1, 1)
+		
 		if vendor.mapID then GameTooltip:AddLine(mapName, 1, 0.82, 0) end
-		GameTooltip:AddLine("\n|cff00ff00<Left Click>|r to open Vendor Items", 1, 1, 1)
-		GameTooltip:AddLine("|cff00ff00<Right Click>|r to add Map Pin", 1, 1, 1)
+		GameTooltip:AddLine(db.L_OPEN_VENDOR_ITEMS, 1, 1, 1)
+		GameTooltip:AddLine(db.L_ADD_MAP_PIN, 1, 1, 1)
 		GameTooltip:Show()
+
+		if vendor.model3D then
+			previewFrame.currentReward = vendor
+			previewFrame.totalRewards = 1
+			previewFrame.currentRewardIndex = 1
+			AnchorPreviewToTooltip(previewFrame, GameTooltip)
+			UpdatePreviewDisplay()
+		end
 	end, function(self, button)
-		if button == "LeftButton" then ShowVendorPopup(vendor.id, vendor.title)
+		if button == "LeftButton" then ShowVendorPopup(vendor.id, npcNameCache[vendor.id] or vendor.title)
 		elseif button == "RightButton" then
 			if InCombatLockdown() then return end
 			local targetMapID = vendor.mapIDWaypoint or vendor.mapID
@@ -1058,15 +1341,29 @@ local function CreateDropLine(parent, dropItem, y)
 	local itemName, isLoading = GetCachedItemName(dropItem.id)
 	local line = AcquireLine(parent); line:SetPoint("TOPLEFT", 10, y)
 	local leftText = itemName
-	if not isLoading and dropItem.sources and #dropItem.sources >= 2 then leftText = leftText .. " (" .. #dropItem.sources .. " sources)" end
+	
 	local rightTextString = "Unknown Source"
 	local mapName = "Unknown Zone"
-	if dropItem.sources and #dropItem.sources > 0 then
+	
+	if dropItem.encounter then
+		local name = EJ_GetEncounterInfo(dropItem.encounter)
+		local encounterName = name or "Unknown Encounter"
+		
+		if dropItem.mapID then
+			local mapInfo = C_Map.GetMapInfo(dropItem.mapID)
+			if mapInfo and mapInfo.name then mapName = mapInfo.name end
+		end
+		rightTextString = string.format(db.L_NPC_IN_ZONE, encounterName, mapName)
+	elseif dropItem.other then
+		rightTextString = dropItem.other
+	elseif dropItem.sources and #dropItem.sources > 0 then
+		if not isLoading and #dropItem.sources >= 2 then leftText = string.format("%s " .. db.L_NUM_SOURCES, leftText, #dropItem.sources) end
 		local firstSource = dropItem.sources[1]
 		local mapInfo = C_Map.GetMapInfo(firstSource.mapID)
 		if mapInfo and mapInfo.name then mapName = mapInfo.name end
-		rightTextString = (#dropItem.sources == 1) and (firstSource.title .. " in " .. mapName) or ("Multiple drops in " .. mapName)
+		rightTextString = (#dropItem.sources == 1) and (string.format(db.L_NPC_IN_ZONE, firstSource.title, mapName)) or (string.format(db.L_MULTIPLE_DROPS, mapName))
 	end
+	
 	local isFav = IsFavorited(dropItem)
 	ConfigureLineBase(line, leftText, rightTextString, isComplete, nil, isFav, dropItem)
 	StandardizeLineScripts(line, function(self)
@@ -1074,10 +1371,28 @@ local function CreateDropLine(parent, dropItem, y)
 		local item = Item:CreateFromItemID(dropItem.id)
 		item:ContinueOnItemLoad(function()
 			if not self:IsMouseOver() and not self.starButton:IsMouseOver() then return end
-			GameTooltip:SetOwner(self, "ANCHOR_RIGHT"); GameTooltip:SetItemByID(dropItem.id); GameTooltip:AddLine("\nDrops from:", 1, 0.82, 0)
-			if dropItem.sources then for _, src in ipairs(dropItem.sources) do GameTooltip:AddLine(src.title, 1, 1, 1) end end
-			GameTooltip:AddLine("\n|cff00ff00<Left Click>|r to open Decor", 1, 1, 1)
-			GameTooltip:AddLine("|cff00ff00<Right Click>|r to add Map Pin", 1, 1, 1)
+			GameTooltip:SetOwner(self, "ANCHOR_RIGHT"); GameTooltip:SetItemByID(dropItem.id); 
+			
+			if dropItem.encounter then
+				GameTooltip:AddLine(db.L_DROPS_FROM, 1, 0.82, 0)
+				local name = EJ_GetEncounterInfo(dropItem.encounter)
+				GameTooltip:AddLine(name or "Unknown Encounter", 1, 1, 1)
+			elseif dropItem.other then
+				GameTooltip:AddLine(db.L_SOURCE, 1, 0.82, 0)
+				GameTooltip:AddLine(dropItem.other, 1, 1, 1)
+			elseif dropItem.sources then 
+				GameTooltip:AddLine(db.L_DROPS_FROM, 1, 0.82, 0)
+				for _, src in ipairs(dropItem.sources) do GameTooltip:AddLine(src.title, 1, 1, 1) end 
+			end
+			
+			GameTooltip:AddLine(db.L_OPEN_DECOR, 1, 1, 1)
+			
+			if dropItem.encounter or (dropItem.other and dropItem.mapID) then
+				GameTooltip:AddLine(db.L_OPEN_MAP, 1, 1, 1)
+			elseif dropItem.sources then
+				GameTooltip:AddLine(db.L_ADD_MAP_PIN, 1, 1, 1)
+			end
+			
 			GameTooltip:Show()
 			local decorData = db.decorItem[dropItem.id]
 			if decorData and not decorData.thumbnailID then
@@ -1096,7 +1411,23 @@ local function CreateDropLine(parent, dropItem, y)
 		elseif button == "LeftButton" then DressUpItemLink("item:" .. dropItem.id)
 		elseif button == "RightButton" then
 			if InCombatLockdown() then return end
-			if dropItem.sources and #dropItem.sources > 0 then
+			
+			if dropItem.encounter then
+				if dropItem.mapID then C_Map.OpenWorldMap(dropItem.mapID) end
+			elseif dropItem.other then
+				if dropItem.mapID then
+					if dropItem.x and dropItem.y then
+						if TomTom and hb_settings.useTomTom then
+							TomTom:AddWaypoint(dropItem.mapID, dropItem.x / 100, dropItem.y / 100, { title = dropItem.other })
+						else
+							local waypoint = UiMapPoint.CreateFromCoordinates(dropItem.mapID, dropItem.x / 100, dropItem.y / 100)
+							C_Map.SetUserWaypoint(waypoint)
+							C_SuperTrack.SetSuperTrackedUserWaypoint(true)
+						end
+					end
+					C_Map.OpenWorldMap(dropItem.mapID)
+				end
+			elseif dropItem.sources and #dropItem.sources > 0 then
 				local firstSource = dropItem.sources[1]
 				if TomTom and hb_settings.useTomTom then
 					for _, src in ipairs(dropItem.sources) do if src.mapID and src.x and src.y then TomTom:AddWaypoint(src.mapID, src.x / 100, src.y / 100, { title = src.title }) end end
@@ -1125,8 +1456,8 @@ local function CreateProfessionLine(parent, profItem, y)
 		item:ContinueOnItemLoad(function()
 			if not self:IsMouseOver() and not self.starButton:IsMouseOver() then return end
 			GameTooltip:SetOwner(self, "ANCHOR_RIGHT"); GameTooltip:SetItemByID(profItem.id); 
-			GameTooltip:AddLine("\n|cff00ff00<Left Click>|r to open Decor", 1, 1, 1)
-			GameTooltip:AddLine("|cff00ff00<Right Click>|r to open Reagents", 1, 1, 1)
+			GameTooltip:AddLine(db.L_OPEN_DECOR, 1, 1, 1)
+			GameTooltip:AddLine(db.L_OPEN_REAGENTS, 1, 1, 1)
 			GameTooltip:Show()
 			local decorData = db.decorItem[profItem.id]
 			if decorData and not decorData.thumbnailID then
@@ -1155,7 +1486,7 @@ local function CreateRewardLine(parent, reward, y)
 	local displayName, isQuestLoading = nil, false
 	if reward.type == "quest" then
 		displayName = questTitleCache[primaryID] or C_QuestLog.GetTitleForQuestID(primaryID)
-		if displayName then questTitleCache[primaryID] = displayName else displayName = "Loading Quest..."; isQuestLoading = true end
+		if displayName then questTitleCache[primaryID] = displayName else displayName = db.L_LOADING_QUEST; isQuestLoading = true end
 	else
 		local _, name = GetAchievementInfo(primaryID)
 		displayName = name or "Unknown Achievement"
@@ -1176,7 +1507,7 @@ local function CreateRewardLine(parent, reward, y)
 		local nextButton = CreateFrame("Button", nil, line)
 		nextButton:SetPoint("RIGHT", line.rightText, "LEFT", -8, 0); nextButton:SetSize(48, 22)
 		local nextButtonText = nextButton:CreateFontString(nil, "ARTWORK", "GameFontNormal"); nextButtonText:SetAllPoints(); nextButtonText:SetFont(STANDARD_TEXT_FONT, 12)
-		nextButtonText:SetText("(Next)"); nextButton:SetPropagateMouseMotion(true)
+		nextButtonText:SetText(db.L_NEXT_BUTTON); nextButton:SetPropagateMouseMotion(true)
 		nextButton.text = nextButtonText
 		nextButton:SetScript("OnClick", function() CycleReward(1) end)
 		line.nextButton = nextButton
@@ -1190,7 +1521,14 @@ local function CreateRewardLine(parent, reward, y)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 		if reward.type == "quest" then GameTooltip:SetHyperlink("quest:" .. primaryID) else GameTooltip:SetHyperlink(GetAchievementLink(primaryID)) end
 		GameTooltip:Show()
-		previewFrame.currentReward = reward; previewFrame.currentRewardIndex = 1
+		
+		local isSameReward = previewFrame:IsShown() and previewFrame.currentReward == reward
+		
+		previewFrame.currentReward = reward
+		if not isSameReward then
+			previewFrame.currentRewardIndex = 1
+		end
+		
 		local rewardsTable = reward.model3D or reward.texture
 		if type(rewardsTable) == "table" then previewFrame.totalRewards = #rewardsTable
 		else previewFrame.totalRewards = (rewardsTable ~= nil and rewardsTable ~= "") and 1 or 0 end
@@ -1217,11 +1555,12 @@ local function CreateRewardLine(parent, reward, y)
 end
 
 function BuildUI()
+	isRebuilding = true
 	ClearWidgets()
 	local y = 0
 	local hasContent = false
 	local dataSource = (currentTab == "vendors" and db.vendors) or (currentTab == "drops" and db.drops) or (currentTab == "professions" and db.professions) or db.collections
-	if not dataSource then return end
+	if not dataSource then isRebuilding = false; return end
 	local activeFilters = hb_settings.tabFilters[currentTab] or {}
 	for _, group in ipairs(dataSource) do
 		local groupTotal = 0
@@ -1245,26 +1584,49 @@ function BuildUI()
 				if showStructural then
 					local showSearch = true
 					if currentSearchQuery ~= "" then
-						local nameToCheck = ""
 						if currentTab == "vendors" then
-							 nameToCheck = item.title or ""
-						elseif currentTab == "drops" or currentTab == "professions" then
-							 nameToCheck = GetCachedItemName(item.id)
+							if not VendorMatchesQuery(item.id, currentSearchQuery) then
+								showSearch = false
+							end
 						else
-							 local primaryID = item.id
-							 if type(item.id) == "table" then primaryID = item.id[currentFaction] end
-							 if item.type == "quest" then
-									nameToCheck = questTitleCache[primaryID] or C_QuestLog.GetTitleForQuestID(primaryID) or ""
-							 else
+							local nameToCheck = ""
+							if currentTab == "drops" or currentTab == "professions" then
+								nameToCheck = GetCachedItemName(item.id)
+							else
+								local primaryID = item.id
+								if type(item.id) == "table" then primaryID = item.id[currentFaction] end
+								if item.type == "quest" then
+									local qID = primaryID
+									if questTitleCache[qID] then
+										nameToCheck = questTitleCache[qID]
+									else
+										local t = C_QuestLog.GetTitleForQuestID(qID)
+										if t then
+											questTitleCache[qID] = t
+											nameToCheck = t
+										else
+											nameToCheck = ""
+											QuestEventListener:AddCallback(qID, function() 
+												local newT = C_QuestLog.GetTitleForQuestID(qID)
+												if newT then 
+													questTitleCache[qID] = newT
+													RequestUpdate()
+												end
+											end)
+										end
+									end
+								else
 									local _, achievName = GetAchievementInfo(primaryID)
 									nameToCheck = achievName or ""
-							 end
-						end
-						if nameToCheck == "" or not string.find(string.lower(nameToCheck), currentSearchQuery, 1, true) then
-							showSearch = false
+								end
+							end
+							
+							if nameToCheck == "" or (nameToCheck ~= db.L_LOADING_VENDOR and nameToCheck ~= db.L_LOADING_ITEM and not string.find(string.lower(nameToCheck), currentSearchQuery, 1, true)) then
+								showSearch = false
+							end
 						end
 					end
-					
+
 					local showReqs = true
 					if currentTab == "vendors" then
 						local hasAnyPass = false
@@ -1344,10 +1706,11 @@ function BuildUI()
 	if not hasContent then
 		local msg = scrollChild:CreateFontString(nil, "OVERLAY")
 		msg:SetFont(STANDARD_TEXT_FONT, 14); msg:SetPoint("TOP", 0, -50)
-		msg:SetText("You've collected everything!\nTry changing your filters.")
+		msg:SetText(db.L_ALL_COLLECTED)
 		msg:SetTextColor(0.9, 0.9, 0.9, 1); table.insert(activeWidgets, msg)
 	end
 	scrollChild:SetHeight(math.abs(y) + 20)
+	isRebuilding = false
 end
 
 local function UpdateEscBehavior()
@@ -1369,19 +1732,28 @@ local function UpdateKeyBinding()
 	end
 end
 
+local function HideMerchantCheckmarks()
+	for i = 1, MERCHANT_ITEMS_PER_PAGE do
+		local button = _G["MerchantItem"..i.."ItemButton"]
+		if button and button.hbCheckmark then
+			button.hbCheckmark:Hide()
+		end
+	end
+end
+
 local function CreateOptionsPanel()
 	local configFrame = CreateFrame("Frame", "HB_ConfigFrame", UIParent)
 	configFrame.name = "Home Bound"
 	local configTitle = configFrame:CreateFontString(nil, "ARTWORK")
-	configTitle:SetFont(STANDARD_TEXT_FONT, 16); configTitle:SetPoint("TOPLEFT", 16, -16); configTitle:SetText("Home Bound Settings")
+	configTitle:SetFont(STANDARD_TEXT_FONT, 16); configTitle:SetPoint("TOPLEFT", 16, -16); configTitle:SetText(db.L_SETTINGS_TITLE)
 	local escCheck = CreateFrame("CheckButton", nil, configFrame, "UICheckButtonTemplate")
 	escCheck:SetPoint("TOPLEFT", configTitle, "BOTTOMLEFT", 0, -20)
-	escCheck.Text:SetFont(STANDARD_TEXT_FONT, 14); escCheck.Text:SetTextColor(1, 0.82, 0); escCheck.Text:SetText(" Esc to Close Home Bound")
+	escCheck.Text:SetFont(STANDARD_TEXT_FONT, 14); escCheck.Text:SetTextColor(1, 0.82, 0); escCheck.Text:SetText(db.L_ESC_TO_CLOSE)
 	escCheck:SetChecked(hb_settings.closeOnEsc)
 	escCheck:SetScript("OnClick", function(self) hb_settings.closeOnEsc = self:GetChecked(); UpdateEscBehavior() end)
 	local mmCheck = CreateFrame("CheckButton", nil, configFrame, "UICheckButtonTemplate")
 	mmCheck:SetPoint("TOPLEFT", escCheck, "BOTTOMLEFT", 0, -10)
-	mmCheck.Text:SetFont(STANDARD_TEXT_FONT, 14); mmCheck.Text:SetTextColor(1, 0.82, 0); mmCheck.Text:SetText(" Minimap Button")
+	mmCheck.Text:SetFont(STANDARD_TEXT_FONT, 14); mmCheck.Text:SetTextColor(1, 0.82, 0); mmCheck.Text:SetText(db.L_MINIMAP_BUTTON)
 	mmCheck:SetChecked(hb_settings.showMinimapButton)
 	mmCheck:SetScript("OnClick", function(self) 
 		hb_settings.showMinimapButton = self:GetChecked()
@@ -1389,14 +1761,34 @@ local function CreateOptionsPanel()
 			 if hb_settings.showMinimapButton then LibDBIcon:Show("HomeBound") else LibDBIcon:Hide("HomeBound") end
 		end
 	end)
+	local merchantCheck = CreateFrame("CheckButton", nil, configFrame, "UICheckButtonTemplate")
+	merchantCheck:SetPoint("TOPLEFT", mmCheck, "BOTTOMLEFT", 0, -10)
+	merchantCheck.Text:SetFont(STANDARD_TEXT_FONT, 14); merchantCheck.Text:SetTextColor(1, 0.82, 0); merchantCheck.Text:SetText(db.L_INCLUDE_CHECKMARKS_MERCHANT)
+	merchantCheck:SetChecked(hb_settings.showMerchantCheckmarks)
+	merchantCheck:SetScript("OnClick", function(self)
+		local checked = self:GetChecked()
+		hb_settings.showMerchantCheckmarks = checked
+		if not checked then HideMerchantCheckmarks()
+		else MerchantFrame_Update() end
+	end)
 	local tomCheck = CreateFrame("CheckButton", nil, configFrame, "UICheckButtonTemplate")
-	tomCheck:SetPoint("TOPLEFT", mmCheck, "BOTTOMLEFT", 0, -10)
-	tomCheck.Text:SetFont(STANDARD_TEXT_FONT, 14); tomCheck.Text:SetTextColor(1, 0.82, 0); tomCheck.Text:SetText(" Enable TomTom Waypoints")
+	tomCheck:SetPoint("TOPLEFT", merchantCheck, "BOTTOMLEFT", 0, -10)
+	tomCheck.Text:SetFont(STANDARD_TEXT_FONT, 14); tomCheck.Text:SetTextColor(1, 0.82, 0); tomCheck.Text:SetText(db.L_TOMTOM)
 	tomCheck:SetChecked(hb_settings.useTomTom)
 	tomCheck:SetScript("OnClick", function(self) hb_settings.useTomTom = self:GetChecked() end)
-	if not TomTom then tomCheck:Disable(); tomCheck.Text:SetText(" Enable TomTom Waypoints (Not Installed)") end
+	if not TomTom then tomCheck:Disable(); tomCheck.Text:SetText(db.L_TOMTOM_NOT_INSTALLED) end
+
+	local twitchCheck = CreateFrame("CheckButton", nil, configFrame, "UICheckButtonTemplate")
+	twitchCheck:SetPoint("TOPLEFT", tomCheck, "BOTTOMLEFT", 0, -10)
+	twitchCheck.Text:SetFont(STANDARD_TEXT_FONT, 14); twitchCheck.Text:SetTextColor(1, 0.82, 0); twitchCheck.Text:SetText(db.L_HIDE_TWITCH_DROP)
+	twitchCheck:SetChecked(hb_settings.hideTwitchDrop)
+	twitchCheck:SetScript("OnClick", function(self) 
+		hb_settings.hideTwitchDrop = self:GetChecked() 
+		UpdateTwitchDrop()
+	end)
+
 	local scaleLabel = configFrame:CreateFontString(nil, "ARTWORK")
-	scaleLabel:SetFont(STANDARD_TEXT_FONT, 14); scaleLabel:SetTextColor(1, 0.82, 0); scaleLabel:SetPoint("TOPLEFT", tomCheck, "BOTTOMLEFT", 0, -20); scaleLabel:SetText("UI Scale")
+	scaleLabel:SetFont(STANDARD_TEXT_FONT, 14); scaleLabel:SetTextColor(1, 0.82, 0); scaleLabel:SetPoint("TOPLEFT", twitchCheck, "BOTTOMLEFT", 0, -20); scaleLabel:SetText(db.L_UI_SCALE)
 	local scaleSlider = CreateFrame("Slider", nil, configFrame, "MinimalSliderWithSteppersTemplate")
 	scaleSlider:SetWidth(200)
 	scaleSlider:SetHeight(20)
@@ -1414,16 +1806,16 @@ local function CreateOptionsPanel()
 		frame:SetScale(rounded); supportFrame:SetScale(rounded); vendorPopup:SetScale(rounded); wowheadPopup:SetScale(rounded)
 	end)
 	local keybindLabel = configFrame:CreateFontString(nil, "ARTWORK")
-	keybindLabel:SetFont(STANDARD_TEXT_FONT, 14); keybindLabel:SetTextColor(1, 0.82, 0); keybindLabel:SetPoint("TOPLEFT", scaleSlider, "BOTTOMLEFT", 0, -30); keybindLabel:SetText("Toggle Frame Keybind")
+	keybindLabel:SetFont(STANDARD_TEXT_FONT, 14); keybindLabel:SetTextColor(1, 0.82, 0); keybindLabel:SetPoint("TOPLEFT", scaleSlider, "BOTTOMLEFT", 0, -30); keybindLabel:SetText(db.L_TOGGLE_KEYBIND)
 	local keybindBtn = CreateFrame("Button", nil, configFrame, "UIPanelButtonTemplate")
 	keybindBtn:SetPoint("LEFT", keybindLabel, "RIGHT", 10, 0); keybindBtn:SetSize(140, 28)
 	keybindBtn.Text:SetFont(STANDARD_TEXT_FONT, 14); keybindBtn:RegisterForClicks("AnyUp")
-	keybindBtn:SetText(hb_settings.toggleKeybind or "Not Bound")
+	keybindBtn:SetText(hb_settings.toggleKeybind or db.L_NOT_BOUND)
 	keybindBtn:SetScript("OnEnter", function(self)
 		if hb_settings.toggleKeybind and hb_settings.toggleKeybind ~= "" then
 			GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 			GameTooltip:AddLine("Home Bound (" .. hb_settings.toggleKeybind .. ")", 1, 1, 1)
-			GameTooltip:AddLine("|cff00ff00<Right Click to unbind>", 1, 1, 1)
+			GameTooltip:AddLine(db.L_UNBIND, 1, 1, 1)
 			GameTooltip:Show()
 		end
 	end)
@@ -1431,17 +1823,17 @@ local function CreateOptionsPanel()
 	keybindBtn:SetScript("OnClick", function(self, button)
 		if button == "RightButton" then
 			hb_settings.toggleKeybind = nil
-			self:SetText("Not Bound")
+			self:SetText(db.L_NOT_BOUND)
 			UpdateKeyBinding()
 			GameTooltip:Hide()
 		else
-			self:SetText("Press a key...")
+			self:SetText(db.L_PRESS_A_KEY)
 			self:EnableKeyboard(true)
 			self:SetScript("OnKeyDown", function(btn, key)
 				if key == "LSHIFT" or key == "RSHIFT" or key == "LCTRL" or key == "RCTRL" or key == "LALT" or key == "RALT" then return end
 				if key == "ESCAPE" then
 					btn:EnableKeyboard(false)
-					btn:SetText(hb_settings.toggleKeybind or "Not Bound")
+					btn:SetText(hb_settings.toggleKeybind or db.L_NOT_BOUND)
 					btn:SetScript("OnKeyDown", nil)
 				else
 					local modifier = ""
@@ -1463,12 +1855,59 @@ local function CreateOptionsPanel()
 	hb_options_category = category
 end
 
+local function HookMerchantFrame()
+	hooksecurefunc("MerchantFrame_Update", function()
+		if not hb_settings.showMerchantCheckmarks then return end
+
+		local guid = UnitGUID("npc")
+		if not guid then return end
+		local npcID = select(6, strsplit("-", guid))
+		npcID = tonumber(npcID)
+
+		if not npcID or not db.vendorItems[npcID] then
+			HideMerchantCheckmarks()
+			return
+		end
+
+		local numMerchantItems = GetMerchantNumItems()
+		
+		for i = 1, MERCHANT_ITEMS_PER_PAGE do
+			local index = (((MerchantFrame.page - 1) * MERCHANT_ITEMS_PER_PAGE) + i)
+			local button = _G["MerchantItem"..i.."ItemButton"]
+			
+			if button and button:IsShown() then
+				if not button.hbCheckmark then
+					local check = button:CreateTexture(nil, "OVERLAY", nil, 7)
+					check:SetSize(18, 18)
+					check:SetPoint("BOTTOM", 0, -8)
+					check:SetTexture(COLLECTED_ICON_TEXTURE)
+					button.hbCheckmark = check
+				end
+				
+				local checked = false
+				if index <= numMerchantItems then
+					local itemLink = GetMerchantItemLink(index)
+					if itemLink then
+						local itemID = GetItemInfoInstant(itemLink)
+						if itemID and IsItemCollected(itemID) then
+							checked = true
+						end
+					end
+				end
+				
+				button.hbCheckmark:SetShown(checked)
+			end
+		end
+	end)
+end
+
 local init = CreateFrame("Frame")
 init:RegisterEvent("ADDON_LOADED")
 init:RegisterEvent("PLAYER_ENTERING_WORLD")
 init:RegisterEvent("ACHIEVEMENT_EARNED")
 init:RegisterEvent("QUEST_TURNED_IN")
 init:RegisterEvent("HOUSE_DECOR_ADDED_TO_CHEST")
+init:RegisterEvent("TOOLTIP_DATA_UPDATE")
 
 init:SetScript("OnEvent", function(self, event, addon, ...)
 	if event == "ADDON_LOADED" and addon == "HomeBound" then
@@ -1478,6 +1917,8 @@ init:SetScript("OnEvent", function(self, event, addon, ...)
 		hb_settings.favorites = hb_settings.favorites or {}
 		
 		if hb_settings.showVendorCheckmarks == nil then hb_settings.showVendorCheckmarks = true end
+		if hb_settings.showMerchantCheckmarks == nil then hb_settings.showMerchantCheckmarks = false end
+		if hb_settings.hideTwitchDrop == nil then hb_settings.hideTwitchDrop = false end
 		
 		db.decorIdToItemId = {}
 		if db.decorItem then
@@ -1515,22 +1956,34 @@ init:SetScript("OnEvent", function(self, event, addon, ...)
 					elseif button == "RightButton" then Settings.OpenToCategory(hb_options_category:GetID()) end
 				end
 			})
-			function dataobj:OnTooltipShow() self:AddLine("|cffffffffHome Bound|r"); self:AddLine("|cff00ff00<Left Click to toggle>\n<Right Click for options>"); self:SetScale(GameTooltip:GetScale()) end
+			function dataobj:OnTooltipShow() self:AddLine("|cffffffffHome Bound|r"); self:AddLine(db.L_MINIMAP_DESCRIPTION); self:SetScale(GameTooltip:GetScale()) end
 			LibDBIcon:Register("HomeBound", dataobj, dbHB.minimap)
 		end
 	elseif event == "PLAYER_ENTERING_WORLD" then
-		if UnitFactionGroup("player") == "Horde" then currentFaction = 2 end
-		local scale = hb_settings.scale or 1.0
-		frame:SetScale(scale); supportFrame:SetScale(scale); vendorPopup:SetScale(scale); wowheadPopup:SetScale(scale)
-		BuildUI()
-		CreateOptionsPanel()
-		UpdateEscBehavior()
-		UpdateKeyBinding()
-		if not hb_settings.showMinimapButton then LibDBIcon:Hide("HomeBound") end
-		wowheadPopup:ClearAllPoints()
-		wowheadPopup:SetPoint("CENTER", frame, "CENTER", 0, 0)
-		vendorPopup:ClearAllPoints()
-		vendorPopup:SetPoint("CENTER", frame, "CENTER", 0, 0)
+		local catalogSearcher = C_HousingCatalog.CreateCatalogSearcher()
+		local searcherTimer
+
+		catalogSearcher:SetResultsUpdatedCallback(function()
+			if searcherTimer then searcherTimer:Cancel(); searcherTimer = nil end
+			if UnitFactionGroup("player") == "Horde" then currentFaction = 2 end
+			local scale = hb_settings.scale or 1.0
+			frame:SetScale(scale); supportFrame:SetScale(scale); vendorPopup:SetScale(scale); wowheadPopup:SetScale(scale)
+			BuildUI()
+			CreateOptionsPanel()
+			UpdateEscBehavior()
+			UpdateKeyBinding()
+			HookMerchantFrame()
+			UpdateTwitchDrop()
+			if not hb_settings.showMinimapButton then LibDBIcon:Hide("HomeBound") end
+			wowheadPopup:ClearAllPoints()
+			wowheadPopup:SetPoint("CENTER", frame, "CENTER", 0, 0)
+			vendorPopup:ClearAllPoints()
+			vendorPopup:SetPoint("CENTER", frame, "CENTER", 0, 0)
+			catalogSearcher:SetResultsUpdatedCallback(function() end)
+		end)
+
+		catalogSearcher:RunSearch()
+		searcherTimer = C_Timer.NewTicker(0.5, function() catalogSearcher:RunSearch() end)
 		self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 	elseif event == "ACHIEVEMENT_EARNED" or event == "QUEST_TURNED_IN" then
 		C_Timer.After(0.5, BuildUI)
@@ -1545,6 +1998,26 @@ init:SetScript("OnEvent", function(self, event, addon, ...)
 			collectionCache[itemID] = nil
 			BuildUI()
 		end
+		if decorID == TWITCH_DROP_DECOR_ID then
+			UpdateTwitchDrop()
+		end
+	elseif event == "TOOLTIP_DATA_UPDATE" then
+		if next(pendingNpcRequests) then
+			local foundNew = false
+			for npcID in pairs(pendingNpcRequests) do
+				local link = "unit:Creature-0-0-0-0-" .. npcID
+				local data = C_TooltipInfo.GetHyperlink(link)
+				if data and data.lines and data.lines[1] then
+					local lineText = data.lines[1].leftText
+					if lineText and lineText ~= "" and lineText ~= UNKNOWN and lineText ~= "Unknown" then
+						npcNameCache[npcID] = lineText
+						pendingNpcRequests[npcID] = nil 
+						foundNew = true
+					end
+				end
+			end
+			if foundNew then RequestUpdate() end
+		end
 	end
 end)
 
@@ -1554,3 +2027,5 @@ SlashCmdList["HB"] = function()
 	if not frame:IsShown() then BuildUI() end
 	frame:SetShown(not frame:IsShown())
 end
+
+function HomeBound_OnAddonCompartmentClick() SlashCmdList["HB"]() end

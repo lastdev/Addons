@@ -19,8 +19,10 @@ local string_format = string.format
 local pairs = pairs
 
 -- Reusable callback to avoid closure creation
-local scanCallback
-local pendingScans = {}
+local scanCache = {}
+local scanCacheCount = 0
+local SCAN_CACHE_TTL_SECONDS = 300
+local SCAN_CACHE_MAX_ENTRIES = 2000
 
 -----------------------------------------------------------
 -- Process tooltip data from scanner frame
@@ -176,6 +178,18 @@ function HousingTooltipScanner:ScanItem(itemID, callback)
         return emptyData
     end
 
+    -- Fast path: session cache (prevents repeated tooltip parsing churn).
+    local now = (GetTime and GetTime()) or 0
+    do
+        local cached = scanCache[numericItemID]
+        if cached and cached.t and cached.data and (now - cached.t) <= SCAN_CACHE_TTL_SECONDS then
+            if callback then
+                callback(cached.data)
+            end
+            return cached.data
+        end
+    end
+
     -- Initialize tooltip data
     local tooltipData = {
         weight = nil,
@@ -194,34 +208,24 @@ function HousingTooltipScanner:ScanItem(itemID, callback)
     scanner:ClearLines()
     scanner:SetItemByID(numericItemID)
 
-    if callback then
-        -- Asynchronous mode (for batch scanning)
-        -- Create reusable callback if needed
-        if not scanCallback then
-            scanCallback = function()
-                for id, data in pairs(pendingScans) do
-                    ProcessTooltipLines(data.tooltipData)
-                    if data.callback then
-                        data.callback(data.tooltipData)
-                    end
-                    pendingScans[id] = nil
-                end
-            end
+    -- Process immediately (shared scanner is not safe for delayed batching).
+    ProcessTooltipLines(tooltipData)
+
+    -- Update cache (bounded).
+    if not scanCache[numericItemID] then
+        scanCacheCount = scanCacheCount + 1
+        if scanCacheCount > SCAN_CACHE_MAX_ENTRIES then
+            scanCache = {}
+            scanCacheCount = 0
         end
-
-        -- Store pending scan
-        pendingScans[numericItemID] = {
-            tooltipData = tooltipData,
-            callback = callback
-        }
-
-        -- Schedule processing (batched)
-        C_Timer.After(0.1, scanCallback)
-    else
-        -- Synchronous mode (immediate processing)
-        ProcessTooltipLines(tooltipData)
-        return tooltipData
     end
+    scanCache[numericItemID] = { t = now, data = tooltipData }
+
+    if callback then
+        callback(tooltipData)
+    end
+
+    return tooltipData
 end
 
 -----------------------------------------------------------
@@ -236,9 +240,8 @@ end
 -- Public API: Clear pending scans
 -----------------------------------------------------------
 function HousingTooltipScanner:ClearPendingScans()
-    for k in pairs(pendingScans) do
-        pendingScans[k] = nil
-    end
+    scanCache = {}
+    scanCacheCount = 0
 end
 
 -- Make globally accessible

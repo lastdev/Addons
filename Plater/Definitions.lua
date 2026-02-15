@@ -78,6 +78,7 @@
 ---@field isPerformanceUnitAura boolean
 ---@field isPerformanceUnitThreat boolean
 ---@field isPerformanceUnitCast boolean
+---@field hasUnitTypeColor boolean true when the unit frame is using a color from the unit type coloring feature in midnight
 ---@field DenyColorChange boolean
 ---@field IsSelf boolean
 ---@field isPlayer boolean
@@ -241,6 +242,7 @@
 ---@field GetHealthCutoffValue fun() update the execute range by the class, spec and talents the player is using
 ---@field CheckRange fun(plateFrame: table, onAdded: boolean) check if the nameplate is in range and update the alpha
 ---@field PlayAudioForScript fun(canUseScriptAudio: boolean, audioFilePath: string, envTable: scriptenv) play an audio for a script
+---@field UpdateCastbarTargetText fun(castBar: castbar, targetFontString: fontstring?) update the castbar target text settings, if targetFontString is provided it will update that fontstring instead of the default one
 
 ---@class scriptenv : table
 ---@field _SpellID number

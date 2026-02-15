@@ -89,6 +89,7 @@ L.Button_InfoFrame					= "Show/hide info frame"
 L.Button_TestBars					= "Start test bars"
 L.Button_MoveBars					= "Move bars"
 L.Button_ResetInfoRange				= "Reset Info/Range frames"
+L.Button_ShowMidnightWizard			= "Midnight Setup Wizard"
 
 L.ModelOptions						= "3D Model Viewer Options"
 L.EnableModels						= "Enable 3D models in boss options"
@@ -105,7 +106,7 @@ L.Editbox_WindowHeight				= "GUI window height"
 L.UIGroupingOptions					= "UI Grouping Options (changing these require UI reload for any mod that's already loaded)"
 L.GroupOptionsExcludeIcon			= "Exclude 'Set Icon' options from getting grouped by spell (they will be grouped together in their own 'Icons' category instead)"
 L.GroupOptionsExcludePrivateAura	= "Exclude 'Private Aura' sound options from getting grouped by spell (they will be grouped together in their own 'Private Auras' category instead)"
-L.AutoExpandSpellGroups				= "Auto expand options that are grouped by spell"
+L.AutoExpandSpellGroups2				= "Auto expand options that are grouped by spell"
 L.ShowWAKeys						= "Show WeakAuras keys next to spell names to assist in writing WeakAuras using Boss Mod triggers."
 --L.ShowSpellDescWhenExpanded		= "Continue showing spell description when groups are expanded"--Might not be used
 L.NoDescription						= "This ability has no description"
@@ -253,6 +254,15 @@ L.SpecWarn_FlashAlpha				= "Flash alpha: %0.1f"
 L.SpecWarn_DemoButton				= "Show example"
 L.SpecWarn_ResetMe					= "Reset to defaults"
 L.SpecialWarnSoundOption			= "Set default sound"
+
+-- Panel: Private Auras Frame
+L.Panel_PrivateAuras				= "Private Auras"
+L.Area_PrivateAuras					= "Private Aura Options"
+L.EnablePrivateAuraIcons			= "Show Private Aura icons on screen"
+L.EnablePrivateAuraText				= "Show Private Aura text messages on screen"
+L.SetPAIconScale					= "Icon scale: %0.1f"--Not Finalized
+L.SetPATextScale					= "Text scale: %0.1f"--Not Finalized
+--SpamBlockNoPrivateAuraSound will be reused in GUI options but doesn't need to be localized again
 --PreMidnight
 L.SpecialWarnHeader1				= "Type 1: Set options for normal priority announcements affecting you or your actions"
 L.SpecialWarnHeader2				= "Type 2: Set options for normal priority announcements affecting everyone"
@@ -423,6 +433,7 @@ L.ZeroatWindowStartRestart			= "Text hits zero at start of CD window then restar
 L.ZeroatWindowStartNeg				= "Text hits zero at start of CD window then goes negative"--Default
 L.BarIconLeft 						= "Left icon"
 L.BarIconRight 						= "Right icon"
+L.BarIconPosition					= "Icon position"
 L.ExpandUpwards						= "Expand upward"
 L.FillUpBars						= "Fill up"
 L.ClickThrough						= "Disable mouse events (click through)"
@@ -438,13 +449,18 @@ L.BarColorByType					= "Color by type"
 L.Highest							= "Highest at top"
 L.Lowest							= "Lowest at top"
 L.NoBarFade							= "Use Start/End colors as Small/Large colors instead of gradual color change"
-L.BarInlineIcons					= "Show inline icons"
+L.BarInlineIcons					= "Show journal icons"--Deprecated
 L.DisableRightClickBar				= "Disable right click to cancel timers"
 L.ShortTimerText					= "Use short timer text (when available)"
 L.KeepBar							= "Keep timer active until ability cast"
 L.KeepBar2							= "(when supported by mod)"
 L.FadeBar							= "Fade timers for out of range abilities"
 L.BarSkin							= "Bar skin"
+L.InlineIconsDropdown				= "Journal icon style"
+L.SingleLargeIcon					= "Single large icon"
+L.DoubleLargeIcons					= "Double large icons"
+L.DoubleInlineIcons					= "All the large icons"
+L.StackedMiniIcons					= "Stacked small icons"
 
 -- Panel: Pull, Break, Combat
 L.Panel_PullBreakCombat				= "Pull & Break"
@@ -459,7 +475,11 @@ L.Area_BlizzFiltersSetup			= "Blizzard Filters guide"
 -- Panel: Toggle DBM Features
 L.Panel_SpamFilter					= "Disable DBM Features"
 
-L.Area_SpamFilter_SpecFeatures		= "Announce Features"
+L.Area_Global_Toggles				= "Feature Global Toggles"
+L.NoWarnings						= "Disable DBM Announce entirely"
+L.NoTimers							= "Disable DBM Timers entirely"
+
+L.Area_SpamFilter_SpecFeatures		= "Specific Announce Features (only applies if not disabled entirely above)"
 L.SpamBlockNoShowAnnounce			= "Do not show text or play sound for ANY general (non emphasized) announcements"
 L.SpamBlockNoSpecWarnText			= "Do not show special announce text"
 L.SpamBlockNoSpecWarnFlash			= "Do not show special announce screen flash"
@@ -467,7 +487,7 @@ L.SpamBlockNoSpecWarnVibrate		= "Do not vibrate controller on special announce"
 L.SpamBlockNoSpecWarnSound			= "Do not play special announce sounds (voice packs sounds enabled in Countdowns &amp; Voice Packs panel will still play)"
 L.SpamBlockNoPrivateAuraSound		= "Do not register private aura sounds"
 
-L.Area_SpamFilter_Timers			= "Timer Features"
+L.Area_SpamFilter_Timers			= "Specific Timer Features (only applies if not disabled entirely above)"
 L.SpamBlockNoShowBossTimers			= "Do not show timers for dungeon/raid bosses"
 L.SpamBlockNoShowTrashTimers		= "Do not show timers for dungeon/raid trash (Note: this also disables nameplate CDs)"
 L.SpamBlockNoShowEventTimers		= "Do not show timers for events or prompts (Queue pop, boss respawn, etc)"

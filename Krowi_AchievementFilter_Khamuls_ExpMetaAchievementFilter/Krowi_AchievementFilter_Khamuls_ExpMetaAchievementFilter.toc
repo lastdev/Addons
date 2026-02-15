@@ -1,20 +1,22 @@
-## Interface: 110207
-## Title: Krowi's |cFF1D92C2AF|r - Khamuls Expansion Meta Achievement Filters
-## Version: 1.2.3
+## Interface: 120000, 120001
+## Title: Krowi's |cFF1D92C2AF|r - Khamuls Collections Plugin
+## Version: 2.0.1
 ## Author: Khamûl-Antonidas
-## X-Email: neytiri-amanthul@gmx.at
-## Notes: Additional Filters for Krowi's Achievement Filter Addon, providing lists for expansion meta achievements
+## X-Email: khamul.antonidas@gmail.com
+## Notes: Adds additional categories to the special tab (Campsites, Decors, Meta Mounts, Pets)
 ## IconTexture: interface/icons/inv_radientazeriteheart
 ## Dependencies: Krowi_AchievementFilter
 ## X-CurseForge: https://www.curseforge.com/wow/addons/krowis-achievement-filter-khamuls-expansion-meta
 ## X-Curse-Project-ID: 1143362
 ## X-Wago: https://addons.wago.io/addons/krowi-achievementfilter-khamuls-expmetaachievementfilter
 ## X-Wago-Project-ID: vNAeqRNo
+## SavedVariables: Khamuls_ExpMetaAchievementFilter_Settings
 
 Libs\Files.xml
 Localization\Files.xml
 
-Utilities.lua
-Data\Files.xml
 
-Krowi_AchievementFilter_Khamuls_ExpMetaAchievementFilter.lua
+Core.lua
+Utilities.lua
+DataSources\Files.xml
+Options.lua

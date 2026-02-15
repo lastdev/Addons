@@ -9,7 +9,9 @@ local TradeSkill = LibTSMWoW:Init("API.TradeSkill")
 local Spell = LibTSMWoW:Include("API.Spell")
 local SlotId = LibTSMWoW:Include("Type.SlotId")
 local ClientInfo = LibTSMWoW:Include("Util.ClientInfo")
+local Item = LibTSMWoW:Include("API.Item")
 local EnumType = LibTSMWoW:From("LibTSMUtil"):Include("BaseType.EnumType")
+local Table = LibTSMWoW:From("LibTSMUtil"):Include("Lua.Table")
 local private = {
 	buggedQuantityRangeSpells = {},
 	categoryRootCache = {
@@ -83,6 +85,7 @@ local BUGGED_QUANTITY_RANGE_SPELLS = {
 	[209664] = {42, 42}, -- Felwort (amount is variable but the values are conservative)
 	[247861] = {4, 4}, -- Astral Glory (amount is variable but the values are conservative)
 }
+local BOGUS_BONUS_TABLE = { 0, 1, 2, 3, 4 }
 
 
 
@@ -164,6 +167,16 @@ function TradeSkill.GetType()
 		return TYPE.LINKED
 	end
 	return TYPE.PLAYER
+end
+
+---Gets the quality index table for a given recipe.
+---@param spellId number The recipe spell to check.
+---@return number[]
+function TradeSkill.GetQualitiesForRecipe(spellId)
+	if not ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI) then
+		return false
+	end
+	return C_TradeSkillUI.GetQualitiesForRecipe(spellId)
 end
 
 ---Returns whether or not the current trade skill is classic crafting.
@@ -378,7 +391,7 @@ end
 ---@param large? boolean Get the large version of the icon
 ---@return string
 function TradeSkill.GetCraftedQualityChatIcon(craftedQuality, large)
-	return Professions.GetChatIconMarkupForQuality(craftedQuality, not large)
+	return private.GetChatIconMarkupForQuality(craftedQuality, not large)
 end
 
 ---Gets the item level bonuses produced by different qualities of the recipe.
@@ -387,7 +400,13 @@ end
 function TradeSkill.GetItemLevelBonuses(spellId)
 	assert(ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI))
 	local bonusTable = C_TradeSkillUI.GetRecipeInfo(spellId).qualityIlvlBonuses
-	return (bonusTable and #bonusTable > 0) and bonusTable or nil
+	if not bonusTable or #bonusTable == 0 then
+		return nil
+	elseif Table.Equal(bonusTable, BOGUS_BONUS_TABLE) then
+		-- Bogus bonus tables (in the form of {0, 1, 2, 3, 4}) don't actually change the level of the item
+		return nil
+	end
+	return bonusTable
 end
 
 ---Gets the range of quantities crafted by a recipe.
@@ -629,13 +648,13 @@ end
 ---@return number quantityRequired
 ---@return string itemLink
 function TradeSkill.GetMatInfoByDataSlotId(spellId, dataSlotIndex)
-	local itemLink = C_TradeSkillUI.GetRecipeFixedReagentItemLink(spellId, dataSlotIndex)
-	for _, reagentInfo in ipairs(C_TradeSkillUI.GetRecipeSchematic(spellId, false).reagentSlotSchematics) do
-		if reagentInfo.dataSlotIndex == dataSlotIndex then
-			return reagentInfo.quantityRequired, itemLink
+	local info = C_TradeSkillUI.GetRecipeSchematic(spellId, false, nil)
+	for _, reagentSlotInfo in ipairs(info.reagentSlotSchematics) do
+		if reagentSlotInfo.dataSlotIndex == dataSlotIndex then
+			local _, itemLink = Item.GetInfo(reagentSlotInfo.reagents[1].itemID)
+			return reagentSlotInfo.quantityRequired, itemLink
 		end
 	end
-	return 1, itemLink
 end
 
 ---Gets info on a trade skill recipe material.
@@ -664,13 +683,14 @@ function TradeSkill.GetMatInfo(spellId, level, index)
 		assert(reagentSlotInfo)
 		local item, isModifiedReagent = nil, nil
 		if reagentSlotInfo.reagentType == Enum.CraftingReagentType.Modifying and reagentSlotInfo.required then
-			item = C_TradeSkillUI.GetRecipeQualityReagentItemLink(spellId, reagentSlotInfo.dataSlotIndex, 1)
+			item = C_TradeSkillUI.GetRecipeQualityReagentLink(spellId, reagentSlotInfo.dataSlotIndex, 1)
 			isModifiedReagent = true
 		elseif reagentSlotInfo.reagentType == Enum.CraftingReagentType.Basic and reagentSlotInfo.dataSlotType == Enum.TradeskillSlotDataType.Reagent then
-			item = C_TradeSkillUI.GetRecipeFixedReagentItemLink(spellId, reagentSlotInfo.dataSlotIndex)
+			local _, itemLink = Item.GetInfo(reagentSlotInfo.reagents[1].itemID)
+			item = itemLink
 			isModifiedReagent = false
 		elseif reagentSlotInfo.reagentType == Enum.CraftingReagentType.Basic and reagentSlotInfo.dataSlotType == Enum.TradeskillSlotDataType.ModifiedReagent then
-			item = C_TradeSkillUI.GetRecipeQualityReagentItemLink(spellId, reagentSlotInfo.dataSlotIndex, 1)
+			item = C_TradeSkillUI.GetRecipeQualityReagentLink(spellId, reagentSlotInfo.dataSlotIndex, 1)
 			-- NOTE: For some reason, the above API doesn't always work (i.e. with 'Handful of Serevite Bolts')
 			item = item or reagentSlotInfo.reagents[1].itemID
 			isModifiedReagent = true
@@ -959,4 +979,9 @@ function private.MapDifficulty(value)
 			error("Unknown difficulty: "..tostring(value))
 		end
 	end
+end
+
+function private.GetChatIconMarkupForQuality(craftedQuality, small)
+	local atlas = format("Professions-ChatIcon-Quality-Tier%d", craftedQuality)
+	return CreateAtlasMarkupWithAtlasSize(atlas, nil, small and 0 or 1, nil, nil, nil, small and 0.4 or 0.5)
 end

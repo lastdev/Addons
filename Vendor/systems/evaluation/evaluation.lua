@@ -61,7 +61,8 @@ function Evaluation:EvaluateItem(item, ignoreCache)
         if cachedEntry then
 
             -- Return deep copy so they don't ruin our actual data with this.
-            return Addon.DeepTableCopy(cachedEntry.Result)
+            --return Addon.DeepTableCopy(cachedEntry.Result)
+            return cachedEntry.Result
         end
     end
 

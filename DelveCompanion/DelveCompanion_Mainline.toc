@@ -1,0 +1,58 @@
+## Interface: 120001, 120000
+## Author: FunDeliveryGames
+## Version: v2026.01.2
+
+## IconTexture: interface/icons/ui_delves
+## Title: Delve Companion
+## Notes: One-stop addon to make Delves experience even better!
+## Notes-deDE: Addon um deine Tiefen-Erfahrung noch besser zu machen!
+## Notes-ruRU: Универсальный аддон, который сделает игру в Вылазках еще лучше!
+## Category-enUS: Delves
+## Category-deDE: Tiefen
+## Category-esES: Profundidades
+## Category-esMX: Abismos
+## Category-frFR: Gouffres
+## Category-itIT: Scorribande
+## Category-koKR: 구렁
+## Category-ptBR: Imersões
+## Category-ruRU: Вылазки
+## Category-zhCN: 地下堡
+## Category-zhTW: 探究
+
+## AddonCompartmentFuncOnEnter: DelveCompanionCompartmentOnEnter
+## AddonCompartmentFuncOnLeave: DelveCompanionCompartmentOnLeave
+## AddonCompartmentFunc: DelveCompanionCompartmentOnClick
+
+## LoadSavedVariablesFirst: 1
+## SavedVariables: DelveCompanionAccountData
+## SavedVariablesPerCharacter: DelveCompanionCharacterData
+
+## OptionalDeps: TomTom, MapPinEnhanced
+
+## X-Category: Delves
+## X-Curse-Project-ID: 1218457
+## X-WoWI-ID: 26915
+## X-Wago-ID: ZKxq4kGk
+## X-Website: https://github.com/FunDeliveryGames/wow-delve-companion
+
+# Core
+Source\Core\Include.xml
+
+# Localization
+Locale\Lockit.xml
+
+# Data
+Data\Include.xml
+
+# Utility
+Source\Utility\Include.xml
+
+# Settings
+Source\Settings\Include.xml
+
+# Modules
+Source\Modules\TooltipExtension\Include.xml
+Source\Modules\EJExtension\Include.xml
+
+# Addon init. Should be the last one
+Source\Bootstrap.lua

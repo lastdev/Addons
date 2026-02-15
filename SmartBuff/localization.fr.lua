@@ -1,4 +1,4 @@
-﻿-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- French localization
 -- Last update : 05/06/2006
 -- By ( Sasmira, Cosmos Team )
@@ -34,8 +34,8 @@ SMARTBUFF_UNDEAD    = "Mort-vivant";
 SMARTBUFF_CLASSES = {"Druide", "Chasseur", "Mage", "Paladin", "Pr\195\170tre", "Voleur", "Chaman", "D\195\169moniste", "Guerrier", "Chevalier de la mort", "Moine", "Chasseur de démons", "Evoker", "Chasseur Pet", "D\195\169moniste Pet", "Chevalier de la mort Pet", "Tank", "Gu\195\169risseur", "Sp\195\169cialiste des d\195\169g\195\162ts"};
 
 -- Templates and Instances
-SMARTBUFF_TEMPLATES = {"Seul", "Groupe", "Raid", "Champs de Bataille", "Ar\195\168ne", "CCG", "EdC", "Ulduar", "MC", "Ony", "BWL", "Naxx", "AQ", "ZG", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
-SMARTBUFF_INSTANCES = {"Citadelle de la Couronne de glace", "L\'\195\169preuve du crois\195\169", "Ulduar", "C\197\147ur du Magma", "Repaire d\'Onyxia", "Repaire de l\'Aile noire", "Naxxramas", "Ahn'Qiraj", "Zul'Gurub"};
+SMARTBUFF_TEMPLATES = {"Solo", "Groupe", "RdR", "Raid", "Clef mythique", "Vision horrifique", "Faille", "Champ de bataille", "Arène", "Flèche du Vide", "Faille onirique", "Marche sur Quel'Danas", "Palais de Nerub-ar", "Libération de Soutermine", "Personnalisé 1", "Personnalisé 2", "Personnalisé 3", "Personnalisé 4", "Personnalisé 5"};
+SMARTBUFF_INSTANCES = {"Flèche du Vide", "Faille onirique", "Marche sur Quel'Danas", "Palais de Nerub-ar", "Libération de Soutermine"};
 
 -- Mount
 SMARTBUFF_MOUNT = "Augmente la vitesse de (%d+)%%.";
@@ -115,7 +115,7 @@ SMARTBUFF_OFT_REQ_RELOAD     = "Les nouvelles versions nécessitent un rechargem
 SMARTBUFF_OFTT               = "ON/OFF SmartBuff";
 SMARTBUFF_OFTT_AUTO          = "ON/OFF Le rappel de buff";
 SMARTBUFF_OFTT_AUTOTIMER     = "D\195\169lai en secondes entre deux v\195\169rifications.";
-SMARTBUFF_OFTT_AUTOCOMBAT    = "Lance une v\195\169rification en combat.";
+SMARTBUFF_OFTT_AUTOCOMBAT    = "Lance une v\195\169rification en combat.\nToute logique de rappel en combat est d\195\169sactiv\195\169e sauf si l'option principale \"en combat\" (dans la fen\195\170tre d'options, pas celle-ci) est activ\195\169e.";
 SMARTBUFF_OFTT_AUTOCHAT      = "Affiche dans le chat un message lorsque le buff est expir\195\169.";
 SMARTBUFF_OFTT_AUTOSPLASH    = "Affiche un message au milieu de l\'\195\169cran \nlorsque le buff est expir\195\169.";
 SMARTBUFF_OFTT_AUTOSOUND     = "Joue un son lorsque les buffs sont expir\195\169s.";
@@ -168,7 +168,7 @@ SMARTBUFF_BST_MANALIMIT      = "Lower bound";
 -- Buffsetup Frame Tooltip Text
 SMARTBUFF_BSTT_SELFONLY      = "Buffs uniquement votre personnage.";
 SMARTBUFF_BSTT_SELFNOT       = "Buffs all other selected classes,\nexcept your character."; -- NOT TRANSLATED
-SMARTBUFF_BSTT_COMBATIN      = "Buffs si vous \195\170tes en combat.";
+SMARTBUFF_BSTT_COMBATIN      = "Buffs si vous \195\170tes en combat.\nToute logique en combat est d\195\169sactiv\195\169e sauf si l'option principale \"en combat\" (dans la fen\195\170tre d'options) est activ\195\169e.";
 SMARTBUFF_BSTT_COMBATOUT     = "Buffs si vous \195\170tes hors combat.";
 SMARTBUFF_BSTT_MAINHAND      = "Buffs La Main Principale.";
 SMARTBUFF_BSTT_OFFHAND       = "Buffs La Main Gauche.";

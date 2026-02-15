@@ -24,7 +24,7 @@ local qcNewDataAlertTooltip = nil
 local qcMutuallyExclusiveAlertTooltip = nil
 
 --[[ Constants ]]--
-local QCADDON_VERSION = 109.93
+local QCADDON_VERSION = 109.94
 local QCADDON_PURGE = true
 local QCDEBUG_MODE = false
 local QCADDON_CHAT_TITLE = "|CFF9482C9Quest Completist:|r "
@@ -144,19 +144,19 @@ qcQuestFactionLevelBits = {
 	["Exalted"]=32,
 }
 local qcHolidayDates = {
-	[1]={"240920","241006"},		-- Brewfest 2024
-	[2]={"180425","180502"},		-- Children's Week 2018
-	[4]={"181101","181103"},		-- Day of the Dead 2018
-	[8]={"241216","250102"},		-- Feast of Winter Veil 2024-2025
-	[16]={"241018","241101"},		-- Hallow's End 2024
-	[32]={"180918","180925"},		-- Harvest Festival 2018
-	[64]={"250205","250219"},		-- Love is in the Air 2019
-	[128]={"250128","250211"},		-- Lunar Festival 2019
-	[256]={"240621","240705"},		-- Midsummer Fire Festival 2024
-	[512]={"180402","180409"},		-- Noblegarden 2018
-	[1024]={"181119","181126"},		-- Pilgrim's Bounty 2018
-	[2048]={"180919","180920"},		-- Pirates' Day 2018
-	[4096]={"180919","180920"},		-- Trial of Styles
+	[1]={"250923","251009"},		-- Brewfest 2025
+	[2]={"260427","260504"},		-- Children's Week 2026
+	[4]={"251101","251103"},		-- Day of the Dead 2025
+	[8]={"251216","260102"},		-- Feast of Winter Veil 2025-2026
+	[16]={"251025","251108"},		-- Hallow's End 2025
+	[32]={"251002","251009"},		-- Harvest Festival 2025
+	[64]={"260209","260223"},		-- Love is in the Air 2026
+	[128]={"260216","260302"},		-- Lunar Festival 2026
+	[256]={"250621","250705"},		-- Midsummer Fire Festival 2025
+	[512]={"260406","260413"},		-- Noblegarden 2026
+	[1024]={"251123","251130"},		-- Pilgrim's Bounty 2025
+	[2048]={"250919","250920"},		-- Pirates' Day 2025
+	[4096]={"250801","250808"},		-- Trial of Styles 2025 august
 }
 
 --[[ Constants for the Key Bindings & Slash Commands ]]--
@@ -387,34 +387,96 @@ end
 end
 
 --Beta Reset Daily and Weekly Start
--- Function to reset daily quests (type 4)
-function ResetDailyQuests()
-    if quests == nil then
-        print("No quests to reset. The quests table is nil.")
-        return
+-- Initialize saved variables if needed
+QC_LastDailyReset = QC_LastDailyReset or 0
+QC_LastWeeklyReset = QC_LastWeeklyReset or 0
+qcCompletedQuests = qcCompletedQuests or {}
+
+-- Returns timestamp of next weekly reset
+local function GetNextWeeklyReset()
+    local now = time()
+    local region = GetCVar("portal")
+    local regionResetDay = {
+        ["US"] = 2, -- Tuesday
+        ["EU"] = 3, -- Wednesday
+        ["KR"] = 4, ["TW"] = 4, ["CN"] = 4, -- Thursday
+    }
+    local resetDay = regionResetDay[region] or 2
+    local t = date("*t", now)
+    local daysUntilReset = (resetDay - t.wday + 7) % 7
+    if daysUntilReset == 0 and t.hour >= 15 then
+        daysUntilReset = 7
     end
-    
-    for questID, questData in pairs(quests) do
-        if questData.type == 4 then  -- Type 4 for daily quests
-            questData.status = "incomplete"
+    t.day = t.day + daysUntilReset
+    t.hour = 15; t.min = 0; t.sec = 0
+    return time(t)
+end
+
+-- Resets all completed quests of a given type flag (4 = daily, 128 = weekly)
+local function ResetQCCompletedQuests(flag)
+    for questId, questData in pairs(qcQuestDatabase) do
+        local questType = tonumber(questData[6])
+        if questType and bit.band(questType, flag) ~= 0 then
+            qcCompletedQuests[questId] = nil
         end
     end
 end
 
--- Function to reset weekly quests (type 128)
-function ResetWeeklyQuests()
-    if quests == nil then
-        print("No quests to reset. The quests table is nil.")
-        return
+-- Event handler
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("PLAYER_LOGIN")
+frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+
+frame:SetScript("OnEvent", function(self, event)
+    local now = time()
+
+    -- Daily reset
+    local nextDailyReset = now + GetQuestResetTime()
+    if now > QC_LastDailyReset then
+        QC_LastDailyReset = nextDailyReset
+        ResetQCCompletedQuests(4)
     end
-    
-    for questID, questData in pairs(quests) do
-        if questData.type == 128 then  -- Type 128 for weekly quests
-            questData.status = "incomplete"
+
+    -- Weekly reset
+    local nextWeeklyReset = GetNextWeeklyReset()
+    if now > QC_LastWeeklyReset then
+        QC_LastWeeklyReset = nextWeeklyReset
+        ResetQCCompletedQuests(128)
+    end
+end)
+
+local function simulateExclusiveCompletions(groupTable)
+    local simulatedCompleted = {}
+
+    for _, group in ipairs(groupTable) do
+        local completedCount = 0
+        local remaining = {}
+
+        for _, questID in ipairs(group.quests) do
+            local qID = tonumber(questID)
+            if qID then
+                local isCompleted = qcCompletedQuests[qID] and (qcCompletedQuests[qID]["C"] == 1 or qcCompletedQuests[qID]["C"] == 2)
+                local isAccepted = C_QuestLog.GetLogIndexForQuestID(qID) and C_QuestLog.GetLogIndexForQuestID(qID) > 0
+
+                if isCompleted or isAccepted then
+                    completedCount = completedCount + 1
+                else
+                    table.insert(remaining, qID)
+                end
+            end
+        end
+
+        if completedCount >= group.max then
+            for _, qID in ipairs(remaining) do
+                simulatedCompleted[qID] = true
+                -- Debug print
+               -- print("Override completed quest:", qID)
+            end
         end
     end
-end
 
+    return simulatedCompleted
+end
 
 --Beta Reset Daily and Weekly End
 
@@ -593,14 +655,37 @@ local function OnAddonLoaded(self, event, addonName)
     if addonName == "QuestCompletist" then
         local qcSearchBox = _G["qcSearchBox"]
         if qcSearchBox then
-            qcSearchBox:SetText("Search")  -- Set default text
-            qcSearchBox:SetTextColor(0.5, 0.5, 0.5)  -- Set default text color to grey
+            qcSearchBox:SetText("Search")
+            qcSearchBox:SetTextColor(0.5, 0.5, 0.5)
             if qcSearchBox.Instructions then
                 qcSearchBox.Instructions:SetText("Search")
             end
             qcSearchBox:HookScript("OnEditFocusGained", qcSearchBox_OnEditFocusGained)
             qcSearchBox:HookScript("OnEditFocusLost", qcSearchBox_OnEditFocusLost)
             qcSearchBox:HookScript("OnTextChanged", qcSearchBox_OnTextChanged)
+
+            -- Create wipe button
+            local wipeButton = CreateFrame("Button", nil, qcSearchBox, "UIPanelCloseButton")
+            wipeButton:SetSize(20, 20) -- small size
+            wipeButton:SetPoint("RIGHT", qcSearchBox, "RIGHT", 20, 0) -- adjust offset as needed
+            wipeButton:SetScript("OnClick", function()
+                qcSearchBox:SetText("Search")
+                qcSearchBox:SetTextColor(0.5, 0.5, 0.5)
+                if qcSearchBox.Instructions then
+                    qcSearchBox.Instructions:SetText("Search")
+                end
+                qcUpdateQuestList(qcCurrentCategoryID, 1)
+            end)
+            wipeButton:Hide() -- hidden until there’s text
+
+            -- Show/hide the wipe button depending on text content
+            qcSearchBox:HookScript("OnTextChanged", function(self)
+                if self:GetText() ~= "" and self:GetText() ~= "Search" then
+                    wipeButton:Show()
+                else
+                    wipeButton:Hide()
+                end
+            end)
         end
         self:UnregisterEvent("ADDON_LOADED")
     end
@@ -878,41 +963,56 @@ local function topologicalSortStorylineQuests(storylineQuests)
         end
         if not visited[questId] then
             tempMarked[questId] = true
-            local prereqQuestId = qcQuestDatabase[questId][14] -- Get the prerequisite quest ID
-            if prereqQuestId and prereqQuestId ~= 0 then
-                visit(prereqQuestId) -- Recursively visit the prerequisite quest
+
+            local questData = qcQuestDatabase[questId]
+            if questData then
+                local prereqQuestId = questData[14] -- Get the prerequisite quest ID
+                if prereqQuestId and prereqQuestId ~= 0 then
+                    visit(prereqQuestId) -- Recursively visit the prerequisite quest
+                end
             end
+
             tempMarked[questId] = false
             visited[questId] = true
-            table.insert(sortedQuests, questId) -- Add to sorted list
+            table.insert(sortedQuests, questId) -- Add to sorted list (even if missing)
         end
     end
 
     -- Visit all quests in the storyline
     for _, questData in ipairs(storylineQuests) do
-        visit(questData[1]) -- questData[1] is the quest ID
+        local questId = type(questData) == "table" and questData[1] or questData
+        visit(questId)
     end
 
     return sortedQuests
 end
 
+
 -- Function to update the quest tooltip
 function qcUpdateTooltip(index)
     local stringFormat = string.format
     local questId = _G["qcMenuButton" .. index].QuestID
+    local att_HookBackup
 
-    if not (questId == nil) then
-        qcQuestInformationTooltip:SetOwner(qcQuestCompletistUI, "ANCHOR_BOTTOMRIGHT", -30, 500)
-        qcQuestInformationTooltip:ClearLines()
-        qcQuestInformationTooltip:SetHyperlink(string.format("quest:%d", questId))
-        qcQuestInformationTooltip:AddLine(" ")
-
-        if not C_AddOns.IsAddOnLoaded("AllTheThings") then
-            qcQuestInformationTooltip:AddDoubleLine("Quest ID:", string.format("|cFF69CCF0%d|r", questId))
+    if questId then
+        -- Temporarily disable ATT's quest tooltip hook so it can't add its own ID
+        if C_AddOns.IsAddOnLoaded("AllTheThings") and GameTooltip.OnTooltipSetQuest then
+            att_HookBackup = GameTooltip.OnTooltipSetQuest
+            GameTooltip.OnTooltipSetQuest = function() end
         end
 
-        if not C_AddOns.IsAddOnLoaded("AllTheThings") then
-            qcQuestInformationTooltip:AddLine(" ")
+        -- Setup tooltip
+        qcQuestInformationTooltip:SetOwner(qcQuestCompletistUI, "ANCHOR_BOTTOMRIGHT", -30, 500)
+        qcQuestInformationTooltip:ClearLines()
+        qcQuestInformationTooltip:SetHyperlink(stringFormat("quest:%d", questId))
+        qcQuestInformationTooltip:AddLine(" ")
+        qcQuestInformationTooltip:AddDoubleLine("Quest ID:", stringFormat("|cFF69CCF0%d|r", questId))
+        qcQuestInformationTooltip:AddLine(" ")
+
+        -- Restore ATT hook if we temporarily replaced it
+        if att_HookBackup then
+            GameTooltip.OnTooltipSetQuest = att_HookBackup
+            att_HookBackup = nil
         end
 
         -- Storyline information
@@ -936,17 +1036,19 @@ function qcUpdateTooltip(index)
             -- Display each quest in the storyline with its completion status
             for _, sortedQuestId in ipairs(sortedQuestIds) do
                 local questData = qcQuestDatabase[sortedQuestId]
-                local questName = questData[2]
-                local questStatus
-
-                if C_QuestLog.IsOnQuest(sortedQuestId) then
-                    -- Highlight the current quest's status if it's being tracked
-                    questStatus = "|cFFFFFF00You are on this quest|r"
+                if questData then
+                    local questName = questData[2]
+                    local questStatus
+                    if C_QuestLog.IsOnQuest(sortedQuestId) then
+                        questStatus = "|cFFFFFF00You are on this quest|r"
+                    else
+                        questStatus = C_QuestLog.IsQuestFlaggedCompleted(sortedQuestId) and "|cFF00FF00Completed|r" or "|cFFFF0000Not Completed|r"
+                    end
+                    qcQuestInformationTooltip:AddDoubleLine(" - " .. questName, questStatus)
                 else
-                    questStatus = C_QuestLog.IsQuestFlaggedCompleted(sortedQuestId) and "|cFF00FF00Completed|r" or "|cFFFF0000Not Completed|r"
+                    -- Handle missing quest gracefully
+                    qcQuestInformationTooltip:AddDoubleLine(" - Missing quest (" .. tostring(sortedQuestId) .. ")", "|cFFFF0000Missing|r")
                 end
-
-                qcQuestInformationTooltip:AddDoubleLine(" - " .. questName, questStatus)
             end
 
             qcQuestInformationTooltip:AddLine(" ")
@@ -1089,6 +1191,7 @@ function qcUpdateTooltip(index)
 end
 
 -- End Tooltip when mouse over quest name
+
 
 function qcQuestClick(qcButtonIndex)
 	local qcQuestID = _G["qcMenuButton" .. qcButtonIndex].QuestID
@@ -1722,20 +1825,31 @@ local function qcRefreshPins(UiMapID, mapLevel)
             end
         end
     end
-		--[[ Map Completed ]]--
-    if qcSettings["QC_M_HIDE_COMPLETED"] == 1 then
-        for i = #qcPins, 1, -1 do
-            for qcQuestIndex = #qcPins[i][7], 1, -1 do
-                local qcQuestID = qcPins[i][7][qcQuestIndex]
-                if qcCompletedQuests[qcQuestID] and (qcCompletedQuests[qcQuestID]["C"] == 1 or qcCompletedQuests[qcQuestID]["C"] == 2) then
-                    table.remove(qcPins[i][7], qcQuestIndex)
-                end
-            end
-            if #qcPins[i][7] == 0 then
-                table.remove(qcPins, i)
-            end
-        end
+local overrideCompleted = {}
+
+if qcSettings["QC_M_HIDE_COMPLETED"] == 1 or qcSettings["QC_M_HIDE_INPROGRESS"] == 1 then
+    overrideCompleted = simulateExclusiveCompletions(qcOverrideDailyExclusiveQuest)
+    for questID, _ in pairs(simulateExclusiveCompletions(qcOverrideWeeklyExclusiveQuest)) do
+        overrideCompleted[questID] = true
     end
+end
+	
+		--[[ Map Completed ]]--
+	if qcSettings["QC_M_HIDE_COMPLETED"] == 1 then
+		for i = #qcPins, 1, -1 do
+			for j = #qcPins[i][7], 1, -1 do
+				local questID = qcPins[i][7][j]
+				if (qcCompletedQuests[questID] and (qcCompletedQuests[questID]["C"] == 1 or qcCompletedQuests[questID]["C"] == 2))
+					or overrideCompleted[questID] then
+					table.remove(qcPins[i][7], j)
+				end
+			end
+			if #qcPins[i][7] == 0 then
+				table.remove(qcPins, i)
+			end
+		end
+	end
+
 		--[[ Map and Quest Faction ]]--
 	if (qcSettings["QC_ML_HIDE_FACTION"] == 1) then
 		for i = #qcPins, 1, -1 do
@@ -1807,26 +1921,28 @@ local function qcRefreshPins(UiMapID, mapLevel)
 			end
 		end
 	end
+	
 		--[[ Map In progress ]]--
-	if (qcSettings["QC_M_HIDE_INPROGRESS"] == 1) then
+	if qcSettings["QC_M_HIDE_INPROGRESS"] == 1 then
 		for i = #qcPins, 1, -1 do
-			for qcQuestIndex = #qcPins[i][7], 1, -1 do
-				local qcQuestID = qcPins[i][7][qcQuestIndex]
-				-- Ensure the quest ID is valid and not nil
-				if qcQuestID and C_QuestLog.GetLogIndexForQuestID(qcQuestID) and C_QuestLog.GetLogIndexForQuestID(qcQuestID) > 0 then
-					TableRemove(qcPins[i][7], qcQuestIndex)
+			for j = #qcPins[i][7], 1, -1 do
+				local questID = qcPins[i][7][j]
+				local isAccepted = C_QuestLog.GetLogIndexForQuestID(questID) and C_QuestLog.GetLogIndexForQuestID(questID) > 0
+				if isAccepted or overrideCompleted[questID] then
+					table.remove(qcPins[i][7], j)
 				end
 			end
-			if (#qcPins[i][7] == 0) then
-				TableRemove(qcPins, i)
+			if #qcPins[i][7] == 0 then
+				table.remove(qcPins, i)
 			end
 		end
 	end
+
 		--[[ Map Covenants ]]--
 	local version, build, date, tocVersion = GetBuildInfo()
 	local majorVersion = tonumber(version:match("^%d+"))
 
-	if majorVersion and majorVersion >= 11 then -- Only run in Retail
+	if majorVersion and majorVersion >= 9 then -- Only run Shadowlands+
 		if (qcSettings["QC_ML_HIDE_COVENANTS"] == 1) then
 			local playerCovenantID = C_Covenants.GetActiveCovenantID()
 			local playerCovenantBit = qcCovenantsBits[playerCovenantID] or 0
@@ -1851,7 +1967,7 @@ local function qcRefreshPins(UiMapID, mapLevel)
 	local version, build, date, tocVersion = GetBuildInfo()
 	local majorVersion = tonumber(version:match("^%d+"))
 
-	if majorVersion and majorVersion >= 11 then -- Only run in Retail
+	if majorVersion and majorVersion >= 11 then -- Only run TWW
 		if (qcSettings["QC_ML_HIDE_WARBANDS"] == 1) then 
 			for i = #qcPins, 1, -1 do
 				for qcQuestIndex = #qcPins[i][7], 1, -1 do
@@ -2424,8 +2540,8 @@ function qcInterfaceOptions_OnShow(self)
 	local version, build, date, tocVersion = GetBuildInfo()
 	local majorVersion = tonumber(version:match("^%d+"))
 
-	-- Create Covenant Checkbox (for Battle for Azeroth (8.x) and later)
-	if majorVersion and majorVersion >= 8 then
+	-- Create Covenant Checkbox (for Shadowlands (9.x) and later)
+	if majorVersion and majorVersion >= 9 then
 		qcIO_ML_HIDE_COVENANTS = CreateFrame("CheckButton", "qcIO_ML_HIDE_COVENANTS", self, "InterfaceOptionsCheckButtonTemplate")
 		qcIO_ML_HIDE_COVENANTS:SetPoint("TOPLEFT", qcIO_ML_HIDE_FACTION, "BOTTOMLEFT", 0, -25)
 		_G[qcIO_ML_HIDE_COVENANTS:GetName().."Text"]:SetText(qcL.HIDEOTHERCOVENANTQUESTS)
@@ -2539,7 +2655,7 @@ function qcQuestCompletistUI_OnShow(self)
 end
 
 function qcQuestCompletistUI_OnLoad(self)
-	SetPortraitToTexture(self.qcPortrait, "Interface\\ICONS\\TRADE_ARCHAEOLOGY_DRAENEI_TOME")
+--SetPortraitToTexture(self.qcPortrait, "Interface\\ICONS\\TRADE_ARCHAEOLOGY_DRAENEI_TOME")
 	self.qcTitleText:SetText(string.format("Quest Completist v%s", QCADDON_VERSION))
 	self.qcCategoryDropdownButton:SetText(GetText("CATEGORIES"))
 	self.qcOptionsButton:SetText(GetText("FILTERS"))

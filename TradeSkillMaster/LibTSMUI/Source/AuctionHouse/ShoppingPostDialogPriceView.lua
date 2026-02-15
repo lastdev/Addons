@@ -222,7 +222,7 @@ function ShoppingPostDialogPriceView:Acquire()
 	self._state:PublisherForExpression([[stackSize and numStacks and (stackSize * numStacks) <= bagQuantity or false]])
 		:AssignToTableKey(self._state, "stackSizeIsValid")
 
-	if LibTSMUI.IsVanillaClassic() then
+	if LibTSMUI.IsVanillaClassic() or LibTSMUI.IsBCClassic() then
 		self._state:PublisherForKeyChange("itemString")
 			:IgnoreNil()
 			:MapWithFunction(ItemInfo.GetMaxStack)

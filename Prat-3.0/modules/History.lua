@@ -24,7 +24,7 @@
 --
 -------------------------------------------------------------------------------
 
-
+local NUM_CHAT_WINDOWS = NUM_CHAT_WINDOWS or Constants.ChatFrameConstants.MaxChatWindows
 
 
 Prat:AddModuleToLoad(function()
@@ -746,7 +746,7 @@ L = {
     local cmdhistory = editBox.history_lines or {}
 
     if cmdhistory[1] == text then return end
-    
+
     table.insert(cmdhistory, 1, text)
 
     local cmdcount = #cmdhistory - maxlines

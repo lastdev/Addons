@@ -1,5 +1,5 @@
 --[[
-    Copyright (C) 2024 GurliGebis
+    Copyright (C) 2024-2026 GurliGebis
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,10 +22,8 @@ if not L then return end
 
 L["%s wants to share a paste with you. Do you want to accept it?"] = "%s хочет поделиться с вами вставкой.|nВы хотите принять её?"
 L["/pasteng config - Open the configuration"] = "/pasteng config - Открыть настройки"
---[[Translation missing --]]
-L["/pasteng export - Open the export dialog"] = "/pasteng export - Open the export dialog"
---[[Translation missing --]]
-L["/pasteng import - Open the import dialog"] = "/pasteng import - Open the import dialog"
+L["/pasteng export - Open the export dialog"] = "/pasteng export - Открыть диалоговое окно экспорта"
+L["/pasteng import - Open the import dialog"] = "/pasteng import - Открыть диалоговое окно импорта"
 L["/pasteng minimap - Toggle the minimap icon"] = "/pasteng minimap - Отобразить значок на миникарте"
 L["/pasteng send Saved Paste name - Send a save paste to the default channel"] = "/pasteng send \\\"Имя сохранённой вставки\\\" - Отправить сохранённую вставку в канал по умолчанию"
 L["/pasteng send Saved Paste name channel - Send a save paste to a specific channel"] = "/pasteng send \\\"Имя сохранённой вставки\\\" канал - Отправить сохранённую вставку в указанный канал"

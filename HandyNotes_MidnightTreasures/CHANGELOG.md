@@ -1,5 +1,24 @@
 # Changelog
 
+## Changed in v11
+
+* Added delves: Twilight Crypts, Atal'aman
+
+## Changed in v10
+
+* Voidstorm: add the loot for Predaxas
+
+## Changed in v9
+
+* Harandar: add the loot for Thorm'belan
+
+## Changed in v8
+
+* Delves: achievement progress and showing on the continent-map, no chests yet
+* World boss loot in Eversong and Zul'aman
+* Harandar: show the portals in the Den
+* Harandar: last of the phase 1 moths
+
 ## Changed in v7
 
 * Add the Arcantina

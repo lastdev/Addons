@@ -1,5 +1,5 @@
-## Interface: 110205
-## Version: 1.6.2
+## Interface: 120000
+## Version: 1.6.5
 ## Title: Achievements Back Button
 ## IconAtlas: questlog-questtypeicon-story
 ## Author: LudiusMaximus

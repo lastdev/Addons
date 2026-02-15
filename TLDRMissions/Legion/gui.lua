@@ -14,6 +14,8 @@ function addon.LegionGUIMixin:Init()
     self:setupRewardCheckbox("Gear", WORLD_QUEST_REWARD_FILTERS_EQUIPMENT)
     self:setupRewardCheckbox("CraftingReagents", PROFESSIONS_MODIFIED_CRAFTING_REAGENT_BASIC)
     self:setupRewardCheckbox("AugmentRunes", L["AugmentRunes"])
+    self:setupRewardCheckbox("VeiledArgunite", C_CurrencyInfo.GetBasicCurrencyInfo(1508).name)
+    self:setupRewardCheckbox("WakeningEssence", C_CurrencyInfo.GetBasicCurrencyInfo(1533).name)
     
     self.ProfileTabButton:SetScript("OnClick", function()
         LibStub("AceConfigDialog-3.0"):Open("TLDRMissions-Legion")

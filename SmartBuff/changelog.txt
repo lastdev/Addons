@@ -1,0 +1,71 @@
+development (alpha) branch
+
+* rewrite to use itemID instead of itemLink, still WIP
+* extensive code refactoring, still WIP
+* added WoW API meta support for sumneko's VS CODE lua-language-server which provides intellisense, snippets, dynamic type checking, diagnostics, syntax checking, autocompletion, code formatting and hover to view details on variables and functions.
+
+main (stable) branch
+
+* all items use itemLinks instead of plaintext itemNames
+* FOOD: added Timely Demise (70 Haste)
+* FOOD: added Filet of Fangs (70 Crit)
+* FOOD: added Seamoth Surprise (70 Vers)
+* FOOD: added Salt-Baked Fishcake (70 Mastery)
+* FOOD: added Feisty Fish Sticks (45 Haste/Crit)
+* FOOD: added Aromatic Seafood Platter (45 Haste/Vers)
+* FOOD: added Sizzling Seafood Medley (45 Haste/Mastery)
+* FOOD: added Revenge, Served Cold (45 Crit/Verst)
+* FOOD: added Thousandbone Tongueslicer (45 Crit/Mastery)
+* FOOD: added Great Cerulean Sea (45 Vers/Mastery)
+* FOOD: added Fated Fortune Cookie (76 primary stat)
+* FOOD: added Feast: Grand Banquet of the Kalu'ak (76 primary stat)
+* FOOD: added Feast: Hoard of Draconic Delicacies (76 primary stat)
+* AUGMENT RUNE: added Draconic Augment Rune
+* VANTUS RUNE: added Vantus Rune: Vault of the Incarnates
+* WEAPON BUFF: added Buzzing Rune
+* WEAPON BUFF: added Chirping Rune
+* WEAPON BUFF: added Howling Rune
+* WEAPON BUFF: added Primal Weightstone
+* WEAPON BUFF: added Primal Whetstone
+* WEAPON BUFF: added Completely Safe Rockets
+* FLASK added Phial of the Eye in the Storm
+* FLASK: added Phial of Still Air
+* FLASK: added Phial of Icy Preservation
+* FLASK: added Iced Phial of Corrupting Rage
+* FLASK: added Phial of Charged Isolation
+* FLASK: added Phial of Glacial Fury
+* FLASK: added Phial of Static Empowerment
+* FLASK: added Phial of Tepid Versatility
+* FLASK: added Aerated Phial of Deftness
+* FLASK: added Steaming Phial of Finesse
+* FLASK: added Charged Phial of Alacrity
+* FLASK: added Crystalline Phial of Perception
+* FLASK: added Phial of Elemental Chaos
+* FLASK: added Aerated Phial of Quick Hands
+* WARLOCK PET: added Summon Imp
+* WARLOCK PET: added Summon Fellhunter
+* WARLOCK PET: added Summon Voidwalker
+* WARLOCK PET: added Summon Succubus
+* WARLOCK PET: added Summon Infernal
+* WARLOCK PET: added Summon Doomguard
+* WARLOCK PET: added Summon Felguard
+* WARLOCK PET: added Summon Fel Imp
+* WARLOCK PET: added Summon Voidlord
+* WARLOCK PET: added Summon Shivarra
+* WARLOCK PET: added Summon Observer
+* WARLOCK PET: added Summon Wrathguard
+* HUNTER PET: added Call Pet 1
+* HUNTER PET: added Call Pet 2
+* HUNTER PET: added Call Pet 3
+* HUNTER PET: added Call Pet 4
+* HUNTER PET: added Call Pet 5
+* TOY: added Wayfarer's Compass
+* TOY: added Golden Dragon Goblet
+* TOY: added Lucky Duck
+* GROUPS: removed old custom locations: Icecrown Citadel, Trial of the Crusader, Ulduar, Molten Core, Onyxia's Lair, Blackwing Lair, Naxxramas, Ahn'Qiraj, Zul'Gurub
+* GROUPS: added LFR, Mythic Keystone, Castle Nathria, Sanctum of Domination, Sepulcher of the First Ones, Vault of the Incarnates
+* increased size of SmartBuff splash window to allow for longer itemLink text
+* tidied up some code and re-indented the most egregious examples nested IF statements
+* TODO: non-English localization
+* TODO: rewrite to use itemID instead of itemLink
+* TODO: add new buffs from Dragonlands class talent trees

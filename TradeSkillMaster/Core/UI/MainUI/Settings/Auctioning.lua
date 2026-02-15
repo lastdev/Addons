@@ -40,7 +40,7 @@ function Auctioning.OnInitialize(settingsDB)
 		:AddKey("global", "auctioningOptions", "matchWhitelist")
 		:AddKey("global", "coreOptions", "auctionSaleSound")
 		:AddKey("global", "coreOptions", "regionWide")
-	if ClientInfo.IsVanillaClassic() then
+	if ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic() then
 		private.settings:AddKey("factionrealm", "auctioningOptions", "whitelist")
 	end
 	TSM.MainUI.Settings.RegisterSettingPage(L["Auctioning"], "middle", private.GetAuctioningSettingsFrame)
@@ -128,7 +128,7 @@ function private.GetAuctioningSettingsFrame()
 end
 
 function private.AddWhitelistSettings(frame)
-	if not ClientInfo.IsVanillaClassic() then
+	if not ClientInfo.IsVanillaClassic() and not ClientInfo.IsBCClassic() then
 		return
 	end
 	frame:AddChild(TSM.MainUI.Settings.CreateExpandableSection("Auctioning", "whitelist", L["Whitelist"], L["TSM will not undercut any players you add to your whitelist."])

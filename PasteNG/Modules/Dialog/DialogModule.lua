@@ -1,5 +1,5 @@
 --[[
-    Copyright (C) 2024 GurliGebis
+    Copyright (C) 2024-2026 GurliGebis
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -280,20 +280,39 @@ do
         local function SendChatMessageWrapper(message, chatType, target)
             if chatType == CHAT_DEFAULT then
                 -- We cannot post directly to the default (currently selected) chat, so we have to do a little "macro" work.
-                -- Open the current chat window.
-                ChatFrame_OpenChat("")
+                if ChatFrameUtil.OpenChat then
+                    -- Midnight Pre-Patch and later
+                    -- Open the current chat window.
+                    ChatFrameUtil.OpenChat("")
 
-                -- Get the current chat window text box.
-                local edit = ChatEdit_GetActiveWindow()
+                    -- Get the current chat window text box.
+                    local edit = ChatFrameUtil.GetActiveWindow()
 
-                -- Set the text we want to send into the text box.
-                edit:SetText(message)
+                    -- Set the text we want to send into the text box.
+                    edit:SetText(message)
 
-                -- Send the message.
-                ChatEdit_SendText(edit, 1)
+                    -- Send the message.
+                    ChatFrameEditBoxMixin.SendText(edit, 1)
 
-                -- Close the chat window again.
-                ChatEdit_DeactivateChat(edit)
+                    -- Close the chat window again.
+                    ChatFrameUtil.DeactivateChat(edit)
+                else
+                    -- Legacy
+                    -- Open the current chat window.
+                    ChatFrame_OpenChat("")
+
+                    -- Get the current chat window text box.
+                    local edit = ChatEdit_GetActiveWindow()
+
+                    -- Set the text we want to send into the text box.
+                    edit:SetText(message)
+
+                    -- Send the message.
+                    ChatEdit_SendText(edit, 1)
+
+                    -- Close the chat window again.
+                    ChatEdit_DeactivateChat(edit)
+                end
             elseif chatType == BN_WHISPER then
                 local bnetAccountID = BNet_GetBNetIDAccount(target)
 
@@ -302,7 +321,13 @@ do
                     return
                 end
 
-                BNSendWhisper(bnetAccountID, message)
+                if C_BattleNet.SendWhisper then
+                    -- Midnight Pre-Patch and later
+                    C_BattleNet.SendWhisper(bnetAccountID, message)
+                else
+                    -- Legacy
+                    BNSendWhisper(bnetAccountID, message)
+                end
             else
                 InternalSendChatMessageWrapper(message, chatType, target)
             end
@@ -351,6 +376,17 @@ do
 
         -- Split the message into lines.
         local lines = { strsplit("\n", message) }
+
+        -- Reverse the order of lines if shift key is held down
+        if IsShiftKeyDown() then
+            local reversedLines = {}
+
+            for i = #lines, 1, -1 do
+                table.insert(reversedLines, lines[i])
+            end
+
+            lines = reversedLines
+        end
 
         -- Define delay to use for pasting into guild chat.
         local delay = 0

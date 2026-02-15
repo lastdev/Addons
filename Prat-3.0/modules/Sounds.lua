@@ -75,7 +75,7 @@ Prat:AddModuleToLoad(function()
   do
       local L
 
-  
+
 L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = true,
@@ -113,7 +113,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
-  
+
 L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "Un module pour jouer un son sur certains évènements de messages.",
@@ -151,7 +151,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
-  
+
 L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "Ein Modul zum Abspielen von Tönen in bestimmten Chat-Nachrichten.",
@@ -189,7 +189,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
-  
+
 L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "특정 대화 메시지에 소리를 재생하는 모듈입니다.",
@@ -227,7 +227,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
-  
+
 L = {
 	["Sounds"] = {
 		--[[Translation missing --]]
@@ -293,7 +293,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
-  
+
 L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "Модуль проигрывает зуки для определённых сообщений в чате.",
@@ -331,7 +331,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
-  
+
 L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "在某些聊天信息播放声音的模块",
@@ -369,7 +369,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
-  
+
 L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "Un módulo que reproduce sonidos con ciertos mensajes del chat.",
@@ -411,7 +411,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
-  
+
 L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "模組：於特定聊天訊息播放音效。",
@@ -460,7 +460,7 @@ L = {
       on = false,
       ["incoming"] = {
         ["GUILD"] = "Kachink",
-        ["OFFICER"] = "Link",
+        ["OFFICER"] = "popup",
         ["PARTY"] = "Text1",
         ["RAID"] = "Text1",
         ["WHISPER"] = "Heart",
@@ -505,6 +505,8 @@ L = {
 
     media.RegisterCallback(self, "LibSharedMedia_Registered", "SharedMedia_Registered")
     media.RegisterCallback(self, "LibSharedMedia_SetGlobal", "SharedMedia_Registered")
+
+	  _G.MuteSoundFile(567421)
   end
 
 
@@ -514,6 +516,7 @@ L = {
     self:UnregisterAllEvents()
     Prat.UnregisterAllChatEvents(self)
     media.UnregisterAllCallbacks(self)
+	  _G.UnmuteSoundFile(567421)
   end
 
   local soundslist = {}

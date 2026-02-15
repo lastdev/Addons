@@ -118,6 +118,9 @@ do
         if item.covenant then
             table.insert(available, ns.conditions.Covenant(item.covenant))
         end
+        if item.expansion then
+            table.insert(available, ns.conditions.Expansion(item.expansion))
+        end
         if item.requires then
             if ns.IsObject(item.requires) then
                 table.insert(available, item.requires)
@@ -605,6 +608,10 @@ local function render_string(s, context)
             local name = C_Map.GetAreaInfo(id)
             if name then
                 return name
+            end
+        elseif variant == "expansion" then
+            if _G["EXPANSION_NAME"..id] then
+                return _G["EXPANSION_NAME"..id]
             end
         end
         return fallback ~= "" and fallback or (variant .. ':' .. id)

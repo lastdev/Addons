@@ -84,6 +84,8 @@ HousingDataAggregator_RegisterCosts({
 
     [{245581}] = { cost = [[75 gold]], buyPriceCopper = 500000 },
 
+    [{245603}] = { cost = [[350 gold]], buyPriceCopper = 3500000 },
+
     [{245604, 245617}] = { cost = [[100 gold*]], buyPriceCopper = 1000000 },
 
     [{245615}] = { cost = [[350 Order Resources]], buyPriceCopper = 100000, costComponents = { { amount = 350, name = [[Order Resources]], currencyTypeID = 1220, mapConfidence = "exact" } } },

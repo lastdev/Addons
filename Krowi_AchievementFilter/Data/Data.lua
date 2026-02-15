@@ -125,7 +125,7 @@ function data:LoadOnPlayerLogin()
     addon.Diagnostics.Trace("On Player Login: Start loading data");
 
     self.TemporaryObtainable:Load();
-    addon.EventData.BuildCalendarEventsCache();
+    -- addon.EventData.BuildCalendarEventsCache();
     KrowiAF.CreateBuildVersions();
 
     self:RegisterAchievementDataTasks();
@@ -162,7 +162,9 @@ function data.GetCurrentZoneAchievements()
     cachedZone = C_Map.GetBestMapForUnit("player");
     local achievements = addon.GetAchievementsInZone(cachedZone);
     for i = 1, #addon.SpecialCategories.CurrentZone do
-        addon.SpecialCategories.CurrentZone[i].Achievements = addon.Options.db.profile.AdjustableCategories.CurrentZone[i] and achievements or nil;
+        local category = addon.SpecialCategories.CurrentZone[i];
+        category.Achievements = addon.Options.db.profile.AdjustableCategories.CurrentZone[i] and achievements or nil;
+        category.CountsDirty = true;
     end
     return true; -- Output that the zone has changed
 end

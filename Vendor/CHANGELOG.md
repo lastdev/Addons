@@ -1,8 +1,9 @@
 # Vendor
 
-## [6.1.2-86-gf3ab31e](https://github.com/typicalzergling/vendor/tree/f3ab31e8a09d576c6eb9d4739c7acd708e2e5f4c) (2025-08-10)
-[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...f3ab31e8a09d576c6eb9d4739c7acd708e2e5f4c) 
+## [6.1.2-87-g00f9fc1](https://github.com/typicalzergling/vendor/tree/00f9fc18e01a8b5611b1a263b2047fbbbf90b909) (2026-01-19)
+[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...00f9fc18e01a8b5611b1a263b2047fbbbf90b909) 
 
+- Midnight update and perf improvements  
 - Classic fixes  
 - update for 6.10.1  
 - Updates to 6.10.0  

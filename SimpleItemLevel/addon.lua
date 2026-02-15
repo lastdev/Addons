@@ -28,7 +28,7 @@ end
 local LAI = LibStub("LibAppropriateItems-1.0")
 
 ns.soulboundAtlas = isClassic and "AzeriteReady" or "Soulbind-32x32" -- UF-SoulShard-Icon-2x
-ns.upgradeAtlas = "poi-door-arrow-up"
+ns.upgradeAtlas = "poi-door-arrow-up" -- MiniMap-PositionArrowUp?
 ns.upgradeString = CreateAtlasMarkup(ns.upgradeAtlas)
 ns.gemString = CreateAtlasMarkup(isClassic and "worldquest-icon-jewelcrafting" or "jailerstower-score-gem-tooltipicon") -- Professions-ChatIcon-Quality-Tier5-Cap
 ns.enchantString = RED_FONT_COLOR:WrapTextInColorCode("E")
@@ -51,11 +51,34 @@ ns.PositionOffsets = {
     RIGHT = {-2, 0},
     CENTER = {0, 0},
 }
+if LE_EXPANSION_LEVEL_CURRENT >= LE_EXPANSION_WRATH_OF_THE_LICH_KING then
+    -- A lot of space on the character sheet freed up here
+    local ONRIGHT = {"LEFT", "RIGHT", 8, 0}
+    local ONLEFT = {"RIGHT", "LEFT", -8, 0}
+    ns.CharacterButtonInsetPositions = {
+        CharacterMainHandSlot = {"TOPRIGHT", "TOPLEFT", -8, 0},
+        InspectMainHandSlot = {"TOPRIGHT", "TOPLEFT", -8, 0},
+        CharacterSecondaryHandSlot = {"TOPLEFT", "TOPRIGHT", 4, 0},
+        InspectSecondaryHandSlot = {"TOPLEFT", "TOPRIGHT", 4, 0},
+    }
+    for _, slot in ipairs({"Head", "Neck", "Shoulder", "Back", "Chest", "Shirt", "Tabard", "Wrist"}) do
+        ns.CharacterButtonInsetPositions["Character"..slot.."Slot"] = ONRIGHT
+        ns.CharacterButtonInsetPositions["Inspect"..slot.."Slot"] = ONRIGHT
+    end
+    for _, slot in ipairs({"Hands", "Waist", "Legs", "Feet", "Finger0", "Finger1", "Trinket0", "Trinket1"}) do
+        ns.CharacterButtonInsetPositions["Character"..slot.."Slot"] = ONLEFT
+        ns.CharacterButtonInsetPositions["Inspect"..slot.."Slot"] = ONLEFT
+    end
+else
+    ns.CharacterButtonInsetPositions = {}
+end
 
 ns.defaults = {
     -- places
     character = true,
+    character_inset = false,
     inspect = true,
+    inspect_inset = false,
     bags = true,
     loot = true,
     flyout = true,
@@ -109,7 +132,38 @@ end
 ns:RegisterEvent("ADDON_LOADED")
 
 
-local function ItemIsUpgrade(item)
+local ItemLevelFromTooltip
+do
+    local empty = {lines={}}
+    local lineType = Enum.TooltipDataLineType.ItemLevel or Enum.TooltipDataLineType.None
+    local ITEM_LEVEL_PATTERN = ITEM_LEVEL:gsub("%%d", "(%%d+)")
+    function ItemLevelFromTooltip(info)
+        for _, line in ipairs((info or empty).lines) do
+            if line.type == lineType then
+                if line.itemLevel then
+                    return line.itemLevel
+                end
+                local levelMatch = line.leftText:match(ITEM_LEVEL_PATTERN)
+                if levelMatch then
+                    return tonumber(levelMatch)
+                end
+            end
+        end
+    end
+end
+
+local function ItemFromUnitSlot(unit, slotID)
+    if unit == "player" then
+        return Item:CreateFromEquipmentSlot(slotID)
+    else
+        local itemLink = GetInventoryItemLink(unit, slotID)
+        if itemLink then return Item:CreateFromItemLink(itemLink) end
+        local itemID = GetInventoryItemID(unit, slotID)
+        if itemID then return Item:CreateFromItemID(itemID) end
+    end
+end
+
+local function ItemIsUpgrade(item, levelOverride)
     if not (item and LAI:IsAppropriate(item:GetItemID())) then
         return
     end
@@ -121,7 +175,7 @@ local function ItemIsUpgrade(item)
         return
     end
     local isUpgrade
-    local itemLevel = item:GetCurrentItemLevel() or 0
+    local itemLevel = levelOverride or item:GetCurrentItemLevel() or 0
     local _, _, _, equipLoc, _, itemClass, itemSubClass = C_Item.GetItemInfoInstant(item:GetItemID())
     ns.ForEquippedItems(equipLoc, function(equippedItem, slot)
         -- This *isn't* async, for flow reasons, so if the equipped items
@@ -209,7 +263,7 @@ end
 ns.DetailsFromItem = DetailsFromItem
 
 ns.frames = {} -- TODO: should I make this a FramePool now?
-local function PrepareItemButton(button)
+local function PrepareItemButton(button, variant)
     if not button.simpleilvl then
         local overlayFrame = CreateFrame("FRAME", nil, button)
         overlayFrame:SetAllPoints()
@@ -221,8 +275,7 @@ local function PrepareItemButton(button)
 
         button.simpleilvlup = overlayFrame:CreateTexture(nil, "OVERLAY")
         button.simpleilvlup:SetSize(10, 10)
-        -- MiniMap-PositionArrowUp?
-        button.simpleilvlup:SetAtlas("poi-door-arrow-up")
+        button.simpleilvlup:SetAtlas(ns.upgradeAtlas)
         button.simpleilvlup:Hide()
 
         button.simpleilvlmissing = overlayFrame:CreateFontString(nil, "OVERLAY")
@@ -235,11 +288,20 @@ local function PrepareItemButton(button)
 
         ns.frames[button] = overlayFrame
     end
+    button.simpleilvloverlay.variant = variant or button.simpleilvloverlay.variant
+    variant = button.simpleilvloverlay.variant
+
     button.simpleilvloverlay:SetFrameLevel(button:GetFrameLevel() + 1)
 
     -- Apply appearance config:
     button.simpleilvl:ClearAllPoints()
-    button.simpleilvl:SetPoint(db.position, unpack(ns.PositionOffsets[db.position]))
+    local position, positionOffsets = db.position, ns.PositionOffsets[db.position]
+    if (variant == "character" and db.character_inset) or (variant == "inspect" and db.inspect_inset) and ns.CharacterButtonInsetPositions[button:GetName()] then
+        local point, relativePoint, x, y = unpack(ns.CharacterButtonInsetPositions[button:GetName()])
+        button.simpleilvl:SetPoint(point, button.simpleilvloverlay, relativePoint, x, y)
+    else
+        button.simpleilvl:SetPoint(db.position, unpack(ns.PositionOffsets[db.position]))
+    end
     button.simpleilvl:SetFontObject(ns.Fonts[db.font] or NumberFontNormal)
     -- button.simpleilvl:SetJustifyH('RIGHT')
 
@@ -354,9 +416,14 @@ local function UpdateButtonFromItem(button, item, variant, suppress, extradetail
     suppress = suppress or blank
     item:ContinueOnItemLoad(function()
         if not ShouldShowOnItem(item) then return end
-        PrepareItemButton(button)
-        local details = DetailsFromItem(item)
-        if extradetails then MergeTable(details, extradetails) end
+        PrepareItemButton(button, variant)
+        local details = DetailsFromItem(item, extradetails and extradetails.level)
+        if extradetails then
+            MergeTable(details, extradetails)
+            if extradetails.level then
+                details.upgrade = ItemIsUpgrade(item, extradetails.level)
+            end
+        end
         if not suppress.level then AddLevelToButton(button, details) end
         if not suppress.upgrade then AddUpgradeToButton(button, details) end
         if not suppress.bound then AddBoundToButton(button, details) end
@@ -386,19 +453,17 @@ local function AddAverageLevelToFontString(unit, fontstring)
     end
     local mainhandEquipLoc, offhandEquipLoc
     local items = {}
-    for slot = INVSLOT_FIRST_EQUIPPED, INVSLOT_LAST_EQUIPPED do
+    for slotID = INVSLOT_FIRST_EQUIPPED, INVSLOT_LAST_EQUIPPED do
         -- shirt and tabard don't count
-        if slot ~= INVSLOT_BODY and slot ~= INVSLOT_TABARD then
-            local itemID = GetInventoryItemID(unit, slot)
-            local itemLink = GetInventoryItemLink(unit, slot)
-            if itemLink or itemID then
-                local item = itemLink and Item:CreateFromItemLink(itemLink) or Item:CreateFromItemID(itemID)
+        if slotID ~= INVSLOT_BODY and slotID ~= INVSLOT_TABARD then
+            local item = ItemFromUnitSlot(unit, slotID)
+            if item and not item:IsItemEmpty() then
                 continuableContainer:AddContinuable(item)
                 table.insert(items, item)
                 -- slot bookkeeping
-                local equipLoc = select(4, C_Item.GetItemInfoInstant(itemLink or itemID))
-                if slot == INVSLOT_MAINHAND then mainhandEquipLoc = equipLoc end
-                if slot == INVSLOT_OFFHAND then offhandEquipLoc = equipLoc end
+                local equipLoc = select(4, C_Item.GetItemInfoInstant(item:GetItemLink() or item:GetItemID()))
+                if slotID == INVSLOT_MAINHAND then mainhandEquipLoc = equipLoc end
+                if slotID == INVSLOT_OFFHAND then offhandEquipLoc = equipLoc end
             end
         end
     end
@@ -433,7 +498,9 @@ local function AddAverageLevelToFontString(unit, fontstring)
         local totalLevel = 0
         for _, item in ipairs(items) do
             totalLevel = totalLevel + item:GetCurrentItemLevel()
+            -- print("item", item:GetItemLink(), item:GetCurrentItemLevel())
         end
+        -- print("total", totalLevel, "/", numSlots, "=", totalLevel / numSlots)
         fontstring:SetFormattedText(ITEM_LEVEL, totalLevel / numSlots)
         fontstring:Show()
     end)
@@ -450,17 +517,10 @@ local function UpdateItemSlotButton(button, unit)
     local slotID = button:GetID()
 
     if (slotID >= INVSLOT_FIRST_EQUIPPED and slotID <= INVSLOT_LAST_EQUIPPED) then
-        local item
-        if unit == "player" then
-            item = Item:CreateFromEquipmentSlot(slotID)
-        else
-            local itemID = GetInventoryItemID(unit, slotID)
-            local itemLink = GetInventoryItemLink(unit, slotID)
-            if itemLink or itemID then
-                item = itemLink and Item:CreateFromItemLink(itemLink) or Item:CreateFromItemID(itemID)
-            end
-        end
-        UpdateButtonFromItem(button, item, key)
+        local item = ItemFromUnitSlot(unit, slotID)
+        UpdateButtonFromItem(button, item, key, nil, {
+            level = ItemLevelFromTooltip(_G.C_TooltipInfo and C_TooltipInfo.GetInventoryItem(unit, slotID))
+        })
         return item
     end
 end
@@ -566,7 +626,7 @@ if _G.EquipmentFlyout_DisplayButton then
             end
             local itemID = EquipmentManager_GetItemInfoByLocation(location)
             if itemID then
-                print("fell back to itemid", location)
+                -- print("fell back to itemid", location)
                 return Item:CreateFromItemID(itemID)
             end
         end
@@ -636,8 +696,13 @@ do
     local function hookBankPanel(panel)
         if not panel then return end
         local update = function(frame)
+            local canUseBank = C_Bank.CanUseBank(frame:GetActiveBankType())
             for itemButton in frame:EnumerateValidItems() do
-                UpdateContainerButton(itemButton, itemButton:GetBankTabID(), itemButton:GetContainerSlotID())
+                if canUseBank then
+                    UpdateContainerButton(itemButton, itemButton:GetBankTabID(), itemButton:GetContainerSlotID())
+                else
+                    CleanButton(itemButton)
+                end
             end
         end
         -- Initial load and switching tabs
@@ -645,8 +710,8 @@ do
         -- Moving items
         hooksecurefunc(panel, "RefreshAllItemsForSelectedTab", update)
     end
-    hookBankPanel(_G.BankPanel)
-    hookBankPanel(_G.AccountBankPanel)
+    hookBankPanel(_G.BankPanel) -- added in 11.2.0
+    hookBankPanel(_G.AccountBankPanel) -- removed in 11.2.0
 end
 
 -- Loot
@@ -668,19 +733,6 @@ if _G.LootFrame_UpdateButton then
     end)
 else
     -- Dragonflight
-    local ITEM_LEVEL_PATTERN = ITEM_LEVEL:gsub("%%d", "(%%d+)")
-    local function itemLevelFromLootTooltip(slot)
-        -- GetLootSlotLink doesn't give a link for the scaled item you'll
-        -- actually loot. As such, we can fall back on tooltip scanning to
-        -- extract the real level. This is only going to work on
-        -- weapons/armor, but conveniently that's the things that get scaled!
-        if not _G.C_TooltipInfo then return end -- in case we get a weird Classic update...
-        local info = C_TooltipInfo.GetLootItem(slot)
-        if info and info.lines and info.lines[2] and info.lines[2].type == Enum.TooltipDataLineType.None then
-            return tonumber(info.lines[2].leftText:match(ITEM_LEVEL_PATTERN))
-        end
-    end
-
     local function handleSlot(frame)
         if not frame.Item then return end
         CleanButton(frame.Item)
@@ -690,7 +742,11 @@ else
         local link = GetLootSlotLink(data.slotIndex)
         if link then
             UpdateButtonFromItem(frame.Item, Item:CreateFromItemLink(link), "loot", nil, {
-                level = itemLevelFromLootTooltip(data.slotIndex),
+            -- GetLootSlotLink doesn't give a link for the scaled item you'll
+            -- actually loot. As such, we can fall back on tooltip scanning to
+            -- extract the real level. This is only going to work on
+            -- weapons/armor, but conveniently that's the things that get scaled!
+                level = ItemLevelFromTooltip(_G.C_TooltipInfo and C_TooltipInfo.GetLootItem(data.slotIndex)),
             })
         end
     end
@@ -1018,8 +1074,22 @@ do
         local gems = (gem1 ~= "" and 1 or 0) + (gem2 ~= "" and 1 or 0) + (gem3 ~= "" and 1 or 0) + (gem4 ~= "" and 1 or 0)
         return slots > gems
     end
+    local enchantableRings = true
+    if isClassic and LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_MISTS_OF_PANDARIA then
+        -- MoP specifically only allows you to enchant your own rings
+        local MISTS_ENCHANTING_ID = 2489
+        local prof1, prof2 = GetProfessions()
+        if prof1 then
+            local skillName, _, skillLevel, maxSkillLevel, _, _, skillLineID, _, _, _, displayName = GetProfessionInfo(prof1)
+            enchantableRings = skillLineID == MISTS_ENCHANTING_ID
+        end
+        if prof2 and not enchantableRings then
+            local skillName, _, skillLevel, maxSkillLevel, _, _, skillLineID, _, _, _, displayName = GetProfessionInfo(prof2)
+            enchantableRings = skillLineID == MISTS_ENCHANTING_ID
+        end
+    end
     local enchantable = isClassic and {
-        INVTYPE_HEAD = true,
+        INVTYPE_HEAD = LE_EXPANSION_LEVEL_CURRENT < LE_EXPANSION_MISTS_OF_PANDARIA,
         INVTYPE_SHOULDER = true,
         INVTYPE_CHEST = true,
         INVTYPE_ROBE = true,
@@ -1027,7 +1097,7 @@ do
         INVTYPE_FEET = true,
         INVTYPE_WRIST = true,
         INVTYPE_HAND = true,
-        INVTYPE_FINGER = true,
+        INVTYPE_FINGER = enchantableRings,
         INVTYPE_CLOAK = true,
         INVTYPE_WEAPON = true,
         INVTYPE_SHIELD = true,
@@ -1044,7 +1114,7 @@ do
         INVTYPE_LEGS = true,
         INVTYPE_FEET = true,
         INVTYPE_WRIST = true,
-        INVTYPE_FINGER = true,
+        INVTYPE_FINGER = enchantableRings,
         INVTYPE_CLOAK = true,
         INVTYPE_WEAPON = true,
         INVTYPE_2HWEAPON = true,

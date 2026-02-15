@@ -1,0 +1,13 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file='TheStonevault.lua'/>
+    <Script file='TheDawnbreaker.lua'/>
+    <Script file='GrimBatol.lua'/>
+    <Script file='AraKara.lua'/>
+    <Script file='CityOfThreads.lua'/>
+    <Script file='PrioryOfTheSacredFlame.lua'/>
+    <Script file='CinderbrewMeadery.lua'/>
+    <Script file='DarkflameCleft.lua'/>
+    <Script file='TheRookery.lua'/>
+    <Script file='OperationFloodgate.lua'/>
+    <Script file='EcoDomeAldani.lua'/>
+</Ui>

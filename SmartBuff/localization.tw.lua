@@ -1,4 +1,4 @@
-﻿-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Taiwan Localization
 -- Big thanks to:
 -- 血之谷-萬年卡奴
@@ -33,8 +33,8 @@ SMARTBUFF_UNDEAD    = "不死";
 SMARTBUFF_CLASSES = {"德魯伊", "獵人", "法師", "聖騎士", "牧師", "盜賊", "薩滿", "術士", "戰士", "死亡騎士", "武僧", "恶魔猎手", "喚魔者", "獵人寵物", "術士寵物", "死騎寵物", "坦克", "補師", "DD"};
 
 -- Templates and Instances
-SMARTBUFF_TEMPLATES = {"自我", "隊伍", "團隊", "戰場", "競技場", "ICC", "TOC", "Ulduar", "MC", "Ony", "BWL", "Naxx", "AQ", "ZG", "自定義 1", "自定義 2", "自定義 3", "自定義 4", "自定義 5"};
-SMARTBUFF_INSTANCES = {"冰冠城塞", "十字軍的試煉", "奧杜亞", "熔火之心", "奧妮克希亞的巢穴", "黑翼之巢", "納克薩瑪斯", "安其拉", "祖爾格拉布"};
+SMARTBUFF_TEMPLATES = {"單人", "隊伍", "隨機團隊", "團隊", "傳奇鑰石", "恐懼幻象", "地心探險", "戰場", "競技場", "虛空尖塔", "夢境裂隙", "進軍奎爾達納斯", "奈幽貝爾宮殿", "安德邁恩解放戰役", "自訂 1", "自訂 2", "自訂 3", "自訂 4", "自訂 5"};
+SMARTBUFF_INSTANCES = {"虛空尖塔", "夢境裂隙", "進軍奎爾達納斯", "奈幽貝爾宮殿", "安德邁恩解放戰役"};
 
 -- Mount
 SMARTBUFF_MOUNT = "速度提高(%d+)%%.";
@@ -120,7 +120,7 @@ SMARTBUFF_OFT_SPLASHMSGSHORT = "簡短訊息";
 SMARTBUFF_OFTT               = "SmarBuff 開/關";
 SMARTBUFF_OFTT_AUTO          = "Buff提示 開/關";
 SMARTBUFF_OFTT_AUTOTIMER     = "Buff監視時間的間隔";
-SMARTBUFF_OFTT_AUTOCOMBAT    = "戰鬥時保持監視";
+SMARTBUFF_OFTT_AUTOCOMBAT    = "戰鬥時保持監視。\n除非在選項視窗中啟用主「戰鬥中」選項（非本項），否則戰鬥中所有提醒邏輯均不執行。";
 SMARTBUFF_OFTT_AUTOCHAT      = "Buff消失訊息 - 聊天視窗訊息";
 SMARTBUFF_OFTT_AUTOSPLASH    = "Buff消失訊息 - 螢幕中央閃爍訊息";
 SMARTBUFF_OFTT_AUTOSOUND     = "Buff消失訊息 - 聲音提示";
@@ -173,7 +173,7 @@ SMARTBUFF_BST_MANALIMIT      = "力能底線";--力能是技能施放來源,如�
 -- Buffsetup Frame Tooltip Text
 SMARTBUFF_BSTT_SELFONLY      = "僅對自己施法,不對其他隊友施法.";
 SMARTBUFF_BSTT_SELFNOT       = "除了自己,buff所有勾選職業.";
-SMARTBUFF_BSTT_COMBATIN      = "在戰鬥狀態時保持自動觸發技能.";
+SMARTBUFF_BSTT_COMBATIN      = "在戰鬥狀態時保持自動觸發技能。\n除非在選項視窗中啟用主「戰鬥中」選項，否則戰鬥中所有邏輯均不執行。";
 SMARTBUFF_BSTT_COMBATOUT     = "在非戰鬥狀態時保持自動觸發技能.";
 SMARTBUFF_BSTT_MAINHAND      = "Buff主手.";
 SMARTBUFF_BSTT_OFFHAND       = "Buff副手.";

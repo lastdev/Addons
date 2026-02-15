@@ -1,13 +1,13 @@
-## Interface: 110100, 110105
+## Interface: 110207, 120000, 120001
 ## X-Min-Interface: 100107
-## Version: r5
+## Version: r6
 ## Category: DBM
 
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Raids (DF)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010공격대 (용군단)|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010團隊副本-巨龍崛起|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM Мод|r|cffffe00a>|r |cffff6010Рейды (Драконы)|r
-## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM Мод|r|cffffe00a>|r |cffff6010团队副本 (巨龙时代)|r
+## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010团队副本 (巨龙时代)|r
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
@@ -30,7 +30,7 @@
 ## X-DBM-Mod-MinExpansion: 9
 ## X-Curse-Project-ID: 1101373
 ## X-Wago-ID: j6jzXW6R
-## Version: r5
+## Version: r6
 
 localization.en.lua
 localization.kr.lua

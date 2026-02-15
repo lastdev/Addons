@@ -148,7 +148,7 @@ function Profession.GetResultInfo(craftString)
 		if type(itemString) == "table" then
 			itemString = itemString[CraftString.GetQuality(craftString) or 1]
 		end
-		if itemString and not LibTSMService.IsVanillaClassic() then
+		if itemString and not LibTSMService.IsVanillaClassic() and not LibTSMService.IsBCClassic() then
 			return itemString, ItemInfo.GetTexture(itemString), ItemInfo.GetName(itemString)
 		elseif EngineeringData.Tinkers[spellId] then
 			local name, icon = TradeSkill.GetBasicInfo(spellId)

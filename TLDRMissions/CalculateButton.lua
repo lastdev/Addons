@@ -214,7 +214,11 @@ local function calculateButtonHandler(self)
         elseif category == "artifact-power" then
             missions = gui:GetArtifactPowerMissions()
         elseif category == "augment-runes" then
-            missions = addon:GetAugmentRuneMissions()
+            missions = gui:GetAugmentRuneMissions()
+        elseif category == "veiled-argunite" then
+            missions = gui:GetVeiledArguniteMissions()
+        elseif category == "wakening-essence" then
+            missions = gui:GetWakeningEssenceMissions()
         end
         
         for _, mission in pairs(missions) do
@@ -271,6 +275,12 @@ local function calculateButtonHandler(self)
         elseif selectedReward == "augment-runes" then
             newMissions = gui:GetAugmentRuneMissions()
             acCategory = "AugmentRunes"
+        elseif selectedReward == "veiled-argunite" then
+            newMissions = gui:GetVeiledArguniteMissions()
+            acCategory = "VeiledArgunite"
+        elseif selectedReward == "wakening-essence" then
+            newMissions = gui:GetWakeningEssenceMissions()
+            acCategory = "WakeningEssence"
         end
         
         for _, mission in ipairs(newMissions) do

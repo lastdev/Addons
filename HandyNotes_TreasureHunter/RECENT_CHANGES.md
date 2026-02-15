@@ -1,4 +1,5 @@
-## Changed in v42
+## Changed in v43
 
-* Updated for 11.2.7
+* Updated for Midnight
+* Bring in systems improvements from [my Midnight plugin](https://www.curseforge.com/wow/addons/handynotes-midnight-treasures)
 

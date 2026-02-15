@@ -1,7 +1,11 @@
 # LargerMacroIconSelection
 
-## [v1.10.6](https://github.com/ketho-wow/LargerMacroIconSelection/tree/v1.10.6) (2025-08-30)
-[Full Changelog](https://github.com/ketho-wow/LargerMacroIconSelection/compare/v1.10.5...v1.10.6) [Previous Releases](https://github.com/ketho-wow/LargerMacroIconSelection/releases)
+## [v1.11.0](https://github.com/ketho-wow/LargerMacroIconSelection/tree/v1.11.0) (2026-01-25)
+[Full Changelog](https://github.com/ketho-wow/LargerMacroIconSelection/compare/v1.10.6...v1.11.0) [Previous Releases](https://github.com/ketho-wow/LargerMacroIconSelection/releases)
 
-- update settings.json  
-- Added support for Bagnon bank, closes #16  
+- Update for patch 12.0.0 and 2.5.5  
+    Update IconFileNames 8.1.2  
+- Merge pull request #18 from OldGromm/Midnight-Beta  
+    (Midnight Beta) Add support for the new Outfit icon selection window  
+- Added support for the new Outfit icon selection window  
+- does not error on classic, but just in case  

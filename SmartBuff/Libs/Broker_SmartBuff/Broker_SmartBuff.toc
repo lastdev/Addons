@@ -1,6 +1,6 @@
-## Interface: 90207
+## Interface: 120000, 120001
 ## Title: Broker: Smart|cffffffffBuff|r
-## Version: 1.90207
+## Version: 1.120000
 ## Notes: SmartBuff support for Data Broker
 ## Author: |cff20d2ffAeldra|r (EU-Proudmoore)
 ## Dependencies: SmartBuff

@@ -263,7 +263,7 @@ function MT:CreateMTFrame()
 
     local mtscrollchild = CreateFrame("Frame", "MacroToolkitButtonContainer", mtscroll, "BackdropTemplate")
     do
-        mtscrollchild:SetSize(285, 10)
+        mtscrollchild:SetSize(mtframe:GetWidth() - 345, 10)
         mtscrollchild:SetPoint("TOPLEFT")
         self:ContainerOnLoad(mtscrollchild)
         mtscroll:SetScrollChild(mtscrollchild)
@@ -908,7 +908,14 @@ function MT:CreateMTFrame()
         mtopt:SetSize(80, 22)
         mtopt:SetText(_G.MAIN_MENU)
         mtopt:SetPoint("RIGHT", mtcustom, "LEFT", -14, 0)
-        mtopt:SetScript("OnClick", function() if MT.MTPF then MT.MTPF:Hide() end Settings.OpenToCategory(MT.categoryID) end)
+        mtopt:SetScript("OnClick", function()
+            if MT.MTPF then MT.MTPF:Hide() end
+            if C_SettingsUtil and C_SettingsUtil.OpenSettingsPanel and InCombatLockdown() then
+                print("Cannot open the settings in combat")
+                return;
+            end
+            Settings.OpenToCategory(MT.categoryID)
+        end)
     end
 
     local mtcon = CreateFrame("Button", "MacroToolkitConditions", mtframe, "BackdropTemplate,UIPanelButtonTemplate")

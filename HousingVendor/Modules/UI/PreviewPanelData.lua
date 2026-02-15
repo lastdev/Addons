@@ -242,6 +242,25 @@ function PreviewPanelData:ShowItem(previewFrame, item)
     if not item or not item.itemID then return end
 
     previewFrame:Show()
+
+    -- Reset per-item waypoint context to avoid stale waypoints when switching between items.
+    if previewFrame.mapBtn and previewFrame.mapBtn.Hide then
+        previewFrame.mapBtn:Hide()
+    end
+    previewFrame._vendorInfo = nil
+    previewFrame._trainerInfo = nil
+    previewFrame._waypointInfo = nil
+    previewFrame._waypointContext = nil
+    
+    -- Hide placeholder when showing an item
+    if previewFrame.placeholder then
+        previewFrame.placeholder:Hide()
+    end
+    
+    -- Show details container when showing an item
+    if previewFrame.details then
+        previewFrame.details:Show()
+    end
     
     previewFrame._currentItem = item
     
@@ -276,6 +295,10 @@ function PreviewPanelData:ShowItem(previewFrame, item)
     self:DisplayRequirements(previewFrame, item, catalogData)
     self:Display3DModel(previewFrame, item, catalogData)
 
+    if previewFrame.RelayoutProfessionAndRequirements then
+        pcall(previewFrame.RelayoutProfessionAndRequirements, previewFrame)
+    end
+
     -- Cost/vendor info can be delayed right after login/reload; retry briefly for the currently displayed item.
     if C_Timer and C_Timer.After and numericItemID then
         local maxAttempts = 3
@@ -295,6 +318,9 @@ function PreviewPanelData:ShowItem(previewFrame, item)
             local refreshed = self:GetCatalogData(numericItemID)
             item._catalogData = refreshed
             self:DisplayVendorInfo(previewFrame, item, refreshed)
+            if previewFrame.RelayoutProfessionAndRequirements then
+                pcall(previewFrame.RelayoutProfessionAndRequirements, previewFrame)
+            end
 
             if NeedsVendorCostRetry() then
                 C_Timer.After(0.8, function()

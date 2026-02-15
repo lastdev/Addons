@@ -1,7 +1,7 @@
 ﻿-- Pawn by Vger-Azjol-Nerub
 -- www.vgermods.com
--- © 2006-2025 Travis Spomer.  This mod is released under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 license.
--- See Readme.htm for more information.
+-- © 2006-2026 Travis Spomer.  This mod is released under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 license.
+-- See Readme.md for more information.
 
 --
 -- Korean resources
@@ -72,7 +72,7 @@ www.vgermods.com
 /pawn debug [ on | off ] -- 콘솔에 디버그 메시지 스팸
 /pawn backup -- 모든 능력치 비율 태그 백업
  
-Pawn 사용자 설정의 더 자세한 정보는, 애드온에 포함된 help 파일 (Readme.htm) 를 참고하세요.]=],
+Pawn 사용자 설정의 더 자세한 정보는, 애드온에 포함된 help 파일 (Readme.md) 를 참고하세요.]=],
 	["ValueCalculationMessage"] = "   %g %s x %g each = %g",
 	["VisibleScalesHeader"] = "%s의 능력치 비율",
 	["Stats"] = {
@@ -322,9 +322,7 @@ Pawn 사용자 설정의 더 자세한 정보는, 애드온에 포함된 help �
 		["OptionsBagUpgradeAdvisor"] = "가방 향상 조언가 표시",
 		["OptionsBagUpgradeAdvisorTooltip"] = [=[Pawn이 가방 내 향상 화살표를 제어하게 하려면 이 옵션을 활성화하세요.
 
-체크하면 Pawn이 가방에서 향상되는 아이템을 찾고 활성 능력치 비율 중 향상되는 아이템에 녹색 화살표로 표시합니다.
-
-체크하지 않으면 WoW는 현재 착용 중인 장비보다 아이템 레벨이 더 높은 아이템에 표시하며, Pawn은 기본 내장 기능과 간섭하지 않습니다.]=],
+체크하면 Pawn이 가방에서 향상되는 아이템을 찾고 활성 능력치 비율 중 향상되는 아이템에 녹색 화살표로 표시합니다.]=],
 		["OptionsBlankLine"] = "값 위에 빈 줄 추가",
 		["OptionsBlankLineTooltip"] = "이 옵션을 켜면 Pawn 값 위에 빈 줄을 추가해 아이템 툴팁을 깔끔하게 정리할 수 있습니다.",
 		["OptionsButtonHidden"] = "숨기기",
@@ -824,9 +822,6 @@ PawnLocal.Specs =
 
 end
 
-if GetLocale() == "koKR" then
-	PawnUseThisLocalization()
-end
-
--- After using this localization or deciding that we don't need it, remove it from memory.
+-- Initiate self-destruct sequence.
+PawnUseThisLocalization()
 PawnUseThisLocalization = nil

@@ -43,7 +43,7 @@ ItemInfoConfig:OnModuleLoad(function()
 	AddonSettings.RegisterOnLoad("Config.ItemInfoConfig", private.HandleSettingsLoaded)
 
 	-- Debug command to wipe the item info cache
-	SlashCommands.RegisterDebug("clearitemdb", private.WipDB)
+	SlashCommands.RegisterDebug("clearitemdb", private.WipeDB)
 end)
 
 ItemInfoConfig:OnModuleUnload(function()
@@ -109,7 +109,7 @@ function private.FetchDestroyItemInfo(data)
 	end
 end
 
-function private.WipDB()
+function private.WipeDB()
 	wipe(_G[CACHE_DB_GLOBAL_NAME])
 	private.wiped = true
 	ReloadUI()

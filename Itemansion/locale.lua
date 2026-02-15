@@ -16,7 +16,8 @@ L["ruRU"] = {
         "Битва за Азерот",
         "Темные Земли",
         "Dragonflight",
-        "The War Within"
+        "The War Within",
+        "Midnight"
     };
 };
 
@@ -33,7 +34,8 @@ L["enUS"] = {
         "Battle for Azeroth",
         "Shadowlands",
         "Dragonflight",
-        "The War Within"
+        "The War Within",
+        "Midnight"
     };
 };
 

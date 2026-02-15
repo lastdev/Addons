@@ -376,7 +376,7 @@ function private.ProcessUpgrade(db, upgradeObj)
 			end
 		end
 	end
-	if prevVersion >= 122 and prevVersion < 131 and not LibTSMApp.IsPandaClassic() then
+	if prevVersion >= 122 and prevVersion < 133 and not LibTSMApp.IsPandaClassic() then
 		for _, key, value in upgradeObj:RemovedSettingIterator("global", nil, "auctionUIContext", "auctioningAuctionScrollingTable") do
 			db:Set("global", upgradeObj:GetScopeKey(key), "auctionUIContext", "auctioningAuctionScrollingTable", value)
 		end
@@ -386,9 +386,12 @@ function private.ProcessUpgrade(db, upgradeObj)
 		for _, key, value in upgradeObj:RemovedSettingIterator("global", nil, "auctionUIContext", "shoppingAuctionScrollingTable") do
 			db:Set("global", upgradeObj:GetScopeKey(key), "auctionUIContext", "shoppingAuctionScrollingTable", value)
 		end
+		for _, key, value in upgradeObj:RemovedSettingIterator("global", nil, "auctionUIContext", "sniperScrollingTable") do
+			db:Set("global", upgradeObj:GetScopeKey(key), "auctionUIContext", "sniperScrollingTable", value)
+		end
 		if not LibTSMApp.IsRetail() then
-			for _, key, value in upgradeObj:RemovedSettingIterator("factionrealm", nil, "auctioningOperations", "whitelist") do
-				db:Set("factionrealm", upgradeObj:GetScopeKey(key), "auctioningOperations", "whitelist", value)
+			for _, key, value in upgradeObj:RemovedSettingIterator("factionrealm", nil, "auctioningOptions", "whitelist") do
+				db:Set("factionrealm", upgradeObj:GetScopeKey(key), "auctioningOptions", "whitelist", value)
 			end
 		end
 	end

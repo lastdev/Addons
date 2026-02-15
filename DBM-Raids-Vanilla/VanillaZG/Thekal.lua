@@ -12,7 +12,7 @@ end
 local mod = DBM:NewMod("Thekal", "DBM-Raids-Vanilla", catID)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision("20250530193736")
+mod:SetRevision("20251223165825")
 mod:SetCreatureID(14509, 11348, 11347)
 mod:SetEncounterID(789)
 mod:SetBossHPInfoToHighest()
@@ -94,13 +94,13 @@ function mod:SPELL_SUMMON(args)
 end
 
 function mod:CHAT_MSG_MONSTER_EMOTE(msg)
-	if msg == L.PriestDied then -- Starts timer before ressurection of adds.
+	if msg == L.PriestDied or msg:find(L.PriestDied) then -- Starts timer before ressurection of adds.
 		self:SendSync("PriestDied")
 	end
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.YellPhase2 and self.vb.phase < 2 then -- Bossfight (tank and spank)
+	if (msg == L.YellPhase2 or msg:find(L.YellPhase2)) and self.vb.phase < 2 then -- Bossfight (tank and spank)
 		self:SendSync("YellPhase2")
 	end
 end

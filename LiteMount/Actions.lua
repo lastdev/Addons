@@ -14,6 +14,7 @@ local C_Spell = LM.C_Spell or C_Spell
 
 local L = LM.Localize
 
+local issecretvalue = issecretvalue or function () return false end
 --
 -- This is the support for saving and restoring druid forms which is all done
 -- in the Dismount action. Form IDs that you put here must be cancelled
@@ -57,7 +58,7 @@ FLOWCONTROLS['ELSEIF'] =
     end
 
 FLOWCONTROLS['ELSE'] =
-    function (args, context, isTrue)
+    function (args, context)
         local trueState  = context.flowControl[#context.flowControl]
         trueState = trueState + 1
         context.flowControl[#context.flowControl] = trueState
@@ -65,7 +66,7 @@ FLOWCONTROLS['ELSE'] =
     end
 
 FLOWCONTROLS['END'] =
-    function (args, context, isTrue)
+    function (args, context)
         table.remove(context.flowControl)
         LM.Debug('  * END is ' .. table.concat(context.flowControl, ','))
     end
@@ -176,7 +177,7 @@ local function GetUsableSpell(arg)
 
     if C_Spell.IsSpellUsable(info.name) then
         local cooldownInfo = C_Spell.GetSpellCooldown(info.name)
-        if cooldownInfo and cooldownInfo.startTime == 0 then
+        if not cooldownInfo or issecretvalue(cooldownInfo.startTime) or cooldownInfo.startTime == 0 then
             return info.name, info.spellID, nameWithSubtext
         end
     end
@@ -213,27 +214,6 @@ ACTIONS['Spell'] = {
         end
 }
 
--- Buff is the same as Spell but checks if you have a matching aura and
--- doesn't recast. Note that it checks only for buffs on the assumption
--- that you can't cast a debuff on yourself, and that it checks by name
--- because for some spells (e.g., Levitate) the ID doesn't match.
-
-ACTIONS['Buff'] = {
-    toDisplay = SpellArgsToDisplay,
-    argType = 'list',
-    handler =
-        function (args, context)
-            for _, arg in ipairs(args:ParseList()) do
-                LM.Debug('  * trying buff: ' .. tostring(arg))
-                local name, id, nameWithSubtext = GetUsableSpell(arg)
-                if name and not LM.UnitAura(context.rule.unit or 'player', name) then
-                    LM.Debug("  * setting action to spell " .. nameWithSubtext)
-                    return LM.SecureAction:Spell(nameWithSubtext, context.rule.unit)
-                end
-            end
-        end
-}
-
 -- Set context.precast to a spell name to try to macro in before mounting journal
 -- mounts. This is a bit less strict than Spell and Buff because the macro
 -- still works even if the spell isn't usable, and has the advantage of
@@ -253,26 +233,6 @@ ACTIONS['PreCast'] = {
                     context.preCast = info.name
                     context.preUse = nil
                     return
-                end
-            end
-        end
-}
-
-ACTIONS['CancelAura'] = {
-    toDisplay = SpellArgsToDisplay,
-    argType = 'list',
-    handler =
-        function (args, context)
-            for _, arg in ipairs(args:ParseList()) do
-                local info = LM.UnitAura('player', arg)
-                if info then
-                    -- Levitate (for example) is marked canApplyAura == false so this is a
-                    -- half-workaround. You still won't cancel Levitate somone else put on you.
-                    if info.canApplyAura then
-                        return LM.SecureAction:CancelAura(info.name)
-                    elseif info.sourceUnit == 'player' and C_Spell.GetSpellInfo(info.name) then
-                        return LM.SecureAction:CancelAura(info.name)
-                    end
                 end
             end
         end
@@ -359,12 +319,6 @@ ACTIONS['Dismount'] = {
                 end
             end
         end
-}
-
--- CancelForm has been absorbed into Dismount
-ACTIONS['CancelForm'] = {
-    argType = 'none',
-    handler = function (args, context) end
 }
 
 -- Got a player target, try copying their mount
@@ -477,6 +431,24 @@ local smartActions = {
     },
 }
 
+ACTIONS['Downshift'] = {
+    argType = 'none',
+    handler =
+        function (args, context)
+            LM.Debug("  * adding mount downshift limit.")
+            if LM.Conditions:Check("[submerged]", context) then
+                table.insert(context.limits, LM.RuleArguments:Get("-", "SWIM"))
+            elseif LM.Conditions:Check("[flyable]", context) then
+                table.insert(context.limits, LM.RuleArguments:Get("-", "DRAGONRIDING"))
+                table.insert(context.limits, LM.RuleArguments:Get("-", "FLY"))
+            elseif LM.Conditions:Check("[drivable]", context) then
+                table.insert(context.limits, LM.RuleArguments:Get("-", "DRIVE"))
+            elseif LM.Conditions:Check("[floating]", context) then
+                table.insert(context.limits, LM.RuleArguments:Get("-", "SWIM"))
+            end
+        end,
+}
+
 ACTIONS['Mount'] = {
     name = L.LM_MOUNT_ACTION,
     description = L.LM_MOUNT_DESCRIPTION,
@@ -521,6 +493,10 @@ ACTIONS['Mount'] = {
             else
                 mounts = filteredList
             end
+
+            -- It is only by good luck rather than good programming that we
+            -- always reach here with mounts ~= nil and I should do something
+            -- about that sometime.
 
             local m
 
@@ -775,6 +751,11 @@ local function IsCastableItem(itemID)
     return false
 end
 
+local function IsCastableSlot(slotNum)
+    local s, d, e = GetInventoryItemCooldown('player', slotNum)
+    return s == 0 and e == 1
+end
+
 -- A derpy version of SecureCmdItemParse that doesn't support bags but does
 -- support item IDs as well as slot names. The assumption is that if you have
 -- the item then GetItemName will always return values immediately.
@@ -801,8 +782,10 @@ local function UsableItemParse(arg)
     return name, itemID, slotNum
 end
 
--- Is this really not in the game anywhere?
-local InventorySlotTable = {
+-- Is this really not in the game anywhere? This is used in UI/Falling.lua
+-- and should probably be somewhere more central rather than buried here.
+
+LM.InventorySlotTable = {
     [INVSLOT_AMMO]      = AMMOSLOT,
     [INVSLOT_HEAD]      = HEADSLOT,
     [INVSLOT_NECK]      = NECKSLOT,
@@ -832,7 +815,7 @@ local function ItemArgsToDisplay(args)
         if name then
             table.insert(out, string.format("%s (%d)", name, id))
         elseif slot then
-            table.insert(out, InventorySlotTable[slot] or slot)
+            table.insert(out, LM.InventorySlotTable[slot] or slot)
         else
             table.insert(out, v)
         end
@@ -851,8 +834,7 @@ ACTIONS['Use'] = {
                 local name, itemID, slotNum = UsableItemParse(arg)
                 if slotNum then
                     LM.Debug('  * trying slot ' .. tostring(slotNum))
-                    local s, d, e = GetInventoryItemCooldown('player', slotNum)
-                    if s == 0 and e == 1 then
+                    if IsCastableSlot(slotNum) then
                         LM.Debug('  * Setting action to use slot ' .. slotNum)
                         return LM.SecureAction:Item(slotNum, context.rule.unit)
                     end
@@ -884,9 +866,38 @@ ACTIONS['PreUse'] = {
         end
 }
 
+ACTIONS['Falling'] = {
+    name = L.LM_FALLING_ACTION,
+    description = L.LM_SPELL_DESCRIPTION,
+    argType = 'none',
+    handler =
+        function (args, context)
+            for _, action in ipairs(LM.Options:GetOption('falling')) do
+                local type, id = string.split(':', action)
+                if type == 'spell' then
+                    local _, _, nameWithSubtext = GetUsableSpell(id)
+                    if nameWithSubtext then
+                        return LM.SecureAction:Spell(nameWithSubtext, context.rule.unit)
+                    end
+                elseif type == 'item' then
+                    local name, itemID = UsableItemParse(id)
+                    if IsCastableItem(itemID) then
+                        return LM.SecureAction:Item(name, context.rule.unit)
+                    end
+                elseif type == 'slot' then
+                    local _, _, slotNum = UsableItemParse(id)
+                    if slotNum and IsCastableSlot(slotNum) then
+                        return LM.SecureAction:Item(slotNum, context.rule.unit)
+                    end
+                end
+            end
+        end
+}
+
 do
-    for a, info in pairs(ACTIONS) do
-        info.action = a
+    -- Add the name from the table key to the info table
+    for actionName, info in pairs(ACTIONS) do
+        info.action = actionName
     end
 end
 

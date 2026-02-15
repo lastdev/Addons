@@ -1,43 +1,5 @@
 local addonName, addon = ...
 
-local defaultOrder = {
-    [Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower] = { -- WOD
-        "garrison-resources",
-        "follower-items",
-        "followerxp",
-        "gear",
-        "apexis",
-        "oil",
-        "seal",
-        "archaeology",
-    },
-    [Enum.GarrisonFollowerType.FollowerType_7_0_GarrisonFollower] = { -- Legion
-        "orderhall-resources",
-        "follower-items",
-        "pet-charms",
-        "reputation",
-        "gear",
-        "crafting-reagents",
-    },
-    [Enum.GarrisonFollowerType.FollowerType_8_0_GarrisonFollower] = { -- BFA
-        "BFA-resources",
-        --"follower-items",
-        --"pet-charms",
-        "reputation",
-        --"gear",
-        --"crafting-reagents",
-        "artifact-power",
-    },
-}
-
-if addon.isWOD then
-    table.insert(defaultOrder[1], "gold", 1)
-end
-
---if addon.isBFA then
---    table.insert(defaultOrder, "gold", 1)
---end
-
 function addon.BaseGUIMixin:updateRewards()
     for _, label in pairs(self.priorityLabels) do
         label:SetText()
@@ -86,8 +48,8 @@ end
 function addon.BaseGUIMixin:RewardsReorder()
     local maxIndex = 0
     local skipThese = {}
-    local order = defaultOrder[self.followerTypeID]
-    for i = 1, #defaultOrder do
+    local order = self.rewardStrings
+    for i = 1, #order do
         for j = 1, #order do
             if order[i] == self.db.profile.selectedRewards[j] then
                 maxIndex = maxIndex + 1

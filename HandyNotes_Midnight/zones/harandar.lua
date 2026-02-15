@@ -9,21 +9,25 @@ local Map = ns.Map
 local LoreObject = ns.node.LoreObject
 local PT = ns.node.ProfessionTreasures
 local Rare = ns.node.Rare
+local Safari = ns.node.Safari
 local SkyridingGlyph = ns.node.SkyridingGlyph
 local Telescope = ns.node.Telescope
 local Treasure = ns.node.Treasure
+local Moth = ns.node.Moth
 
 local Achievement = ns.reward.Achievement
 local Mount = ns.reward.Mount
 local Pet = ns.reward.Pet
 local Section = ns.reward.Section
---local Spacer = ns.reward.Spacer
+-- local Spacer = ns.reward.Spacer
 local Toy = ns.reward.Toy
 local Transmog = ns.reward.Transmog
 local Reputation = ns.reward.Reputation
 
+local Entrance = ns.poi.Entrance
 local Path = ns.poi.Path
-
+local POI = ns.poi.POI
+local Spacer = ns.reward.Spacer
 -------------------------------------------------------------------------------
 
 local map = Map({id = 2413, settings = true}) -- or 2480
@@ -38,6 +42,7 @@ map.nodes[51164535] = Rare({
     quest = 91832, -- 94712/91832
     rewards = {
         Achievement({id = 61264, criteria = 109039}),
+        Reputation({id = 2704, gain = 50, quest = 94712}), Spacer(),
         Section(L['shared_drops']), Mount({item = 246735, id = 2615}), -- Rootstalker Grimlynx
         Mount({item = 252012, id = 2708}) -- Vibrant Petalwing
     }
@@ -48,6 +53,7 @@ map.nodes[68714070] = Rare({
     quest = 92137, -- 92137 94713
     rewards = {
         Achievement({id = 61264, criteria = 109040}),
+        Reputation({id = 2704, gain = 50, quest = 94713}), Spacer(),
         Section(L['shared_drops']), Mount({item = 246735, id = 2615}), -- Rootstalker Grimlynx
         Mount({item = 252012, id = 2708}) -- Vibrant Petalwing
     }
@@ -58,6 +64,7 @@ map.nodes[69175986] = Rare({
     quest = 92142, -- 92142/94714
     rewards = {
         Achievement({id = 61264, criteria = 109041}),
+        Reputation({id = 2704, gain = 50, quest = 94714}), Spacer(),
         Section(L['shared_drops']), Mount({item = 246735, id = 2615}), -- Rootstalker Grimlynx
         Mount({item = 252012, id = 2708}) -- Vibrant Petalwing
     }, -- [Ha'kalawe's Flawless Wing] clock
@@ -75,6 +82,7 @@ map.nodes[72636928] = Rare({
     quest = 92148, -- 94715
     rewards = {
         Achievement({id = 61264, criteria = 109042}),
+        Reputation({id = 2704, gain = 50, quest = 94715}), Spacer(),
         Section(L['shared_drops']), Mount({item = 246735, id = 2615}), -- Rootstalker Grimlynx
         Mount({item = 252012, id = 2708}) -- Vibrant Petalwing
     }
@@ -95,6 +103,7 @@ map.nodes[64574794] = Rare({
     quest = 92161, -- 94717
     rewards = {
         Achievement({id = 61264, criteria = 109044}),
+        Reputation({id = 2704, gain = 50, quest = 94717}), Spacer(),
         Section(L['shared_drops']), Mount({item = 246735, id = 2615}), -- Rootstalker Grimlynx
         Mount({item = 252012, id = 2708}) -- Vibrant Petalwing
     }
@@ -105,6 +114,7 @@ map.nodes[65553269] = Rare({
     quest = 92168, -- 94718
     rewards = {
         Achievement({id = 61264, criteria = 109045}),
+        Reputation({id = 2704, gain = 50, quest = 94718}), Spacer(),
         Section(L['shared_drops']), Mount({item = 246735, id = 2615}), -- Rootstalker Grimlynx
         Mount({item = 252012, id = 2708}) -- Vibrant Petalwing
     }
@@ -125,6 +135,7 @@ map.nodes[45933134] = Rare({
     quest = 92172, -- 92720
     rewards = {
         Achievement({id = 61264, criteria = 109047}),
+        Reputation({id = 2704, gain = 50, quest = 92720}), Spacer(), -- need to check quest id
         Section(L['shared_drops']), Mount({item = 246735, id = 2615}), -- Rootstalker Grimlynx
         Mount({item = 252012, id = 2708}) -- Vibrant Petalwing
     },
@@ -146,6 +157,7 @@ map.nodes[36597516] = Rare({
     quest = 92183, -- 94722/92183
     rewards = {
         Achievement({id = 61264, criteria = 109049}),
+        Reputation({id = 2704, gain = 50, quest = 94722}), Spacer(),
         Section(L['shared_drops']), Mount({item = 246735, id = 2615}), -- Rootstalker Grimlynx
         Mount({item = 252012, id = 2708}) -- Vibrant Petalwing
     }
@@ -156,6 +168,7 @@ map.nodes[28118181] = Rare({ -- review
     quest = 92190, -- 94723
     rewards = {
         Achievement({id = 61264, criteria = 109050}),
+        Reputation({id = 2704, gain = 50, quest = 94723}), Spacer(),
         Section(L['shared_drops']), Mount({item = 246735, id = 2615}), -- Rootstalker Grimlynx
         Mount({item = 252012, id = 2708}) -- Vibrant Petalwing
     }
@@ -163,9 +176,11 @@ map.nodes[28118181] = Rare({ -- review
 
 map.nodes[27277032] = Rare({
     id = 250321,
+    location = L['in_cave'],
     quest = 92191, -- 94724, -- 92191
     rewards = {
         Achievement({id = 61264, criteria = 109051}),
+        Reputation({id = 2704, gain = 50, quest = 94724}), Spacer(),
         Section(L['shared_drops']), Mount({item = 246735, id = 2615}), -- Rootstalker Grimlynx
         Mount({item = 252012, id = 2708}) -- Vibrant Petalwing
     }
@@ -176,6 +191,7 @@ map.nodes[39696070] = Rare({
     quest = 92193, -- 92193/94725
     rewards = {
         Achievement({id = 61264, criteria = 109052}),
+        Reputation({id = 2704, gain = 50, quest = 94725}), Spacer(),
         Section(L['shared_drops']), Mount({item = 246735, id = 2615}), -- Rootstalker Grimlynx
         Mount({item = 252012, id = 2708}) -- Vibrant Petalwing
     }
@@ -183,9 +199,10 @@ map.nodes[39696070] = Rare({
 
 map.nodes[44201658] = Rare({
     id = 250358,
-    quest = 92194, -- 92194
+    quest = 92194, -- 94726
     rewards = {
         Achievement({id = 61264, criteria = 109053}),
+        Reputation({id = 2704, gain = 50, quest = 94726}), Spacer(),
         Section(L['shared_drops']), Mount({item = 246735, id = 2615}), -- Rootstalker Grimlynx
         Mount({item = 252012, id = 2708}) -- Vibrant Petalwing
     }
@@ -210,16 +227,16 @@ map.nodes[47065025] = Treasure({
 map.nodes[73656535] = Treasure({
     quest = 92427,
     rewards = {
-        Achievement({id = 61263, criteria = 109035}),
-        Transmog({item = 263289, type = L['cosmetic']})
+        Achievement({id = 61263, criteria = 109035}), --
+        Transmog({item = 263289}) -- Sporelord's Authority
     }
 }) -- Sporelord's Fight Prize
 
 map.nodes[62905124] = Treasure({
     quest = 92431,
     rewards = {
-        Achievement({id = 61263, criteria = 109036}),
-        Transmog({item = 263287, type = L['cosmetic']}) -- [Reliquary-Keeper's Lost Shortbow]
+        Achievement({id = 61263, criteria = 109036}), --
+        Transmog({item = 263287}) -- Reliquary-Keeper's Lost Shortbow
     }
 }) -- Reliquary's Lost Paintbrush
 
@@ -232,27 +249,68 @@ map.nodes[55693943] = Treasure({
     }
 }) -- Kemet's Simmering Cauldron
 
-map.nodes[20003500] = Treasure({
+map.nodes[51154755] = Treasure({
+    label = L['altar_of_innocence'],
+    icon = 519378,
+    quest = 93130,
+    note = L['altar_of_innocence_note'],
+    pois = {
+        POI({points = {51105049}, label = '{item:256882}'}) -- A Tattered Ball
+    }
+}) -- Altar of Innocence
+
+map.nodes[47185314] = Treasure({
+    label = L['altar_of_vigor'],
+    icon = 519389,
+    quest = 93145,
+    note = L['altar_of_vigor_note'],
+    pois = {
+        POI({points = {45145412}, label = '{item:257024}'}) -- Lost Hunting Knife
+    }
+}) -- Altar of Vigor
+
+map.nodes[51155856] = Treasure({
+    label = L['altar_of_wisdom'],
+    icon = 519379,
+    quest = 93146,
+    note = L['altar_of_wisdom_note'],
+    pois = {
+        POI({points = {51395600}, label = '{item:257054}'}) -- A Rolled-Up Pillow
+    }
+}) -- Altar of Wisdom
+
+den.nodes[47235078] = Treasure({
     quest = 93144,
-    rewards = {Achievement({id = 61263, criteria = 110254})}
+    questDeps = {93130, 93145, 93146},
+    parent = map.id,
+    rewards = {
+        Achievement({id = 61263, criteria = 110254}), Toy({item = 259084})
+    }
 }) -- Gift of the Cycle
 
 map.nodes[26736759] = Treasure({
     quest = 93508,
+    location = L['in_small_cave'],
+    note = L['impenatrably_sealed_gourd_note'],
     rewards = {
         Achievement({id = 61263, criteria = 110255}),
         Pet({item = 260730, id = 4948}) -- [Perturbed Sporebat]
-    }
+    },
+    pois = {Entrance({27536797})}
 }) -- Impenatrably Sealed Gourd
 -- Loot [Mysterious Red Fluid] (260251) from the nearby {object:Dangling Jug}
 -- loot [Mysterious Purple Fluid] (260250) from the nearby {object:Hanging Flask}
 -- click on {object:Durable Vase} and add the fluids to get [Fizzing Fluid] (260266) then loot the treasure from the Sealed Gourd
 
-map.nodes[20004500] = Treasure({
-    quest = 93650,
+map.nodes[46656778] = Treasure({
+    quest = 93650, -- 93652 when ringing dong
+    note = L['sporespawned_cache_note'],
     rewards = {
         Achievement({id = 61263, criteria = 110256}),
         Mount({item = 256423, id = 2747}) -- Untained Grove Crawler
+    },
+    pois = {
+        POI({color = 'Red', points = {41306790}, label = L['fungal_mallet']})
     }
 }) -- Sporespawned Cache
 
@@ -406,20 +464,6 @@ map.nodes[68212379] = LoreObject({
 -- moths give 1x currency 3385 (Luminous Dust)
 -- 120 in total to find
 
-local Moth = Class('Moth', ns.node.Collectible, {
-    label = L['glowing_moth'],
-    icon = 1003597,
-    group = ns.groups.GLOWING_MOTH,
-    rewards = {
-        Achievement({id = 61052, criteria = {id = 1, qty = true}}),
-        ns.reward.Currency({id = 3385}) -- Luminous Dust
-    }
-})
-
-function Moth.getters:requires()
-    return ns.requirement.Reputation(2704, self.renown, true)
-end
-
 map.nodes[36354839] = Moth({quest = 92196, renown = 1}) -- Group 1
 map.nodes[36112639] = Moth({quest = 92197, renown = 1}) -- Group 1
 map.nodes[49882551] = Moth({quest = 92198, renown = 1})
@@ -562,9 +606,77 @@ map.nodes[66166169] = ns.node.NPC({
     }
 })
 
+-------------------------------- MORE THAN JUST THEIR ROOTS --------------------------------
+
+local MoreThanJustThierRoots = ns.node.MoreThanJustThierRoots
+
+map.nodes[20002500] = Class('more_than_just_thier_roots', ns.node.Collectible, {
+    label = '{achievement:62188}',
+    group = ns.groups.MORE_THAN_JUST_THIER_ROOTS,
+    icon = 236160,
+    scale = 2,
+    rewards = {
+        Achievement({
+            id = 62188,
+            criteria = {111946, 111947, 111948, 111949, 111950} -- Chonon, Funnid, Kawayn, Or'jan, Zhakir
+        }) -- More Than Just Their Roots,
+    },
+    getters = {
+        note = function()
+            local function Rootstatus(achievementID, criteriaNum)
+                if select(3, GetAchievementCriteriaInfo(achievementID,
+                    criteriaNum)) then
+                    return ns.status.Green(L['completed'])
+                else
+                    return ns.status.Red(L['incomplete'])
+                end
+            end
+            local note = L['more_than_just_thier_roots_note']
+            note = note .. '\n\n' .. '{npc:245103} - {map:198} ' ..
+                       Rootstatus(62188, 1)
+            note = note .. '\n' .. '{npc:245107} - {map:2239} ' ..
+                       Rootstatus(62188, 2)
+            note = note .. '\n' .. '{npc:251936} - {map:116} ' ..
+                       Rootstatus(62188, 3)
+            note = note .. '\n' .. '{npc:245105} - {map:62} ' ..
+                       Rootstatus(62188, 4)
+            note = note .. '\n' .. '{npc:245106} - {map:641} ' ..
+                       Rootstatus(62188, 5)
+            return note
+        end
+    }
+})()
+
+local mnt = Map({id = 198, settings = true})
+local ami = Map({id = 2239, settings = true})
+local hil = Map({id = 116, settings = true})
+local drk = Map({id = 62, settings = true})
+local val = Map({id = 641, settings = true})
+
+mnt.nodes[58422998] = MoreThanJustThierRoots({
+    id = 245103,
+    rewards = {Achievement({id = 62188, criteria = 111946})} -- Chonon (on the roots)
+})
+ami.nodes[34225261] = MoreThanJustThierRoots({
+    id = 245107,
+    rewards = {Achievement({id = 62188, criteria = 111947})} -- Funnid (up in the tree)
+})
+hil.nodes[50824257] = MoreThanJustThierRoots({
+    id = 251936,
+    rewards = {Achievement({id = 62188, criteria = 111948})} -- Kawayn (on top of the trunk)
+})
+drk.nodes[33206678] = MoreThanJustThierRoots({
+    id = 245105,
+    rewards = {Achievement({id = 62188, criteria = 111949})} -- Or'jan
+})
+val.nodes[46713541] = MoreThanJustThierRoots({
+    id = 245106,
+    rewards = {Achievement({id = 62188, criteria = 111950})} -- Zhakir
+})
+
 --[[ MIDNIGHT: Chronicler of the Harani - https://www.wowhead.com/beta/achievement=61344/chronicler-of-the-haranir
 
-Requires "THe Cauldron of Echoes" https://www.wowhead.com/beta/quest=88994/the-cauldron-of-echoes
+https://www.wowhead.com/beta/quest=88994/the-cauldron-of-echoes
 [59982090] = {vignette=7372, label="Echoes of Our Past: Fading History"}, 93475
 [59711852] = {vignette=7373, label="Echoes of Our Past: Alndust"}, 93474
 [61141595] = {vignette=7374, label="Echoes of Our Past: Dangerous Memories"},  93473
@@ -573,4 +685,52 @@ https://www.wowhead.com/beta/quest=88993/weynans-ward
 [41563588] = {vignette=7370, label="Laments of Wey'nan: Hunting Purpose"}, 93471
 [43233732] = {vignette=7369, label="Laments of Wey'nan: Finding Hope"}, 93470
 [42303547] = {vignette=7371, label="Laments of Wey'nan: There Must Be More"}, 93472
+
+https://www.wowhead.com/beta/quest=88996/the-echoless-flame
+91516
+[64853844] = {vignette=7378, label="Words of Obayo: The Flame"}, 93482
+cave enterance 61383815 for both below
+[62603568] = {vignette=7380, label="Words of Obayo: The Silence"}, 39480
+[61433498] = {vignette=7379, label="Words of Obayo: The Rift"}, 93481
+
+https://www.wowhead.com/beta/quest=88997/russulas-outreach
+-- 91517
+[63434013] = {vignette=7381, label="Tending the Lands: The Conflict"}, 93485
+[61023895] = {vignette=7382, label="Tending the Lands: The Plan"}, 93484
+[61413718] = {vignette=7383, label="Tending the Lands: The Cycle"}, 93483
+
+
+https://www.wowhead.com/beta/quest=88995/alnharas-bloom
+91455/89284
+[55036627] = {vignette=7376, label="Seeker's Trail: Seeking Peace"},93478
+[53686695] = {vignette=7375, label="Seeker's Trail: Call of Aln'hara"},93479
+[55936686] = {vignette=7377, label="Seeker's Trail: Unending Mission"},93476
+
+
+https://www.wowhead.com/beta/quest=88998/root-of-the-world maybe right quest id?
+w
+89284/91518
+[40803630] = {vignette=7384, label="Ways of the Roots: Serving"}, 93488
+[41483413] = {vignette=7385, label="Ways of the Roots: Growing"}, 93487
+[40493470] = {vignette=7386, label="Ways of the Roots: Pruning"}, 93486
 ]] --
+-------------------------------------------------------------------------------
+-------------------------------- SAFARI ---------------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[72806790] = Safari.AzureSporebat({
+    pois = {
+        POI({
+            72806790, 69906440, 56705450, 64104560, 59664567, 53206733,
+            52668026, 59663227, 61934807, 62186583, 57585470
+        })
+    }
+})
+map.nodes[35506380] = Safari.RootlingNester({
+    pois = {POI({35506380, 52908020, 66583758, 53187541})}
+})
+map.nodes[69503150] = Safari.MudPotadpole({})
+map.nodes[41506980] = Safari.Silkcrawler({
+    pois = {POI({41506980, 57804410, 39403380, 61902720, 48455859, 50462682})}
+})
+map.nodes[61101950] = Safari.Waddles({})

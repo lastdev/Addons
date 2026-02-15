@@ -7,7 +7,7 @@ L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Traducido por "
 L.TranslationBy 			= "Saispai, Woopy"
-L.Website					= "Por favor, sigue a MysticalOS para noticias y actualizaciones |cFF73C2FBhttps://allmylinks.com/mysticalos|r"
+L.Website					= "Sigue a MysticalOS para noticias y actualizaciones |cFF73C2FBhttps://allmylinks.com/mysticalos|r"
 L.WebsiteButton				= "Página web"
 
 L.OTabBosses	= "Jefes"
@@ -90,6 +90,7 @@ L.Button_TestBars			= "Comprobar barras"
 L.Button_MoveBars			= "Mover barras"
 L.Button_ResetInfoRange		= "Restablecer posiciones predeterminadas"
 
+L.Button_ShowMidnightWizard = "Asistente de configuración de Midnight"
 L.ModelOptions				= "Opciones del visualizador de modelos 3D"
 L.EnableModels				= "Mostrar modelos 3D en opciones de jefe"
 L.ModelSoundOptions			= "Sonido"
@@ -105,7 +106,7 @@ L.Editbox_WindowHeight		= "Altura"
 L.UIGroupingOptions					= "Opciones de agrupación de IU (cambiarlas requiere recargar la IU)"
 L.GroupOptionsExcludeIcon			= "Excluir que las opciones 'Establecer icono activado' se agrupan por hechizo (en su lugar, se agruparán en su propia categoría 'Iconos')"
 L.GroupOptionsExcludePrivateAura	= "Excluir que las opciones de sonido 'Aura privada' se agrupan por hechizo (en su lugar, se agruparán en su propia categoría 'Auras privadas')"
-L.AutoExpandSpellGroups				= "Expandir opciones automáticamente que están agrupadas por hechizo"
+L.AutoExpandSpellGroups2				= "Expandir opciones automáticamente que están agrupadas por hechizo"
 L.ShowWAKeys						= "Mostrar las claves de WeakAuras junto a los nombres de los hechizos para ayudar a escribir WeakAuras usando los activadores de módulos de jefe"
 --L.ShowSpellDescWhenExpanded		= "Continuar mostrando la descripción del hechizo cuando se expanden los grupos."--Might not be used
 L.NoDescription						= "Esta facultad no tiene descripción."
@@ -257,6 +258,14 @@ L.SpecialWarnHeader5				= "Tipo 5: Opciones para anuncios con notas que contiene
 L.AnnouncementMidnightNotice		= "Las opciones de este panel son para avisos que Blizzard clasifica como 'menores'"
 L.SpecialWarnHeaderMedium			= "Anuncios para mecánicas que Blizzard clasifica como 'moderadas'"
 L.SpecialWarnHeaderCritical			= "Anuncios para mecánicas que Blizzard clasifica como 'críticas'"
+
+-- Panel: Private Auras Frame
+L.Panel_PrivateAuras				= "Auras privadas"
+L.Area_PrivateAuras					= "Opciones de aura privada"
+L.EnablePrivateAuraIcons			= "Mostrar iconos de aura privada en pantalla"
+L.EnablePrivateAuraText				= "Mostrar mensajes de texto de aura privada en pantalla"
+L.SetPAIconScale					= "Escala del icono: %0.1f"
+L.SetPATextScale					= "Escala del texto: %0.1f"
 
 -- Panel: Generalwarnings
 L.Tab_GeneralMessages 			= "Mensajes de chat"
@@ -414,6 +423,7 @@ L.ZeroatWindowStartRestart 		= "El texto llega a cero al inicio de la ventana de
 L.ZeroatWindowStartNeg 			= "El texto llega a cero al inicio de la ventana de reutilización y luego se vuelve negativo" --Default
 L.BarIconLeft 					= "Icono izquierdo"
 L.BarIconRight 					= "Icono derecho"
+L.BarIconPosition               = "Posición del icono"
 L.ExpandUpwards					= "Expandir arriba"
 L.FillUpBars					= "Rellenar"
 L.ClickThrough					= "Desactivar clic en barras"
@@ -429,13 +439,18 @@ L.BarColorByType				= "Color por tipo"
 L.Highest						= "Alto hacia arriba"
 L.Lowest						= "Bajo hacia arriba"
 L.NoBarFade						= "Utilizar color inicial para barras pequeñas y final para grandes, sin cambios graduales"
-L.BarInlineIcons				= "Iconos en barras"
+L.BarInlineIcons				= "Mostrar iconos del diaro"
 L.DisableRightClickBar			= "Desactivar clic derecho para cancelar temporizadores"
 L.ShortTimerText				= "Texto de temporizador breve"
 L.KeepBar						= "Mantener hasta que se lance la facultad"
 L.KeepBar2						= "(siempre que el módulo lo permita)"
 L.FadeBar						= "Desteñir barras de facultades lejanas"
 L.BarSkin						= "Estilo de barra"
+L.InlineIconsDropdown			= "Estilo de icono del diario"
+L.SingleLargeIcon				= "Un solo icono grande"
+L.DoubleLargeIcons				= "Dos iconos grandes"
+L.DoubleInlineIcons				= "Todos los iconos grandes"
+L.StackedMiniIcons				= "Iconos pequeños apilados"
 
 -- Panel: Pull, Break, Combat
 L.Panel_PullBreakCombat		= "Inicio y descanso"
@@ -448,6 +463,10 @@ L.Area_DBMFiltersSetup		= "Guía de filtros de DBM"
 L.Area_BlizzFiltersSetup	= "Guía de filtros de Blizzard"
 -- Panel: DBM Features
 L.Panel_SpamFilter			= "Desactivar funciones de DBM"
+
+L.Area_Global_Toggles              = "Opciones globales de funciones"
+L.NoWarnings                       = "Desactivar los avisos de DBM"
+L.NoTimers                         = "Desactivar los temporizadores de DBM"
 
 L.Area_SpamFilter_SpecFeatures		= "Opciones de anuncios"
 L.SpamBlockNoShowAnnounce 			= "No mostrar texto ni reproducir sonido para NINGÚN anuncio general"
@@ -577,8 +596,8 @@ L.ConfigAreaFooter					= "Las opciones en esta área solo anulan temporalmente l
 L.ConfigAreaFooter2					= "Se recomienda considerar todos los roles y no excluir los temporizadores/alertas que un tanque, etc. pueda necesitar."
 
 L.Area_receivingOptions				= "Opciones de recepción"--NYI
-L.NoAnnounceOverride				= "No acepta anuncios anulados por parte de los líderes de la banda."--NYI
-L.NoTimerOverridee					= "No acepta anulaciones del temporizador por parte de los líderes de la banda."--NYI
+L.NoAnnounceOverride				= "No aceptar anuncios anulados por parte de los líderes de la banda."--NYI
+L.NoTimerOverridee					= "No aceptar anulaciones del temporizador por parte de los líderes de la banda."--NYI
 L.ReplaceMyConfigOnOverride			= "AVISO: Reemplaza permanentemente mis configuraciones de modificación con líderes de banda, al anularlas"--NYI
 L.ReceivingFooter					= "Las anulaciones de opciones de iconos y burbujas de chat no se pueden desactivar ya que estas configuraciones afectan a otros jugadores a tu alrededor."--NYI
 L.ReceivingFooter2					= "Si activas estas opciones, es entre tú y líder de banda si tu configuración causa conflicto con su intención."--NYI
@@ -590,7 +609,7 @@ L.TabFooter							= "Todas las opciones en este panel solo funcionan si eres lí
 L.Tab_Privacy 				= "Controles de privacidad"
 L.Tab_PrivacyMidnight		= "Privacidad de comunicaciones"
 L.Area_WhisperMessages		= "Opciones de susurros"
-L.AutoRespond 				= "Responder automáticamente a susurros durante el encuentro"
+L.AutoRespond 				= "Responder automáticamente a susurros durante encuentros de jefe"
 L.WhisperStats 				= "Incluir estadísticas de victoria y derrota en las respuestas automáticas"
 L.DisableStatusWhisper 		= "Desactivar susurros automáticos para todos (requiere ser líder)"
 L.Area_SyncMessages			= "Opciones de sincronización de addons"

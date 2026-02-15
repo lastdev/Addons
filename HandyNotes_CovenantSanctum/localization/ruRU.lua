@@ -1,53 +1,100 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_CovenantSanctum", "ruRU", false, true)
 
 if not L then return end
--- Russian localization by dadec666 ( https://www.curseforge.com/members/dadec666 )
+-- Russian localization by dadec666 ( https://www.curseforge.com/members/dadec666 ) and Hollicsh ( https://www.curseforge.com/members/hollicsh )
 if L then
-L["Blizzard"] = true
-L["Both"] = "Оба"
-L["config_easy_waypoints"] = "Упрощённые путевые точки"
-L["config_easy_waypoints_desc"] = "Активирует упрощённое создание путевой точки. Позволяет установить путевую точку, щёлкнув правой кнопкой мыши, и получить доступ к дополнительным параметрам, нажав CtrL+[ПКМ]."
+----------------------------------------------------------------------------------------------------
+-----------------------------------------------CONFIG-----------------------------------------------
+----------------------------------------------------------------------------------------------------
+
+L["config_plugin_name"] = "Covenant Sanctum"
+L["config_plugin_desc"] = "Показывает на карте мира и миникарте расположение НИПов и достопримечательности в обители ковенанта."
+
+L["config_tab_general"] = "Общие"
+L["config_tab_scale_alpha"] = "Масштаб / прозрачность"
+--L["config_scale_alpha_desc"] = "PH"
+L["config_icon_scale"] = "Масштаб значков"
+L["config_icon_scale_desc"] = "Изменяет размер значков"
 L["config_icon_alpha"] = "Прозрачность значков"
 L["config_icon_alpha_desc"] = "Изменяет прозрачность значков"
-L["config_icon_scale"] = "Размер значков"
-L["config_icon_scale_desc"] = "Изменяет размер значков"
+L["config_what_to_display"] = "Что отображать?"
+L["config_what_to_display_desc"] = "Эти настройки определяют, какие типы значков будут отображаться."
+
 L["config_innkeeper"] = "Хозяин таверны"
-L["config_innkeeper_desc"] = "Показать местонахождение хозяина таверны."
+L["config_innkeeper_desc"] = "Показать местонахождение хозяина таверны.."
+
 L["config_mail"] = "Почтовый ящик"
 L["config_mail_desc"] = "Показать расположение почтовых ящиков."
-L["config_others"] = "Другие"
-L["config_others_desc"] = "Показать все остальные достопримечательности."
-L["config_plugin_desc"] = "Показывает на карте мира и миникарте расположение НИПов и достопримечательности в обители ковенанта."
-L["config_plugin_name"] = "Covenant Sanctum"
+
 L["config_portal"] = "Портал"
 L["config_portal_desc"] = "Показать расположение портала."
+
+L["config_travelguide_note"] = "|cFFFF0000*Уже активно через HandyNotes: TravelGuide.|r"
+
 L["config_reforge"] = "Улучшение предметов"
 L["config_reforge_desc"] = "Показать расположение улучшения предметов."
+
 L["config_renown"] = "Хранитель известности"
 L["config_renown_desc"] = "Показать местонахождение хранителя известности."
+
+L["config_stablemaster"] = "Смотритель стойл"
+L["config_stablemaster_desc"] = "Показать местонахождение смотрителя стойл."
+
+L["config_vendor"] = "Торговцы"
+L["config_vendor_desc"] = "Показать местонахождение торговцев."
+
+L["config_weaponsmith"] = "Оружейник"
+L["config_weaponsmith_desc"] = "Показать местонахождение оружейника."
+
+L["config_easy_waypoints"] = "Упрощённые точки маршрута"
+L["config_easy_waypoints_desc"] = "Активирует упрощённое создание путевых точек.\nПозволяет установить точку маршрута, щёлкнув ПКМ, и получить доступ к дополнительным параметрам, щелкнув ПКМ и удерживая клавишу CTRL."
+L["config_waypoint_dropdown"] = "Выбор"
+L["config_waypoint_dropdown_desc"] = "Выберите способ создания точки маршрута."
+L["Blizzard"] = true
+L["TomTom"] = true
+L["Both"] = "Оба"
+
+L["config_others"] = "Другие"
+L["config_others_desc"] = "Показать все остальные достопримечательности."
+
 L["config_restore_nodes"] = "Восстановить скрытые значки"
 L["config_restore_nodes_desc"] = "Восстановить все значки, которые были скрыты через контекстное меню."
 L["config_restore_nodes_print"] = "Все скрытые значки были восстановлены"
-L["config_stablemaster"] = "Смотритель стойл"
-L["config_stablemaster_desc"] = "Показать местонахождение смотрителя стойл."
-L["config_tab_general"] = "Общие"
-L["config_travelguide_note"] = "|cFFFF0000*Уже активен через HandyNotes: TravelGuide.|r"
-L["config_vendor"] = "Торговцы"
-L["config_vendor_desc"] = "Показать местонахождение торговцев."
-L["config_waypoint_dropdown"] = "Выбор"
-L["config_waypoint_dropdown_desc"] = "Выберите способ создания путевой точки."
-L["config_weaponsmith"] = "Оружейник"
-L["config_weaponsmith_desc"] = "Показать местонахождение оружейника."
-L["config_what_to_display"] = "Что отображать?"
-L["config_what_to_display_desc"] = "Эти настройки определяют, значки каких типов будут отображаться."
-L["handler_context_menu_add_map_pin"] = "Установить путевую точку"
-L["handler_context_menu_add_tomtom"] = "Добавить в TomTom"
+
+----------------------------------------------------------------------------------------------------
+-------------------------------------------------DEV------------------------------------------------
+----------------------------------------------------------------------------------------------------
+
+L["dev_config_tab"] = "РАЗРАБОТЧИКАМ"
+
+L["dev_config_force_nodes"] = "Принудительно показать"
+L["dev_config_force_nodes_desc"] = "Принудительное отображение всех значков независимо от класса, фракции или ковенанта."
+
+L["dev_config_show_prints"] = "Показать print()"
+L["dev_config_show_prints_desc"] = "Показывать сообщения print() в окне чата."
+
+----------------------------------------------------------------------------------------------------
+-----------------------------------------------HANDLER----------------------------------------------
+----------------------------------------------------------------------------------------------------
+
+--==========================================CONTEXT_MENU==========================================--
+
 L["handler_context_menu_addon_name"] = "HandyNotes: Covenant Sanctum"
+L["handler_context_menu_add_tomtom"] = "Добавить в TomTom"
+L["handler_context_menu_add_map_pin"] = "Установить точку маршрута на карте"
 L["handler_context_menu_hide_node"] = "Скрыть этот значок"
+
+--============================================TOOLTIPS============================================--
+
 L["handler_tooltip_requires"] = "Требуется"
-L["handler_tooltip_sanctum_feature"] = "улучшение святилища"
+L["handler_tooltip_sanctum_feature"] = "Улучшение Обители"
 L["handler_tooltip_TNTIER"] = "%s уровень транспортной сети."
-L["Mailbox"] = "Почтовый ящик"
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------DATABASE----------------------------------------------
+----------------------------------------------------------------------------------------------------
+
 L["Portal to Oribos"] = "Портал в Орибос"
-L["TomTom"] = true
+L["Mailbox"] = "Почтовый ящик"
+
 end

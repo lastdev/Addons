@@ -23,6 +23,7 @@ local QUALITY_NAMES = Constants.QUALITY_NAMES or {}
 local hordeFactionKeywords = Constants.hordeFactionKeywords or {}
 local allianceFactionKeywords = Constants.allianceFactionKeywords or {}
 local CRAFTED_ITEMS_LOOKUP = Constants.CRAFTED_ITEMS_LOOKUP or {}
+local BATCH_YIELD_SECONDS = 0.01
 local function InternString(str) return Util.InternString and Util.InternString(str) or str end
 local function GetApiDataCache() return Util.GetApiDataCache and Util.GetApiDataCache() or {} end
 local function TouchApiDataCacheItem(itemID) if Util.TouchApiDataCacheItem then Util.TouchApiDataCacheItem(itemID) end end
@@ -70,7 +71,7 @@ function DataManager:BatchLoadAPIData(allItems, filterOptions)
             return
         end
         local endIndex = math.min(startIndex + batchSize - 1, #itemsToLoad)
-        local apiDataCache = GetApiDataCache()
+        local batchApiCache = GetApiDataCache()
         local wroteAny = false
 
         for i = startIndex, endIndex do
@@ -136,7 +137,7 @@ function DataManager:BatchLoadAPIData(allItems, filterOptions)
             local qualityName = qualityValue and QUALITY_NAMES[qualityValue] or nil
 
             -- Cache the aggregated API data (including all rich fields)
-            apiDataCache[itemID] = {
+            batchApiCache[itemID] = {
                 expansion = apiExpansion,
                 category = catalogData and catalogData.categoryNames and catalogData.categoryNames[1] or nil,
                 subcategory = catalogData and catalogData.subcategoryNames and catalogData.subcategoryNames[1] or nil,
@@ -163,7 +164,7 @@ function DataManager:BatchLoadAPIData(allItems, filterOptions)
 
             -- Update item record with all rich API data
             if itemRecord then
-                local apiData = apiDataCache[itemID]
+                local apiData = batchApiCache[itemID]
                 itemRecord._apiExpansion = apiData.expansion
                 itemRecord._apiCategory = apiData.category
                 itemRecord._apiSubcategory = apiData.subcategory
@@ -270,13 +271,13 @@ function DataManager:BatchLoadAPIData(allItems, filterOptions)
         end
 
         if wroteAny then
-            PruneApiDataCacheIfNeeded(apiDataCache)
+            PruneApiDataCacheIfNeeded(batchApiCache)
         end
 
         -- Schedule next batch or complete
         if endIndex < #itemsToLoad then
             currentBatch = currentBatch + 1
-            C_Timer.After(0, function()
+            C_Timer.After(BATCH_YIELD_SECONDS, function()
                 ProcessBatch(endIndex + 1)
             end)
         else
@@ -361,12 +362,12 @@ function DataManager:BatchLoadAPIDataForItemIDs(itemIDs, onComplete, opts)
             return
         end
         local endIndex = math.min(startIndex + batchSize - 1, #itemsToLoad)
-        local apiDataCache = GetApiDataCache()
+        local batchApiCache = GetApiDataCache()
         local wroteAny = false
 
         for i = startIndex, endIndex do
             local itemID = itemsToLoad[i]
-            if itemID and not apiDataCache[itemID] then
+            if itemID and not batchApiCache[itemID] then
                 local catalogData = HousingAPICache and HousingAPICache.GetCatalogData and HousingAPICache:GetCatalogData(itemID) or (HousingAPI and HousingAPI.GetCatalogData and HousingAPI:GetCatalogData(itemID)) or nil
                 local qualityValue = catalogData and catalogData.quality
                 local qualityName = qualityValue and QUALITY_NAMES[qualityValue] or nil
@@ -374,7 +375,7 @@ function DataManager:BatchLoadAPIDataForItemIDs(itemIDs, onComplete, opts)
                 if qualityOnly then
                     -- Don't cache "unknown" quality; it would block future retries.
                     if qualityValue ~= nil then
-                        apiDataCache[itemID] = {
+                        batchApiCache[itemID] = {
                             quality = qualityValue,
                             qualityName = qualityName,
                         }
@@ -432,7 +433,7 @@ function DataManager:BatchLoadAPIDataForItemIDs(itemIDs, onComplete, opts)
                         end
                     end
 
-                    apiDataCache[itemID] = {
+                    batchApiCache[itemID] = {
                         expansion = apiExpansion,
                         category = catalogData and catalogData.categoryNames and catalogData.categoryNames[1] or nil,
                         subcategory = catalogData and catalogData.subcategoryNames and catalogData.subcategoryNames[1] or nil,
@@ -460,11 +461,11 @@ function DataManager:BatchLoadAPIDataForItemIDs(itemIDs, onComplete, opts)
         end
 
         if wroteAny then
-            PruneApiDataCacheIfNeeded(apiDataCache)
+            PruneApiDataCacheIfNeeded(batchApiCache)
         end
 
         if endIndex < #itemsToLoad then
-            C_Timer.After(0.01, function()
+            C_Timer.After(BATCH_YIELD_SECONDS, function()
                 if (tonumber(state._batchCancelToken) or 0) ~= token then
                     state.batchLoadInProgress = false
                     if type(onComplete) == "function" then

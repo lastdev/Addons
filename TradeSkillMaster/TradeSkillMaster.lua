@@ -204,7 +204,7 @@ function TSM.OnInitialize(settingsDB)
 
 	-- AHDB price sources
 	-- luacheck: globals AuctionDB
-	if Addon.IsEnabled("AuctionDB") and AuctionDB and AuctionDB.AHGetAuctionInfoByLink then
+	if Addon.IsEnabled("AuctionDB") and AuctionDB and AuctionDB.AHendOfScanCB and AuctionDB.AHGetAuctionInfoByLink then
 		hooksecurefunc(AuctionDB, "AHendOfScanCB", function()
 			CustomString.InvalidateCache("AHDBMinBuyout")
 			CustomString.InvalidateCache("AHDBMinBid")

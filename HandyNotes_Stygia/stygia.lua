@@ -1,10 +1,12 @@
 local myname, ns = ...
 
-ns.SetupMapOverlay = nil
+ns.overlayTexture = 3743739 -- INV_STYGIA
 
 ns.hiddenConfig = {
     default_icon = true,
     display = true,
+    notable = true,
+    unhide = true,
     achievementsHidden = true,
     zonesHidden = true,
     groupsHiddenByZone = true,
@@ -176,7 +178,7 @@ ns.RegisterPoints(1543, {
         hide_before = ns.conditions.QuestComplete(63668), -- All three pages used
     },
     [20206700] = { --Soulsteel Anvil
-        npc = 177392,
+        label = "{npc:177392:Soulsteel Anvil}",
         atlas = "repair",
         loot = {185474}, -- Armored Husk
         requires_item = 185473, -- Soulforger's Tools

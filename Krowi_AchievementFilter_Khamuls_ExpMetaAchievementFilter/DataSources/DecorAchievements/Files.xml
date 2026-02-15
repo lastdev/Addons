@@ -1,0 +1,14 @@
+<Ui>
+    <Script file="Midnight.lua" />
+    <Script file="TheWarWithin.lua" />
+    <Script file="Dragonflight.lua" />
+    <Script file="Shadowlands.lua" />
+    <Script file="BattleForAzeroth.lua" />
+    <Script file="Legion.lua" />
+    <Script file="WarlordsOfDraenor.lua" />
+    <Script file="MistsOfPandaria.lua" />
+    <Script file="WrathOfTheLichKing.lua" />
+    <Script file="Classic.lua" />
+    <Script file="PvP.lua" />
+    <Script file="DecorAchievements.lua" />
+</Ui>

@@ -265,8 +265,8 @@ SMARTBUFF_DEMONTYPE = "小鬼";
 SMARTBUFF_CLASSES = {"德鲁伊", "猎人", "法师", "圣骑士", "牧师", "潜行者", "萨满祭司", "术士", "战士", "死亡骑士", "武僧", "恶魔猎手", "唤魔者", "猎人宠物", "术士宠物", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
 
 -- 模板和地图
-SMARTBUFF_TEMPLATES = {"Solo", "组队", "团队", "战场", "卡拉赞", "祖阿曼", "地狱火堡垒", "盘牙水库", "奥金顿", "风暴要塞", "格鲁尔巢穴", "时光之穴", "黑暗神庙", "自定义 1", "自定义 2", "自定义 3"};
-SMARTBUFF_INSTANCES = {"卡拉赞", "祖阿曼", "玛瑟里顿的巢穴", "毒蛇神殿", "风暴之眼", "格鲁尔的巢穴", "海加尔", "黑暗神庙", "熔火之心", "奥妮克希亚的巢穴", "黑翼之巢", "纳克萨玛斯", "安其拉", "祖尔格拉布", "奥特兰克山谷", "阿拉希盆地", "战歌峡谷", "刀锋山", "纳格兰竞技场"};
+SMARTBUFF_TEMPLATES = {"单人", "小队", "随机团队", "团队", "史诗钥石", "惊悚幻象", "地心探险", "战场", "竞技场", "虚空尖塔", "梦境裂隙", "进军奎尔丹纳斯", "奈幽贝扎宫", "安德麦恩解放", "自定义 1", "自定义 2", "自定义 3", "自定义 4", "自定义 5"};
+SMARTBUFF_INSTANCES = {"虚空尖塔", "梦境裂隙", "进军奎尔丹纳斯", "奈幽贝扎宫", "安德麦恩解放"};
 
 -- 骑乘
 SMARTBUFF_MOUNT = "速度提高(%d+)%%.";
@@ -344,7 +344,7 @@ SMARTBUFF_OFT_OKAY           = "继续"
 SMARTBUFF_OFTT               = "启用智能施法";
 SMARTBUFF_OFTT_AUTO          = "启用BUFF信息提示";
 SMARTBUFF_OFTT_AUTOTIMER     = "BUFF监视时间的间隔";
-SMARTBUFF_OFTT_AUTOCOMBAT    = "战斗时仍保持监视";
+SMARTBUFF_OFTT_AUTOCOMBAT    = "战斗时仍保持监视。\n除非在选项窗口中启用主「战斗中」选项（非本项），否则战斗中所有提醒逻辑均不执行。";
 SMARTBUFF_OFTT_AUTOCHAT      = "在聊天窗口中显示施法有关信息";
 SMARTBUFF_OFTT_AUTOSPLASH    = "在游戏屏幕的中央以闪烁方式显示施法失败的有关信息";
 SMARTBUFF_OFTT_AUTOSOUND     = "声音提示施法失败事件";
@@ -395,7 +395,7 @@ SMARTBUFF_BST_MANALIMIT      = "最低值";
 -- BUFF设置提示信息内容
 SMARTBUFF_BSTT_SELFONLY      = "仅BUFF自己，不给其他队友BUFF。"; 
 SMARTBUFF_BSTT_SELFNOT       = "BUFF所有其他选择的职业，但是不BUFF自己。";
-SMARTBUFF_BSTT_COMBATIN      = "在战斗状态时仍保持自动触发技能";
+SMARTBUFF_BSTT_COMBATIN      = "在战斗状态时仍保持自动触发技能。\n除非在选项窗口中启用主「战斗中」选项，否则战斗中所有逻辑均不执行。";
 SMARTBUFF_BSTT_COMBATOUT     = "在非战斗状态时保持自动触发技能";
 SMARTBUFF_BSTT_MAINHAND      = "给主手武器施放BUFF。";
 SMARTBUFF_BSTT_OFFHAND       = "给副手武器施放BUFF。";

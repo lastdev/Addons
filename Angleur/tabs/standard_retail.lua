@@ -106,15 +106,16 @@ end
 
 function retailStandardTab:ExtraButtons(tab1contents)
     tab1contents.raftEnable.text:SetText(T["Raft"])
-    tab1contents.raftEnable:reposition()
     tab1contents.raftEnable.disabledText:SetText(T["Couldn't find any rafts \n in toybox, feature disabled"])
-    tab1contents.raftEnable:SetScript("OnClick", function(self)
+    tab1contents.raftEnable.text.tooltip = T["Pick a Raft, and Angleur will have you use it when you are in water!\n(Also keep the buff going afterwards)\n\n" 
+    .. "Pick \'Random Raft\' to get a different one every time!"]
+    tab1contents.raftEnable.checkbox:SetScript("OnClick", function(self)
         if self:GetChecked() then
             AngleurConfig.raftEnabled = true
-            self.dropDown:Show()
+            tab1contents.raftEnable.dropDown:Show()
         elseif self:GetChecked() == false then
             AngleurConfig.raftEnabled = false
-            self.dropDown:Hide()
+            tab1contents.raftEnable.dropDown:Hide()
         end
     end)
     UIDropDownMenu_Initialize(tab1contents.raftEnable.dropDown, InitializeDropDownRafts)
@@ -123,15 +124,15 @@ function retailStandardTab:ExtraButtons(tab1contents)
     UIDropDownMenu_SetSelectedID(tab1contents.raftEnable.dropDown, 1)
     UIDropDownMenu_JustifyText(tab1contents.raftEnable.dropDown, "LEFT")
     if AngleurConfig.raftEnabled == true then
-        tab1contents.raftEnable:SetChecked(true)
+        tab1contents.raftEnable.checkbox:SetChecked(true)
         tab1contents.raftEnable.dropDown:Show()
     end
     DropDown_CreateTitle(tab1contents.raftEnable.dropDown, T["Rafts"])
     
     tab1contents.oversizedBobberEnable.text:SetText(T["Oversized Bobber"])
-    tab1contents.oversizedBobberEnable:reposition()
     tab1contents.oversizedBobberEnable.disabledText:SetText(T["Couldn't find \n Oversized Bobber in \n toybox, feature disabled"])
-    tab1contents.oversizedBobberEnable:SetScript("OnClick", function(self)
+    tab1contents.oversizedBobberEnable.text.tooltip = T["If checked, Angleur will have you keep \'Reusable Oversized Bobber\' applied."]
+    tab1contents.oversizedBobberEnable.checkbox:SetScript("OnClick", function(self)
         if self:GetChecked() then
             AngleurConfig.oversizedEnabled = true
         elseif self:GetChecked() == false then
@@ -139,23 +140,24 @@ function retailStandardTab:ExtraButtons(tab1contents)
         end
     end)
     if AngleurConfig.oversizedEnabled == true then
-        tab1contents.oversizedBobberEnable:SetChecked(true)
+        tab1contents.oversizedBobberEnable.checkbox:SetChecked(true)
     end
     
     tab1contents.crateBobberEnable.text:SetText(T["Crate of Bobbers"])
-    tab1contents.crateBobberEnable:reposition()
     tab1contents.crateBobberEnable.disabledText:SetText(T["Couldn't find \n any Crate Bobbers \n in toybox, feature disabled"])
-    tab1contents.crateBobberEnable:SetScript("OnClick", function(self)
+    tab1contents.crateBobberEnable.text.tooltip = T["Pick a Bobber from the Crate of Bobbers, and Angleur will have you keep it applied!\n\n" 
+    .. "Pick \'Random Bobber\' to get a different one every time!"]
+    tab1contents.crateBobberEnable.checkbox:SetScript("OnClick", function(self)
         if self:GetChecked() then
             AngleurConfig.crateEnabled = true
-            self.dropDown:Show()
+            tab1contents.crateBobberEnable.dropDown:Show()
         elseif self:GetChecked() == false then
             AngleurConfig.crateEnabled = false
-            self.dropDown:Hide()
+            tab1contents.crateBobberEnable.dropDown:Hide()
         end
     end)
     if AngleurConfig.crateEnabled == true then
-        tab1contents.crateBobberEnable:SetChecked(true)
+        tab1contents.crateBobberEnable.checkbox:SetChecked(true)
     end
     UIDropDownMenu_Initialize(tab1contents.crateBobberEnable.dropDown, InitializeDropDownCrateBobbers)
     UIDropDownMenu_SetWidth(tab1contents.crateBobberEnable.dropDown, 100)
@@ -163,7 +165,7 @@ function retailStandardTab:ExtraButtons(tab1contents)
     UIDropDownMenu_SetSelectedID(tab1contents.crateBobberEnable.dropDown, 1)
     UIDropDownMenu_JustifyText(tab1contents.crateBobberEnable.dropDown, "LEFT")
     if AngleurConfig.crateEnabled == true then
-        tab1contents.crateBobberEnable:SetChecked(true)
+        tab1contents.crateBobberEnable.checkbox:SetChecked(true)
         tab1contents.crateBobberEnable.dropDown:Show()
     end
     DropDown_CreateTitle(tab1contents.crateBobberEnable.dropDown, T["Crate Bobbers"])

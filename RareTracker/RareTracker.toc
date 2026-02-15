@@ -1,8 +1,0 @@
-## Interface: 110200
-## Title: RareTracker
-## Author: Melroy
-## Version: 1.0.28
-## OptionalDeps: RareTrackerCore
-## IconTexture: Interface\AddOns\RareTrackerCore\Icons\RareTrackerIcon
-
-RareTracker.lua

@@ -1,7 +1,7 @@
-## Interface: 110107
+## Interface: 120000
 ## Author: Voopie
 ## Title: Maze Helper [|cff235be8Mists of Tirna Scithe|r]
-## Version: 1.97
+## Version: 1.98
 ## IconTexture: Interface\AddOns\MazeHelper\Media\mh_logo_mini.blp
 ## Notes: Your favorite helper for «Mists of Tirna Scithe»
 ## Notes-ruRU: Ваш любимый помощник для подземелья «Туманы Тирна Скитта»

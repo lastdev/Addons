@@ -12,12 +12,35 @@ ang.retail.tinyTab = {}
 local retailTinyTab = ang.retail.tinyTab
 
 function retailTinyTab:ExtraButtons(tab3_contents)
+    tab3_contents.swimRelease.text:SetText(T["Release When Swimming"])
+    --tab3_contents.swimRelease.text:SetFontObject(SpellFont_Small)
+    tab3_contents.swimRelease.text.tooltip = T["If checked, the only action your OneKey/DoubleClick will perform while swimming will be casting rafts.\n(If you already have one, the key will be released.)"] 
+    .. T["\n\nChecked by default, uncheck if you want to use Extra Toys, Items, Spells while submerged in water."]
+    
+    tab3_contents.swimRelease.checkbox:SetScript("OnClick", function(self)
+        if InCombatLockdown() then
+            self:SetChecked(not self:GetChecked())
+            print(T["Can't change in combat."])
+            return
+        end
+        if self:GetChecked() then
+            Angleur_TinyOptions.swimRelease = true
+            print(T["Angleur will only have you cast rafts while swimming, then release the key afterward."])
+        elseif self:GetChecked() == false then
+            Angleur_TinyOptions.swimRelease = false
+            print(T["Angleur will no longer release your keybind while swimming."])
+        end
+    end)
+    if Angleur_TinyOptions.swimRelease == true then
+        tab3_contents.swimRelease.checkbox:SetChecked(true)
+    end
+
+
     tab3_contents.offInteract.text:SetText(T["Disable Soft Interact"])
-    tab3_contents.offInteract:reposition()
     --tab3_contents.offInteract.text:SetFontObject(SpellFont_Small)
     tab3_contents.offInteract.text.tooltip = T["If checked, Angleur will disable " .. colorYello:WrapTextInColorCode("Soft Interact ") .. "after you stop fishing.\n\n" 
     .. colorGrae:WrapTextInColorCode("Intended for people who want to keep Soft Interact disabled during normal play.")]
-    tab3_contents.offInteract:SetScript("OnClick", function(self)
+    tab3_contents.offInteract.checkbox:SetScript("OnClick", function(self)
         if InCombatLockdown() then
             self:SetChecked(not self:GetChecked())
             print(T["Can't change in combat."])
@@ -33,14 +56,13 @@ function retailTinyTab:ExtraButtons(tab3_contents)
         end
     end)
     if Angleur_TinyOptions.turnOffSoftInteract == true then
-        tab3_contents.offInteract:SetChecked(true)
+        tab3_contents.offInteract.checkbox:SetChecked(true)
     end
 
     tab3_contents.softIconOff.text:SetText(T["Disable Soft Icon"])
-    tab3_contents.softIconOff:reposition()
     --tab3_contents.softIconOff.text:SetFontObject(SpellFont_Small)
     tab3_contents.softIconOff.text.tooltip = T["Whether the Hook icon above the bobber is shown.\nNote, this affects icons for other soft target objects."]
-    tab3_contents.softIconOff:SetScript("OnClick", function(self)
+    tab3_contents.softIconOff.checkbox:SetScript("OnClick", function(self)
         if InCombatLockdown() then
             self:SetChecked(not self:GetChecked())
             print(T["Can't change in combat."])
@@ -61,7 +83,7 @@ function retailTinyTab:ExtraButtons(tab3_contents)
         end
     end)
     if Angleur_TinyOptions.softIconOff == true then
-        tab3_contents.softIconOff:SetChecked(true)
+        tab3_contents.softIconOff.checkbox:SetChecked(true)
         tab3_contents.softIconOff.disabledTexture:Show()
     end
 end
@@ -70,20 +92,22 @@ function retailTinyTab:SetDefaultsButtonScript(tab3_contents)
     tab3_contents.defaults:SetScript("OnClick", function()
         Angleur_TinyOptions.turnOffSoftInteract = false
         Angleur_TinyOptions.allowDismount = false
+        Angleur_TinyOptions.swimRelease = true
         Angleur_TinyOptions.softIconOff = false
         Angleur_TinyOptions.doubleClickWindow = 0.4
         Angleur_TinyOptions.visualScale = 1
         Angleur_TinyOptions.ultraFocusMaster = 1
         Angleur_TinyOptions.loginDisabled = false
         Angleur_TinyOptions.errorsDisabled = true
-        tab3_contents.offInteract:SetChecked(false)
-        tab3_contents.dismount:SetChecked(false)
-        tab3_contents.softIconOff:SetChecked(false)
+        tab3_contents.offInteract.checkbox:SetChecked(false)
+        tab3_contents.dismount.checkbox:SetChecked(false)
+        tab3_contents.swimRelease.checkbox:SetChecked(true)
+        tab3_contents.softIconOff.checkbox:SetChecked(false)
         tab3_contents.doubleClickWindow:SetValue(4)
         tab3_contents.visualSize:SetValue(10)
         tab3_contents.ultraFocusMaster:SetValue(100)
-        tab3_contents.loginMessages:SetChecked(true)
-        tab3_contents.debugMode:SetChecked(false)
+        tab3_contents.loginMessages.checkbox:SetChecked(true)
+        tab3_contents.debugMode.checkbox:SetChecked(false)
         print(T["Default tiny settings restored"])
     end)
 end

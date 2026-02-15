@@ -541,6 +541,8 @@ qcLocalize = {
 	UPGRADESYSTEM = "Upgrade System",
 	WARBANDS = "Warbands",
 	UNDERMINE = "Undermine",
+	ARATHIHIGHLANDSTWW = "Arathi Highlands TWW",
+	DELVESHEADQUARTERS = "Delvers Headquarters",
 	}
 
 end

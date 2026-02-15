@@ -56,7 +56,7 @@ function AuctionUI.OnInitialize(settingsDB)
 	DefaultUI.RegisterAuctionHouseVisibleCallback(private.AuctionFrameHidden, false)
 	AuctionScan.ConfigureLock(L["A scan is already in progress. Please stop that scan before starting another one."], private.ScanLockCallback)
 	ItemLinked.RegisterCallback(private.ItemLinkedCallback, true)
-	local loadTimer = DelayTimer.New("AUCTION_UI_LOAD_BLIZZ", function() C_AddOns.LoadAddOn(ClientInfo.IsVanillaClassic() and "Blizzard_AuctionUI" or "Blizzard_AuctionHouseUI") end)
+	local loadTimer = DelayTimer.New("AUCTION_UI_LOAD_BLIZZ", function() C_AddOns.LoadAddOn((ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic()) and "Blizzard_AuctionUI" or "Blizzard_AuctionHouseUI") end)
 	loadTimer:RunForTime(1)
 end
 
@@ -110,7 +110,7 @@ function private.AuctionFrameInit()
 		return
 	end
 	local tabTemplateName = nil
-	if ClientInfo.IsVanillaClassic() then
+	if ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic() then
 		private.defaultFrame = AuctionFrame
 		tabTemplateName = "AuctionTabTemplate"
 	else
@@ -119,7 +119,7 @@ function private.AuctionFrameInit()
 	end
 	if not private.hasShown then
 		private.hasShown = true
-		if ClientInfo.IsVanillaClassic() then
+		if ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic() then
 			local tabId = private.defaultFrame.numTabs + 1
 			local tab = CreateFrame("Button", "AuctionFrameTab"..tabId, private.defaultFrame, tabTemplateName)
 			tab:Hide()
@@ -141,11 +141,11 @@ function private.AuctionFrameInit()
 		end
 	end
 	if private.settings.showDefault then
-		if ClientInfo.IsVanillaClassic() then
+		if ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic() then
 			UIParent_OnEvent(UIParent, "AUCTION_HOUSE_SHOW")
 		end
 	else
-		if not ClientInfo.IsVanillaClassic() then
+		if not ClientInfo.IsVanillaClassic() and not ClientInfo.IsBCClassic() then
 			private.defaultFrame:SetScale(0.001)
 			LibAHTab:SetSelected(AH_TAB_ID)
 		end
@@ -177,7 +177,7 @@ function private.AuctionFrameHidden()
 	if not private.frame then
 		return
 	end
-	if not ClientInfo.IsVanillaClassic() then
+	if not ClientInfo.IsVanillaClassic() and not ClientInfo.IsBCClassic() then
 		private.defaultFrame:SetScale(1)
 		private.defaultFrame:SetDisplayMode(AuctionHouseFrameDisplayMode.Buy)
 	end
@@ -190,7 +190,7 @@ function private.HideAuctionFrame()
 	end
 	private.frame:Hide()
 	-- For some reason, on retail the OnHide callback isn't called immediately
-	if ClientInfo.IsVanillaClassic() then
+	if ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic() then
 		assert(not private.frame)
 	end
 	for _, callback in ipairs(private.updateCallbacks) do
@@ -205,7 +205,7 @@ function private.CreateMainFrame()
 		:SetSettingsContext(private.settings, "frame")
 		:SetMinResize(MIN_FRAME_SIZE.width, MIN_FRAME_SIZE.height)
 		:SetStrata("HIGH")
-		:SetProtected(ClientInfo.IsVanillaClassic() and private.settings.protectAuctionHouse)
+		:SetProtected((ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic()) and private.settings.protectAuctionHouse)
 		:AddPlayerGold(private.settings)
 		:AddAppStatusIcon(AppHelper.GetRegion(), AppHelper.GetLastSync(), TSM.AuctionDB.GetAppDataUpdateTimes())
 		:AddSwitchButton(private.SwitchBtnOnClick)
@@ -242,7 +242,7 @@ function private.BaseFrameOnHide(frame)
 	private.frame = nil
 	if not private.isSwitching then
 		PlaySound(SOUNDKIT.AUCTION_WINDOW_CLOSE)
-		if ClientInfo.IsVanillaClassic() then
+		if ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic() then
 			CloseAuctionHouse()
 		else
 			private.defaultFrame:SetScale(1)
@@ -256,7 +256,7 @@ function private.SwitchBtnOnClick(button)
 	private.isSwitching = true
 	private.settings.showDefault = true
 	private.HideAuctionFrame()
-	if not ClientInfo.IsVanillaClassic() then
+	if not ClientInfo.IsVanillaClassic() and not ClientInfo.IsBCClassic() then
 		private.defaultFrame:SetScale(1)
 		private.defaultFrame:SetDisplayMode(AuctionHouseFrameDisplayMode.Buy)
 	end
@@ -266,12 +266,12 @@ end
 
 function private.TSMTabOnClick()
 	private.settings.showDefault = false
-	if ClientInfo.IsVanillaClassic() then
+	if ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic() then
 		ClearCursor()
 		ClickAuctionSellItemButton(AuctionsItemButton, "LeftButton")
 	end
 	ClearCursor()
-	if ClientInfo.IsVanillaClassic() then
+	if ClientInfo.IsVanillaClassic() or ClientInfo.IsBCClassic() then
 		-- Replace CloseAuctionHouse() with a no-op while hiding the AH frame so we don't stop interacting with the AH NPC
 		local origCloseAuctionHouse = CloseAuctionHouse
 		CloseAuctionHouse = NoOp

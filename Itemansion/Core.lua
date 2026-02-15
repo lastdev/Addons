@@ -13,6 +13,7 @@ local expColors = {
 	"|cFFefdea9%s|r",
 	"|cFFc9c3c3%s|r",
 	"|cFFff5f07%s|r",
+	"|cFFa335ee%s|r",
 };
 
 local function OnTooltipSetItem(tooltip, data)

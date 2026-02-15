@@ -1,5 +1,56 @@
 # Changelog
 
+## Changed in v2026.11
+
+* Improve the visibility of notes (yes, so it's easier to notice them to see the Twilight Ascension rare order)
+
+## Changed in v2026.10
+
+* Slightly better coords for Twilight Ascension
+* Fixed some errors when sharing links due to Midnight secrets
+
+## Changed in v2026.9
+
+* Rares for the Twilight Ascension event
+
+## Changed in v2026.8
+
+* If you're in Midnight, and your preferences for message announcements would be sending them to Blizzard's floating combat text, this is being forcibly changed so they go to the UIErrorsFrame instead, as new taint issues mean that any addon use of Blizzard's system makes it stop working for regular combat messages.
+
+## Changed in v2026.7
+
+* Tweak checks for knowable transmog items for Midnight
+* Zereth Mortis: add the vignette for The Engulfer
+* Add some protection against nils entering the queue of popups while in combat
+
+## Changed in v2026.6
+
+* Several midnight issues secret issues: detecting the current shard, and syncing with your group in combat
+* New version of LibSink-2.0 which fixes a problem with blizzard's scrolling combat text
+
+## Changed in v2026.5
+
+* Midnight: restore the disabled death-detection for popups
+* Minor data tweaks
+
+## Changed in v2026.4
+
+* Avoid a secret value issue when scanning chat
+* Midnight: add Predaxas world boss in Voidstorm
+* Add the Enclave Aspirant's Hatchet to the broken transmog items list
+
+## Changed in v2026.3
+
+* Updated for Burning Crusade Anniversary (2.5.5)
+* Darkshore: add the new decor rewards from 11.2.7
+* Legion: add Broodmother Shu'malis to the tunnels
+* Midnight: world boss loot in Eversong, Zul'Aman, Harandar
+
+## Changed in v2026.2
+
+* War Within: fixed the coordinates in Ringing Deeps (again)
+* Legion: changed the quest for Randril in Suramar
+
 ## Changed in v2026.1
 
 * Midnight:

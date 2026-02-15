@@ -91,6 +91,28 @@ function addon:RefreshProfile()
             guiX = nil,
             guiY = nil,
             ignoreDeadFollowers = false,
+            
+            alertSentSuccess = false,
+            alertSentSuccessFileID = nil,
+            alertSentSuccessFlashTaskbar = false,
+            alertSentPartial = false,
+            alertSentPartialFileID = nil,
+            alertSentPartialFlashTaskbar = false,
+            alertZeroHP = false,
+            alertZeroHPFileID = nil,
+            alertZeroHPFlashTaskbar = false,
+            alertNotEnoughAnima = false,
+            alertNotEnoughAnimaFileID = nil,
+            alertNotEnoughAnimaFlashTaskbar = false,
+            alertSentFailure = false,
+            alertSentFailureFileID = nil,
+            alertSentFailureFlashTaskbar = false,
+            alertAnimaQuestMissing = false,
+            alertAnimaQuestMissingFileID = nil,
+            alertAnimaQuestMissingFlashTaskbar = false,
+            alertCompleteMissions = false,
+            alertCompleteMissionsFileID = nil,
+            alertCompleteMissionsFlashTaskbar = false,
         }
     }
     
@@ -581,6 +603,28 @@ function addon:ProfileChanged()
     addon.GUI.BlockCompletionButton:SetChecked(profile.blockCompletion)
     
     addon.GUI.IgnoreDeadFollowersButton:SetChecked(profile.ignoreDeadFollowers)
+    
+    addon.GUI.AlertsSentSuccessfulButton:SetChecked(profile.alertSentSuccess)
+    addon.GUI.AlertsSentSuccessfulEditBox:SetText(profile.alertSentSuccessFileID or "")
+    addon.GUI.AlertsSentSuccessfulFlashTaskbarButton:SetChecked(profile.alertSentSuccessFlashTaskbar)
+    addon.GUI.AlertsSentPartialButton:SetChecked(profile.alertSentPartial)
+    addon.GUI.AlertsSentPartialEditBox:SetText(profile.alertSentPartialFileID or "")
+    addon.GUI.AlertsSentPartialFlashTaskbarButton:SetChecked(profile.alertSentPartialFlashTaskbar)
+    addon.GUI.AlertsZeroHPButton:SetChecked(profile.alertZeroHP)
+    addon.GUI.AlertsZeroHPEditBox:SetText(profile.alertZeroHPFileID or "")
+    addon.GUI.AlertsZeroHPFlashTaskbarButton:SetChecked(profile.alertZeroHPFlashTaskbar)
+    addon.GUI.AlertsNotEnoughAnimaButton:SetChecked(profile.alertNotEnoughAnima)
+    addon.GUI.AlertsNotEnoughAnimaEditBox:SetText(profile.alertNotEnoughAnimaFileID or "")
+    addon.GUI.AlertsNotEnoughAnimaFlashTaskbarButton:SetChecked(profile.alertNotEnoughAnimaFlashTaskbar)
+    addon.GUI.AlertsSentFailureButton:SetChecked(profile.alertSentFailure)
+    addon.GUI.AlertsSentFailureEditBox:SetText(profile.alertSentFailureFileID or "")
+    addon.GUI.AlertsSentFailureFlashTaskbarButton:SetChecked(profile.alertSentFailureFlashTaskbar)
+    addon.GUI.AlertsAnimaQuestMissingButton:SetChecked(profile.alertAnimaQuestMissing)
+    addon.GUI.AlertsAnimaQuestMissingEditBox:SetText(profile.alertAnimaQuestMissingFileID or "")
+    addon.GUI.AlertsAnimaQuestMissingFlashTaskbarButton:SetChecked(profile.alertAnimaQuestMissingFlashTaskbar)
+    addon.GUI.AlertsCompleteMissionsButton:SetChecked(profile.alertCompleteMissions)
+    addon.GUI.AlertsCompleteMissionsEditBox:SetText(profile.alertCompleteMissionsFileID or "")
+    addon.GUI.AlertsCompleteMissionsFlashTaskbarButton:SetChecked(profile.alertCompleteMissionsFlashTaskbar)
     
     if profile.guiX and profile.guiY then
         addon.GUI:ClearAllPoints()

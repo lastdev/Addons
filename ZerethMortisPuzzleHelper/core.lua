@@ -239,7 +239,7 @@ sliderHeadText:SetText("SCALE")
 
 local optionsVersionText =  aura_env.settingsFrame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 optionsVersionText:SetPoint("BOTTOM",  aura_env.settingsFrame, "BOTTOM", 0, 10)
-optionsVersionText:SetText("ZMPH 1.6.22")
+optionsVersionText:SetText("ZMPH 1.6.24")
 optionsVersionText:SetFont(fontMain, 12, "OUTLINE")
 
 local groupEnabled = CreateFrame('Frame', nil, aura_env.settingsFrame, 'BackdropTemplate')
@@ -291,9 +291,9 @@ aura_env.settingsFrame:SetScript("OnEvent", function(self, event)
         if (event == "PLAYER_ENTERING_WORLD" or event == "ZONE_CHANGED") then
             local bestMapID = C_Map.GetBestMapForUnit("player")
             if bestMapID == 1970 then
-                self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+                --self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
             else 
-                self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+                --self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
             end
         end
         if event == "COMBAT_LOG_EVENT_UNFILTERED" then

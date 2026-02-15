@@ -11,24 +11,11 @@ icons["Mixed"] = "Interface\\Addons\\HandyNotes_DungeonLocations\\images\\merged
 icons["Locked"] = "Interface\\Addons\\HandyNotes_DungeonLocations\\images\\gray.tga"
 
 local db
-local mapToContinent = { }
 local nodes = { }
 local minimap = { } -- For nodes that need precise minimap locations but would look wrong on zone or continent maps
 local alterName = { }
 local extraInfo = { }
 local legionInstancesDiscovered = { } -- Extrememly bad juju, needs fixing in BfA
-
--- After testing, the developer code is removed from the file and only the command remains
-SLASH_devModeDL1 = "/devmodeHN_DL";
-function SlashCmdList.devModeDL(msg, editbox)
-  if ns.Addon.db.profile.devModeDL then
-    ns.Addon.db.profile.devModeDL = false
-    print("DeveloperMode = Off")
-  else
-    ns.Addon.db.profile.devModeDL = true
-    print("DeveloperMode = On")
-  end
-end
 
 local LOCKOUTS = { }
 local function updateLockouts()
@@ -577,6 +564,13 @@ ns.Addon = Addon
     order = 27.0,
     set = function(info, v) db[info[#info]] = v self:FullUpdate() HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "DungeonLocations") end,
    },
+   hideMN = {
+    type = "toggle",
+    name = L["Hide Quel'Thalas"],
+    desc = L["Hide all Quel'Thalas nodes from the map"],
+    order = 27.1,
+    set = function(info, v) db[info[#info]] = v self:FullUpdate() HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "DungeonLocations") end,
+   },
  },
 }
 
@@ -669,10 +663,21 @@ nodes[13] = { -- Eastern Kingdoms
    [53977927] = { id = 237, type = "Dungeon" }, -- The Temple of Atal'hakkar 
    [40808194] = { id = 63, type = "Dungeon"  }, -- Deadmines
    [42915972] = { id = 231, type = "Dungeon" }, -- Gnomeregan 
-   [46886972] = { mnID = 33, id = { 741, 742, 66, 228, 229, 559 }, type = "Mixed"   }, -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
-   [49428163] = { mnID = 42, id = { 745, 860 }, type = "Mixed" }, -- Karazhan, Return to Karazhan
-   [46583029] = { mnID = 19, id = { 311, 316 }, type = "Mixed" }, -- Scarlet Halls, Monastery 
-   [52176317] = { mnID = 15, id = { 1197, 239 }, type = "Mixed" }, --  Legacy of Tyr Dragonflight Dungeon & Vanilla Uldaman 
+   [46886972] = { id = { 741, 742, 66, 228, 229, 559 }, type = "Mixed"   }, -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
+   [49428163] = { id = { 745, 860 }, type = "Mixed" }, -- Karazhan, Return to Karazhan
+   [46583029] = { id = { 311, 316 }, type = "Mixed" }, -- Scarlet Halls, Monastery 
+   [52176317] = { id = { 1197, 239 }, type = "Mixed" }, --  Legacy of Tyr Dragonflight Dungeon & Vanilla Uldaman 
+
+   [58260280] = { id = 1300, type = "Dungeon" }, -- Terrasse der Magisters
+   [53132565] = { id = 1299, type = "Dungeon" }, -- Windläuferturm
+   [63622304] = { id = 1315, type = "Dungeon" }, -- Maisarakavernen
+   [66390419] = { id = 1313, type = "Dungeon" }, -- Arena der Leerennarbe
+   [67291205] = { id = 1316, type = "Dungeon" }, -- Nexupunkt Xenas
+   [72881155] = { id = 1309, type = "Dungeon" }, -- Das blendende Tal
+   [61503275] = { id = 1311, type = "Dungeon" }, -- Nalorakks Bau   
+   [56560795] = { id = 1308, type = "Raid" }, -- Marsch auf Quel'Danas
+   [64941164] = { id = 1307, type = "Raid" }, -- Die Leerenspitze
+   [74890897] = { id = 1314, type = "Raid" }, -- Der Traumriss
 }
 
 if self.db.profile.Zone then
@@ -1199,8 +1204,8 @@ nodes[101] = { -- Outland
    [66452335] = { id = 749, type = "Raid" }, -- The Eye  
    [72298069] = { id = 751, type = "Raid" }, -- Black Temple 
    [45131901] = { id = 746, type = "Raid" }, -- Gruul's Lairend
-   [56695240] = { mnID = 100, id = { 747, 248, 256, 259 }, type = "Mixed" }, -- Hellfire Ramparts, The Blood Furnace, The Shattered Halls, Magtheridon's Lair 
-   [34624490] = { mnID = 102, id = { 748, 260, 261, 262 }, type = "Mixed" }, -- Slave Pens, The Steamvault, The Underbog, Serpentshrine Cavern
+   [56695240] = { id = { 747, 248, 256, 259 }, type = "Mixed" }, -- Hellfire Ramparts, The Blood Furnace, The Shattered Halls, Magtheridon's Lair 
+   [34624490] = { id = { 748, 260, 261, 262 }, type = "Mixed" }, -- Slave Pens, The Steamvault, The Underbog, Serpentshrine Cavern
 }
 
 if self.db.profile.Zone then
@@ -2718,6 +2723,7 @@ nodes[1978][31015550] = {
 
 end
 
+-- The War Within
 if (not self.db.profile.hideTWW) then
 
 nodes[2339] = { } -- Dornogal
@@ -2750,7 +2756,7 @@ nodes[2472] = { } -- Tazavesh
       [17361571] = { id = 1302, type = "Raid" },  -- Manaforge Omega
    }
 
- if self.db.profile.Zone then
+if self.db.profile.Zone then
 
    nodes[2216] = {
       [52164580] = { 
@@ -2920,6 +2926,116 @@ end
 
 end
 
+
+-- Midnight
+if (not self.db.profile.hideMN) then
+nodes[2537] = { } -- Quel'Thalas
+nodes[2395] = { } -- Eversong Woods
+nodes[2437] = { } -- Zul'Aman
+nodes[2424] = { } -- Isle of Quel'Danas
+nodes[2405] = { } -- Void Tempest
+nodes[2413] = { } -- Harandar
+nodes[2536] = { } -- Atal'Aman
+nodes[2393] = { } -- Silvermoon
+nodes[2444] = { } -- Schlächteranhöhe
+nodes[2576] = { } -- Rootlands
+
+   nodes[2537] = {
+      [29240810] = { id = 1300, type = "Dungeon" }, -- Terrasse der Magisters
+      [17817053] = { id = 1299, type = "Dungeon" }, -- Windläuferturm
+      [46086345] = { id = 1315, type = "Dungeon" }, -- Maisarakavernen
+      [53541263] = { id = 1313, type = "Dungeon" }, -- Arena der Leerennarbe
+      [56112716] = { id = 1316, type = "Dungeon" }, -- Nexupunkt Xenas
+      [77562414] = { id = 1309, type = "Dungeon" }, -- Das blendende Tal
+      [38008953] = { id = 1311, type = "Dungeon" }, -- Nalorakks Bau      
+      [27022260] = { id = 1308, type = "Raid" }, -- Marsch auf Quel'Danas
+      [52812948] = { id = 1307, type = "Raid" }, -- Die Leerenspitze
+      [83141931] = { id = 1314, type = "Raid" }, -- Der Traumriss
+   }
+
+   if self.db.profile.Zone then
+
+      nodes[2395] = {
+         [35457882] = { 
+         id = 1299, type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true, 
+      }, -- Windläuferturm
+      }
+
+      nodes[2424] = {
+         [63461538] = { 
+         id = 1300, type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true, 
+      }, -- Terrasse der Magister
+      [52608529] = { 
+         id = 1308, 
+         type = "Raid", 
+         showInZone = true, 
+         hideOnContinent = true, 
+      } -- Marsch auf Quel'Danas
+      }
+
+      nodes[2437] = {
+         [43833950] = { 
+         id = 1315, type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true, 
+      }, -- Maisarakavernen
+      [29838450] = { 
+         id = 1311, 
+         type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true, 
+      } -- Nalorakks Bau
+      }
+
+      nodes[2405] = {
+         [64976178] = { 
+         id = 1316, type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true, 
+      }, -- Nexuspunkt Xenas
+      [51661874] = { 
+         id = 1313, 
+         type = "Raid", 
+         showInZone = true, 
+         hideOnContinent = true, 
+      }, -- Arena der Leerennarbe
+      [45246483] = { 
+         id = 1307, 
+         type = "Raid", 
+         showInZone = true, 
+         hideOnContinent = true, 
+      } -- Leerenspitze
+      }
+
+      nodes[2444] = {
+         [53653339] = { 
+         id = 1313, type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true, 
+      }, -- Arena der Leerennarbe
+      }
+
+      nodes[2413] = {
+         [26467804] = { 
+         id = 1309, type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true, 
+      }, -- Das blendende Tal
+      [61386289] = { 
+         id = 1314, 
+         type = "Raid", 
+         showInZone = true, 
+         hideOnContinent = true, 
+      } -- Der Traumriss
+      }
+
+   end
+
+end
 end
 
 

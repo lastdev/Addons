@@ -21,7 +21,7 @@ if detailsFramework.IsAddonApocalypseWow() then
     displayMap = {
         [1] = {
             Enum.DamageMeterType.DamageDone, --damage done
-            Enum.DamageMeterType.DamageDone, --dps
+            Enum.DamageMeterType.Dps, --dps
             Enum.DamageMeterType.DamageTaken, --damage taken
             100, --friendly fire (not supported)
             100, --frags (not supported)
@@ -31,7 +31,7 @@ if detailsFramework.IsAddonApocalypseWow() then
         },
         [2] = {
             Enum.DamageMeterType.HealingDone, --healing done
-            Enum.DamageMeterType.HealingDone, --hps
+            Enum.DamageMeterType.Hps, --hps
             Enum.DamageMeterType.Absorbs, --absorbs
             100, --overhealing (not supported)
             100, --healing taken (not supported)
@@ -73,6 +73,10 @@ swappedFrame:SetPoint("topleft", UIParent, "topleft", 0, 0)
 swappedFrame:SetSize(1, 1)
 swappedFrame:EnableMouse(false)
 
+local updateCombatElapsedTime = function(self)
+    local elapsedTime = self:GetFormattedTimeForTitleBar()
+end
+
 local onEvent = function(event, instance, ...)
     ---@cast instance instance
     if event == "DETAILS_INSTANCE_CHANGEATTRIBUTE" then
@@ -105,9 +109,19 @@ local onEvent = function(event, instance, ...)
         end
 
     elseif event == "DETAILS_OPTIONS_MODIFIED" then
-        bParser.UpdateAllDamageMeterWindowsAppearance()
+        if detailsFramework.IsAddonApocalypseWow() then
+            if bParser.IsDamageMeterSwapped() then
+                bParser.UpdateAllDamageMeterWindowsAppearance()
+            end
+        end
     end
 end
+
+--calling on challenge mode start, wipe details data
+
+---Details222.BParser.ResetServerDM
+
+
 
 local swapListener = Details:CreateEventListener()
 swapListener:RegisterEvent("DETAILS_INSTANCE_CHANGEATTRIBUTE", onEvent)
@@ -135,8 +149,12 @@ function bParser.IsDamageMeterSwapped()
     return Details.damage_meter_type ~= 0
 end
 
+---@param blzWindow blzwindow
+---@param instance instance
 local posses = function(blzWindow, instance)
-    blzWindow.position = {blzWindow:GetPoint(1)}
+    local anchor1, refFrame, anchor2, x, y = blzWindow:GetPoint(1)
+    local refFrameName = refFrame and refFrame:GetName() or "UIParent"
+    Details.damage_meter_position[blzWindow.sessionWindowIndex] = {anchor1, refFrameName, anchor2, x, y}
 
     local scrollBox = blzWindow.ScrollBox
     scrollBox:ClearAllPoints()
@@ -154,6 +172,19 @@ local posses = function(blzWindow, instance)
             if type(v) == "table" and v.Hide then
                 v:Hide()
             end
+        end
+    end
+end
+
+---@param blzWindow blzwindow
+local unposses = function(blzWindow)
+    local position = Details.damage_meter_position[blzWindow.sessionWindowIndex]
+    if position then
+        local anchor1, refFrameName, anchor2, x, y = unpack(position)
+        local refFrame = _G[refFrameName]
+        if refFrame then
+            blzWindow:ClearAllPoints()
+            blzWindow:SetPoint(anchor1, refFrame, anchor2, x, y)
         end
     end
 end
@@ -213,7 +244,15 @@ function bParser.UpdateDamageMeterAppearance(blzWindow)
                 local name = line:GetName()
                 local value = line:GetValue()
 
+                C_Timer.After(0, function()
+                    local anchor1, relativeFrame, anchor2, x, y =  statusBar:GetPoint(3)
+                    if anchor1 == "BOTTOMRIGHT" and detailsFramework.Math.IsNearlyEqual(-4, x, SMALL_NUMBER) then
+                        statusBar:SetPoint(anchor1, relativeFrame, anchor2, -1, y)
+                    end
+                end)
+
                 statusBar:SetStatusBarTexture(textureFile)
+                statusBar.BackgroundEdge:SetTexture("")
                 background:SetTexture(textureFile2)
 
                 if left_text_outline then
@@ -242,15 +281,15 @@ function bParser.UpdateDamageMeterAppearance(blzWindow)
                 if (textL_outline_small) then
                     local color = textL_outline_small_color
                     name:SetShadowColor(color[1], color[2], color[3], color[4])
-                    name:SetShadowColor(color[1], color[2], color[3], color[4])
+                    name:SetShadowOffset(1, -1)
                 else
-                    name:SetShadowColor(0, 0, 0, 0)
                     name:SetShadowColor(0, 0, 0, 0)
                 end
 
                 if (textR_outline_small) then
                     local color = textR_outline_small_color
                     value:SetShadowColor(color[1], color[2], color[3], color[4])
+                    value:SetShadowOffset(1, -1)
                 else
                     value:SetShadowColor(0, 0, 0, 0)
                 end
@@ -259,21 +298,92 @@ function bParser.UpdateDamageMeterAppearance(blzWindow)
                 damageMeter:SetBarHeight(height)
                 damageMeter:SetBarSpacing(spacing)
                 damageMeter:SetShowBarIcons(bShowIcon)
-
             end)
             blzWindow:RefreshLayout()
         end
     end
 end
 
-function bParser.UpdateDamageMeterSwap()
-    if bParser.IsDamageMeterSwapped() then
-        --show blizzard
-        local isDamageMeterEnabled = C_CVar.GetCVarBool("damageMeterEnabled")
-        if not isDamageMeterEnabled then
-            C_CVar.SetCVar("damageMeterEnabled", "1")
+local enableDamageMeter = function()
+    local isDamageMeterEnabled = C_CVar.GetCVarBool("damageMeterEnabled")
+    if not isDamageMeterEnabled then
+        C_CVar.SetCVar("damageMeterEnabled", "1")
+    end
+    damageMeter:Show()
+end
+
+---@type table<blzwindow, boolean>
+local isBeingUseAsOverlay = {}
+
+function bParser.MakeAsOverlay()
+    if not bParser.IsDamageMeterSwapped() then
+        local windowUsed = {}
+
+        local makeAsOverlay = function(instance)
+            enableDamageMeter()
+
+            local blzWindow
+            local lines = instance.barras
+
+            damageMeter:ForEachSessionWindow(function(thisWindow)
+                if not blzWindow and thisWindow and not windowUsed[thisWindow] then
+                    windowUsed[thisWindow] = true
+                    blzWindow = thisWindow
+                end
+            end)
+
+            if not blzWindow then
+                damageMeter:ShowNewSessionWindow()
+                damageMeter:ForEachSessionWindow(function(thisWindow)
+                    if not blzWindow and thisWindow and not windowUsed[thisWindow] then
+                        windowUsed[thisWindow] = true
+                        blzWindow = thisWindow
+                    end
+                end)
+            end
+
+            if blzWindow then
+                blzWindow:Show()
+                local i = 1
+                blzWindow:ForEachEntryFrame(function(line)
+                    if lines[i] then
+                        line:SetAlpha(0)
+                        line:ClearAllPoints()
+                        line:SetPoint("topleft", lines[i], "topleft", 0, 0)
+                        line:SetPoint("bottomright", lines[i], "bottomright", 0, 0)
+                        i = i + 1
+                    end
+                end)
+
+                isBeingUseAsOverlay[blzWindow] = true
+            end
         end
-        damageMeter:Show()
+
+        Details:InstanceCall(makeAsOverlay)
+    end
+end
+
+function bParser.UnmakeAsOverlay()
+    damageMeter:ForEachSessionWindow(function(blzWindow)
+        if isBeingUseAsOverlay[blzWindow] then
+            blzWindow:Refresh(ScrollBoxConstants.DiscardScrollPosition)
+            blzWindow:Hide()
+        end
+    end)
+end
+
+local debugSwap = false
+
+function bParser.UpdateDamageMeterSwap()
+    if debugSwap then
+        print("[DS] is swapped:", bParser.IsDamageMeterSwapped())
+    end
+
+    if bParser.IsDamageMeterSwapped() then
+        --bParser.UnmakeAsOverlay()
+
+        --show blizzard
+        enableDamageMeter()
 
         local hideLines = function(instance)
             local allInstanceLines = instance.barras
@@ -288,15 +398,37 @@ function bParser.UpdateDamageMeterSwap()
             end
         end)
 
-        local bWindowIndex = 1
+        local windowUsed = {}
 
         local swapToBlz = function(instance)
-            ---@type blzwindow
-            local blzWindow = _G["DamageMeterSessionWindow" .. bWindowIndex]
+            local blzWindow
+
+            damageMeter:ForEachSessionWindow(function(thisWindow)
+                if not blzWindow and thisWindow and not windowUsed[thisWindow] then
+                    windowUsed[thisWindow] = true
+                    blzWindow = thisWindow
+                    if debugSwap then
+                        print("[DS] IC, has blzWindow: ", blzWindow, "shown:", blzWindow and blzWindow:IsShown())
+                    end
+                end
+            end)
 
             if not blzWindow then
+                if debugSwap then
+                    print("[DS] blzWindow bit found, creating a new one")
+                end
+
                 damageMeter:ShowNewSessionWindow()
-                blzWindow = _G["DamageMeterSessionWindow" .. bWindowIndex]
+
+                damageMeter:ForEachSessionWindow(function(thisWindow)
+                    if not blzWindow and thisWindow and not windowUsed[thisWindow] then
+                        windowUsed[thisWindow] = true
+                        blzWindow = thisWindow
+                        if debugSwap then
+                            print("[DS] IC, has blzWindow: ", blzWindow, "shown:", blzWindow and blzWindow:IsShown())
+                        end
+                    end
+                end)
             end
 
             if blzWindow then
@@ -306,9 +438,22 @@ function bParser.UpdateDamageMeterSwap()
                 DAMAGE_METER_DEFAULT_BAR_HEIGHT = instance.row_info.height
                 DAMAGE_METER_DEFAULT_BAR_SPACING = instance.row_info.spacing
 
-                bWindowIndex = bWindowIndex + 1
+                local mainDisplay, subDisplay = instance:GetDisplay()
+                local damageMeterType = bParser.GetDamageMeterTypeFromDisplay(mainDisplay, subDisplay)
+                if damageMeterType < 100 then
+                    blzWindow:SetDamageMeterType(damageMeterType)
+                end
+
                 instance.blzWindow = blzWindow
                 blzWindow:Refresh()
+
+                if debugSwap then
+                    print("[DS] blzWindow", blzWindow, "swapped correctly")
+                end
+            else
+                if debugSwap then
+                    print("[DS] blzWindow not found, period")
+                end
             end
         end
 
@@ -322,7 +467,16 @@ function bParser.UpdateDamageMeterSwap()
         end
         damageMeter:Hide()
 
+        do return end
+
         swappedFrame:SetScript("OnUpdate", nil)
+
+        damageMeter:ForEachSessionWindow(function(thisWindow)
+            if thisWindow then
+                unposses(thisWindow)
+                thisWindow:GetDamageMeterOwner():HideSessionWindow(thisWindow)
+            end
+        end)
 
         --show details
         for i = 1, 10 do
@@ -344,3 +498,60 @@ function bParser.UpdateDamageMeterSwap()
 
     end
 end
+
+function DetailsActionButtonTemplate_OnLoad(self)
+    self:RegisterForClicks("AnyUp")
+end
+
+do return end
+
+local secureButtons = {}
+
+for i = 1, 5 do
+    local b = CreateFrame("button", "DetailsTestBar" .. i, UIParent, "xml_DetailsActionButtonTemplate")
+    b:SetPoint("left", UIParent, "left", 2, 200 + (-(i - 1) * 22))
+
+    b.leftText = b:CreateFontString(nil, "overlay", "GameFontNormal")
+    b.leftText:SetPoint("left", b, "left", 2, 0)
+    b.leftText:SetText(i)
+
+    b.rightText = b:CreateFontString(nil, "overlay", "GameFontNormal")
+    b.rightText:SetPoint("right", b, "right", -2, 0)
+
+    local initializationCode = [[
+        self:SetAttribute("secureOnEnter", [====[
+            self:RunFor(self, print('On Entered'))
+        ]====])
+        self:SetAttribute("secureOnLeave", [====[
+            self:RunFor(self, print('On Left'))
+        ]====])
+    ]]
+
+    b:SetAttribute("initialConfigFunction", initializationCode)
+
+    --b:Run([[print("Button Loaded")]])
+    --print(b.CallMethod)
+
+    secureButtons[i] = b
+
+    b:Hide()
+end
+
+local f = CreateFrame("frame")
+f:RegisterEvent("PLAYER_REGEN_DISABLED")
+f:RegisterEvent("PLAYER_REGEN_ENABLED")
+f:SetScript("OnEvent", function(self, event, ...)
+    if event == "PLAYER_REGEN_DISABLED" then
+        for i = 1, 5 do
+            local b = secureButtons[i]
+            b:Run([[self:RunFor(self, print("In Combat"))]])
+        end
+
+    elseif event == "PLAYER_REGEN_ENABLED" then
+        --for i = 1, 5 do
+        --    local b = secureButtons[i]
+        --    b:Run([[self:RunFor(self, print("Out of Combat"))]])
+        --end
+    end
+end)
+

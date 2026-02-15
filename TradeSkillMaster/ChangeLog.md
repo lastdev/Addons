@@ -1,5 +1,5 @@
-## v4.14.49 Changes
+## v4.14.55 Changes
 
-* [Retail] Various compatibility improvements with other addons
+* [Retail] Updated for 12.0.1
 
 [Known Issues](https://support.tradeskillmaster.com/en_US/known_issues)

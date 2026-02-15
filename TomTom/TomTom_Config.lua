@@ -1,6 +1,6 @@
 local addonName, addon = ...
 
-local L = TomTomLocals
+local L = addon.L
 
 local function createconfig()
 	local options = {}
@@ -1016,13 +1016,21 @@ local function createconfig()
 				type = "description",
 				name = L["TomTom supports setting multiple waypoints at the same time, and storing and loading pages of waypoints. This section enables you to configure some settings for this feature."],
 			},
-			enable = {
+			enableMinimap = {
 				order = 2,
 				type = "toggle",
-				name = L["Show minimap/addon compartment button"],
-				desc = L["Enables or disables the showing of a minimap/addon-compartment button to toggle the paste window."],
+				name = L["Show minimap button to open TomTom-Paste window"],
+				desc = L["Enables or disables the showing of a minimap button to toggle the paste window."],
 				width = "double",
 				arg = "paste.minimap_button",
+			},
+			enableAddonCompartment = {
+				order = 3,
+				type = "toggle",
+				name = L["Show addon compartment button to open TomTom-Paste window"],
+				desc = L["Enables or disables the showing of an addon-compartment button to toggle the paste window."],
+				width = "double",
+				arg = "paste.addon_compartment_button",
 			},
 		}
 	}
@@ -1154,7 +1162,8 @@ local aboutOptions = {
 local blizzPanel
 function addon:CreateConfigPanels()
 	config:RegisterOptionsTable("TomTom", aboutOptions)
-	local aboutFrame = dialog:AddToBlizOptions("TomTom", "TomTom")
+	local aboutFrame, category = dialog:AddToBlizOptions("TomTom", "TomTom")
+	addon.aboutCategory = category
 	if not registered then
 		blizzPanel = createBlizzOptions()
 		registered = true
@@ -1172,7 +1181,7 @@ SlashCmdList["TOMTOM"] = function(msg)
 	end
 
 	if Settings then
-		Settings.OpenToCategory("TomTom")
+		Settings.OpenToCategory(addon.aboutCategory)
 	elseif InterfaceOptionsFrame_OpenToCategory then
 		InterfaceOptionsFrame_OpenToCategory("TomTom")
 		InterfaceOptionsFrame_OpenToCategory("TomTom")

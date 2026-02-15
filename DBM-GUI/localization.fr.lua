@@ -6,7 +6,7 @@ L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Traduit par "
 L.TranslationBy 			= "Psyco/Sasmira/Pettigrow/Edoz@EU-Ysondre/Leybola@EU-Sargeras/Noleen@EU-Hyjal" -- your name here, localizers!
-L.Website					= "Merci de suivre MysticalOS pour les actualités et les mises à jour |cFF73C2FBhttps://allmylinks.com/mysticalos|r"
+L.Website					= "Suivre MysticalOS pour les actualités et les mises à jour |cFF73C2FBhttps://allmylinks.com/mysticalos|r"
 L.WebsiteButton				= "Site web"
 
 L.OTabBosses						= "Options de Boss"--Deprecated and will be deleted once tabs no longer use this
@@ -90,6 +90,7 @@ L.Button_TestBars			= "Barres de test"
 L.Button_MoveBars			= "Déplacer les barres"
 L.Button_ResetInfoRange		= "Réinit. les cadres de portée et d'info"
 
+L.Button_ShowMidnightWizard = "Assistant de configuration de Midnight"
 L.ModelOptions				= "Options du visualiseur de modèle 3D"
 L.EnableModels				= "Activer les modèles 3D dans les options des boss"
 L.ModelSoundOptions			= "Configurer le son pour le visualiseur 3D"
@@ -106,7 +107,7 @@ L.UIGroupingOptions					= "Options d'interface partagées (requiert de recharger
 L.GroupOptionsExcludeIcon			= "Exclure l'option 'Définir l'icône sur' du regroupement par sort (elles seront regroupées dans la catégorie 'Icônes' à la place)"
 L.GroupOptionsExcludePrivateAura	= "Exclure les options sonores des 'Auras Privées' du regroupement par sort (elles seront regroupées dans la catégorie 'Auras Privées' à la place)"
 L.ShowWAKeys						= "Afficher les clés WeakAuras à côté des noms de sorts pour aider à écrire des WeakAuras en utilisant les déclencheurs du boss mod"
-L.AutoExpandSpellGroups				= "Déplier automatiquement les options liées à la même capacité"
+L.AutoExpandSpellGroups2				= "Déplier automatiquement les options liées à la même capacité"
 --L.ShowSpellDescWhenExpanded		= "Continuer à afficher la description du sort lorsque les groupes sont déployés."--Might not be used
 L.NoDescription						= "Cette capacité n'a aucune description"
 L.CustomOptions						= "Cette catégorie contient des options personnalisées pour une capacité ou un événement qui n'a pas son propre ID de sort ou de journal. Ces options ont été regroupées ensemble en utilisant un ID manuel personnalisé pour faciliter la création de WeakAuras."
@@ -262,6 +263,14 @@ L.AnnouncementMidnightNotice		= "Les options de ce panneau concernent les averti
 L.SpecialWarnHeaderMedium			= "Annonces pour les mécaniques que Blizzard classe comme 'moyennes'"
 L.SpecialWarnHeaderCritical			= "Annonces pour les mécaniques que Blizzard classe comme 'critiques'"
 
+-- Panel: Private Auras Frame
+L.Panel_PrivateAuras				= "Auras privées"
+L.Area_PrivateAuras					= "Options des auras privées"
+L.EnablePrivateAuraIcons			= "Afficher les icônes des auras privées à l'écran"
+L.EnablePrivateAuraText				= "Afficher les messages texte des auras privées à l'écran"
+L.SetPAIconScale					= "Échelle de l'icône : %0.1f"
+L.SetPATextScale					= "Échelle du texte : %0.1f"
+
 -- Tab: Generalwarnings
 L.Tab_GeneralMessages 			= "Messages de la fenêtre de discussion"
 L.SelectChatFrameArea 			= "Options de la fenêtre de discussion"
@@ -405,6 +414,7 @@ L.ZeroatWindowStartRestart 		= "Le texte atteint zéro au début de la fenêtre 
 L.ZeroatWindowStartNeg 			= "Le texte atteint zéro au début de la fenêtre de recharge puis devient négatif"
 L.BarIconLeft 					= "Icône à gauche"
 L.BarIconRight 					= "Icône à droite"
+L.BarIconPosition               = "Position de l’icône"
 L.ExpandUpwards					= "Étendre vers le haut"
 L.FillUpBars					= "Remplissage"
 L.ClickThrough					= "Désactiver les interactions souris"
@@ -420,13 +430,18 @@ L.BarColorByType				= "Couleur par type"
 L.Highest 						= "Le plus élevé en haut"
 L.Lowest 						= "Le plus bas en haut"
 L.NoBarFade						= "Utiliser la couleur initiale pour les petites barres et la couleur finale pour les grandes, sans changements graduels"
-L.BarInlineIcons				= "Icônes intégrées"
+L.BarInlineIcons				= "Afficher les icônes du journal"
 L.DisableRightClickBar 			= "Désactiver le clic droit pour annuler les chronomètres"
 L.ShortTimerText 				= "Utiliser un texte de chronomètre court"
 L.KeepBar						= "Maintenir les barres actives jusqu'à l'utilisation de la capacité"
 L.KeepBar2						= "(quand supporté par le module)"
 L.FadeBar 						= "Faire disparaître les chronomètres pour les capacités hors de portée"
 L.BarSkin						= "Apparence des barres"
+L.InlineIconsDropdown			= "Style des icônes du journal"
+L.SingleLargeIcon				= "Une seule grande icône"
+L.DoubleLargeIcons				= "Deux grandes icônes"
+L.DoubleInlineIcons				= "Toutes les grandes icônes"
+L.StackedMiniIcons				= "Petites icônes empilées"
 
 -- Panel: Pull, Break, Combat
 L.Panel_PullBreakCombat				= "Pull et pause"
@@ -443,6 +458,11 @@ L.Panel_ReducedInformation 	= "Réduire les informations"
 
 -- Panel: DBM Features
 L.Panel_SpamFilter					= "Désactiver les fonctions de DBM"
+
+L.Area_Global_Toggles              = "Options globales des fonctionnalités"
+L.NoWarnings                       = "Désactiver les alertes de DBM"
+L.NoTimers                         = "Désactiver les chronomètres de DBM"
+
 L.Area_SpamFilter_Anounces			= "Filtres d'annonces"
 L.SpamBlockNoShowAnnounce			= "Ne pas afficher de texte ni jouer de son pour AUCUNE annonce générale"
 L.SpamBlockNoShowTgtAnnounce		= "Ne pas afficher de texte ni jouer de son pour les annonces générales CIBLE qui ne vous affectent pas"

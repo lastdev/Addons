@@ -23,6 +23,8 @@ do
 	assert(WOW_PROJECT_ID)
 	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
 		GAME_VERSION = "VANILLA"
+	elseif WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then
+		GAME_VERSION = "BCC"
 	elseif WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC then
 		GAME_VERSION = "MOP"
 	elseif WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
@@ -108,6 +110,12 @@ end
 ---@return boolean
 function LibTSMComponent.__static.IsVanillaClassic()
 	return GAME_VERSION == "VANILLA"
+end
+
+---Returns whether or not we're running within the Burning Crusade Classic version of the game.
+---@return boolean
+function LibTSMComponent.__static.IsBCClassic()
+	return GAME_VERSION == "BCC"
 end
 
 ---Returns whether or not we're running within the Panda Classic version of the game.

@@ -20,6 +20,8 @@ function Transform.Get()
 		return DATA.Retail
 	elseif LibTSMData.IsPandaClassic() then
 		return DATA.Panda
+	elseif LibTSMData.IsBCClassic() then
+		return DATA.BCC
 	elseif LibTSMData.IsVanillaClassic() then
 		return DATA.Vanilla
 	else
@@ -64,6 +66,75 @@ DATA.Vanilla = {
 	},
 	["i:10938"] = {
 		["i:10939"] = 3, -- Lesser Magic Essence
+	},
+}
+
+
+
+-- ============================================================================
+-- Burning Crusade
+-- ============================================================================
+
+DATA.BCC = {
+	-- Essences
+	["i:22446"] = {
+		["i:22447"] = 1/3, -- Greater Planar Essence
+	},
+	["i:22447"] = {
+		["i:22446"] = 3, -- Lesser Planar Essence
+	},
+	["i:16203"] = {
+		["i:16202"] = 1/3, -- Greater Eternal Essence
+	},
+	["i:16202"] = {
+		["i:16203"] = 3, -- Lesser Eternal Essence
+	},
+	["i:11175"] = {
+		["i:11174"] = 1/3, -- Greater Nether Essence
+	},
+	["i:11174"] = {
+		["i:11175"] = 3, -- Lesser Nether Essence
+	},
+	["i:11135"] = {
+		["i:11134"] = 1/3, -- Greater Mystic Essence
+	},
+	["i:11134"] = {
+		["i:11135"] = 3, -- Lesser Mystic Essence
+	},
+	["i:11082"] = {
+		["i:10998"] = 1/3, -- Greater Astral Essence
+	},
+	["i:10998"] = {
+		["i:11082"] = 3, -- Lesser Astral Essence
+	},
+	["i:10939"] = {
+		["i:10938"] = 1/3, -- Greater Magic Essence
+	},
+	["i:10938"] = {
+		["i:10939"] = 3, -- Lesser Magic Essence
+	},
+
+	-- Primals
+	["i:21885"] = {
+		["i:22578"] = 0.1, -- Water
+	},
+	["i:22456"] = {
+		["i:22577"] = 0.1, -- Shadow
+	},
+	["i:22457"] = {
+		["i:22576"] = 0.1, -- Mana
+	},
+	["i:21886"] = {
+		["i:22575"] = 0.1, -- Life
+	},
+	["i:21884"] = {
+		["i:22574"] = 0.1, -- Fire
+	},
+	["i:22452"] = {
+		["i:22573"] = 0.1, -- Earth
+	},
+	["i:22451"] = {
+		["i:22572"] = 0.1, -- Air
 	},
 }
 

@@ -296,10 +296,7 @@ do
         categoryKeys = {"Collection"},
     };
 
-    addon.ControlCenter:AddModule(moduleData);
+    if not addon.IS_MIDNIGHT then
+        addon.ControlCenter:AddModule(moduleData);
+    end
 end
-
-
-
-
---/script Transmog_LoadUI();ShowUIPanel(TransmogFrame)

@@ -23,6 +23,43 @@ function PreviewPanelData.Util.CleanText(text)
     return text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):gsub("|[Hh]", ""):gsub("|T[^|]*|t", ""):gsub("|n", " "):match("^%s*(.-)%s*$") or text
 end
 
+-- Cache for resolved encounter names
+local encounterNameCache = {}
+
+--- Resolves "Encounter XXXXX" or "NPC XXXXX" placeholder strings to actual names
+--- Uses the Encounter Journal API (EJ_GetEncounterInfo) for encounters
+--- @param name string The name to check/resolve
+--- @return string resolvedName The resolved name, or original if not a placeholder
+function PreviewPanelData.Util.ResolveEncounterName(name)
+    if not name or type(name) ~= "string" then
+        return name
+    end
+
+    -- Check if this is an "Encounter XXXXX" placeholder
+    local encounterID = name:match("^Encounter%s+(%d+)$")
+    if encounterID then
+        encounterID = tonumber(encounterID)
+        if encounterID then
+            -- Check cache first
+            if encounterNameCache[encounterID] then
+                return encounterNameCache[encounterID]
+            end
+
+            -- Try to resolve via Encounter Journal API
+            if EJ_GetEncounterInfo then
+                local bossName = EJ_GetEncounterInfo(encounterID)
+                if bossName and bossName ~= "" then
+                    encounterNameCache[encounterID] = bossName
+                    return bossName
+                end
+            end
+        end
+    end
+
+    -- Return original if couldn't resolve
+    return name
+end
+
 function PreviewPanelData.Util.FormatMoneyFromCopper(copperAmount)
     local amount = tonumber(copperAmount) or 0
     if amount <= 0 then
@@ -173,7 +210,17 @@ end
 
 function PreviewPanelData:DisplayNameAndIcon(previewFrame, item, catalogData)
     local name = catalogData.name or item.name or "Unknown Item"
-    if catalogData.quality ~= nil then
+
+    -- Get quality from catalogData or fallback to C_Item API (API safety)
+    local quality = catalogData.quality
+    if quality == nil then
+        local itemID = tonumber(item.itemID)
+        if itemID and C_Item and C_Item.GetItemQualityByID then
+            quality = C_Item.GetItemQualityByID(itemID)
+        end
+    end
+
+    if quality ~= nil then
         local qualityColors = {
             [0] = "|cff9d9d9d",
             [1] = "|cffffffff",
@@ -182,7 +229,7 @@ function PreviewPanelData:DisplayNameAndIcon(previewFrame, item, catalogData)
             [4] = "|cffa335ee",
             [5] = "|cffff8000",
         }
-        local colorCode = qualityColors[catalogData.quality] or "|cffffffff"
+        local colorCode = qualityColors[quality] or "|cffffffff"
         previewFrame.name:SetText(colorCode .. name .. "|r")
     else
         previewFrame.name:SetText(name)
@@ -225,8 +272,9 @@ function PreviewPanelData:DisplayNameAndIcon(previewFrame, item, catalogData)
     end
     
     previewFrame.icon:SetTexture(icon)
-    
-    if catalogData.quality ~= nil then
+
+    -- Use the same quality variable from above (already has fallback to C_Item API)
+    if quality ~= nil then
         local qualityColors = {
             [0] = {0.62, 0.62, 0.62},
             [1] = {1.00, 1.00, 1.00},
@@ -235,7 +283,7 @@ function PreviewPanelData:DisplayNameAndIcon(previewFrame, item, catalogData)
             [4] = {0.64, 0.21, 0.93},
             [5] = {1.00, 0.50, 0.00},
         }
-        local color = qualityColors[catalogData.quality] or {1, 1, 1}
+        local color = qualityColors[quality] or {1, 1, 1}
         if previewFrame.iconBorder and previewFrame.iconBorder.SetBackdropBorderColor then
             previewFrame.iconBorder:SetBackdropBorderColor(color[1], color[2], color[3], 0.9)
         elseif previewFrame.iconBorder and previewFrame.iconBorder.SetVertexColor then
@@ -246,23 +294,84 @@ end
 
 function PreviewPanelData:DisplayCollectionStatus(previewFrame, item, catalogData)
     local itemID = tonumber(item.itemID)
-    local isCollected = false
-    if itemID and HousingCollectionAPI then
-        isCollected = HousingCollectionAPI:IsItemCollected(itemID)
-    end
-    
-    if isCollected then
-        previewFrame.collectedCheck:Show()
-        previewFrame.collectedValue:SetText("|cFF00FF00Yes|r")
-    else
-        previewFrame.collectedCheck:Hide()
-        previewFrame.collectedValue:SetText("|cFFFF0000No|r")
-    end
-    
     local collectionText = nil
     local numPlaced = item._apiNumPlaced or catalogData.numPlaced or 0
     local numStored = item._apiNumStored or catalogData.numStored or 0
     local totalOwned = numPlaced + numStored
+    local isCollected = totalOwned > 0
+    local themeColors = _G.HousingTheme and _G.HousingTheme.Colors or {}
+    local statusSuccess = themeColors.statusSuccess or { 0.30, 0.85, 0.50, 1.0 }
+    local statusError = themeColors.statusError or { 0.95, 0.35, 0.40, 1.0 }
+    local textMuted = themeColors.textMuted or { 0.50, 0.48, 0.58, 1.0 }
+
+    if not isCollected and itemID and HousingCollectionAPI then
+        isCollected = HousingCollectionAPI:IsItemCollected(itemID)
+    end
+
+    if isCollected then
+        previewFrame.collectedCheck:Show()
+        if previewFrame.collectedValue then
+            previewFrame.collectedValue:SetText("|cFF00FF00Yes|r")
+        end
+    else
+        previewFrame.collectedCheck:Hide()
+        if previewFrame.collectedValue then
+            previewFrame.collectedValue:SetText("|cFFFF0000No|r")
+        end
+    end
+
+    -- Recipe known/unknown (profession items only). If we can't determine known/unknown yet,
+    -- show trainer guidance instead.
+    if previewFrame.recipeValue and previewFrame.recipeValue.label then
+        local hv = _G.HousingVendor
+        local pr = hv and hv.ProfessionReagents
+        local hasReagents = pr and pr.HasReagents and itemID and pr:HasReagents(itemID) or false
+
+        if hasReagents then
+            local known = pr and pr.IsRecipeKnown and pr:IsRecipeKnown(itemID) or nil
+            local altProfs = _G.HousingAltProfessions
+            local altsWithRecipe = altProfs and altProfs.GetCharsWithRecipe and altProfs:GetCharsWithRecipe(itemID) or {}
+            
+            if known == nil then
+                local pt = hv and hv.ProfessionTrainers
+                local trainer = pt and pt.GetTrainerForItem and pt:GetTrainerForItem(itemID, item) or nil
+                local trainerName = trainer and trainer.name or nil
+                local trainerLocation = trainer and trainer.location or nil
+
+                previewFrame.recipeValue.label:SetText("Trainer:")
+                previewFrame.recipeValue:SetText(trainerName or trainerLocation or "")
+                previewFrame.recipeValue:SetTextColor(textMuted[1], textMuted[2], textMuted[3], 1)
+            elseif known == true then
+                previewFrame.recipeValue.label:SetText("Recipe:")
+                previewFrame.recipeValue:SetText("Known")
+                previewFrame.recipeValue:SetTextColor(statusSuccess[1], statusSuccess[2], statusSuccess[3], 1)
+            else
+                -- Not known by current char, check alts
+                if #altsWithRecipe > 0 then
+                    local altNames = {}
+                    for i = 1, math.min(#altsWithRecipe, 3) do
+                        altNames[#altNames + 1] = altsWithRecipe[i].name
+                    end
+                    if #altsWithRecipe > 3 then
+                        altNames[#altNames + 1] = "..." .. (#altsWithRecipe - 3) .. " more"
+                    end
+                    previewFrame.recipeValue.label:SetText("Known by:")
+                    previewFrame.recipeValue:SetText(table.concat(altNames, ", "))
+                    previewFrame.recipeValue:SetTextColor(statusWarning[1], statusWarning[2], statusWarning[3], 1)
+                else
+                    previewFrame.recipeValue.label:SetText("Recipe:")
+                    previewFrame.recipeValue:SetText("Unknown")
+                    previewFrame.recipeValue:SetTextColor(statusError[1], statusError[2], statusError[3], 1)
+                end
+            end
+            previewFrame.recipeValue:Show()
+            previewFrame.recipeValue.label:Show()
+        else
+            previewFrame.recipeValue:SetText("")
+            previewFrame.recipeValue:Hide()
+            previewFrame.recipeValue.label:Hide()
+        end
+    end
 
     if numPlaced > 0 then
         collectionText = string.format("Placed: %d", numPlaced)
@@ -271,15 +380,14 @@ function PreviewPanelData:DisplayCollectionStatus(previewFrame, item, catalogDat
         end
     elseif numStored > 0 then
         collectionText = string.format("Stored: %d", numStored)
-    elseif catalogData.quantity and catalogData.quantity > 0 then
+    elseif catalogData.quantity and catalogData.quantity > 0 and catalogData.quantity < 4294967290 then
+        -- Filter out invalid Midnight beta API values (max uint32 = 4294967295, likely -1 as unsigned)
         collectionText = string.format("Owned: %d", catalogData.quantity)
     end
     
     if collectionText and collectionText ~= "" then
-        previewFrame.SetFieldValue(previewFrame.collectionValue, collectionText, previewFrame.collectionValue.label)
-        if previewFrame.collectedValue and previewFrame.collectedValue.label then
-            previewFrame.collectedValue.label:ClearAllPoints()
-            previewFrame.collectedValue.label:SetPoint("LEFT", previewFrame.collectionValue, "RIGHT", 15, 0)
+        if previewFrame.collectionValue and previewFrame.SetFieldValue then
+            previewFrame.SetFieldValue(previewFrame.collectionValue, collectionText, previewFrame.collectionValue.label)
         end
     else
         if previewFrame.collectionValue then
@@ -287,10 +395,6 @@ function PreviewPanelData:DisplayCollectionStatus(previewFrame, item, catalogDat
             if previewFrame.collectionValue.label then
                 previewFrame.collectionValue.label:Hide()
             end
-        end
-        if previewFrame.collectedValue and previewFrame.collectedValue.label then
-            previewFrame.collectedValue.label:ClearAllPoints()
-            previewFrame.collectedValue.label:SetPoint("TOPLEFT", previewFrame.idText, "BOTTOMLEFT", 0, -4)
         end
     end
 end
@@ -301,16 +405,10 @@ function PreviewPanelData:DisplayExpansionAndFaction(previewFrame, item, catalog
         local apiExpansion = HousingAPI:GetExpansionFromFilterTags(item.itemID)
         if apiExpansion and apiExpansion ~= "" then
             expansionText = apiExpansion
-            if expansionText == "Midnight" then
-                expansionText = expansionText .. " (Not Yet Released)"
-            end
         end
     end
     if not expansionText and item.expansionName and item.expansionName ~= "" then
         expansionText = item.expansionName
-        if expansionText == "Midnight" then
-            expansionText = expansionText .. " (Not Yet Released)"
-        end
     end
     
     local displayExpansion = expansionText
@@ -341,7 +439,7 @@ function PreviewPanelData:DisplayVendorInfo(previewFrame, item, catalogData)
     local itemID = item and tonumber(item.itemID) or nil
     local vendor = nil
     local zone = nil
-    local cost = catalogData.cost
+    local cost = (item and item.cost and item.cost ~= "") and nil or (catalogData and catalogData.cost)
     local costBreakdown = {}
     local costBreakdownIcons = {}
     local coordsText = nil
@@ -557,10 +655,20 @@ function PreviewPanelData:DisplayVendorInfo(previewFrame, item, catalogData)
         local filterZone = Filters and Filters.currentFilters and Filters.currentFilters.zone or nil
 
         if _G.HousingVendorHelper then
-            vendor = vendor or _G.HousingVendorHelper:GetVendorName(item, filterVendor)
-            zone = zone or _G.HousingVendorHelper:GetZoneName(item, filterZone)
+            local filterMapID = Filters and Filters.currentFilters and Filters.currentFilters.zoneMapID or nil
 
-            local coords = _G.HousingVendorHelper:GetVendorCoords(item, filterVendor)
+            local hardVendor = _G.HousingVendorHelper:GetVendorName(item, filterVendor, filterZone, filterMapID)
+            local hardZone = _G.HousingVendorHelper:GetZoneName(item, filterZone, filterMapID)
+
+            -- Override API/enrichment text when we have hard data (authoritative).
+            if hardVendor and hardVendor ~= "" then
+                vendor = hardVendor
+            end
+            if hardZone and hardZone ~= "" then
+                zone = hardZone
+            end
+
+            local coords = _G.HousingVendorHelper:GetVendorCoords(item, filterVendor, filterZone, filterMapID)
             if coords and coords.x and coords.y and coords.x > 0 and coords.y > 0 then
                 -- Store actual numeric coordinates for waypoint
                 waypointX = coords.x
@@ -570,16 +678,54 @@ function PreviewPanelData:DisplayVendorInfo(previewFrame, item, catalogData)
                     apiMapID = coords.mapID
                 end
 
-                if not coordsText then
-                    coordsText = string.format("%.1f, %.1f", coords.x, coords.y)
-                    apiCoords = coordsText
+                -- Keep displayed coords in sync with the waypoint coords when we have hard data.
+                coordsText = string.format("%.1f, %.1f", coords.x, coords.y)
+                apiCoords = coordsText
+            end
+        end
+    end
+
+    -- Fallback: pull from static expansion data (drops/quests/rewards) even if the item record
+    -- didn't carry the fields through (e.g. stale cache or partial enrichment).
+    if itemID and _G.HousingExpansionData then
+        local expData = _G.HousingExpansionData[itemID]
+        if expData and expData.drop then
+            local d = expData.drop[1] or expData.drop
+            if not vendor and d and d.npcName and d.npcName ~= "" then
+                vendor = d.npcName
+            end
+            if not zone and d and d.zone and d.zone ~= "" then
+                zone = d.zone
+            end
+            if not coordsText and d and d.coordinates then
+                local c = d.coordinates
+                if c.x and c.y and c.x > 0 and c.y > 0 then
+                    coordsText = string.format("%.1f, %.1f", c.x, c.y)
+                    waypointX, waypointY = c.x, c.y
+                    if c.mapID and c.mapID > 0 then
+                        waypointMapID = c.mapID
+                        apiMapID = c.mapID
+                    end
                 end
+            end
+        end
+        -- Reward fallback: extract zone from reward data
+        if expData and expData.reward then
+            local r = expData.reward[1] or expData.reward
+            if not zone and r and r.zone and r.zone ~= "" then
+                zone = r.zone
             end
         end
     end
 
     if not vendor and catalogData.vendor then
         vendor = PreviewPanelData.Util.CleanText(catalogData.vendor)
+        vendor = PreviewPanelData.Util.ResolveEncounterName(vendor)
+    end
+
+    -- FIX: Fallback to item npcName for drop items
+    if not vendor and item and item.npcName then
+        vendor = item.npcName
     end
 
     if not zone and catalogData.zone then
@@ -598,15 +744,26 @@ function PreviewPanelData:DisplayVendorInfo(previewFrame, item, catalogData)
             -- User filtered by a specific zone, show that zone
             zone = Filters.currentFilters.zone
         else
-            -- Fallback: static zone first, then API zone
-            zone = item.zoneName or item._apiZone
+            -- FIX: For drop items, use item.zone field first, then zoneName, then API zone
+            zone = item.zone or item.zoneName or item._apiZone
         end
     end
 
     -- NOTE: Coordinate extraction is now handled by VendorHelper:GetVendorCoords() above (lines 726-740)
     -- which already has the fallback logic for item.coords and item.vendorCoords.
-    -- No need to duplicate that logic here.
-    
+    -- FIX: Additional fallback for drop items with coordinates field
+    if not coordsText and item and item.coordinates then
+        if item.coordinates.x and item.coordinates.y and item.coordinates.x > 0 and item.coordinates.y > 0 then
+            coordsText = string.format("%.1f, %.1f", item.coordinates.x, item.coordinates.y)
+            waypointX = item.coordinates.x
+            waypointY = item.coordinates.y
+            if item.coordinates.mapID and item.coordinates.mapID > 0 then
+                waypointMapID = item.coordinates.mapID
+                apiMapID = item.coordinates.mapID
+            end
+        end
+    end
+
     local parsedReputation = nil
     local repProgress = nil
     local isRenownRequirement = false
@@ -740,8 +897,103 @@ function PreviewPanelData:DisplayVendorInfo(previewFrame, item, catalogData)
         end
     end
 
+    -- Update vendor label/value based on source type.
+    local vendorLabel = "Vendor:"
+    if item then
+        local sourceType = tostring(item._sourceType or "")
+        local sourceTypes = item._sourceTypes
+        local isQuest = (sourceType == "Quest") or (sourceTypes and sourceTypes["Quest"])
+            or item._questId or item._questName or item._allQuests
+        local isAchievement = (sourceType == "Achievement") or (sourceTypes and sourceTypes["Achievement"])
+            or item._achievementId or item._achievementName or item._apiAchievement
+
+        if sourceType == "Loot Drop" or sourceType == "Drop" or sourceType == "Reward" then
+            vendorLabel = "Drops from:"
+        elseif isQuest then
+            vendorLabel = "Quest:"
+            vendor = vendor or item._questName or item.title
+        elseif isAchievement then
+            vendorLabel = "Achievement:"
+            vendor = vendor or item._achievementName or item._apiAchievement
+        end
+    end
+    if previewFrame.vendorValue and previewFrame.vendorValue.label then
+        previewFrame.vendorValue.label:SetText(vendorLabel)
+    end
+
     previewFrame.SetFieldValue(previewFrame.vendorValue, vendor, previewFrame.vendorValue.label)
-    
+
+    -- FIX: Add Encounter Journal tooltip for boss drops
+    if previewFrame.vendorValue and item and item.npcID and (item._sourceType == "Loot Drop" or item._sourceType == "Drop") then
+        -- Store NPC ID for tooltip
+        previewFrame.vendorValue._npcID = item.npcID
+        previewFrame.vendorValue._npcName = vendor or item.npcName
+
+        -- Add tooltip with encounter journal information
+        if not previewFrame.vendorValue._hasEncounterTooltip then
+            previewFrame.vendorValue:SetScript("OnEnter", function(self)
+                if not self._npcID or not self._npcName then return end
+
+                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                GameTooltip:SetText(self._npcName, 1, 1, 1)
+                GameTooltip:AddLine(" ")
+
+                -- Try to get encounter info from Encounter Journal using NPC ID
+                -- Note: The Encounter Journal API doesn't have a direct NPC ID -> Encounter ID lookup
+                -- We can try to show NPC info and suggest opening the Encounter Journal
+                if C_TooltipInfo and C_TooltipInfo.GetHyperlink then
+                    local npcLink = "unit:Creature-0-0-0-0-" .. self._npcID
+                    local tooltipData = C_TooltipInfo.GetHyperlink(npcLink)
+                    if tooltipData and tooltipData.lines then
+                        for _, line in ipairs(tooltipData.lines) do
+                            if line.leftText and line.leftText ~= "" and line.leftText ~= self._npcName then
+                                local r, g, b = 0.8, 0.8, 0.8
+                                if line.leftColor then
+                                    r, g, b = line.leftColor.r or r, line.leftColor.g or g, line.leftColor.b or b
+                                end
+                                GameTooltip:AddLine(line.leftText, r, g, b)
+                            end
+                        end
+                    end
+                end
+
+                GameTooltip:AddLine(" ")
+                GameTooltip:AddLine("NPC ID: " .. self._npcID, 0.6, 0.6, 0.6)
+                GameTooltip:AddLine("|cFFFFAA00Click to open Encounter Journal|r", 0.7, 0.7, 0.7)
+                GameTooltip:Show()
+            end)
+
+            previewFrame.vendorValue:SetScript("OnLeave", function(self)
+                GameTooltip:Hide()
+            end)
+
+            -- Make clickable to open Encounter Journal
+            previewFrame.vendorValue:SetScript("OnMouseUp", function(self, button)
+                if button == "LeftButton" and self._npcID then
+                    -- Try to open Encounter Journal
+                    if EncounterJournal_OpenJournal then
+                        EncounterJournal_OpenJournal(nil, nil, self._npcID)
+                    elseif ToggleEncounterJournal then
+                        ToggleEncounterJournal()
+                    end
+                end
+            end)
+
+            -- Enable mouse interaction
+            previewFrame.vendorValue:SetMouseClickEnabled(true)
+            previewFrame.vendorValue._hasEncounterTooltip = true
+        end
+    elseif previewFrame.vendorValue and previewFrame.vendorValue._hasEncounterTooltip then
+        -- Clear encounter tooltip for non-drop items
+        previewFrame.vendorValue:SetScript("OnEnter", nil)
+        previewFrame.vendorValue:SetScript("OnLeave", nil)
+        previewFrame.vendorValue:SetScript("OnMouseUp", nil)
+        previewFrame.vendorValue:SetMouseClickEnabled(false)
+        previewFrame.vendorValue._hasEncounterTooltip = nil
+        previewFrame.vendorValue._npcID = nil
+        previewFrame.vendorValue._npcName = nil
+    end
+
     local displayZone = zone
     if displayZone then
         -- Strip out color codes and formatting
@@ -760,12 +1012,68 @@ function PreviewPanelData:DisplayVendorInfo(previewFrame, item, catalogData)
     
     previewFrame.SetFieldValue(previewFrame.zoneValue, displayZone, previewFrame.zoneValue.label)
 
+    -- Auction House price (cached via AuctionHouseAPI scans/imports)
+    -- Only show for profession items (craftable items that can be sold on AH)
+    if previewFrame.ahPriceValue then
+        local isProfessionItem = itemID and _G.HousingProfessionData and _G.HousingProfessionData[itemID]
+
+        if isProfessionItem then
+            local function FormatAge(seconds)
+                seconds = math.max(0, tonumber(seconds) or 0)
+                if seconds < 60 then
+                    return string.format("%ds", seconds)
+                end
+                local mins = math.floor(seconds / 60)
+                if mins < 60 then
+                    return string.format("%dm", mins)
+                end
+                local hours = math.floor(mins / 60)
+                mins = mins % 60
+                if hours < 24 then
+                    return string.format("%dh %dm", hours, mins)
+                end
+                local days = math.floor(hours / 24)
+                hours = hours % 24
+                return string.format("%dd %dh", days, hours)
+            end
+
+            local priceText = "|cFF909090Not cached|r"
+            local tooltip = "No cached AH price for this item.\nRun Scan All / Scan Visible, or use Import Browse while viewing Housing -> Decor in the Auction House."
+
+            local api = _G.HousingAuctionHouseAPI
+            if itemID and api and api.GetCachedPrice then
+                local price, cachedAt = api:GetCachedPrice(itemID)
+                price = tonumber(price)
+                cachedAt = tonumber(cachedAt)
+                if price and price > 0 then
+                    priceText = PreviewPanelData.Util.FormatMoneyFromCopper(price)
+                    if cachedAt and cachedAt > 0 and _G.date and _G.time then
+                        local age = _G.time() - cachedAt
+                        tooltip = string.format("Last updated: %s\nAge: %s", _G.date("%Y-%m-%d %H:%M:%S", cachedAt), FormatAge(age))
+                    else
+                        tooltip = "Cached AH price (timestamp unavailable)."
+                    end
+                end
+            end
+
+            previewFrame.SetFieldValue(previewFrame.ahPriceValue, priceText, previewFrame.ahPriceValue.label)
+            previewFrame.ahPriceValue.tooltipText = tooltip
+        else
+            -- Hide AH price for non-profession items
+            previewFrame.SetFieldValue(previewFrame.ahPriceValue, nil, previewFrame.ahPriceValue.label)
+        end
+    end
+
     local costDisplay = cost
     if #costBreakdown > 0 then
-        costDisplay = (costBreakdownIcons[1] or costBreakdown[1])
+        local displayParts = {}
+        for i = 1, #costBreakdown do
+            displayParts[i] = (costBreakdownIcons and costBreakdownIcons[i]) or costBreakdown[i]
+        end
+        costDisplay = table.concat(displayParts, " + ")
         item._costBreakdown = costBreakdown -- tooltip-friendly strings
         item._costBreakdownIcons = costBreakdownIcons
-    elseif catalogData and (catalogData.costRaw or catalogData.cost) then
+    elseif (not item or not item.cost or item.cost == "") and catalogData and (catalogData.costRaw or catalogData.cost) then
         local costText = catalogData.costRaw or catalogData.cost
         if type(costText) == "string" then
             local numeric = tonumber(costText)
@@ -796,7 +1104,11 @@ function PreviewPanelData:DisplayVendorInfo(previewFrame, item, catalogData)
         end
 
         if #costBreakdown > 0 then
-            costDisplay = (costBreakdownIcons[1] or costBreakdown[1])
+            local displayParts = {}
+            for i = 1, #costBreakdown do
+                displayParts[i] = (costBreakdownIcons and costBreakdownIcons[i]) or costBreakdown[i]
+            end
+            costDisplay = table.concat(displayParts, " + ")
             item._costBreakdown = costBreakdown -- tooltip-friendly strings
             item._costBreakdownIcons = costBreakdownIcons
         end
@@ -1005,33 +1317,50 @@ function PreviewPanelData:DisplayVendorInfo(previewFrame, item, catalogData)
     end
     previewFrame.SetFieldValue(previewFrame.renownValue, renownText, previewFrame.renownValue.label)
     
-    if coordsText and coordsText ~= "" then
-        -- Use the pre-extracted waypoint coordinates we gathered earlier
-        if waypointX and waypointY and waypointMapID then
-            previewFrame.mapBtn:Show()
-            previewFrame._vendorInfo = {
-                name = vendor,
-                vendorName = vendor,
-                zoneName = zone,
-                expansionName = item.expansionName,
-                coords = {
+    -- If the profession block already configured a trainer waypoint, don't hide/override it here.
+    local hasTrainerWaypoint = previewFrame._waypointContext == "trainer" and previewFrame._waypointInfo ~= nil
+    if not hasTrainerWaypoint then
+        if coordsText and coordsText ~= "" then
+            -- Use the pre-extracted waypoint coordinates we gathered earlier
+            if waypointX and waypointY and waypointMapID then
+                previewFrame.mapBtn:Show()
+                local npcID = item and item.npcID
+                if _G.HousingVendorHelper and _G.HousingVendorHelper.GetVendorNPCID then
+                    local Filters = _G.HousingFilters
+                    local filterVendor = Filters and Filters.currentFilters and Filters.currentFilters.vendor or nil
+                    local filterZone = Filters and Filters.currentFilters and Filters.currentFilters.zone or nil
+                    local filterMapID = Filters and Filters.currentFilters and Filters.currentFilters.zoneMapID or nil
+                    npcID = _G.HousingVendorHelper:GetVendorNPCID(item, filterVendor, filterZone, filterMapID)
+                end
+
+                previewFrame._vendorInfo = {
+                    name = vendor,
+                    vendorName = vendor,
+                    zoneName = zone,
+                    expansionName = item.expansionName,
+                    coords = {
+                        x = waypointX,
+                        y = waypointY,
+                        mapID = waypointMapID
+                    },
                     x = waypointX,
                     y = waypointY,
-                    mapID = waypointMapID
-                },
-                mapID = waypointMapID,
-                itemID = item.itemID
-            }
+                    mapID = waypointMapID,
+                    itemID = item.itemID,
+                    npcID = npcID
+                }
+            else
+                previewFrame.mapBtn:Hide()
+            end
         else
             previewFrame.mapBtn:Hide()
         end
-    else
-        previewFrame.mapBtn:Hide()
     end
     
     previewFrame.UpdateHeaderVisibility(previewFrame.vendorHeader, {
         previewFrame.vendorValue,
         previewFrame.costValue,
+        previewFrame.ahPriceValue,
         previewFrame.factionValue,
         previewFrame.reputationValue,
         previewFrame.renownValue,
@@ -1045,6 +1374,7 @@ function PreviewPanelData:DisplayProfessionInfo(previewFrame, item, catalogData)
     local professionText = nil
     local professionSkillText = nil
     local professionRecipeText = nil
+    local professionRecipeLabel = "Recipe:"
     
     if item.profession then
         if item.professionSkillNeeded and item.professionSkillNeeded > 0 then
@@ -1080,17 +1410,65 @@ function PreviewPanelData:DisplayProfessionInfo(previewFrame, item, catalogData)
             professionSkillText = item.professionSkill
         end
 
-        if item.professionSpellID then
+        local itemID = tonumber(item.itemID)
+        local hv = _G.HousingVendor
+        local pr = hv and hv.ProfessionReagents
+        local hasReagents = pr and pr.HasReagents and itemID and pr:HasReagents(itemID) or false
+
+        local known = nil
+        if hasReagents then
+            known = pr and pr.IsRecipeKnown and pr:IsRecipeKnown(itemID) or nil
+        end
+
+        -- Prefer showing trainer guidance when we can't reliably detect recipe state.
+        if hasReagents and known == nil then
+            local pt = hv and hv.ProfessionTrainers
+            local trainer = pt and pt.GetTrainerForItem and pt:GetTrainerForItem(itemID, item) or nil
+            local trainerName = trainer and trainer.name or nil
+            local trainerLocation = trainer and trainer.location or nil
+
+            if trainerName or trainerLocation then
+                -- If we have trainer coordinates, point the waypoint button at the trainer (profession items only).
+                local coords = trainer and trainer.coords or nil
+                local x = coords and tonumber(coords.x) or nil
+                local y = coords and tonumber(coords.y) or nil
+                local mapID = coords and tonumber(coords.mapID) or nil
+                if previewFrame.mapBtn and x and y and mapID and x > 0 and y > 0 then
+                    previewFrame.mapBtn:Show()
+                    previewFrame._waypointContext = "trainer"
+                    previewFrame._waypointInfo = {
+                        name = trainerName or "Trainer",
+                        vendorName = trainerName or "Trainer",
+                        zoneName = trainerLocation,
+                        expansionName = item.professionSkill or item._apiExpansion or nil,
+                        coords = { x = x, y = y, mapID = mapID },
+                        x = x,
+                        y = y,
+                        mapID = mapID,
+                        itemID = item.itemID,
+                        npcID = nil,
+                    }
+                end
+            end
+        elseif hasReagents and known ~= nil then
+            professionRecipeLabel = "Recipe:"
+            professionRecipeText = known and "Recipe Known" or "Recipe Unknown"
+        end
+
+        -- Fallback: actual recipe/spell name if we didn't set trainer/known text above.
+        if not professionRecipeText then
+            if item.professionSpellID then
             local spellInfo = C_Spell and C_Spell.GetSpellInfo and C_Spell.GetSpellInfo(item.professionSpellID)
             if spellInfo and spellInfo.name then
                 professionRecipeText = spellInfo.name
             end
-        elseif item.professionRecipeID then
+            elseif item.professionRecipeID then
             if C_TradeSkillUI and C_TradeSkillUI.GetRecipeInfo then
                 local recipeInfo = C_TradeSkillUI.GetRecipeInfo(item.professionRecipeID)
                 if recipeInfo and recipeInfo.name then
                     professionRecipeText = recipeInfo.name
                 end
+            end
             end
         end
 
@@ -1109,6 +1487,17 @@ function PreviewPanelData:DisplayProfessionInfo(previewFrame, item, catalogData)
     previewFrame.SetFieldValue(previewFrame.professionValue, professionName, previewFrame.professionValue.label)
     previewFrame.SetFieldValue(previewFrame.professionSkillValue, professionSkillText, previewFrame.professionSkillValue.label)
     previewFrame.SetFieldValue(previewFrame.professionRecipeValue, professionRecipeText, previewFrame.professionRecipeValue.label)
+    if previewFrame.professionRecipeValue and previewFrame.professionRecipeValue.label and previewFrame.professionRecipeValue.label.SetText then
+        previewFrame.professionRecipeValue.label:SetText(professionRecipeLabel)
+        -- Keep the value column aligned with the "Profession:" line, even when the label is shorter ("Trainer:").
+        local baseLabel = previewFrame.professionValue and previewFrame.professionValue.label or nil
+        if baseLabel and baseLabel.GetStringWidth and previewFrame.professionRecipeValue.label.SetWidth then
+            local w = tonumber(baseLabel:GetStringWidth()) or nil
+            if w and w > 0 then
+                previewFrame.professionRecipeValue.label:SetWidth(w + 2)
+            end
+        end
+    end
 
     self:DisplayReagents(previewFrame, item)
     
@@ -1126,94 +1515,302 @@ function PreviewPanelData:DisplayReagents(previewFrame, item)
     
     local textPrimary = HousingTheme.Colors.textPrimary
     local accentPrimary = HousingTheme.Colors.accentPrimary
-    
+    local textSecondary = HousingTheme.Colors.textSecondary
+    local accentGold = HousingTheme.Colors.accentGold
+    local api = _G.HousingAuctionHouseAPI
+    local formatMoney = PreviewPanelData and PreviewPanelData.Util and PreviewPanelData.Util.FormatMoneyFromCopper
+
     if previewFrame.reagentsContainer then
         previewFrame.reagentsContainer:Hide()
         if previewFrame.reagentsContainer.header then
             previewFrame.reagentsContainer.header:Hide()
         end
+        if previewFrame.reagentsContainer.priceHeader then
+            previewFrame.reagentsContainer.priceHeader:Hide()
+        end
         for _, line in pairs(previewFrame.reagentsContainer.lines or {}) do
-            line:Hide()
+            if line and line.Hide then
+                line:Hide()
+            end
+        end
+        for _, line in pairs(previewFrame.reagentsContainer.priceLines or {}) do
+            if line and line.Hide then
+                line:Hide()
+            end
         end
     end
     
-    if reagentData and reagentData.reagents and #reagentData.reagents > 0 then
+    local hasReagents = reagentData and reagentData.reagents and #reagentData.reagents > 0
+    if previewFrame.materialsBtn then
+        if hasReagents then
+            previewFrame.materialsBtn:Show()
+        else
+            previewFrame.materialsBtn:Hide()
+        end
+    end
+
+    if hasReagents then
         if not previewFrame.reagentsContainer then
             local container = CreateFrame("Frame", nil, previewFrame.details)
-            container:SetWidth(210)
+            container:SetPoint("LEFT", previewFrame.details, "LEFT", 0, 0)
+            container:SetPoint("RIGHT", previewFrame.details, "RIGHT", 0, 0)
             container:SetHeight(1)
             container.lines = {}
+            container.priceLines = {}
             previewFrame.reagentsContainer = container
         end
         
         local container = previewFrame.reagentsContainer
-        container:ClearAllPoints()
-        container:SetPoint("TOPRIGHT", previewFrame.details, "TOPRIGHT", -10, (previewFrame.professionHeader:GetTop() - previewFrame.details:GetTop()))
+        -- Positioning is now handled by RelayoutProfessionAndRequirements in PreviewPanelUI
+        -- Don't override the positioning here
         container:Show()
         
         if not container.header then
             local header = previewFrame.details:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-            header:SetPoint("TOPRIGHT", container, "TOPRIGHT", 0, 0)
-            header:SetWidth(200)
+            header:SetPoint("TOPLEFT", container, "TOPLEFT", 0, 0)
+            header:SetWidth(180)
             header:SetJustifyH("LEFT")
             header:SetText("Reagents:")
             header:SetTextColor(accentPrimary[1], accentPrimary[2], accentPrimary[3], 1)
             container.header = header
         end
         container.header:Show()
-        
+
+        if not container.priceHeader then
+            local header = previewFrame.details:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+            header:SetPoint("TOPLEFT", container, "TOPLEFT", 165, 0)  -- Position to the right of reagent names (moved left for more price space)
+            header:SetPoint("TOPRIGHT", container, "TOPRIGHT", 0, 0)
+            header:SetJustifyH("LEFT")
+            header:SetText("AH Price:(Total)")
+            header:SetTextColor(accentPrimary[1], accentPrimary[2], accentPrimary[3], 1)
+            container.priceHeader = header
+        end
+        container.priceHeader:Show()
+
         local yOffset = -18
+        local lineStep = 22
+
         for i, reagent in ipairs(reagentData.reagents) do
+            -- Support both field naming conventions: id/amount and itemID/count
+            local reagentID = reagent.id or reagent.itemID
+            local reagentAmount = reagent.amount or reagent.count or 1
+
+            if C_Item and C_Item.RequestLoadItemDataByID and reagentID then
+                pcall(C_Item.RequestLoadItemDataByID, reagentID)
+            end
+
             if not container.lines[i] then
                 local line = previewFrame.details:CreateFontString(nil, "OVERLAY", "GameFontNormal")
                 line:SetJustifyH("LEFT")
                 line:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
                 container.lines[i] = line
             end
-            
+            if not container.priceLines[i] then
+                -- Use a larger font so embedded coin textures are readable.
+                local line = previewFrame.details:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+                line:SetJustifyH("LEFT")  -- Changed from RIGHT to LEFT
+                line:SetTextColor(textSecondary[1], textSecondary[2], textSecondary[3], 1)
+                container.priceLines[i] = line
+            end
+
             local line = container.lines[i]
+            local priceLine = container.priceLines[i]
             line:ClearAllPoints()
-            line:SetPoint("TOPRIGHT", container.header, "BOTTOMRIGHT", 0, yOffset)
-            line:SetWidth(200)
+            line:SetPoint("TOPLEFT", container.header, "BOTTOMLEFT", 0, yOffset)
+            line:SetWidth(155)  -- Reduced width to give more space for prices
+            priceLine:ClearAllPoints()
+            priceLine:SetPoint("TOPLEFT", container.priceHeader, "BOTTOMLEFT", 0, yOffset)
+            priceLine:SetPoint("TOPRIGHT", container, "TOPRIGHT", 0, yOffset)
             
-            local reagentName = nil
-            if C_Item and C_Item.GetItemNameByID then
-                reagentName = C_Item.GetItemNameByID(reagent.id)
+            local reagentName = reagent.itemName  -- Use cached name if available
+            if not reagentName and C_Item and C_Item.GetItemNameByID then
+                reagentName = C_Item.GetItemNameByID(reagentID)
             end
-            
+
             if not reagentName and C_Item and C_Item.GetItemInfo then
-                reagentName = C_Item.GetItemInfo(reagent.id)
+                reagentName = C_Item.GetItemInfo(reagentID)
             end
-            
+
             if not reagentName then
                 reagentName = "Loading..."
-                C_Item.RequestLoadItemDataByID(reagent.id)
+                if C_Item and C_Item.RequestLoadItemDataByID then
+                    pcall(C_Item.RequestLoadItemDataByID, reagentID)
+                end
+                local capturedID = reagentID
+                local capturedAmount = reagentAmount
                 C_Timer.After(0.5, function()
-                    local name = C_Item.GetItemNameByID(reagent.id)
-                    if name and line then
-                        line:SetText(reagent.amount .. "x " .. name)
+                    local name = capturedID and C_Item and C_Item.GetItemNameByID and C_Item.GetItemNameByID(capturedID)
+                    if name and line and capturedAmount then
+                        line:SetText(capturedAmount .. "x " .. name)
                     end
                 end)
             end
-            
-            line:SetText(reagent.amount .. "x " .. reagentName)
+
+            line:SetText(reagentAmount .. "x " .. reagentName)
             line:Show()
-            yOffset = yOffset - 14
+
+            local unitPrice = nil
+            if api and api.GetOrFetchAddonPrice then
+                local p = select(1, api:GetOrFetchAddonPrice(reagentID))
+                p = tonumber(p)
+                if p and p > 0 then
+                    unitPrice = p
+                end
+            elseif api and api.GetCachedPrice then
+                local p = api:GetCachedPrice(reagentID)
+                p = tonumber(p)
+                if p and p > 0 then
+                    unitPrice = p
+                end
+            end
+
+            if unitPrice and formatMoney then
+                local total = unitPrice * reagentAmount
+                priceLine:SetTextColor(accentGold[1], accentGold[2], accentGold[3], 1)
+                priceLine:SetText(formatMoney(unitPrice) .. " (" .. formatMoney(total) .. ")")
+            else
+                priceLine:SetTextColor(textSecondary[1], textSecondary[2], textSecondary[3], 1)
+                priceLine:SetText("|cFF909090No price|r")
+            end
+            priceLine:Show()
+            yOffset = yOffset - lineStep
         end
         
         for i = #reagentData.reagents + 1, #container.lines do
             container.lines[i]:Hide()
         end
-        
-        container:SetHeight(math.abs(yOffset) + 14)
+        for i = #reagentData.reagents + 1, #(container.priceLines or {}) do
+            container.priceLines[i]:Hide()
+        end
+
+        container:SetHeight(math.abs(yOffset) + lineStep)
     end
 end
 
 function PreviewPanelData:DisplayRequirements(previewFrame, item, catalogData)
-    local questText = item._apiQuest or catalogData.quest
-    local questID = item._questId or (catalogData and catalogData.questID) or item.questRequired or item.questID
-    local achievementText = item._apiAchievement or (catalogData and catalogData.achievement) or item._achievementName
+    -- Use BOTH static and API sources for quest info:
+    -- - Prefer readable static quest text when available
+    -- - Fall back to API when missing or when static is just a numeric placeholder
+    local function IsNumericPlaceholder(text)
+        return type(text) == "string" and text:match("^%d+$") ~= nil
+    end
+
+    local staticQuestText = item and (item._questName or item.title) or nil
+    if IsNumericPlaceholder(staticQuestText) then
+        staticQuestText = nil
+    end
+
+    local apiQuestText = nil
+    if item and item._apiQuest and item._apiQuest ~= "" then
+        apiQuestText = item._apiQuest
+    elseif catalogData and catalogData.quest and catalogData.quest ~= "" then
+        apiQuestText = catalogData.quest
+    end
+
+    local questID = item and (item._questId or item.questRequired or item.questID) or nil
+    if (not questID or questID == "") and catalogData and catalogData.questID then
+        questID = catalogData.questID
+    end
+
+    -- If multiple quests exist for this item, prefer the first quest that has quest giver NPC info,
+    -- so the preview panel can show a correct quest giver + waypoint.
+    if item and item._allQuests and type(item._allQuests) == "table" and #item._allQuests > 0 and _G.HousingQuestNPCs then
+        for _, q in ipairs(item._allQuests) do
+            local qid = q and (q.questId or q.questID) or nil
+            local numericQID = tonumber(qid)
+            if numericQID and _G.HousingQuestNPCs[numericQID] then
+                questID = numericQID
+                break
+            end
+        end
+    end
+
+    -- Fallback: if we have multiple quest sources, use the first one for display.
+    if (not staticQuestText or staticQuestText == "") and item and item._allQuests and type(item._allQuests) == "table" then
+        local first = item._allQuests[1]
+        if first and type(first) == "table" then
+            local t = first.title or first.questName
+            if not IsNumericPlaceholder(t) and t and t ~= "" then
+                staticQuestText = t
+            end
+            questID = first.questId or first.questID or questID
+        end
+    end
+
+    local questText = (staticQuestText and staticQuestText ~= "") and staticQuestText or apiQuestText
+
+    -- If we have a quest ID but no readable quest name, try to get it from WoW API
+    local numQuestID = tonumber(questID)
+    if numQuestID and (not questText or questText == "" or IsNumericPlaceholder(questText)) then
+        -- Request quest data to be loaded (async)
+        if C_QuestLog and C_QuestLog.RequestLoadQuestByID then
+            pcall(C_QuestLog.RequestLoadQuestByID, numQuestID)
+        end
+        -- Try to get the quest title
+        if C_QuestLog and C_QuestLog.GetTitleForQuestID then
+            local ok, title = pcall(C_QuestLog.GetTitleForQuestID, numQuestID)
+            if ok and title and title ~= "" then
+                questText = title
+            end
+        end
+        -- If still no text, show "Quest #ID" as fallback
+        if not questText or questText == "" or IsNumericPlaceholder(questText) then
+            questText = "Quest #" .. numQuestID
+        end
+    end
+
+    local function NormalizeTooltipText(s)
+        if not s or s == "" then return nil end
+        if PreviewPanelData and PreviewPanelData.Util and PreviewPanelData.Util.CleanText then
+            s = PreviewPanelData.Util.CleanText(s)
+        end
+        s = tostring(s or ""):gsub("%s+", " "):match("^%s*(.-)%s*$")
+        if s == "" then return nil end
+        return s
+    end
+
+    local staticForTooltip = NormalizeTooltipText(staticQuestText)
+    local apiForTooltip = NormalizeTooltipText(apiQuestText)
+    if previewFrame.questValue then
+        previewFrame.questValue.tooltipText = nil
+        if staticForTooltip and apiForTooltip and staticForTooltip ~= apiForTooltip then
+            previewFrame.questValue.tooltipText = "Quest sources:\nStatic: " .. staticForTooltip .. "\nAPI: " .. apiForTooltip
+        end
+    end
+    -- Check each source explicitly to handle empty strings properly
+    local achievementText = nil
     local achievementID = item._achievementId or (catalogData and catalogData.achievementID) or item.achievementRequired
+
+    if item._apiAchievement and item._apiAchievement ~= "" then
+        achievementText = item._apiAchievement
+    elseif catalogData and catalogData.achievement and catalogData.achievement ~= "" then
+        achievementText = catalogData.achievement
+    elseif item._achievementName and item._achievementName ~= "" then
+        achievementText = item._achievementName
+    elseif achievementID then
+        -- Fallback: If we have an achievement ID but no name, try to get name from WoW API
+        local numAchID = tonumber(achievementID)
+        if numAchID then
+            local achName = nil
+            -- Try C_AchievementInfo first (returns struct with .name field)
+            if C_AchievementInfo and C_AchievementInfo.GetAchievementInfo then
+                local ok, achInfo = pcall(C_AchievementInfo.GetAchievementInfo, numAchID)
+                if ok and achInfo and achInfo.name and achInfo.name ~= "" then
+                    achName = achInfo.name
+                end
+            end
+            -- Fallback to legacy GetAchievementInfo (returns multiple values: id, name, ...)
+            if not achName and GetAchievementInfo then
+                local ok, _, name = pcall(GetAchievementInfo, numAchID)
+                if ok and name and name ~= "" then
+                    achName = name
+                end
+            end
+            achievementText = achName or ("Achievement #" .. numAchID)
+        else
+            achievementText = "Achievement #" .. tostring(achievementID)
+        end
+    end
     local eventText = catalogData.event
     local classText = catalogData.class
     local raceText = catalogData.race
@@ -1236,8 +1833,114 @@ function PreviewPanelData:DisplayRequirements(previewFrame, item, catalogData)
         previewFrame.questValue:SetText(questText .. questStatus)
         previewFrame.questValue:Show()
         if previewFrame.questValue.label then previewFrame.questValue.label:Show() end
+
+        -- If we had to fall back to "Quest #ID", update the UI once the quest title loads (async).
+        if numericQuestID and (questText:match("^Quest%s+#%d+") or IsNumericPlaceholder(questText)) then
+            local resolver = _G.HousingQuestTitleResolver
+            if resolver and resolver.GetTitle then
+                resolver:GetTitle(numericQuestID, function(title)
+                    if not previewFrame or not previewFrame.questValue then return end
+                    if not previewFrame.IsShown or not previewFrame:IsShown() then return end
+                    if not previewFrame._currentItem or not item or not item.itemID then return end
+                    if tonumber(previewFrame._currentItem.itemID) ~= tonumber(item.itemID) then return end
+
+                    local updatedStatus = ""
+                    if C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted then
+                        local ok, isComplete = pcall(C_QuestLog.IsQuestFlaggedCompleted, numericQuestID)
+                        if ok and isComplete then
+                            updatedStatus = " |cFF00FF00(Completed)|r"
+                        elseif ok and not isComplete then
+                            updatedStatus = " |cFFFF0000(Not Completed)|r"
+                        end
+                    end
+
+                    previewFrame.questValue:SetText(title .. updatedStatus)
+                end)
+            end
+        end
+
+        -- Add quest NPC info to panel and tooltip if available
+        if numericQuestID and _G.HousingQuestNPCs then
+            local npcInfo = _G.HousingQuestNPCs[numericQuestID]
+            if npcInfo and npcInfo.npcName and npcInfo.npcName ~= "" and npcInfo.npcName ~= "Unknown" and npcInfo.npcName ~= "Vendor/Drop" then
+                local hasValidCoords = npcInfo.coords and npcInfo.coords.x and npcInfo.coords.y and npcInfo.coords.mapID and npcInfo.coords.mapID ~= 0
+                local zoneName = nil
+                if hasValidCoords then
+                    if C_Map and C_Map.GetMapInfo then
+                        local ok, mapInfo = pcall(C_Map.GetMapInfo, npcInfo.coords.mapID)
+                        if ok and mapInfo and mapInfo.name then
+                            zoneName = mapInfo.name
+                        end
+                    end
+                end
+
+                -- Display quest giver in the panel
+                if previewFrame.questGiverValue then
+                    local questGiverDisplay = npcInfo.npcName
+                    if npcInfo.faction and npcInfo.faction ~= "Both" then
+                        questGiverDisplay = questGiverDisplay .. " |cFF888888[" .. npcInfo.faction .. "]|r"
+                    end
+                    previewFrame.questGiverValue:SetText(questGiverDisplay)
+                    previewFrame.questGiverValue:Show()
+                    if previewFrame.questGiverValue.label then
+                        previewFrame.questGiverValue.label:Show()
+                    end
+
+                    -- Add tooltip with location details
+                    if hasValidCoords then
+                        local tooltipText = npcInfo.npcName
+                        if zoneName then
+                            tooltipText = tooltipText .. string.format("\n|cFFAAAAAA%s (%.1f, %.1f)|r", zoneName, npcInfo.coords.x, npcInfo.coords.y)
+                            tooltipText = tooltipText .. string.format("\n|cFFAAAAAA/way %s %.1f %.1f|r", zoneName, npcInfo.coords.x, npcInfo.coords.y)
+                        else
+                            tooltipText = tooltipText .. string.format("\n|cFFAAAAAA(%.1f, %.1f)|r", npcInfo.coords.x, npcInfo.coords.y)
+                        end
+                        previewFrame.questGiverValue.tooltipText = tooltipText
+                    end
+
+                    -- Store NPC data for potential waypoint functionality
+                    previewFrame.questGiverValue._questNPCInfo = npcInfo
+                    previewFrame.questGiverValue._questID = numericQuestID
+                end
+
+                -- Set up waypoint for quest NPC if no vendor waypoint exists and coords are valid
+                if hasValidCoords and previewFrame.mapBtn and not previewFrame._vendorInfo then
+                    previewFrame.mapBtn:Show()
+                    previewFrame._waypointContext = "questNPC"
+                    previewFrame._waypointInfo = {
+                        name = npcInfo.npcName,
+                        vendorName = npcInfo.npcName,
+                        zoneName = zoneName,
+                        expansionName = item and item.expansionName or nil,
+                        coords = {
+                            x = npcInfo.coords.x,
+                            y = npcInfo.coords.y,
+                            mapID = npcInfo.coords.mapID
+                        },
+                        x = npcInfo.coords.x,
+                        y = npcInfo.coords.y,
+                        mapID = npcInfo.coords.mapID,
+                        itemID = item and item.itemID or nil,
+                        npcID = npcInfo.npcID
+                    }
+                end
+            else
+                -- Hide quest giver field if no valid NPC info
+                if previewFrame.questGiverValue then
+                    previewFrame.SetFieldValue(previewFrame.questGiverValue, nil, previewFrame.questGiverValue.label)
+                end
+            end
+        else
+            -- Hide quest giver field if no quest ID
+            if previewFrame.questGiverValue then
+                previewFrame.SetFieldValue(previewFrame.questGiverValue, nil, previewFrame.questGiverValue.label)
+            end
+        end
     else
         previewFrame.SetFieldValue(previewFrame.questValue, nil, previewFrame.questValue.label)
+        if previewFrame.questGiverValue then
+            previewFrame.SetFieldValue(previewFrame.questGiverValue, nil, previewFrame.questGiverValue.label)
+        end
     end
 
     -- Achievement display with progress tracking
@@ -1459,17 +2162,199 @@ function PreviewPanelData:DisplayRequirements(previewFrame, item, catalogData)
     previewFrame.SetFieldValue(previewFrame.classValue, classText, previewFrame.classValue.label)
     previewFrame.SetFieldValue(previewFrame.raceValue, raceText, previewFrame.raceValue.label)
 
-    previewFrame.UpdateHeaderVisibility(previewFrame.requirementsHeader, {
+    -- Display additional source metadata (rewardType/details), used for reward items AND as a
+    -- generic "rich source info" line for drops/quests/etc.
+    local rewardTypeText = item.rewardType
+    local sourceDetailsText = item.sourceDetails
+    local rewardSourceText = item.source  -- "source" field from reward data (e.g. "Strange Recycling Requisition")
+
+    -- Reward fallback: pull from HousingExpansionData[itemID].reward
+    if item and item.itemID and _G.HousingExpansionData then
+        local expData = _G.HousingExpansionData[tonumber(item.itemID)]
+        if expData and expData.reward then
+            local r = expData.reward[1] or expData.reward
+            if r then
+                if (not rewardTypeText or rewardTypeText == "") and r.rewardType and r.rewardType ~= "" then
+                    rewardTypeText = r.rewardType
+                end
+                if (not sourceDetailsText or sourceDetailsText == "") and r.sourceDetails and r.sourceDetails ~= "" then
+                    sourceDetailsText = r.sourceDetails
+                end
+                if (not rewardSourceText or rewardSourceText == "") and r.source and r.source ~= "" then
+                    rewardSourceText = r.source
+                end
+            end
+        end
+    end
+
+    -- Drop fallback: reuse Details for drop notes, and optionally summarize multiple drop sources.
+    if (not sourceDetailsText or sourceDetailsText == "") and item.dropNotes and item.dropNotes ~= "" then
+        sourceDetailsText = item.dropNotes
+    end
+
+    -- Fallback: if item record is missing drop notes, pull from static expansion data.
+    if (not sourceDetailsText or sourceDetailsText == "") and item and item.itemID and _G.HousingExpansionData then
+        local expData = _G.HousingExpansionData[tonumber(item.itemID)]
+        if expData and expData.drop then
+            local d = expData.drop[1] or expData.drop
+            if d and d.notes and d.notes ~= "" then
+                sourceDetailsText = d.notes
+            end
+        end
+    end
+
+    -- Quest fallback: reuse Details for quest notes (user-maintained metadata).
+    if (not sourceDetailsText or sourceDetailsText == "") and item and item.itemID and _G.HousingExpansionData then
+        local expData = _G.HousingExpansionData[tonumber(item.itemID)]
+        if expData and expData.quest then
+            local q = expData.quest[1] or expData.quest
+            if q and q.sourceDetails and q.sourceDetails ~= "" then
+                sourceDetailsText = q.sourceDetails
+            end
+        end
+    end
+
+    if (not rewardTypeText or rewardTypeText == "") and item._sourceType and item._sourceType ~= "" then
+        rewardTypeText = tostring(item._sourceType)
+    end
+
+    -- For rewards, combine source and sourceDetails into a richer display
+    if rewardSourceText and rewardSourceText ~= "" then
+        if sourceDetailsText and sourceDetailsText ~= "" then
+            sourceDetailsText = rewardSourceText .. " - " .. sourceDetailsText
+        else
+            sourceDetailsText = rewardSourceText
+        end
+    end
+
+    -- If we have multiple drops, provide a richer tooltip.
+    if item._allDrops and type(item._allDrops) == "table" and #item._allDrops > 1 then
+        local lines = {}
+        for _, d in ipairs(item._allDrops) do
+            local npc = d and d.npcName or nil
+            local zone = d and d.zone or nil
+            local notes = d and d.notes or nil
+
+            local parts = {}
+            if npc and npc ~= "" then
+                table.insert(parts, tostring(npc))
+            end
+            if zone and zone ~= "" then
+                table.insert(parts, tostring(zone))
+            end
+            local header = table.concat(parts, " - ")
+            if header ~= "" then
+                table.insert(lines, header)
+            end
+            if notes and notes ~= "" then
+                table.insert(lines, "  " .. tostring(notes))
+            end
+        end
+
+        if #lines > 0 then
+            local tooltip = "Drop sources:\n" .. table.concat(lines, "\n")
+            if previewFrame.sourceDetailsValue then
+                previewFrame.sourceDetailsValue.tooltipText = tooltip
+            end
+            if not sourceDetailsText or sourceDetailsText == "" then
+                sourceDetailsText = "Multiple drop sources (hover)"
+            end
+        end
+    end
+
+    -- If we have multiple quests, provide a richer tooltip as well.
+    if item._allQuests and type(item._allQuests) == "table" and #item._allQuests > 1 then
+        local lines = {}
+        for _, q in ipairs(item._allQuests) do
+            local qid = q and (q.questId or q.questID) or nil
+            local title = q and (q.title or q.questName) or nil
+            local details = q and q.sourceDetails or nil
+            if title and tostring(title):match("^%d+$") and q and q.title and q.title ~= "" then
+                title = q.title
+            end
+            local line = tostring(title or "Quest")
+            if qid then
+                line = line .. " (#" .. tostring(qid) .. ")"
+            end
+            if details and details ~= "" then
+                line = line .. "\n  " .. tostring(details)
+            end
+            table.insert(lines, line)
+        end
+
+        if #lines > 0 then
+            local tooltip = "Quest sources:\n" .. table.concat(lines, "\n")
+            if previewFrame.questValue then
+                if previewFrame.questValue.tooltipText and previewFrame.questValue.tooltipText ~= "" then
+                    previewFrame.questValue.tooltipText = previewFrame.questValue.tooltipText .. "\n\n" .. tooltip
+                else
+                    previewFrame.questValue.tooltipText = tooltip
+                end
+            end
+        end
+    end
+
+    if previewFrame.rewardTypeValue and rewardTypeText and rewardTypeText ~= "" then
+        previewFrame.rewardTypeValue:SetText(rewardTypeText)
+        previewFrame.rewardTypeValue:Show()
+        if previewFrame.rewardTypeValue.label then previewFrame.rewardTypeValue.label:Show() end
+    elseif previewFrame.rewardTypeValue then
+        previewFrame.SetFieldValue(previewFrame.rewardTypeValue, nil, previewFrame.rewardTypeValue.label)
+    end
+
+    if previewFrame.sourceDetailsValue and sourceDetailsText and sourceDetailsText ~= "" then
+        previewFrame.sourceDetailsValue:SetText(sourceDetailsText)
+        previewFrame.sourceDetailsValue:Show()
+        if previewFrame.sourceDetailsValue.label then previewFrame.sourceDetailsValue.label:Show() end
+    elseif previewFrame.sourceDetailsValue then
+        if previewFrame.sourceDetailsValue.tooltipText then
+            previewFrame.sourceDetailsValue.tooltipText = nil
+        end
+        previewFrame.SetFieldValue(previewFrame.sourceDetailsValue, nil, previewFrame.sourceDetailsValue.label)
+    end
+
+    local fieldsToCheck = {
         previewFrame.questValue,
+        previewFrame.questGiverValue,
         previewFrame.achievementValue,
         previewFrame.eventValue,
         previewFrame.classValue,
         previewFrame.raceValue
-    })
+    }
+
+    -- Add reward fields if they exist
+    if previewFrame.rewardTypeValue then
+        table.insert(fieldsToCheck, previewFrame.rewardTypeValue)
+    end
+    if previewFrame.sourceDetailsValue then
+        table.insert(fieldsToCheck, previewFrame.sourceDetailsValue)
+    end
+
+    previewFrame.UpdateHeaderVisibility(previewFrame.requirementsHeader, fieldsToCheck)
 end
 
 function PreviewPanelData:Display3DModel(previewFrame, item, catalogData)
     local modelFileID = catalogData and (catalogData.asset or catalogData.modelFileID)
+
+    -- Fallback to static data if Housing APIs are disabled (API safety)
+    if (not modelFileID or modelFileID == 0) and item and item.itemID then
+        local itemID = tonumber(item.itemID)
+        if itemID and _G.HousingAllItems then
+            local staticData = _G.HousingAllItems[itemID]
+            if staticData then
+                -- Format varies: {decorID, modelFileID, iconFileID} or {"Name", decorID, modelFileID, iconFileID}
+                -- Check if first element is a string (item name) to determine offset
+                if type(staticData[1]) == "string" then
+                    -- Format: {"Name", decorID, modelFileID, iconFileID}
+                    modelFileID = tonumber(staticData[3])
+                else
+                    -- Format: {decorID, modelFileID, iconFileID}
+                    modelFileID = tonumber(staticData[2])
+                end
+            end
+        end
+    end
+
     previewFrame._currentModelID = modelFileID
 
     if previewFrame.modelFrame and modelFileID and previewFrame.modelVisible then
