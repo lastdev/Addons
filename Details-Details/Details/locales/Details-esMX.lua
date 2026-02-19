@@ -1281,6 +1281,26 @@ L["STRING_SEGMENTS_LIST_WASTED_TIME"] = "No en combate"
 L["STRING_SHIELD_HEAL"] = "Prevenido"
 L["STRING_SHIELD_OVERHEAL"] = "Gastado"
 L["STRING_SHORTCUT_RIGHTCLICK"] = "Haz clic derecho para cerrar"
+L["STRING_SIMPLE_TEXT_FORMAT"] = "Usar formato de texto simple"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED"] = "Usar texto alineado"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_DESC"] = "El texto se alinea en columnas, configura el espacio entre columnas."
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_SPACE_BETWEEN"] = "Espacio entre columnas"
+L["STRING_SIMPLE_TEXT_FORMAT_DESC"] = "Habilita el uso de las tres reglas de abajo."
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE2"] = "No mostrar porcentaje"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE3"] = "Mostrar solo total"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE4"] = "Separar con | como separador"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE5"] = "Separar con [corchetes]"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE6"] = "Total (DPS) Porcentaje"
+L["STRING_SIMPLE_TEXT_FORMAT_TITLE"] = "Texto derecho: Simple o Alineado"
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE1"] = [=[Cuando la línea tiene información
+sobre total y porcentaje.
+|cFFAAAAAA%s orden: total, porcentaje.]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE2"] = [=[Cuando la línea tiene información
+sobre total y por segundo.
+|cFFAAAAAA%s orden: total, por segundo.]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE3"] = [=[Cuando la línea tiene información
+sobre total, por segundo y porcentaje.
+|cFFAAAAAA%s orden: total, por segundo, porcentaje.]=]
 L["STRING_SLASH_API_DESC"] = "abre el panel API para plugins de compilación, pantallas personalizadas, auras, etc."
 L["STRING_SLASH_CAPTURE_DESC"] = "activar o desactivar todas las capturas de datos."
 L["STRING_SLASH_CAPTUREOFF"] = "Todas las recogidas de datos se han desactivada."
@@ -1333,8 +1353,7 @@ L["STRING_TOOOLD"] = "no se pudo instalar porque la versión de Details! es dema
 L["STRING_TOP"] = "superior"
 L["STRING_TOP_TO_BOTTOM"] = "De arriba hacia abajo"
 L["STRING_TOTAL"] = "Total"
---[[Translation missing --]]
-L["STRING_TRAINING_DUMMY"] = "Training Dummy"
+L["STRING_TRAINING_DUMMY"] = "Muñeco de entrenamiento"
 L["STRING_TRANSLATE_LANGUAGE"] = "Ayuda a traducir Details!"
 L["STRING_TUTORIAL_FULLY_DELETE_WINDOW"] = "Cerró una ventana y puede volver a abrirla en cualquier momento. Para eliminar completamente una ventana, vaya a Opciones -> Ventana: General -> Eliminar."
 L["STRING_TUTORIAL_OVERALL1"] = "Los datos generales solo se actualizan cuando finaliza el combate, si desea actualizaciones periódicas, haga clic derecho en la barra de título y selecciona 'Datos generales dinámicos'."

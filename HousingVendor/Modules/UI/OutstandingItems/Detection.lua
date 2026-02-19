@@ -34,6 +34,17 @@ local function VendorMatchesPlayerFaction(vendor)
     return vendorFaction == playerFaction
 end
 
+-- Expansions whose vendor items should not appear in zone popups yet.
+-- Remove an entry once the expansion goes live.
+local UNRELEASED_EXPANSIONS = {
+    ["Midnight"] = true,
+}
+
+local function IsVendorFromUnreleasedExpansion(vendor)
+    if not vendor or not vendor.expansion then return false end
+    return UNRELEASED_EXPANSIONS[vendor.expansion] == true
+end
+
 local function GetBestZoneMapID()
     if not (C_Map and C_Map.GetBestMapForUnit) then
         return nil
@@ -181,7 +192,9 @@ function OutstandingItemsUI:GetOutstandingItemsForZone(mapID, zoneName)
                 if mapID and record._vendorIndices and _G.HousingVendorPool and next(_G.HousingVendorPool) ~= nil then
                     for _, idx in ipairs(record._vendorIndices) do
                         local v = _G.HousingVendorPool[idx]
-                        if v and v.coords and v.coords.mapID and v.coords.mapID == mapID and VendorMatchesPlayerFaction(v) then
+                        if v and v.coords and v.coords.mapID and v.coords.mapID == mapID
+                           and VendorMatchesPlayerFaction(v)
+                           and not IsVendorFromUnreleasedExpansion(v) then
                             matchedVendor = v
                             vendorMapID = v.coords.mapID
                             recordZone = v.location
@@ -189,7 +202,7 @@ function OutstandingItemsUI:GetOutstandingItemsForZone(mapID, zoneName)
                         end
                     end
                 end
-                
+
                 -- Secondary: Use VendorHelper for zone-specific lookups (passes mapID for filtering)
                 if _G.HousingVendorHelper and not matchedVendor then
                     recordZone = _G.HousingVendorHelper.GetZoneName and _G.HousingVendorHelper:GetZoneName(record, nil, mapID)
@@ -314,17 +327,38 @@ function OutstandingItemsUI:GetOutstandingItemsForZone(mapID, zoneName)
                                 vendorName = "Unknown Vendor"
                             end
                             
+                            -- Build a stable vendor key: prefer npcID (unique per NPC)
+                            -- over mapID (can vary depending on data source/load order).
+                            local vendorNpcID = (matchedVendor and matchedVendor.npcID) or record.npcID
                             local vendorKey = vendorName
-                            if vendorMapID and vendorMapID ~= 0 then
+                            if vendorNpcID and vendorNpcID ~= 0 and vendorNpcID ~= "" and vendorNpcID ~= "None" then
+                                vendorKey = vendorName .. "#npc" .. tostring(vendorNpcID)
+                            elseif vendorMapID and vendorMapID ~= 0 then
                                 vendorKey = vendorName .. "@" .. tostring(vendorMapID)
-                            elseif record.npcID then
-                                vendorKey = vendorName .. "#npc" .. tostring(record.npcID)
                             end
-                            
-                            -- Check if vendor is muted
+
+                            -- Check if vendor is muted (exact key or legacy key with same base name)
                             local isMuted = false
-                            if HousingDB and HousingDB.mutedVendors and HousingDB.mutedVendors[vendorKey] then
-                                isMuted = true
+                            if HousingDB and HousingDB.mutedVendors then
+                                if HousingDB.mutedVendors[vendorKey] then
+                                    isMuted = true
+                                else
+                                    -- Match legacy keys: "Name@mapID" should match "Name#npcID" and vice versa
+                                    for mutedKey, v in pairs(HousingDB.mutedVendors) do
+                                        if v then
+                                            local mutedBase = mutedKey:match("^(.-)[@#]") or mutedKey
+                                            if mutedBase == vendorName then
+                                                isMuted = true
+                                                -- Migrate: store under canonical key and remove old key
+                                                HousingDB.mutedVendors[vendorKey] = true
+                                                if mutedKey ~= vendorKey then
+                                                    HousingDB.mutedVendors[mutedKey] = nil
+                                                end
+                                                break
+                                            end
+                                        end
+                                    end
+                                end
                             end
                             
                             if not isMuted then

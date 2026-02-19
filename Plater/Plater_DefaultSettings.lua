@@ -156,6 +156,8 @@ PLATER_DEFAULT_SETTINGS = {
 		click_space = {140, 28}, --classic: {132, 32}, retail: {110, 45},
 		click_space_scale = {1, 1},
 		click_space_scale_friendly = {1, 1},
+		overlap_space_scale = {1, 1},
+		overlap_space_scale_friendly = {1, 1},
 		click_space_friendly = {140, 28}, --classic: {132, 32}, retail: {110, 45},
 		click_space_always_show = false,
 		hide_friendly_castbars = false,
@@ -751,8 +753,6 @@ PLATER_DEFAULT_SETTINGS = {
 		widget_bar_scale = 0.75,
 		widget_bar_anchor = {side = 4, x = 0, y = 0},
 		
-		no_spellname_length_limit = false,
-		
 		--> castbar target name
 		castbar_target_show = false,
 		castbar_target_notank = false,
@@ -848,6 +848,7 @@ PLATER_DEFAULT_SETTINGS = {
 		aura_consolidate = false, --aura icons shown with the same name is stacked into only one
 		aura_consolidate_timeleft_lower = true, --when stacking auras with the same name, show the time left for the aura with the lesser remaining time
 		aura_sort = false, -- sort auras via sort function -> default by time left
+		aura_max_shown_limit = 0,
 		
 		aura_alpha = 0.85,
 		aura_custom = {},
@@ -920,13 +921,19 @@ PLATER_DEFAULT_SETTINGS = {
 		aura_show_only_important_buffs_personal = false,
 		
 		aura_show_important = false,
+		aura_show_important_new = false,
 		aura_show_dispellable = true,
+		aura_show_raid = false,
 		aura_show_only_short_dispellable_on_players = false,
 		aura_show_enrage = false,
 		aura_show_magic = false,
 		aura_show_aura_by_the_player = true,
+		aura_show_debuff_by_the_player = false,
+		aura_show_debuff_as_blizzard_does = true,
+		aura_show_buff_by_the_player = false,
 		aura_show_aura_by_other_players = false,
 		aura_show_buff_by_the_unit = true,
+		aura_show_buff_on_enemy_npc = true,
 		aura_show_debuff_by_the_unit = true,
 		aura_show_aura_by_other_npcs = true,
 		aura_border_colors_by_type = false,

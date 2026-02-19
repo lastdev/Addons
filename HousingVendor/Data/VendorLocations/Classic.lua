@@ -5,8 +5,8 @@ local vendors = {
   [1] = {
     expansion = "Classic",
     location = "Eastern Kingdoms",
-    vendorName = "Cataloger Rockbottom",
-    npcID = 242398,
+    vendorName = "Cataloger Jakes",
+    npcID = 189226,
     faction = 0,
     coords = {x = 47.1, y = 82.6, mapID = 2022},
   },
@@ -525,64 +525,176 @@ local vendors = {
     coords = {x = 75.0, y = 66.0, mapID = 84},
   },
 
+  [38] = {
+    expansion = "Classic",
+    location = "",
+    vendorName = "Argan Hammerfist",
+    npcID = 255218,
+    faction = 0,
+    coords = {x = 0.0, y = 0.0, mapID = 0},
+  },
+  [56] = {
+    expansion = "Classic",
+    location = "",
+    vendorName = "Sathren Azuredawn",
+    npcID = 259864,
+    faction = 0,
+    coords = {x = 0.0, y = 0.0, mapID = 0},
+  },
+  [58] = {
+    expansion = "Classic",
+    location = "",
+    vendorName = "Hesta Forlath",
+    npcID = 252916,
+    faction = 0,
+    coords = {x = 0.0, y = 0.0, mapID = 0},
+  },
+  [59] = {
+    expansion = "Classic",
+    location = "Boralus",
+    vendorName = "Provisioner Fray",
+    npcID = 135808,
+    faction = 0,
+    coords = {x = 67.6, y = 21.8, mapID = 1161},
+  },
+  [60] = {
+    expansion = "Classic",
+    location = "",
+    vendorName = "Dennia Silvertongue",
+    npcID = 256828,
+    faction = 0,
+    coords = {x = 0.0, y = 0.0, mapID = 0},
+  },
+  [61] = {
+    expansion = "Classic",
+    location = "Orgrimmar",
+    vendorName = "Lonalo",
+    npcID = 256119,
+    faction = 0,
+    coords = {x = 58.6, y = 50.4, mapID = 85},
+  },
+  [62] = {
+    expansion = "Classic",
+    location = "Valley of the Four Winds",
+    vendorName = "Gina Mudclaw",
+    npcID = 58706,
+    faction = 0,
+    coords = {x = 53.2, y = 51.6, mapID = 376},
+  },
+  [63] = {
+    expansion = "Classic",
+    location = "Stormwind City",
+    vendorName = "Second Chair Pawdo",
+    npcID = 252312,
+    faction = 0,
+    coords = {x = 56.2, y = 76.8, mapID = 84},
+  },
+  [64] = {
+    expansion = "Classic",
+    location = "Stormwind City",
+    vendorName = "Captain Lancy Revshon",
+    npcID = 49877,
+    faction = 0,
+    coords = {x = 67.6, y = 72.8, mapID = 84},
+  },
+  [65] = {
+    expansion = "Classic",
+    location = "Stormsong Valley",
+    vendorName = "Caspian",
+    npcID = 252313,
+    faction = 0,
+    coords = {x = 59.4, y = 69.6, mapID = 942},
+  },
+  [67] = {
+    expansion = "Classic",
+    location = "",
+    vendorName = "Tajaka Sawtusk",
+    npcID = 254944,
+    faction = 0,
+    coords = {x = 0.0, y = 0.0, mapID = 0},
+  },
+  [68] = {
+    expansion = "Classic",
+    location = "Ghostlands",
+    vendorName = "Provisioner Vredigar",
+    npcID = 16528,
+    faction = 0,
+    coords = {x = 47.6, y = 32.2, mapID = 95},
+  },
+  [69] = {
+    expansion = "Classic",
+    location = "",
+    vendorName = "Telemancer Astrandis",
+    npcID = 242399,
+    faction = 0,
+    coords = {x = 0.0, y = 0.0, mapID = 0},
+  },
+  [70] = {
+    expansion = "Classic",
+    location = "",
+    vendorName = "Construct Ali'a",
+    npcID = 258181,
+    faction = 0,
+    coords = {x = 0.0, y = 0.0, mapID = 0},
+  },
 }
 
 local itemEntries = {
-  { vendorId = 34, itemID = "264175", itemName = "Amani Strongbox", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 13, itemID = "256330", itemName = "Kharanos Stone Bed", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 69, itemID = "264175", itemName = "Amani Strongbox", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 13, itemID = "256330", itemName = "Kharanos Stone Bed", goldCost = 6800000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 28, itemID = "248808", itemName = "Nesingwary Mounted Elk Head", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 31, itemID = "247762", itemName = "Netherstorm Battlefield Flag", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 31, itemID = "247761", itemName = "Uncontested Battlefield Banner", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 31, itemID = "247756", itemName = "Challenger's Dueling Flag", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 31, itemID = "247756", itemName = "Challenger's Dueling Flag", goldCost = 0, currencies = {{ currencyID = 1792, amount = 1000 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 31, itemID = "247747", itemName = "Warsong Outriders Flag", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 31, itemID = "247745", itemName = "Horde Dueling Flag", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 3, itemID = "245985", itemName = "Floating Azure Lantern", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  -- Cataloger Rockbottom block
-  { vendorId = 1, itemID = "245285", itemName = "Reliquary Storage Crate", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "245287", itemName = "Long Sin'dorei Rug", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "245288", itemName = "Circular Sin'dorei Rug", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "245423", itemName = "Spherical Draenic Topiary", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "245478", itemName = "Lordaeron Sconce", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "245479", itemName = "Blightfire Sconce", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "245480", itemName = "Lordaeron Torch", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "245481", itemName = "Blightfire Torch", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "245283", itemName = "Blood Elven Candelabra", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "245286", itemName = "Rectangular Sin'dorei Rug", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  -- Cataloger Jakes block
+  { vendorId = 1, itemID = "245285", itemName = "Reliquary Storage Crate", goldCost = 0, currencies = {{ currencyID = 2003, amount = 100 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 16 },
+  { vendorId = 1, itemID = "245287", itemName = "Long Sin'dorei Rug", goldCost = 0, currencies = {{ currencyID = 2003, amount = 250 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 10 },
+  { vendorId = 1, itemID = "245288", itemName = "Circular Sin'dorei Rug", goldCost = 0, currencies = {{ currencyID = 2003, amount = 250 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 10 },
+  { vendorId = 1, itemID = "245423", itemName = "Spherical Draenic Topiary", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Council of Exarchs", reputationLevel = "Friendly", renownLevel = 0 },
+  { vendorId = 1, itemID = "245478", itemName = "Lordaeron Sconce", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "The Honorbound", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 1, itemID = "245479", itemName = "Blightfire Sconce", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "The Honorbound", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 1, itemID = "245480", itemName = "Lordaeron Torch", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "The Honorbound", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 1, itemID = "245481", itemName = "Blightfire Torch", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "The Honorbound", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 1, itemID = "245283", itemName = "Blood Elven Candelabra", goldCost = 0, currencies = {{ currencyID = 2003, amount = 400 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 16 },
+  { vendorId = 1, itemID = "245286", itemName = "Rectangular Sin'dorei Rug", goldCost = 0, currencies = {{ currencyID = 2003, amount = 250 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 10 },
   { vendorId = 1, itemID = "245508", itemName = "Pandaren Cooking Table", goldCost = 10000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "245433", itemName = "Blackrock Strongbox", goldCost = 5000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "245603", itemName = "Gilnean Noble's Trellis", goldCost = 3500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "245605", itemName = "Gilnean Stone Wall", goldCost = 3000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "246222", itemName = "Boralus String Lights", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "247670", itemName = "Pandaren Pantry", goldCost = 10000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "247734", itemName = "Paw'don Well", goldCost = 8000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 1, itemID = "245433", itemName = "Blackrock Strongbox", goldCost = 5000000, currencies = {}, itemCosts = {}, factionName = "Laughing Skull Orcs", reputationLevel = "Friendly", renownLevel = 0 },
+  { vendorId = 1, itemID = "245603", itemName = "Gilnean Noble's Trellis", goldCost = 3500000, currencies = {}, itemCosts = {}, factionName = "Gilneas", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 1, itemID = "245605", itemName = "Gilnean Stone Wall", goldCost = 3000000, currencies = {}, itemCosts = {}, factionName = "Gilneas", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 59, itemID = "246222", itemName = "Boralus String Lights", goldCost = 0, currencies = {{ currencyID = 1560, amount = 75 }}, itemCosts = {}, factionName = "Proudmoore Admiralty", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 62, itemID = "247670", itemName = "Pandaren Pantry", goldCost = 9000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 62, itemID = "247734", itemName = "Paw'don Well", goldCost = 7200000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 1, itemID = "247737", itemName = "Stormstout Brew Keg", goldCost = 3000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "251476", itemName = "Embroidered Embaari Tent", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "251479", itemName = "Shadowmoon Greenhouse", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "251481", itemName = "Elodor Armory Rack", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "251483", itemName = "Draenethyst Lantern", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 1, itemID = "251476", itemName = "Embroidered Embaari Tent", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Council of Exarchs", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 1, itemID = "251479", itemName = "Shadowmoon Greenhouse", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Council of Exarchs", reputationLevel = "Exalted", renownLevel = 0 },
+  { vendorId = 1, itemID = "251481", itemName = "Elodor Armory Rack", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Council of Exarchs", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 1, itemID = "251483", itemName = "Draenethyst Lantern", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Council of Exarchs", reputationLevel = "Friendly", renownLevel = 0 },
   { vendorId = 1, itemID = "251484", itemName = "\"Dawning Hope\" Mosaic", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "251493", itemName = "Small Karabor Fountain", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "251551", itemName = "Grand Draenethyst Lamp", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "252036", itemName = "Tidesage's Bookcase", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "252387", itemName = "Boralus Fence", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "252388", itemName = "Boralus Fencepost", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "252394", itemName = "Bowhull Bookcase", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "252396", itemName = "Admiralty's Copper Lantern", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "252398", itemName = "Stormsong Water Pump", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "252402", itemName = "Tidesage's Double Bookshelves", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "252652", itemName = "Copper Stormsong Well", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "256049", itemName = "Sin'dorei Sleeper", goldCost = 50000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 1, itemID = "257419", itemName = "Sin'dorei Crafter's Forge", goldCost = 50000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 1, itemID = "251493", itemName = "Small Karabor Fountain", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Council of Exarchs", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 1, itemID = "251551", itemName = "Grand Draenethyst Lamp", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Council of Exarchs", reputationLevel = "Exalted", renownLevel = 0 },
+  { vendorId = 1, itemID = "252036", itemName = "Tidesage's Bookcase", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Proudmoore Admiralty", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 1, itemID = "252387", itemName = "Boralus Fence", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Proudmoore Admiralty", reputationLevel = "Friendly", renownLevel = 0 },
+  { vendorId = 1, itemID = "252388", itemName = "Boralus Fencepost", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Proudmoore Admiralty", reputationLevel = "Friendly", renownLevel = 0 },
+  { vendorId = 1, itemID = "252394", itemName = "Bowhull Bookcase", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Storm", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 1, itemID = "252396", itemName = "Admiralty's Copper Lantern", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Storm", reputationLevel = "Friendly", renownLevel = 0 },
+  { vendorId = 1, itemID = "252398", itemName = "Stormsong Water Pump", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Storm", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 1, itemID = "252402", itemName = "Tidesage's Double Bookshelves", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Proudmoore Admiralty", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 65, itemID = "252652", itemName = "Copper Stormsong Well", goldCost = 0, currencies = {{ currencyID = 1560, amount = 800 }}, itemCosts = {}, factionName = "Storm's Wake", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 68, itemID = "256049", itemName = "Sin'dorei Sleeper", goldCost = 47500000, currencies = {}, itemCosts = {}, factionName = "Tranquillien", reputationLevel = "Exalted", renownLevel = 0 },
+  { vendorId = 1, itemID = "257419", itemName = "Sin'dorei Crafter's Forge", goldCost = 50000000, currencies = {}, itemCosts = {}, factionName = "Tranquillien", reputationLevel = "Exalted", renownLevel = 0 },
 
   -- Marie Allen block
-  { vendorId = 2, itemID = "246845", itemName = "Tome of Shadowforge Cunning", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 2, itemID = "246847", itemName = "Tome of Draenei Faith", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 61, itemID = "246845", itemName = "Tome of Shadowforge Cunning", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 61, itemID = "246847", itemName = "Tome of Draenei Faith", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 2, itemID = "246848", itemName = "Scribe's Working Notes", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 2, itemID = "246860", itemName = "Tome of Forsaken Resilience", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Caeris Fairdawn block
-  { vendorId = 3, itemID = "246845", itemName = "Tome of Shadowforge Cunning", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 3, itemID = "246847", itemName = "Tome of Draenei Faith", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 61, itemID = "246845", itemName = "Tome of Shadowforge Cunning", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 61, itemID = "246847", itemName = "Tome of Draenei Faith", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 3, itemID = "246848", itemName = "Scribe's Working Notes", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 3, itemID = "246860", itemName = "Tome of Forsaken Resilience", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
@@ -599,7 +711,7 @@ local itemEntries = {
 
   -- Stolen Royal Vendorbot block
   { vendorId = 6, itemID = "253469", itemName = "Ritual-Cursed Sarcophagus", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 6, itemID = "255648", itemName = "Zul'Aman Ancestral Fountain", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 67, itemID = "255648", itemName = "Zul'Aman Ancestral Fountain", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 6, itemID = "256925", itemName = "Amani Spearhunter's Spit", goldCost = 0, currencies = {{ currencyID = 3316, amount = 1 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 6, itemID = "256928", itemName = "Banner of the Amani Tribe", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 6, itemID = "264255", itemName = "Amani Trophy Frame", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -614,8 +726,8 @@ local itemEntries = {
   -- Neriv block
   { vendorId = 7, itemID = "253485", itemName = "Sin'dorei Honor Stone", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 7, itemID = "253488", itemName = "Diamond Honor Stone", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 7, itemID = "243106", itemName = "Gemmed Eversong Lantern", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 7, itemID = "245282", itemName = "Silvermoon Library Bookcase", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 56, itemID = "243106", itemName = "Gemmed Eversong Lantern", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 56, itemID = "245282", itemName = "Silvermoon Library Bookcase", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 7, itemID = "244538", itemName = "Silvermoon Sundial", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 7, itemID = "244783", itemName = "Majestic Lightwood Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 7, itemID = "245992", itemName = "Ornate Silvermoon Candelabra", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -624,16 +736,16 @@ local itemEntries = {
   { vendorId = 7, itemID = "251912", itemName = "Goldenmist Grapes", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 7, itemID = "254773", itemName = "\"Eversong Lantern\" Painting", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 7, itemID = "257367", itemName = "Silvermoon Energy Focus", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 7, itemID = "262610", itemName = "Swirling Ritual Pedestal", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 56, itemID = "262610", itemName = "Swirling Ritual Pedestal", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 7, itemID = "263211", itemName = "Gilded Eversong Cup", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 7, itemID = "263231", itemName = "Silvermoon Curio Shelves", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 7, itemID = "264248", itemName = "Sin'dorei Storage Jar", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 7, itemID = "264660", itemName = "Ren'dorei Spired Tent", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Naleidea Rivergleam block
-  { vendorId = 8, itemID = "245290", itemName = "Long Silvermoon Table", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 3, itemID = "245290", itemName = "Long Silvermoon Table", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 8, itemID = "245941", itemName = "Silvermoon Sanctum Focus", goldCost = 0, currencies = {{ currencyID = 3316, amount = 2500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 8, itemID = "256040", itemName = "Silvermoon Gemmed Chair", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 3, itemID = "256040", itemName = "Silvermoon Gemmed Chair", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 8, itemID = "257422", itemName = "Gilded Sunfury Chair", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 8, itemID = "263206", itemName = "Plum Eversong Rug", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 8, itemID = "263228", itemName = "Grand Lightwood Table", goldCost = 0, currencies = {{ currencyID = 3316, amount = 2500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -644,7 +756,7 @@ local itemEntries = {
   { vendorId = 8, itemID = "263212", itemName = "Farstrider's Comfy Cushion", goldCost = 0, currencies = {{ currencyID = 3379, amount = 150 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Riica block
-  { vendorId = 9, itemID = "244656", itemName = "Silvermoon Painter's Cushion", goldCost = 1500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 58, itemID = "244656", itemName = "Silvermoon Painter's Cushion", goldCost = 1500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 9, itemID = "253606", itemName = "\"Brunch and a Book\" Unframed Painting", goldCost = 15000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 9, itemID = "253609", itemName = "\"River's Protectors\" Unframed Painting", goldCost = 15000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 9, itemID = "253610", itemName = "\"Isolation\" Unframed Painting", goldCost = 15000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -654,7 +766,7 @@ local itemEntries = {
   { vendorId = 9, itemID = "253705", itemName = "\"The Light Blooms\" Unframed Painting", goldCost = 15000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Caeris Fairdawn block
-  { vendorId = 3, itemID = "246414", itemName = "Light-Infused Rotunda", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 60, itemID = "246414", itemName = "Light-Infused Rotunda", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 3, itemID = "252666", itemName = "\"The High Exarch\" Painting", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 3, itemID = "252667", itemName = "\"The Ranger of the Void\" Painting", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 3, itemID = "252668", itemName = "\"The Harbinger\" Painting", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -672,8 +784,8 @@ local itemEntries = {
   { vendorId = 10, itemID = "263297", itemName = "Cuddly Cerulean Grrgle", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 10, itemID = "263300", itemName = "Cuddly Purple Grrgle", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 10, itemID = "263301", itemName = "Cuddly Green Grrgle", goldCost = 5000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 10, itemID = "263302", itemName = "Cuddly Red Grrgle", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 10, itemID = "263303", itemName = "Cuddly Blue Grrgle", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 60, itemID = "263302", itemName = "Cuddly Red Grrgle", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 60, itemID = "263303", itemName = "Cuddly Blue Grrgle", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 10, itemID = "264680", itemName = "Cuddly Seagreen Grrgle", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 10, itemID = "264681", itemName = "Cuddly Brown Grrgle", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 10, itemID = "264682", itemName = "Cuddly Flaxen Grrgle", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -711,14 +823,14 @@ local itemEntries = {
   -- Eadric the Pure block
   { vendorId = 11, itemID = "245655", itemName = "Filigree Moon Lamp", goldCost = 0, currencies = {{ currencyID = 2003, amount = 10 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 11, itemID = "246487", itemName = "Gnomish Tesla Coil", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "246601", itemName = "Bolt Chair", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 6, itemID = "246601", itemName = "Bolt Chair", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 11, itemID = "247908", itemName = "Nightborne Lantern", goldCost = 300000, currencies = {{ currencyID = 1220, amount = 50 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 11, itemID = "247915", itemName = "Square Suramar Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 11, itemID = "248116", itemName = "Valdrakken Chandelier", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 63, itemID = "248116", itemName = "Valdrakken Chandelier", goldCost = 750000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 11, itemID = "248934", itemName = "Golden Cloud Serpent Treasure Chest", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 11, itemID = "253168", itemName = "Earthen Storage Crate", goldCost = 10000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 11, itemID = "253173", itemName = "Meadery Storage Barrel", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 11, itemID = "256168", itemName = "Draconic Sconce", goldCost = 0, currencies = {{ currencyID = 2003, amount = 10 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 64, itemID = "253168", itemName = "Earthen Storage Crate", goldCost = 500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 63, itemID = "253173", itemName = "Meadery Storage Barrel", goldCost = 200000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 63, itemID = "256168", itemName = "Draconic Sconce", goldCost = 750000, currencies = {{ currencyID = 2003, amount = 10 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- \ block
 
@@ -726,45 +838,45 @@ local itemEntries = {
   -- Items 259071, 263026, 255840 are reputation-gated and in ReputationFactions.lua
 
   -- Innkeeper Belm block
-  { vendorId = 13, itemID = "256905", itemName = "Small Gilnean Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 4, itemID = "256905", itemName = "Small Gilnean Table", goldCost = 1575000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- World Vendors block
-  { vendorId = 14, itemID = "246425", itemName = "Round Dwarven Table", goldCost = 4000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 14, itemID = "246425", itemName = "Round Dwarven Table", goldCost = 4000000, currencies = {}, itemCosts = {}, factionName = "Wildhammer Clan", reputationLevel = "Friendly", renownLevel = 0 },
 
   -- Magovu block
-  { vendorId = 15, itemID = "246425", itemName = "Round Dwarven Table", goldCost = 4000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 15, itemID = "246425", itemName = "Round Dwarven Table", goldCost = 4000000, currencies = {}, itemCosts = {}, factionName = "Wildhammer Clan", reputationLevel = "Friendly", renownLevel = 0 },
 
   -- Stuart Fleming block
-  { vendorId = 16, itemID = "246426", itemName = "Ornate Ironforge Table", goldCost = 6000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 16, itemID = "246426", itemName = "Ornate Ironforge Table", goldCost = 6000000, currencies = {}, itemCosts = {}, factionName = "Ironforge", reputationLevel = "Honored", renownLevel = 0 },
   { vendorId = 16, itemID = "257405", itemName = "Baradin Bay Fishing Rack", goldCost = 2000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Dedric Sleetshaper block (Alliance vendor for Ironforge items per master table)
   { vendorId = 57, itemID = "245426", itemName = "Dark Iron Brazier", goldCost = 7000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 57, itemID = "245427", itemName = "Dark Iron Expedition Tent", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 57, itemID = "252010", itemName = "Ornate Ironforge Bench", goldCost = 4500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 57, itemID = "256333", itemName = "Ornate Dwarven Wardrobe", goldCost = 10000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 57, itemID = "252010", itemName = "Ornate Ironforge Bench", goldCost = 4500000, currencies = {}, itemCosts = {}, factionName = "Ironforge", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 57, itemID = "256333", itemName = "Ornate Dwarven Wardrobe", goldCost = 10000000, currencies = {}, itemCosts = {}, factionName = "Ironforge", reputationLevel = "Revered", renownLevel = 0 },
   { vendorId = 57, itemID = "256425", itemName = "Shadowforge Stone Chair", goldCost = 3500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Edwin Harly block
-  { vendorId = 17, itemID = "246426", itemName = "Ornate Ironforge Table", goldCost = 6000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 17, itemID = "246490", itemName = "Ironforge Fencepost", goldCost = 2500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 17, itemID = "246491", itemName = "Ironforge Fence", goldCost = 1500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 17, itemID = "246426", itemName = "Ornate Ironforge Table", goldCost = 6000000, currencies = {}, itemCosts = {}, factionName = "Ironforge", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 17, itemID = "246490", itemName = "Ironforge Fencepost", goldCost = 2500000, currencies = {}, itemCosts = {}, factionName = "Ironforge", reputationLevel = "Friendly", renownLevel = 0 },
+  { vendorId = 17, itemID = "246491", itemName = "Ironforge Fence", goldCost = 1500000, currencies = {}, itemCosts = {}, factionName = "Ironforge", reputationLevel = "Friendly", renownLevel = 0 },
 
   -- Lord Candren block
   { vendorId = 18, itemID = "246479", itemName = "Gnomish T.O.O.L.B.O.X.", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "246480", itemName = "Automated Gnomeregan Guardian", goldCost = 10000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 18, itemID = "246480", itemName = "Automated Gnomeregan Guardian", goldCost = 10000000, currencies = {}, itemCosts = {}, factionName = "Rustbolt Resistance", reputationLevel = "Exalted", renownLevel = 0 },
   { vendorId = 18, itemID = "246483", itemName = "Redundant Reclamation Rig", goldCost = 5000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "246484", itemName = "Mechagon Hanging Floodlight", goldCost = 1000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "246497", itemName = "Small Emergency Warning Lamp", goldCost = 1000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "246498", itemName = "Emergency Warning Lamp", goldCost = 1000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "246499", itemName = "Mechagon Eyelight Lamp", goldCost = 1500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "246501", itemName = "Gnomish Safety Flamethrower", goldCost = 2000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "246503", itemName = "Large H.O.M.E. Cog", goldCost = 1000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "246598", itemName = "Screw-Sealed Stembarrel", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "246603", itemName = "Gnomish Cog Stack", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "246605", itemName = "Mecha-Storage Mecha-Chest", goldCost = 1500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "246701", itemName = "Gnomish Sprocket Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "246703", itemName = "Double-Sprocket Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 18, itemID = "246484", itemName = "Mechagon Hanging Floodlight", goldCost = 1000000, currencies = {}, itemCosts = {}, factionName = "Rustbolt Resistance", reputationLevel = "Friendly", renownLevel = 0 },
+  { vendorId = 18, itemID = "246497", itemName = "Small Emergency Warning Lamp", goldCost = 1000000, currencies = {}, itemCosts = {}, factionName = "Rustbolt Resistance", reputationLevel = "Friendly", renownLevel = 0 },
+  { vendorId = 6, itemID = "246498", itemName = "Emergency Warning Lamp", goldCost = 1500000, currencies = {}, itemCosts = {}, factionName = "Rustbolt Resistance", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 6, itemID = "246499", itemName = "Mechagon Eyelight Lamp", goldCost = 1350000, currencies = {}, itemCosts = {}, factionName = "Rustbolt Resistance", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 6, itemID = "246501", itemName = "Gnomish Safety Flamethrower", goldCost = 2000000, currencies = {}, itemCosts = {}, factionName = "Rustbolt Resistance", reputationLevel = "Exalted", renownLevel = 0 },
+  { vendorId = 6, itemID = "246503", itemName = "Large H.O.M.E. Cog", goldCost = 900000, currencies = {}, itemCosts = {}, factionName = "Rustbolt Resistance", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 6, itemID = "246598", itemName = "Screw-Sealed Stembarrel", goldCost = 5000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 6, itemID = "246603", itemName = "Gnomish Cog Stack", goldCost = 19000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 6, itemID = "246605", itemName = "Mecha-Storage Mecha-Chest", goldCost = 2000000, currencies = {}, itemCosts = {}, factionName = "Rustbolt Resistance", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 6, itemID = "246701", itemName = "Gnomish Sprocket Table", goldCost = 14000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 6, itemID = "246703", itemName = "Double-Sprocket Table", goldCost = 19000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Captain Donald Adams block
   { vendorId = 19, itemID = "246692", itemName = "Murder Row Wine Decanter", goldCost = 0, currencies = {{ currencyID = 3379, amount = 150 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -775,38 +887,38 @@ local itemEntries = {
   -- Master Smith Burninate block
   { vendorId = 22, itemID = "247740", itemName = "Kotmogu Pedestal", goldCost = 0, currencies = {{ currencyID = 1792, amount = 2000 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 22, itemID = "247741", itemName = "Kotmogu Orb of Power", goldCost = 0, currencies = {{ currencyID = 1792, amount = 1000 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 53, itemID = "247750", itemName = "Deephaul Crystal", goldCost = 0, currencies = {{ currencyID = 1792, amount = 2500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 31, itemID = "247750", itemName = "Deephaul Crystal", goldCost = 0, currencies = {{ currencyID = 1792, amount = 2500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 22, itemID = "247763", itemName = "Berserker's Empowerment", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 22, itemID = "247765", itemName = "Healer's Empowerment", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 22, itemID = "247766", itemName = "Runner's Empowerment", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 22, itemID = "247768", itemName = "Guardian's Empowerment", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 22, itemID = "247769", itemName = "Chaotic Empowerment", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 22, itemID = "247770", itemName = "Mysterious Empowerment", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 53, itemID = "253170", itemName = "Earthen Contender's Target", goldCost = 0, currencies = {{ currencyID = 1792, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 22, itemID = "256896", itemName = "Smoke Lamppost", goldCost = 0, currencies = {{ currencyID = 1792, amount = 450 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 31, itemID = "253170", itemName = "Earthen Contender's Target", goldCost = 0, currencies = {{ currencyID = 1792, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 31, itemID = "256896", itemName = "Smoke Lamppost", goldCost = 0, currencies = {{ currencyID = 1792, amount = 450 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   -- Riica block (Alliance PvP vendor per master table)
   { vendorId = 9, itemID = "247744", itemName = "Alliance Dueling Flag", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 9, itemID = "247746", itemName = "Silverwing Sentinels Flag", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 9, itemID = "247756", itemName = "Challenger's Dueling Flag", goldCost = 0, currencies = {{ currencyID = 1792, amount = 1000 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 9, itemID = "247761", itemName = "Uncontested Battlefield Banner", goldCost = 0, currencies = {{ currencyID = 1792, amount = 400 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 9, itemID = "247762", itemName = "Netherstorm Battlefield Flag", goldCost = 0, currencies = {{ currencyID = 1792, amount = 300 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 22, itemID = "247757", itemName = "Alliance Battlefield Banner", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 22, itemID = "247758", itemName = "Fortified Alliance Banner", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 9, itemID = "247757", itemName = "Alliance Battlefield Banner", goldCost = 0, currencies = {{ currencyID = 1792, amount = 600 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 9, itemID = "247758", itemName = "Fortified Alliance Banner", goldCost = 0, currencies = {{ currencyID = 1792, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Maurice Essman block
-  { vendorId = 23, itemID = "248333", itemName = "Stormwind Large Wooden Table", goldCost = 1000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "248336", itemName = "Stormwind Wooden Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "248617", itemName = "Stormwind Keg Stand", goldCost = 1500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "248619", itemName = "Stormwind Gazebo", goldCost = 2500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "248620", itemName = "Stormwind Trellis and Basin", goldCost = 1500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "248662", itemName = "Jewelcrafter's Tent", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "248665", itemName = "Stormwind Peddler's Cart", goldCost = 2500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "248794", itemName = "Elwynn Fence", goldCost = 500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "248795", itemName = "Elwynn Fencepost", goldCost = 750000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 64, itemID = "248333", itemName = "Stormwind Large Wooden Table", goldCost = 1500000, currencies = {}, itemCosts = {}, factionName = "Stormwind", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 64, itemID = "248336", itemName = "Stormwind Wooden Table", goldCost = 2550000, currencies = {}, itemCosts = {}, factionName = "Stormwind", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 64, itemID = "248617", itemName = "Stormwind Keg Stand", goldCost = 1275000, currencies = {}, itemCosts = {}, factionName = "Stormwind", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 64, itemID = "248619", itemName = "Stormwind Gazebo", goldCost = 2125000, currencies = {}, itemCosts = {}, factionName = "Stormwind", reputationLevel = "Exalted", renownLevel = 0 },
+  { vendorId = 64, itemID = "248620", itemName = "Stormwind Trellis and Basin", goldCost = 2500000, currencies = {}, itemCosts = {}, factionName = "Stormwind", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 64, itemID = "248662", itemName = "Jewelcrafter's Tent", goldCost = 4250000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 64, itemID = "248665", itemName = "Stormwind Peddler's Cart", goldCost = 2125000, currencies = {}, itemCosts = {}, factionName = "Stormwind", reputationLevel = "Exalted", renownLevel = 0 },
+  { vendorId = 23, itemID = "248794", itemName = "Elwynn Fence", goldCost = 500000, currencies = {}, itemCosts = {}, factionName = "Stormwind", reputationLevel = "Friendly", renownLevel = 0 },
+  { vendorId = 23, itemID = "248795", itemName = "Elwynn Fencepost", goldCost = 750000, currencies = {}, itemCosts = {}, factionName = "Stormwind", reputationLevel = "Friendly", renownLevel = 0 },
   { vendorId = 23, itemID = "248798", itemName = "Northshire Barrel", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 23, itemID = "248801", itemName = "Stormwind Weapon Rack", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 23, itemID = "248938", itemName = "Hooded Iron Lantern", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "248939", itemName = "Stormwind Lamppost", goldCost = 1000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 23, itemID = "248939", itemName = "Stormwind Lamppost", goldCost = 1000000, currencies = {}, itemCosts = {}, factionName = "Stormwind", reputationLevel = "Honored", renownLevel = 0 },
 
   -- Drac Roughcut block
   { vendorId = 24, itemID = "248797", itemName = "City Wanderer's Candleholder", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -820,7 +932,7 @@ local itemEntries = {
   { vendorId = 26, itemID = "250233", itemName = "Replica Libram of Ancient Kings", goldCost = 0, currencies = {{ currencyID = 1220, amount = 2000 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 26, itemID = "250234", itemName = "Sanctum of Light Candelabra", goldCost = 0, currencies = {{ currencyID = 1220, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 26, itemID = "250235", itemName = "Silver Hand Tribute to the Fallen", goldCost = 0, currencies = {{ currencyID = 1220, amount = 1000 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 26, itemID = "250236", itemName = "Silver Hand Weapon Rack", goldCost = 0, currencies = {{ currencyID = 1220, amount = 1500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 11, itemID = "250236", itemName = "Silver Hand Weapon Rack", goldCost = 0, currencies = {{ currencyID = 1220, amount = 1500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Thanthaldis Snowgleam block
 
@@ -836,7 +948,7 @@ local itemEntries = {
   -- Hoddruc Bladebender block
 
   -- Joruh block
-  { vendorId = 31, itemID = "243088", itemName = "Standing Ornate Weapon Rack", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 38, itemID = "243088", itemName = "Standing Ornate Weapon Rack", goldCost = 1000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 31, itemID = "256924", itemName = "Hash'ey Heartbroth Cauldron", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 31, itemID = "256926", itemName = "Empty Amani Cauldron", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 31, itemID = "256927", itemName = "Carved Idol of Nalorakk, Loa of War", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -848,13 +960,13 @@ local itemEntries = {
   { vendorId = 31, itemID = "260514", itemName = "Visage of Nalorakk, Loa of War", goldCost = 0, currencies = {{ currencyID = 3316, amount = 2500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 31, itemID = "260515", itemName = "Visage of Halazzi, Loa of the Hunt", goldCost = 0, currencies = {{ currencyID = 3316, amount = 2500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 31, itemID = "260516", itemName = "Visage of Jan'alai, Loa of Fire", goldCost = 0, currencies = {{ currencyID = 3316, amount = 2500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 31, itemID = "263318", itemName = "Simple Amani Basket", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 31, itemID = "263320", itemName = "Rope-Bound Amani Basket", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 15, itemID = "263318", itemName = "Simple Amani Basket", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 15, itemID = "263320", itemName = "Rope-Bound Amani Basket", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 31, itemID = "264333", itemName = "Amani Incense Burner", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 31, itemID = "264350", itemName = "Carved Idol of Akil'zon, Loa of Victory", goldCost = 0, currencies = {{ currencyID = 3316, amount = 750 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Thargas Anvilmar block
-  { vendorId = 32, itemID = "246108", itemName = "Embellished Dwarven Tome", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 32, itemID = "246108", itemName = "Embellished Dwarven Tome", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "Wildhammer Clan", reputationLevel = "Honored", renownLevel = 0 },
 
   -- Magister Kaelis block
   { vendorId = 33, itemID = "245581", itemName = "Silvermoon Round Interior Pillar", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -880,19 +992,19 @@ local itemEntries = {
   { vendorId = 36, itemID = "263225", itemName = "Sunlit Glass Mirror", goldCost = 0, currencies = {{ currencyID = 3379, amount = 150 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Sir Finley Mrrgglton block
-  { vendorId = 37, itemID = "263994", itemName = "Fungal Chest", goldCost = 0, currencies = {{ currencyID = 3316, amount = 500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 37, itemID = "263995", itemName = "Delver's Bountiful Coffer", goldCost = 0, currencies = {{ currencyID = 3316, amount = 500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 37, itemID = "263996", itemName = "Twilight Tabernacle", goldCost = 0, currencies = {{ currencyID = 3316, amount = 500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 37, itemID = "264007", itemName = "Corewarden's Spoils", goldCost = 0, currencies = {{ currencyID = 3316, amount = 500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 37, itemID = "264170", itemName = "Ancient Kaldorei Coffer", goldCost = 0, currencies = {{ currencyID = 3316, amount = 500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 69, itemID = "263994", itemName = "Fungal Chest", goldCost = 0, currencies = {{ currencyID = 3316, amount = 500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 69, itemID = "263995", itemName = "Delver's Bountiful Coffer", goldCost = 0, currencies = {{ currencyID = 3316, amount = 500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 69, itemID = "263996", itemName = "Twilight Tabernacle", goldCost = 0, currencies = {{ currencyID = 3316, amount = 500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 69, itemID = "264007", itemName = "Corewarden's Spoils", goldCost = 0, currencies = {{ currencyID = 3316, amount = 500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 69, itemID = "264170", itemName = "Ancient Kaldorei Coffer", goldCost = 0, currencies = {{ currencyID = 3316, amount = 500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
 
   -- Preyseeker Vark block
-  { vendorId = 39, itemID = "265681", itemName = "Preyseeker's Magister Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 39, itemID = "265682", itemName = "Preyseeker's Tinker Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 39, itemID = "265683", itemName = "Preyseeker's Ethereal Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 34, itemID = "265685", itemName = "Preyseeker's Amani Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 39, itemID = "265686", itemName = "Preyseeker's Rutaani Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 70, itemID = "265681", itemName = "Preyseeker's Magister Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 70, itemID = "265682", itemName = "Preyseeker's Tinker Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 70, itemID = "265683", itemName = "Preyseeker's Ethereal Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 70, itemID = "265685", itemName = "Preyseeker's Amani Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 70, itemID = "265686", itemName = "Preyseeker's Rutaani Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 39, itemID = "265687", itemName = "Preyseeker's Vindicator Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 34, itemID = "265688", itemName = "Preyseeker's Consul Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 39, itemID = "265689", itemName = "Preyseeker's Executor Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -901,10 +1013,10 @@ local itemEntries = {
   { vendorId = 39, itemID = "265692", itemName = "Preyseeker's Thornspeaker Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 39, itemID = "265694", itemName = "Preyseeker's Twilight Effigy", goldCost = 0, currencies = {{ currencyID = 3392, amount = 1200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 39, itemID = "265696", itemName = "Preyseeker's Magister Bust", goldCost = 0, currencies = {{ currencyID = 3392, amount = 800 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 39, itemID = "265697", itemName = "Preyseeker's Tinker Bust", goldCost = 0, currencies = {{ currencyID = 3392, amount = 800 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 39, itemID = "265698", itemName = "Preyseeker's Ethereal Bust", goldCost = 0, currencies = {{ currencyID = 3392, amount = 800 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 34, itemID = "265700", itemName = "Preyseeker's Amani Bust", goldCost = 0, currencies = {{ currencyID = 3392, amount = 800 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 39, itemID = "265701", itemName = "Preyseeker's Rutaani Bust", goldCost = 0, currencies = {{ currencyID = 3392, amount = 800 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 70, itemID = "265697", itemName = "Preyseeker's Tinker Bust", goldCost = 0, currencies = {{ currencyID = 3392, amount = 800 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 70, itemID = "265698", itemName = "Preyseeker's Ethereal Bust", goldCost = 0, currencies = {{ currencyID = 3392, amount = 800 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 70, itemID = "265700", itemName = "Preyseeker's Amani Bust", goldCost = 0, currencies = {{ currencyID = 3392, amount = 800 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 70, itemID = "265701", itemName = "Preyseeker's Rutaani Bust", goldCost = 0, currencies = {{ currencyID = 3392, amount = 800 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 39, itemID = "265702", itemName = "Preyseeker's Vindicator Bust", goldCost = 0, currencies = {{ currencyID = 3392, amount = 800 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 34, itemID = "265703", itemName = "Preyseeker's Consul Bust", goldCost = 0, currencies = {{ currencyID = 3392, amount = 800 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 39, itemID = "265704", itemName = "Preyseeker's Executor Bust", goldCost = 0, currencies = {{ currencyID = 3392, amount = 800 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -928,19 +1040,19 @@ local itemEntries = {
   { vendorId = 41, itemID = "245505", itemName = "Lordaeron Fencepost", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Larkin Thunderbrew block
-  { vendorId = 20, itemID = "245291", itemName = "Replica Dark Iron Mole Machine", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 20, itemID = "245291", itemName = "Replica Dark Iron Mole Machine", goldCost = 25000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Brave Tuho block (Alliance vendor per master table)
-  { vendorId = 21, itemID = "243335", itemName = "Tauren Bluff Rug", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 21, itemID = "243335", itemName = "Tauren Bluff Rug", goldCost = 1700000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Miz'ra block (Horde vendor per master table)
-  { vendorId = 43, itemID = "243335", itemName = "Tauren Bluff Rug", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 21, itemID = "243335", itemName = "Tauren Bluff Rug", goldCost = 1700000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Shadowforge Vendor blockitemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 44, itemID = "246409", itemName = "Shadowforge Grinding Wheel", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 22, itemID = "246409", itemName = "Shadowforge Grinding Wheel", goldCost = 6300000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Surwich Merchant block
-  { vendorId = 45, itemID = "244777", itemName = "Surwich Peddler's Wagon", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 23, itemID = "244777", itemName = "Surwich Peddler's Wagon", goldCost = 9900000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Loch Vendor block
   { vendorId = 46, itemID = "246422", itemName = "Thelsamar Hanging Lantern", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -949,8 +1061,8 @@ local itemEntries = {
   { vendorId = 47, itemID = "248796", itemName = "Goldshire Food Cart", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Captain Stonehelm block
-  { vendorId = 48, itemID = "246411", itemName = "Ironforge Bookcase", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 48, itemID = "246412", itemName = "Small Ironforge Bookcase", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 26, itemID = "246411", itemName = "Ironforge Bookcase", goldCost = 7000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 26, itemID = "246412", itemName = "Small Ironforge Bookcase", goldCost = 4500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Stormpike Quartermaster block
   { vendorId = 49, itemID = "246424", itemName = "Square Stormpike Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -960,7 +1072,7 @@ local itemEntries = {
   -- Harb Clawhoof block (Horde vendor per master table)
 
   -- Lamppost Vendor block
-  { vendorId = 52, itemID = "256331", itemName = "Shadowforge Lamppost", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 30, itemID = "256331", itemName = "Shadowforge Lamppost", goldCost = 4500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Ra (Horde PvP Vendor) block
   { vendorId = 53, itemID = "247763", itemName = "Berserker's Empowerment", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -969,26 +1081,26 @@ local itemEntries = {
   { vendorId = 53, itemID = "247768", itemName = "Guardian's Empowerment", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 53, itemID = "247769", itemName = "Chaotic Empowerment", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 53, itemID = "247770", itemName = "Mysterious Empowerment", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 53, itemID = "256896", itemName = "Smoke Lamppost", goldCost = 0, currencies = {{ currencyID = 1792, amount = 450 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 53, itemID = "247727", itemName = "Iron Dragonmaw Gate", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 31, itemID = "256896", itemName = "Smoke Lamppost", goldCost = 0, currencies = {{ currencyID = 1792, amount = 450 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 31, itemID = "247727", itemName = "Iron Dragonmaw Gate", goldCost = 0, currencies = {{ currencyID = 1792, amount = 5000 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 53, itemID = "247759", itemName = "Horde Battlefield Banner", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 53, itemID = "247760", itemName = "Fortified Horde Banner", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Solelo block (Alliance)
-  { vendorId = 54, itemID = "239177", itemName = "Open Tome of Twilight Nihilism", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 54, itemID = "239179", itemName = "Tome of Twilight Nihilism", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 54, itemID = "239177", itemName = "Open Tome of Twilight Nihilism", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 54, itemID = "239179", itemName = "Tome of Twilight Nihilism", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 54, itemID = "245410", itemName = "Abandoned Bookcase", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 54, itemID = "250627", itemName = "Forbidden Fork", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 54, itemID = "250627", itemName = "Forbidden Fork", goldCost = 0, currencies = {{ currencyID = 3363, amount = 5 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Lonalo block (Horde)
-  { vendorId = 55, itemID = "239177", itemName = "Open Tome of Twilight Nihilism", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 55, itemID = "239179", itemName = "Tome of Twilight Nihilism", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 55, itemID = "239177", itemName = "Open Tome of Twilight Nihilism", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 55, itemID = "239179", itemName = "Tome of Twilight Nihilism", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 55, itemID = "245410", itemName = "Abandoned Bookcase", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 55, itemID = "250627", itemName = "Forbidden Fork", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 55, itemID = "250627", itemName = "Forbidden Fork", goldCost = 0, currencies = {{ currencyID = 3363, amount = 5 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Captain Lancy Revshon block (Alliance vendor per master table)
-  { vendorId = 66, itemID = "243088", itemName = "Standing Ornate Weapon Rack", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 66, itemID = "256673", itemName = "Stormwind Forge", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 38, itemID = "243088", itemName = "Standing Ornate Weapon Rack", goldCost = 1000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 66, itemID = "256673", itemName = "Stormwind Forge", goldCost = 8500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 56, itemID = "246874", itemName = "Sturdy Brazier", goldCost = 1100000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 56, itemID = "250092", itemName = "Small Wooden Footstool", goldCost = 150000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 56, itemID = "264278", itemName = "Sturdy Portable Ice Chest", goldCost = 1200000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },

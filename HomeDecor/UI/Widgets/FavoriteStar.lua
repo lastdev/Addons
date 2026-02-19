@@ -18,7 +18,11 @@ end
 local function toggle(id)
     local db = getDB()
     if not db then return end
-    db[id] = not db[id]
+    if db[id] then
+        db[id] = nil
+    else
+        db[id] = true
+    end
 end
 
 local function apply(tex, on)

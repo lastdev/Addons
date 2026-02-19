@@ -33,9 +33,12 @@ SMARTBUFF_UNDEAD    = "Mort-vivant";
 -- Classes
 SMARTBUFF_CLASSES = {"Druide", "Chasseur", "Mage", "Paladin", "Pr\195\170tre", "Voleur", "Chaman", "D\195\169moniste", "Guerrier", "Chevalier de la mort", "Moine", "Chasseur de démons", "Evoker", "Chasseur Pet", "D\195\169moniste Pet", "Chevalier de la mort Pet", "Tank", "Gu\195\169risseur", "Sp\195\169cialiste des d\195\169g\195\162ts"};
 
--- Templates and Instances
-SMARTBUFF_TEMPLATES = {"Solo", "Groupe", "RdR", "Raid", "Clef mythique", "Vision horrifique", "Faille", "Champ de bataille", "Arène", "Flèche du Vide", "Faille onirique", "Marche sur Quel'Danas", "Palais de Nerub-ar", "Libération de Soutermine", "Personnalisé 1", "Personnalisé 2", "Personnalisé 3", "Personnalisé 4", "Personnalisé 5"};
-SMARTBUFF_INSTANCES = {"Flèche du Vide", "Faille onirique", "Marche sur Quel'Danas", "Palais de Nerub-ar", "Libération de Soutermine"};
+-- Templates: split into generics, instances, custom. Assembled into SMARTBUFF_TEMPLATES at load (SmartBuff.lua).
+-- GENERICS: Enum.SmartBuffGroup (SmartBuff.lua) matches this order. Do not reorder or add/remove without updating both.
+SMARTBUFF_TEMPLATES_GENERICS = {"Solo", "Groupe", "RdR", "Raid", "Clef mythique", "Vision horrifique", "Faille", "Champ de bataille", "Arène"};
+-- INSTANCES: Must match GetInstanceInfo() name exactly. Only raids are currently supported; 5-man instance switching is not supported.
+SMARTBUFF_TEMPLATES_INSTANCES = {"Flèche du Vide", "Faille onirique", "Marche sur Quel'Danas", "Palais de Nerub-ar", "Libération de Soutermine"};
+SMARTBUFF_TEMPLATES_CUSTOM = {"Personnalisé 1", "Personnalisé 2", "Personnalisé 3", "Personnalisé 4", "Personnalisé 5"};
 
 -- Mount
 SMARTBUFF_MOUNT = "Augmente la vitesse de (%d+)%%.";
@@ -88,10 +91,10 @@ SMARTBUFF_OFT_BUFFTARGET     = "Buff sur Cible";
 SMARTBUFF_OFT_BUFFPVP        = "JcJ Buff";
 SMARTBUFF_OFT_AUTOSWITCHTMPINST = "Instance";
 SMARTBUFF_OFT_CHECKCHARGES   = "Charges";
-SMARTBUFF_OFT_RBT            = "Reset BT";
+SMARTBUFF_OFT_RBT            = "R: Timers";
 SMARTBUFF_OFT_BUFFINCITIES   = "Buff dans les Cap.";
 SMARTBUFF_OFT_UISYNC         = "UI sync";
-SMARTBUFF_OFT_BLDURATION     = "Liste noire";
+SMARTBUFF_OFT_BLDURATION     = "Bloqué";
 SMARTBUFF_OFT_COMPMODE       = "Comp. mode";
 SMARTBUFF_OFT_MINIGRP        = "Mini groupe";
 SMARTBUFF_OFT_ANTIDAZE       = "Anti daze"; -- NOT TRANSLATED
@@ -101,9 +104,10 @@ SMARTBUFF_OFT_SMARTDEBUFF    = "SmartDebuff";
 SMARTBUFF_OFT_INSHAPESHIFT   = "Shapeshift";
 SMARTBUFF_OFT_LINKGRPBUFFCHECK  = "Grp link";
 SMARTBUFF_OFT_LINKSELFBUFFCHECK = "Self link";
-SMARTBUFF_OFT_RESETALL       = "Reset All";
-SMARTBUFF_OFT_RESETLIST      = "Reset List";
-SMARTBUFF_OFT_RESETBUFFS     = "Reset Buffs";
+SMARTBUFF_OFT_RESETALL       = "R: Tout";
+SMARTBUFF_OFT_RESETLIST      = "R: Liste";
+SMARTBUFF_OFT_RESETBUFFS     = "R: Buffs";
+SMARTBUFF_OFT_NEWS           = "News";
 SMARTBUFF_OFT_PURGE_BUFFS    = "New Version, reset ALL SmartBuff buff data?\nThis will reset all buff profiles!";
 SMARTBUFF_OFT_YES            = "Oui";
 SMARTBUFF_OFT_NO             = "No";
@@ -113,6 +117,13 @@ SMARTBUFF_OFT_REQ_RELOAD     = "Les nouvelles versions nécessitent un rechargem
 
 -- Options Frame Tooltip Text
 SMARTBUFF_OFTT               = "ON/OFF SmartBuff";
+SMARTBUFF_OFTT_RBT           = "Reset BT : efface uniquement les timers de buff (aucune donnée sauvegardée).";
+SMARTBUFF_OFTT_RESETALL      = "Reset tout : efface tout (profils + options). Nécessite ReloadUI.";
+SMARTBUFF_OFTT_RESETBUFFS    = "Reset Buffs : réinitialise buffs et profils aux valeurs par défaut.";
+SMARTBUFF_OFTT_RESETLIST     = "Reset Liste : réinitialise uniquement l'ordre des buffs.";
+SMARTBUFF_OFTT_DONE          = "Fermer les options.";
+SMARTBUFF_OFTT_NEWS          = "Afficher les notes de version et le journal des modifications.";
+SMARTBUFF_OFTT_HELPLATE_RESET = "Boutons reset (survoler pour détails)";
 SMARTBUFF_OFTT_AUTO          = "ON/OFF Le rappel de buff";
 SMARTBUFF_OFTT_AUTOTIMER     = "D\195\169lai en secondes entre deux v\195\169rifications.";
 SMARTBUFF_OFTT_AUTOCOMBAT    = "Lance une v\195\169rification en combat.\nToute logique de rappel en combat est d\195\169sactiv\195\169e sauf si l'option principale \"en combat\" (dans la fen\195\170tre d'options, pas celle-ci) est activ\195\169e.";
@@ -139,7 +150,7 @@ SMARTBUFF_OFTT_AUTOSWITCHTMPINST = "Change automatiquement de configuration,\nsi
 SMARTBUFF_OFTT_CHECKCHARGES  = "Affiche un message au quantit\195\169 basse\nde charges que un Buff\n0 = D\195\169sactiv\195\169";
 SMARTBUFF_OFTT_BUFFINCITIES  = "Buffs also if you are in capital cities.\nIf you are PvP flagged, it buffs in any case."; -- NOT TRANSLATED
 SMARTBUFF_OFTT_UISYNC        = "Activate syncronisation with the UI\nto retrive the bufftime left from other players."; -- NOT TRANSLATED
-SMARTBUFF_OFTT_BLDURATION    = "How many seconds, players will be blacklistet.\n0 = Deactivated"; -- NOT TRANSLATED
+SMARTBUFF_OFTT_BLDURATION    = "Combien de secondes les joueurs seront bloqués.\n0 = Désactivé";
 SMARTBUFF_OFTT_COMPMODE      = "Compatibility mode\nAttention!!!\nUses this mode only, if you are\nfacing problems to cast buffs on yourself.";
 SMARTBUFF_OFTT_MINIGRP       = "Show raid subgoup settings in an\nown movable mini group frame."; -- NOT TRANSLATED
 SMARTBUFF_OFTT_ANTIDAZE      = "Automatically cancels the\naspect of the cheetah/pack\nif someone gets dazed\n(self or group)."; -- NOT TRANSLATED
@@ -207,6 +218,7 @@ SMARTBUFF_MSG_CLASS          = "Classe";
 SMARTBUFF_MSG_CHARGES        = "charges";
 SMARTBUFF_MSG_SOUNDS         = "Son Splash sélectionné: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec changed (%s), loading buff templates...";
+SMARTBUFF_MSG_PVP_PREP_ONLY  = "En raison des limitations de l'API, le buff ne fonctionne que pendant la préparation et est désactivé une fois le match commencé.";
 
 -- Support
 SMARTBUFF_MINIMAP_TT         = "Left Click: Menu d\'options\nRight Click: ON/OFF\nAlt-Left Click: SmartDebuff\nShift drag: Move button"; -- NOT TRANSLATED

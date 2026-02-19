@@ -58,12 +58,20 @@ local function buildIndex()
   local root = NS.Data and NS.Data.Vendors
   if type(root) ~= "table" then return end
 
-  local out, seen = {}, {}
+  local out, seen, seenVendorIDs = {}, {}, {}
   local function walk(node)
     if type(node) ~= "table" or seen[node] then return end
     seen[node] = true
     if isVendorRecord(node) then
-      out[#out + 1] = node
+      local vendorID = node.source and tonumber(node.source.id)
+      if vendorID then
+        if not seenVendorIDs[vendorID] then
+          seenVendorIDs[vendorID] = true
+          out[#out + 1] = node
+        end
+      else
+        out[#out + 1] = node
+      end
       return
     end
     for _, v in pairs(node) do

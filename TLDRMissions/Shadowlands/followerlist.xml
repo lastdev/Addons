@@ -1,21 +1,32 @@
 <Ui>
-    <Frame name="TLDRMissionsFollowerList" parent="GarrisonLandingPage" inherits="BaseLandingPageFollowerListTemplate" mixin="GarrisonFollowerList">
-		<KeyValues>
-			<KeyValue key="showUncollected" value="true" type="boolean"/>
-			<KeyValue key="canCastSpellsOnFollowers" value="true" type="boolean"/>
-			<KeyValue key="isLandingPage" value="true" type="boolean"/>
-		</KeyValues>
+	<Button name="TLDRMissionsCovenantMissionFollowerButtonTemplate" inherits="CovenantMissionFollowerButtonTemplate" virtual="true">
 		<Layers>
-			<Layer level="BORDER">
-				<FontString parentKey="LandingPageHeader" inherits="QuestFont_Enormous" text="GARRISON_FOLLOWERS">
+			<Layer level="HIGHLIGHT">
+				<Texture parentKey="DownArrow" file="Interface\Buttons\SquareButtonTextures">
+					<Size x="13" y="13"/>
 					<Anchors>
-						<Anchor point="LEFT" relativeKey="$parent.$parent.HeaderBar" x="26"/>
+						<Anchor point="TOPRIGHT" x="-10" y="-38"/>
 					</Anchors>
-				</FontString>
+					<TexCoords left="0.45312500" right="0.64062500" bottom="0.01562500" top="0.20312500"/>
+				</Texture>
 			</Layer>
 		</Layers>
-		<Anchors>
-			<Anchor point="TOPLEFT" x="45" y="-120"/>
-		</Anchors>
+	</Button>
+    
+    
+	<Frame name="TLDRMissionsCovenantMissionFollowerOrCategoryListButtonTemplate" virtual="true">
+		<Size x="260" y="20"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Category" inherits="GameFontNormal" justifyH="LEFT" setAllPoints="true"/>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button parentKey="Follower" inherits="TLDRMissionsCovenantMissionFollowerButtonTemplate" mixin="GarrisonMissionFollowerOrCategoryListButtonMixin">
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+				</Anchors>
+			</Button>
+		</Frames>
 	</Frame>
 </Ui>

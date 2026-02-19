@@ -1,7 +1,7 @@
 ## X-Flavor: retail
 ## X-Expansion: TWW
 ## Interface: 120000, 120001
-## Version: 1.8.6
+## Version: 1.8.7
 
 ## Title: Plumber
 
@@ -61,7 +61,6 @@ Modules\DelvesScenario.lua
 Modules\DelvesDashboard.lua
 Modules\DelvesAutomation.lua
 Modules\ExpansionLandingPage.xml
-Modules\LandingPageSwitch.lua
 Modules\GameTooltipExtension.xml
 Modules\LootUI.xml
 Modules\UnderlightAngler.lua
@@ -75,7 +74,7 @@ Modules\BlizzardSuperTrack.lua
 Modules\ItemUpgradeUI.xml
 Modules\Macros.lua
 Modules\ProfessionsBook.lua
-Modules\ExpansionLandingPage\ExpansionLandingPage_TWW.xml
+Modules\ExpansionLandingPage\ExpansionLandingPage_Retail.xml
 Modules\BlizzFix_ModelLoading.lua
 Modules\Timerunning\LegionRemix.xml
 Modules\HolidayDungeon.lua

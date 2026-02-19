@@ -10,6 +10,97 @@ local L = addon.L;
 local changelogs = addon.ControlCenter.changelogs;
 
 
+changelogs[10807] = {
+    {
+        type = "date",
+        versionText = "1.8.7",
+        timestamp = 1771000000,
+    },
+
+    {
+        type = "h1",
+        text = L["ModuleName NewExpansionLandingPage"],
+        dbKey = "NewExpansionLandingPage",
+    },
+
+    {
+        type = "Checkbox",
+        dbKey = "NewExpansionLandingPage",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Added a new minimap button to toggle the Expansion Summary UI.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "You can right-click this button to access Order Hall UI from previous expansions.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "You can customize the button\'s appearance and behavior.",
+    },
+
+    {
+        type = "img",
+        fileName = "Changelog_LandingButton",
+    },
+
+    {
+        type = "br",
+    },
+
+    {
+        type = "h1",
+        text = MISCELLANEOUS,
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Nameplate Quest Indicator: Added an option to show quest progress on all NPC nameplates when pressing a modifier key.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Drawer Macros: Unusable toys should no longer appear in the flyout when \"Hide Unusable Actions\" is enabled.",
+    },
+
+    {
+        type = "br",
+    },
+
+    {
+        type = "h1",
+        text = "Bug Fixes",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Nameplate Quest Indicator: Fixed an error when calculating percentage-based quest progress.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Loot UI: Fixed an error when displaying the item comparison tooltip.",
+    },
+
+    {
+        type = "p",
+        bullet = true,
+        text = "Expansion Summary: Fixed an issue where the reputation level text disappears before reaching Paragon.",
+    },
+};
+
+
 changelogs[10806] = {
     {
         type = "date",

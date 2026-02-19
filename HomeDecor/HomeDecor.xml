@@ -7,4 +7,51 @@
     <Include file="Data/Professions/Professions.xml"/>
 	<Include file="Data/Pvp/Pvp.xml"/>
 	<Include file="Data/Events/Events.xml"/>
+
+    <!-- World Map Button template (used by Krowi_WorldMapButtons) -->
+    <Button name="HomeDecorWorldMapButtonTemplate"
+            frameStrata="HIGH"
+            mixin="HomeDecorWorldMapButtonMixin"
+            virtual="true">
+        <Size x="32" y="32"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Background"
+                         file="Interface\Minimap\UI-Minimap-Background">
+                    <Size x="25" y="25"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="2" y="-4"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="ARTWORK">
+                <Texture parentKey="Icon"
+                         file="Interface\AddOns\HomeDecor\Media\Icon">
+                    <Size x="20" y="20"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="6" y="-6"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY" textureSubLevel="1">
+                <Texture parentKey="Border"
+                         file="Interface\Minimap\MiniMap-TrackingBorder">
+                    <Size x="54" y="54"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <HighlightTexture alphaMode="ADD"
+                          file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnMouseDown method="OnMouseDown"/>
+            <OnMouseUp method="OnMouseUp"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave function="GameTooltip_Hide"/>
+            <OnClick method="OnClick"/>
+        </Scripts>
+    </Button>
 </Ui>

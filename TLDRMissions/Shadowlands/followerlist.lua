@@ -138,15 +138,9 @@ function addon:Init()
                 end
             end
             if #uncollectedFollowers > 0 then
-                
-                --table.insert(followersList, 0)
-                --table.insert(categoryLabels, #followersList, FOLLOWERLIST_LABEL_UNCOLLECTED)
                 for _, follower in pairs(uncollectedFollowers) do
                     dataProvider:Insert({index=index, follower=follower, followerList=self})
-                    --table.insert(followers, follower)
-                    --table.insert(followersList, #followers)
                 end
-                --numFollowers = #followersList
             end
         end
     
@@ -156,25 +150,15 @@ function addon:Init()
     hooksecurefunc(CovenantMissionFrame.FollowerList, "UpdateFollowers", newUpdateFollowers)
     hooksecurefunc(GarrisonLandingPageFollowerList, "UpdateFollowers", newUpdateFollowers)
     
-    hooksecurefunc("GarrisonFollowerList_InitButton", function(frame)
-        if frame.Follower then
-            if not frame.Follower.DownArrow then
-                frame.Follower.DownArrow = frame.Follower:CreateTexture()
-                frame.Follower.DownArrow:SetPoint("TOPRIGHT", -10, -38)
-                frame.Follower.DownArrow:SetSize(13, 13)
-                frame.Follower.DownArrow:SetTexCoord(0.45312500, 0.64062500, 0.20312500, 0.01562500)
-                local norecursion
-                hooksecurefunc(frame.Follower.Status, "SetText", function(self, text)
-                    if norecursion then return end
-                    if text == GARRISON_FOLLOWER_INACTIVE then
-                        if self:GetParent().info.source then
-                            norecursion = true
-                            self:SetText(self:GetParent().info.source)
-                            norecursion = false
-                        end
-                    end
-                end)
-            end
-        end
+    hooksecurefunc(GarrisonLandingPageFollowerList, "Setup", function(self)
+    	self.ScrollBox.view:SetElementInitializer("TLDRMissionsCovenantMissionFollowerOrCategoryListButtonTemplate", function(button, elementData)
+    		self.buttonInitializer(button, elementData);
+    	end);
+    end)
+    
+    hooksecurefunc(CovenantMissionFrame.FollowerList, "Setup", function(self)
+    	self.ScrollBox.view:SetElementInitializer("TLDRMissionsCovenantMissionFollowerOrCategoryListButtonTemplate", function(button, elementData)
+    		self.buttonInitializer(button, elementData);
+    	end);
     end)
 end

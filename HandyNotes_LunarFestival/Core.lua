@@ -1,213 +1,307 @@
---[[
-                                ----o----(||)----oo----(||)----o----
 
-                                           Lunar Festival
+------------------------------------------
+--  This addon was heavily inspired by  --
+--    HandyNotes_Lorewalkers            --
+--    HandyNotes_LostAndFound           --
+--  by Kemayo                           --
+------------------------------------------
 
-                                      v4.32 - 24th January 2026
-                                Copyright (C) Taraezor / Chris Birch
-                                         All Rights Reserved
 
-                                ----o----(||)----oo----(||)----o----
-]]
+-- declaration
+local addonName, LunarFestival = ...
+LunarFestival.points = {}
 
-local addonName, ns = ...
 
-ns.defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = true,
-					remove = { true, true, true, true }, -- One Time, Seasonal, Weekly, Daily
-					removeAchieveChar = false, removeAchieveAcct = false,
-					removeOneTime = true, removeSeasonal = true, removeDaily = true,
-					iconZoneElders = 19, iconDungeonElders = 18, iconCrown = 17,
-					iconFactionElders = 15, iconPreservation = 13, iconSeasonal=16,
-					iconMeta = 20, iconHistory = 14, iconSpecial = 12, } }
+-- our db and defaults
+local db
+local defaults = { profile = { completed = false, icon_scale = 1.4, icon_alpha = 0.8 } }
 
--- Localised
-local ipairs, next = _G.ipairs,  _G.next
+local continents = {
+	[12]   = true, -- Kalimdor
+	[13]   = true, -- Eastern Kingdoms
+	[101]  = true, -- Outland
+	[113]  = true, -- Northrend
+	[203]  = true, -- Vashj'ir
+	[224]  = true, -- Stranglethorn Vale
+	[424]  = true, -- Pandaria
+	[572]  = true, -- Draenor
+	[619]  = true, -- Broken Isles
+	[875]  = true, -- Zandalar
+	[876]  = true, -- Kul Tiras
+	[947]  = true, -- Azeroth
+	[1978] = true, -- Dragon Isles
+	[2274] = true, -- Khaz Algar
+}
 
+local notes = {
+	[8619]  = "Inside the dungeon.", -- Elder Morndeep, Blackrock Depths
+	[8635]  = "Inside Earthsong Falls.", -- Elder Splitrock, Maraudon
+	[8644]  = "Inside Lower Blackrock Spire.", -- Elder Stonefort, Lower Blackrock Spire
+	[8647]  = "Speak to Zidormi at the north of the zone to gain access to this Elder.",
+	[8648]  = "Speak to Zidormi in Tirisfal to gain access to The Undercity.",
+	[8652]  = "Speak to Zidormi in Tirisfal to gain access to Brill.",
+	[8676]  = "Inside the dungeon.", -- Elder Wildmane, Zul'Farrak
+	[8713]  = "Inside the dungeon.", -- Elder Starsong, Sunken Temple
+	[8715]  = "Speak to Zidormi in Darkshore to gain access to Teldrassil.",
+	[8718]  = "Speak to Zidormi in Darkshore to gain access to Darnassus.",
+	[8721]  = "Speak to Zidormi in Darkshore to gain access to Lor'danel.",
+	[8727]  = "Inside the dungeon.", -- Elder Farwhisper, Stratholme
+	[13017] = "Inside the dungeon.", -- Elder Jarten, Utgarde Keep
+	[13021] = "Inside the dungeon.", -- Elder Igasho, The Nexus
+	[13022] = "Inside the dungeon.", -- Elder Nurgen, Azjol-Nerub
+	[13023] = "Inside the dungeon.", -- Elder Kilias, Drak'Tharon Keep
+	[13065] = "Inside the dungeon.", -- Elder Ohanzee, Gundrak
+	[13066] = "Inside the dungeon.", -- Elder Yurauk, Halls of Stone
+	[13067] = "Inside the dungeon.", -- Elder Chogan'gada, Utgarde Pinnacle
+}
+
+-- upvalues
+local C_Calendar = _G.C_Calendar
+local C_DateAndTime = _G.C_DateAndTime
+local C_Map = _G.C_Map
+local C_QuestLog = _G.C_QuestLog
+local C_Timer_After = _G.C_Timer.After
 local GameTooltip = _G.GameTooltip
-local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
+local GetAchievementCriteriaInfo = _G.GetAchievementCriteriaInfo
+local IsControlKeyDown = _G.IsControlKeyDown
+local UIParent = _G.UIParent
 
 local LibStub = _G.LibStub
 local HandyNotes = _G.HandyNotes
+local TomTom = _G.TomTom
 
--- ---------------------------------------------------------------------------------------------------------------------------------
+local completedQuests = {}
+local points = LunarFestival.points
 
-function ns.handyNotesPinIterator( t, prev )
-	if not t then return end
-	local hash;
-	local coord, pin = next( t, prev )
-	while coord do
-		if pin and ns.PassAzerothCheck( pin ) and ns.PassAllChecks( pin ) and 
-				( pin.alwaysShow or ns.ShowAchievements( pin ) or ns.ShowQuests( pin ) or ns.ShowAnyway( pin) ) then
-			if pin.elder then
-				hash = ( ns.db.iconZoneElders <= 10 ) and ns.db.iconZoneElders or ( ns.db.iconZoneElders + 10 )
-				return coord, nil, ns.textures[ hash ], ns.ScalePin( hash ), ns.db.iconAlpha
-			elseif pin.elderDungeon then
-				hash = ( ns.db.iconDungeonElders <= 10 ) and ns.db.iconDungeonElders or ( ns.db.iconDungeonElders + 10 )
-				return coord, nil, ns.textures[ hash ], ns.ScalePin( hash ), ns.db.iconAlpha
-			elseif pin.elderFaction then
-				hash = ( ns.db.iconFactionElders <= 10 ) and ns.db.iconFactionElders or ( ns.db.iconFactionElders + 10 )
-				return coord, nil, ns.textures[ hash ], ns.ScalePin( hash ), ns.db.iconAlpha
-			elseif pin.history then
-				hash = ( ns.db.iconHistory <= 10 ) and ns.db.iconHistory or ( ns.db.iconHistory + 10 )
-				return coord, nil, ns.textures[ hash ], ns.ScalePin( hash ) * 2, ns.db.iconAlpha
-			elseif pin.metaLarge then
-				hash = ( ns.db.iconMeta <= 10 ) and ns.db.iconMeta or ( ns.db.iconMeta + 10 )
-				return coord, nil, ns.textures[ hash ], ns.ScalePin( hash ) * 1.7, ns.db.iconAlpha
-			elseif pin.honor then
-				hash = ( ns.db.iconMeta <= 10 ) and ns.db.iconMeta or ( ns.db.iconMeta + 10 )
-				return coord, nil, ns.textures[ hash ], ns.ScalePin( hash ), ns.db.iconAlpha
-			elseif pin.pyro then
-				hash = ( ns.db.iconSpecial <= 10 ) and ns.db.iconSpecial or ( ns.db.iconSpecial + 10 )
-				return coord, nil, ns.textures[ hash ], ns.ScalePin( hash ), ns.db.iconAlpha
-			elseif pin.preservation then
-				hash = ( ns.db.iconPreservation <= 10 ) and ns.db.iconPreservation or ( ns.db.iconPreservation + 10 )
-				return coord, nil, ns.textures[ hash ], ns.ScalePin( hash ), ns.db.iconAlpha
-			elseif pin.seasonalQuest then
-				hash = ( ns.db.iconSeasonal <= 10 ) and ns.db.iconSeasonal or ( ns.db.iconSeasonal + 10 )
-				return coord, nil, ns.textures[ hash ], ns.ScalePin( hash ), ns.db.iconAlpha
-			elseif pin.coins then
-				hash = ( ns.db.iconCrown <= 10 ) and ns.db.iconCrown or ( ns.db.iconCrown + 10 )
-				return coord, nil, ns.textures[ hash ], ns.ScalePin( hash ), ns.db.iconAlpha
-			elseif pin.crown and ( IsQuestFlaggedCompleted( 56842 ) == true ) then -- Lunar Preservation
-				hash = ( ns.db.iconCrown <= 10 ) and ns.db.iconCrown or ( ns.db.iconCrown + 10 )
-				return coord, nil, ns.textures[ hash ], ns.ScalePin( hash ) * 0.5, ns.db.iconAlpha
-			end				
-		end
-		coord, pin = next( t, coord )
+
+-- plugin handler for HandyNotes
+function LunarFestival:OnEnter(mapFile, coord)
+	if self:GetCenter() > UIParent:GetCenter() then -- compare X coordinate
+		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+	else
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	end
-end
 
--- ---------------------------------------------------------------------------------------------------------------------------------
+	local point = points[mapFile] and points[mapFile][coord]
+	local nameOfElder = GetAchievementCriteriaInfo(point[2], point[3])
 
-local iconLF = "\n11 = " ..ns.L["Coin"] .." - " ..ns.L[ "Blue" ] .."\n12 = " ..ns.L["Coin"] .." - " ..ns.L["Deep Green"] .."\n13 = "
-			..ns.L["Coin"] .." - " ..ns.L["Deep Pink"] .."\n14 = " ..ns.L["Coin"] .." - " ..ns.L["Deep Red"] .."\n15 = "
-			..ns.L["Coin"] .." - " ..ns.L["Green"] .."\n16 = " ..ns.L["Coin"] .." - " ..ns.L["Light Blue"] .."\n17 = "
-			..ns.L["Coin"] .." - " ..ns.L["Pink"] .."\n18 = " ..ns.L["Coin"] .." - " ..ns.L["Purple"] .."\n19 = " ..ns.L["Coin"]
-			.." - " ..ns.L["Teal"] .."\n20 = " ..ns.L["Coin"] .." - " ..ns.L["Original"]
+	GameTooltip:SetText(nameOfElder)
 
-ns.options = {
-	type = "group",
-	name = ns.L[ ns.eventName ],
-	desc = ns.AddColouredText( "AddOn Description" ),
-	get = function( info ) return ns.db[ info[ #info ] ] end,
-	set = function( info, v )
-		ns.db[ info[ #info ] ] = v
-		ns.pluginHandler:Refresh()
-	end,
-	args = {
-		options = {
-			-- Add a " " to force this to be before the first group. HN arranges alphabetically on local language
-			type = "group", name = " " ..ns.L[ "Options" ], inline = true,
-			args = { iconScale = ns.setIconScale, iconAlpha = ns.setIconAlpha, showCoords = ns.setShowCoords,
-				removeSeasonal = ns.setRemoveSeasonal, removeDailies = ns.setRemoveDailies, 
-				removeAchieveChar = ns.setRemoveAchieveChar, removeAchieveAcct = ns.setRemoveAchieveAcct,
-				showAzeroth = ns.setShowAzeroth,
-			},
-		},
-		icon = {
-			type = "group",
-			name = ns.L[ "Map Pin Selections" ],
-			inline = true,
-			args = {
-				iconZoneElders = {
-					type = "range",
-					name = ns.L[ "Zones" ],
-					desc = ns.iconStandard ..iconLF, 
-					min = 1, max = 20, step = 1,
-					arg = "iconZoneElders",
-					order = 20,
-				},
-				iconDungeonElders = {
-					type = "range",
-					name = ns.L[ "Dungeons" ],
-					desc = ns.iconStandard ..iconLF, 
-					min = 1, max = 20, step = 1,
-					arg = "iconDungeonElders",
-					order = 21,
-				},
-				iconFactionElders = {
-					type = "range",
-					name = ns.L[ "Factions" ],
-					desc = ns.iconStandard ..iconLF, 
-					min = 1, max = 20, step = 1,
-					arg = "iconFactionElders",
-					order = 22,
-				},
-				iconPreservation = {
-					type = "range",
-					name = ns.L[ "Lunar Preservation" ],
-					desc = ns.iconStandard ..iconLF, 
-					min = 1, max = 20, step = 1,
-					arg = "iconPreservation",
-					order = 23,
-				},
-				iconCrown = {
-					type = "range",
-					name = ns.L[ "Crown of... Quests" ],
-					desc = ns.iconStandard ..iconLF, 
-					min = 1, max = 20, step = 1,
-					arg = "iconCrown",
-					order = 24,
-				},
-				iconSeasonal = {
-					type = "range",
-					name = ns.L[ "Seasonal" ] .." " ..ns.L[ "Quests" ],
-					desc = ns.iconStandard ..iconLF, 
-					min = 1, max = 20, step = 1,
-					arg = "iconSeasonal",
-					order = 25,
-				},
-				iconMeta = {
-					type = "range",
-					name = ns.L[ "HonorElders" ],
-					desc = ns.iconStandard ..iconLF, 
-					min = 1, max = 20, step = 1,
-					arg = "iconMeta",
-					order = 26,
-				},
-				iconHistory = {
-					type = "range",
-					name = ns.L[ "History" ],
-					desc = ns.iconStandard ..iconLF, 
-					min = 1, max = 20, step = 1,
-					arg = "iconHistory",
-					order = 27,
-				},
-				iconSpecial = {
-					type = "range",
-					name = ns.L[ "Special" ],
-					desc = ns.iconStandard ..iconLF, 
-					min = 1, max = 20, step = 1,
-					arg = "iconSpecial",
-					order = 28,
-				},
-			},
-		},
-		notes = { type = "group", name = ns.L[ "Notes" ], inline = true,
-			args = ns.MakeSetChatCommands( { "/lf", "/lunar", } ), },
-	},
-}
+	if notes[point[1]] then
+		GameTooltip:AddLine(notes[point[1]])
+		GameTooltip:AddLine(" ")
+	end
 
--- ---------------------------------------------------------------------------------------------------------------------------------
+	if TomTom then
+		GameTooltip:AddLine("Right-click to set a waypoint.", 1, 1, 1)
+		GameTooltip:AddLine("Control-Right-click to set waypoints to every Elder.", 1, 1, 1)
+	end
 
-function HandyNotes_LunarFestival_OnAddonCompartmentClick( addonName, buttonName )
-	Settings.OpenToCategory( "HandyNotes" )
-	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", ns.addOnName )
-end
-
-function HandyNotes_LunarFestival_OnAddonCompartmentEnter( ... )
-	GameTooltip:SetOwner( MinimapCluster or AddonCompartmentFrame, "ANCHOR_LEFT" )	
-	GameTooltip:AddLine( ns.colour.prefix ..ns.L[ ns.eventName ] .."\n\n" )
-	GameTooltip:AddDoubleLine( ns.colour.highlight ..ns.L[ "Left" ] .."/" ..ns.L[ "Right" ], ns.colour.plaintext
-		..ns.L[ "Options" ] )
 	GameTooltip:Show()
 end
 
-function HandyNotes_LunarFestival_OnAddonCompartmentLeave( ... )
+function LunarFestival:OnLeave()
 	GameTooltip:Hide()
 end
 
--- ---------------------------------------------------------------------------------------------------------------------------------
 
-SLASH_LunarFestival1, SLASH_LunarFestival2 = "/lf", "/lunar"
-SlashCmdList[ "LunarFestival" ] = function( options ) ns.Slash( options ) end
+local function createWaypoint(mapFile, coord)
+	local x, y = HandyNotes:getXY(coord)
+	local point = points[mapFile] and points[mapFile][coord]
+	local nameOfElder = GetAchievementCriteriaInfo(point[2], point[3])
+
+	TomTom:AddWaypoint(mapFile, x, y, { title = nameOfElder, from = addonName, persistent = false, minimap = true, world = true })
+end
+
+local function createAllWaypoints()
+	for mapFile, coords in next, points do
+		if not continents[mapFile] then
+			for coord, questID in next, coords do
+				if coord and (db.completed or not completedQuests[questID[1]]) then
+					createWaypoint(mapFile, coord)
+				end
+			end
+		end
+	end
+
+	TomTom:SetClosestWaypoint()
+end
+
+function LunarFestival:OnClick(button, down, mapFile, coord)
+	if TomTom and button == "RightButton" and not down then
+		if IsControlKeyDown() then
+			createAllWaypoints()
+		else
+			createWaypoint(mapFile, coord)
+		end
+	end
+end
+
+
+do
+	-- custom iterator we use to iterate over every node in a given zone
+	local function iterator(t, prev)
+		if not LunarFestival.isEnabled then return end
+		if not t then return end
+
+		local coord, value = next(t, prev)
+		while coord do
+			if value and (db.completed or not completedQuests[value[1]]) then
+				local icon = value[4] and "interface\\icons\\spell_hunter_lonewolf" or "interface\\icons\\inv_misc_elvencoins"
+				return coord, nil, icon, db.icon_scale, db.icon_alpha
+			end
+
+			coord, value = next(t, coord)
+		end
+	end
+
+	function LunarFestival:GetNodes2(mapID)
+		return iterator, points[mapID]
+	end
+end
+
+
+-- config
+local options = {
+	type = "group",
+	name = "Lunar Festival",
+	desc = "Lunar Festival elder NPC locations.",
+	get = function(info) return db[info[#info]] end,
+	set = function(info, v)
+		db[info[#info]] = v
+		LunarFestival:Refresh()
+	end,
+	args = {
+		desc = {
+			name = "These settings control the look and feel of the icon.",
+			type = "description",
+			order = 1,
+		},
+		completed = {
+			name = "Show completed",
+			desc = "Show icons for elder NPCs you have already visited.",
+			type = "toggle",
+			width = "full",
+			arg = "completed",
+			order = 2,
+		},
+		icon_scale = {
+			type = "range",
+			name = "Icon Scale",
+			desc = "Change the size of the icons.",
+			min = 0.25, max = 2, step = 0.01,
+			arg = "icon_scale",
+			order = 3,
+		},
+		icon_alpha = {
+			type = "range",
+			name = "Icon Alpha",
+			desc = "Change the transparency of the icons.",
+			min = 0, max = 1, step = 0.01,
+			arg = "icon_alpha",
+			order = 4,
+		},
+	},
+}
+
+
+-- check
+local setEnabled = false
+local function CheckEventActive()
+	local calendar = C_DateAndTime.GetCurrentCalendarTime()
+	local month, day, year = calendar.month, calendar.monthDay, calendar.year
+	local hour, minute = calendar.hour, calendar.minute
+
+	local monthInfo = C_Calendar.GetMonthInfo()
+	local curMonth, curYear = monthInfo.month, monthInfo.year
+
+	local monthOffset = -12 * (curYear - year) + month - curMonth
+	local numEvents = C_Calendar.GetNumDayEvents(monthOffset, day)
+
+	for i=1, numEvents do
+		local event = C_Calendar.GetDayEvent(monthOffset, day, i)
+
+		if event.iconTexture == 235469 or event.iconTexture == 235470 or event.iconTexture == 235471 then
+			setEnabled = event.sequenceType == "ONGOING" -- or event.sequenceType == "INFO"
+
+			if event.sequenceType == "START" then
+				setEnabled = hour >= event.startTime.hour and (hour > event.startTime.hour or minute >= event.startTime.minute)
+			elseif event.sequenceType == "END" then
+				setEnabled = hour <= event.endTime.hour and (hour < event.endTime.hour or minute <= event.endTime.minute)
+			end
+		end
+	end
+
+	if setEnabled and not LunarFestival.isEnabled then
+		for _, id in ipairs(C_QuestLog.GetAllCompletedQuestIDs()) do
+			completedQuests[id] = true
+		end
+
+		LunarFestival.isEnabled = true
+		LunarFestival:Refresh()
+		LunarFestival:RegisterEvent("QUEST_TURNED_IN", "Refresh")
+
+		HandyNotes:Print("The Lunar Festival has begun!  Locations of Elder NPCs are now marked on your map.")
+	elseif not setEnabled and LunarFestival.isEnabled then
+		LunarFestival.isEnabled = false
+		LunarFestival:Refresh()
+		LunarFestival:UnregisterAllEvents()
+
+		HandyNotes:Print("The Lunar Festival has ended.  See you next year!")
+	end
+end
+
+local function RepeatingCheck()
+	CheckEventActive()
+	C_Timer_After(60, RepeatingCheck)
+end
+
+-- initialise
+function LunarFestival:OnEnable()
+	self.isEnabled = false
+
+	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
+	if not HereBeDragons then
+		HandyNotes:Print("Your installed copy of HandyNotes is out of date and the Lunar Festival plug-in will not work correctly.  Please update HandyNotes to version 1.5.0 or newer.")
+		return
+	end
+
+	for continentMapID in next, continents do
+		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
+		for _, map in next, children do
+			local coords = points[map.mapID]
+			if coords then
+				for coord, criteria in next, coords do
+					local mx, my = HandyNotes:getXY(coord)
+					local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
+					if cx and cy then
+						points[continentMapID] = points[continentMapID] or {}
+						points[continentMapID][HandyNotes:getCoord(cx, cy)] = criteria
+					end
+				end
+			end
+		end
+	end
+
+	local calendar = C_DateAndTime.GetCurrentCalendarTime()
+	C_Calendar.SetAbsMonth(calendar.month, calendar.year)
+	CheckEventActive()
+
+	HandyNotes:RegisterPluginDB("LunarFestival", self, options)
+	db = LibStub("AceDB-3.0"):New("HandyNotes_LunarFestivalDB", defaults, "Default").profile
+
+	self:RegisterEvent("CALENDAR_UPDATE_EVENT", CheckEventActive)
+	self:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST", CheckEventActive)
+	self:RegisterEvent("ZONE_CHANGED", CheckEventActive)
+
+	C_Timer_After(60, RepeatingCheck)
+end
+
+function LunarFestival:Refresh(_, questID)
+	if questID then completedQuests[questID] = true end
+	self:SendMessage("HandyNotes_NotifyUpdate", "LunarFestival")
+end
+
+
+-- activate
+LibStub("AceAddon-3.0"):NewAddon(LunarFestival, addonName, "AceEvent-3.0")

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2685, "DBM-Raids-WarWithin", 1, 1302)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20260209035553")
+mod:SetRevision("20260218222853")
 mod:SetCreatureID(233816)
 mod:SetEncounterID(3130)
 mod:SetUsedIcons(4, 6)
@@ -22,10 +22,10 @@ mod:AddCustomTimerOptions(1237607, true, 5, 0)--Mythic Lash
 mod:AddCustomTimerOptions(1225626, true, 3, 0)--Soulfire Convergence
 mod:AddCustomTimerOptions(1225582, true, 1, 0)--Soul Calling
 --Midnight private aura replacements
-mod:AddPrivateAuraSoundOption(1237607, true, 1237607, 1)--Mythic Lash
-mod:AddPrivateAuraSoundOption(1227276, true, 1227276, 1)
-mod:AddPrivateAuraSoundOption(1225626, true, 1225626, 1)
-mod:AddPrivateAuraSoundOption(1242086, true, 1242086, 1)--GTFO
+mod:AddPrivateAuraSoundOption(1237607, true, 1237607, 1, 1)--Mythic Lash
+mod:AddPrivateAuraSoundOption(1227276, true, 1227276, 1, 1)
+mod:AddPrivateAuraSoundOption(1225626, true, 1225626, 1, 1)
+mod:AddPrivateAuraSoundOption(1242086, true, 1242086, 1, 2)--GTFO
 
 function mod:OnLimitedCombatStart()
 	self:DisableSpecialWarningSounds()
@@ -37,9 +37,8 @@ function mod:OnLimitedCombatStart()
 	self:EnableTimelineOptions(1225626, 349)
 	self:EnableTimelineOptions(1225582, 350)
 
-	self:EnablePrivateAuraSound(1237607, "defensive", 2)
-	self:EnablePrivateAuraSound(1248464, "defensive", 2, 1237607)
+	self:EnablePrivateAuraSound({1237607,1248464}, "defensive", 2)
 	self:EnablePrivateAuraSound(1227276, "lineyou", 17)
-	self:EnablePrivateAuraSound(1225626, "orbyou", 17)
+	self:EnablePrivateAuraSound(1225626, "orbrun", 17)
 	self:EnablePrivateAuraSound(1242086, "watchfeet", 8)
 end

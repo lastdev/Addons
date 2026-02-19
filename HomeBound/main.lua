@@ -11,6 +11,13 @@ local TWITCH_DROP_DECOR_ID = 15151
 local TWITCH_DROP_END_TIME = 1771351200 
 local TWITCH_DROP_URL = "https://worldofwarcraft.blizzard.com/en-gb/news/24244883/twitch-drop-now-live-get-the-cuddly-green-grrgle-housing-decor-item"
 
+local EXPANSION_NAMES = {
+	[1] = "Classic", [2] = "The Burning Crusade", [3] = "Wrath of the Lich King",
+	[4] = "Cataclysm", [5] = "Mists of Pandaria", [6] = "Warlords of Draenor",
+	[7] = "Legion", [8] = "Battle for Azeroth", [9] = "Shadowlands",
+	[10] = "Dragonflight", [11] = "The War Within"
+}
+
 hb_settings = hb_settings or {
 	scale = 1.0,
 	hideCompleted = false,
@@ -986,11 +993,21 @@ filterButton:SetupMenu(function(dropdown, rootDescription)
 		reqMenu:CreateCheckbox(db.L_REPUTATION, function() return activeFilters.reputation end, function() activeFilters.reputation = not activeFilters.reputation; BuildUI(); RefreshVendorPopup() end)
 	end
 
+	if currentTab == "professions" then
+		local expMenu = rootDescription:CreateButton(db.L_EXPANSION)
+		for i, name in ipairs(EXPANSION_NAMES) do
+			expMenu:CreateCheckbox(name, function() return activeFilters["expansion"..i] end, function() activeFilters["expansion"..i] = not activeFilters["expansion"..i]; BuildUI() end)
+		end
+	end
+
 	rootDescription:CreateDivider()
 	rootDescription:CreateButton(db.L_RESET_FILTERS, function()
 		activeFilters.neutral = true; activeFilters.alliance = true; activeFilters.horde = true; 
 		if currentTab == "decor" then activeFilters.achievement = true; activeFilters.quest = true; end
 		if currentTab == "vendors" then activeFilters.achievement = true; activeFilters.quest = true; activeFilters.reputation = true; end
+		if currentTab == "professions" then
+			for i = 1, #EXPANSION_NAMES do activeFilters["expansion"..i] = true end
+		end
 		BuildUI() 
 		RefreshVendorPopup()
 	end)
@@ -1581,6 +1598,14 @@ function BuildUI()
 					local typeMatch = (rewardType == "quest" and activeFilters.quest) or (rewardType == "achievement" and activeFilters.achievement)
 					if not typeMatch then showStructural = false end
 				end
+				
+				if currentTab == "professions" then
+					local expID = item.expansion or 0
+					if expID > 0 and not activeFilters["expansion"..expID] then
+						showStructural = false
+					end
+				end
+
 				if showStructural then
 					local showSearch = true
 					if currentSearchQuery ~= "" then
@@ -1928,7 +1953,7 @@ init:SetScript("OnEvent", function(self, event, addon, ...)
 		if hb_settings.useTomTom == nil then hb_settings.useTomTom = true end
 		if hb_settings.closeOnEsc == nil then hb_settings.closeOnEsc = true end
 		hb_settings.tabFilters = hb_settings.tabFilters or {}
-		local function InitializeTabFilter(tabName, includeType, includeReqs)
+		local function InitializeTabFilter(tabName, includeType, includeReqs, includeExpansions)
 			 if not hb_settings.tabFilters[tabName] then
 					 hb_settings.tabFilters[tabName] = { neutral = true, alliance = true, horde = true }
 					 if includeType then
@@ -1940,12 +1965,17 @@ init:SetScript("OnEvent", function(self, event, addon, ...)
 						hb_settings.tabFilters[tabName].quest = true
 						hb_settings.tabFilters[tabName].reputation = true
 					 end
+					 if includeExpansions then
+						for i = 1, #EXPANSION_NAMES do
+							hb_settings.tabFilters[tabName]["expansion"..i] = true
+						end
+					 end
 			 end
 		end
-		InitializeTabFilter("decor", true, false)
-		InitializeTabFilter("vendors", false, true)
-		InitializeTabFilter("drops", false, false)
-		InitializeTabFilter("professions", false, false)
+		InitializeTabFilter("decor", true, false, false)
+		InitializeTabFilter("vendors", false, true, false)
+		InitializeTabFilter("drops", false, false, false)
+		InitializeTabFilter("professions", false, false, true)
 		local ldb = LibStub:GetLibrary("LibDataBroker-1.1", true)
 		if ldb then
 			local dataobj = ldb:NewDataObject("HomeBound", { type = "launcher", icon = 7252953, label = "HomeBound", text = "HomeBound", name = "HomeBound",

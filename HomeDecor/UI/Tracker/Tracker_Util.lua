@@ -1,4 +1,4 @@
-local _, NS = ...
+local ADDON, NS = ...
 NS.UI = NS.UI or {}
 
 local Tracker = NS.UI.Tracker or {}
@@ -8,14 +8,16 @@ local U = NS.UI.TrackerUtil or {}
 NS.UI.TrackerUtil = U
 Tracker.Util = U
 
+local RepAlts = NS.Systems and NS.Systems.ReputationAlts
+
 local DecorIconCache = {}
 local DecorNameCache = {}
 local QuestTitleCache = {}
 local AchTitleCache = {}
 
-local C_HousingCatalog = _G.C_HousingCatalog
-local C_QuestLog = _G.C_QuestLog
-local GetAchievementInfo = _G.GetAchievementInfo
+local C_HousingCatalog = C_HousingCatalog
+local C_QuestLog = C_QuestLog
+local GetAchievementInfo = GetAchievementInfo
 
 local pcall = pcall
 local tonumber = tonumber
@@ -23,17 +25,60 @@ local tostring = tostring
 local type = type
 local concat = table.concat
 
-local function GetViewerHooks()
-  local ui = NS.UI
-  local view = ui and ui.Viewer
-  if not view then return end
-  return view.Data, view.Util, view.Requirements
+function U.GetTrackerDB()
+  local addon = NS.Addon
+  local prof = addon and addon.db and addon.db.profile
+  if type(prof) == "table" then
+    if type(prof.tracker) ~= "table" then
+      prof.tracker = {}
+    end
+    local t = prof.tracker
+    if type(t.pos) ~= "table" then
+      t.pos = {}
+    end
+    return t
+  end
+
+  local sv = HomeDecorDB
+  if type(sv) ~= "table" then
+    return nil
+  end
+
+  local t1 = sv.tracker
+  if type(t1) == "table" then
+    return t1
+  end
+
+  local s = sv.settings
+  if type(s) == "table" then
+    local t2 = s.tracker
+    if type(t2) == "table" then
+      return t2
+    end
+  end
+
+  local p = sv.profile
+  if type(p) == "table" then
+    local t3 = p.tracker
+    if type(t3) == "table" then
+      return t3
+    end
+  end
+
+  return nil
 end
 
 function U.Clamp(v, a, b)
   if v < a then return a end
   if v > b then return b end
   return v
+end
+
+local function GetViewerHooks()
+  local ui = NS.UI
+  local view = ui and ui.Viewer
+  if not view then return end
+  return view.Data, view.Util, view.Requirements
 end
 
 local function GetCatalogInfo(decorID)
@@ -85,7 +130,7 @@ function U.GetDecorName(decorID)
 end
 
 function U.IsCollectedSafe(it)
-  local _, Util = GetViewerHooks()
+  local Util = select(2, GetViewerHooks())
   if Util and Util.IsCollectedSafe then
     return Util.IsCollectedSafe(it)
   end
@@ -239,12 +284,21 @@ function U.GetAQAndRepLines(it)
   end
 
   local repLine
-  local _, _, Req = GetViewerHooks()
+  local Req = select(3, GetViewerHooks())
   if Req and Req.GetRepRequirement and Req.BuildRepDisplay then
     local repReq = Req.GetRepRequirement(it)
     local s = Req.BuildRepDisplay(repReq, false)
     if s and s ~= "" then
       repLine = s
+      if RepAlts and RepAlts.GetAnyOtherCharacter and RepAlts.CurrentCharacterHas and repReq and repReq.text then
+        local hasOnCurrent = RepAlts:CurrentCharacterHas(repReq.text)
+        if not hasOnCurrent then
+          local who = RepAlts:GetAnyOtherCharacter(repReq.text)
+          if who then
+            repLine = repLine .. " |cffc0ffc0(" .. tostring(who) .. ")|r"
+          end
+        end
+      end
     end
   end
 

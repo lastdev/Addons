@@ -36,7 +36,7 @@ local dv_optionsCategory = nil
 local decorThumbCache = {}
 local itemNameCache = {}
 local refreshTimer = nil
-local MAX_ITEMS_PER_PAGE = 36
+local MAX_ITEMS_PER_PAGE = 18
 local LibDBIcon = LibStub("LibDBIcon-1.0", true)
 local minimapButton 
 local vendorSessionCache = {}
@@ -51,7 +51,6 @@ dv.currentTab = dv.currentTab or "vendors"
 dv.currentTab = "vendors" 
 vendorFilteredItems = {}
 currentVendorPage = 1
-dv.searchQuery = ""
 dv.activeWowheadBox = nil
 dv.collapsedHeaders = dv.collapsedHeaders or {}
 dv.activeWidgets = dv.activeWidgets or {}
@@ -412,7 +411,9 @@ end
 -- 🔹 Main FRAME
 -------------------------------------------------
 local frame = CreateFrame("Frame", "DV_MainFrame", UIParent, "BackdropTemplate")
-frame:SetSize(860, 580)
+--frame:SetSize(860, 580)
+frame:SetSize(1200, 800)
+local PREVIEW_WIDTH = 420
 frame:SetPoint("CENTER")
 frame:SetFrameStrata("HIGH")
 frame:SetFrameLevel(100)
@@ -451,6 +452,8 @@ titleBg:SetPoint("TOPLEFT", 4, -4)
 titleBg:SetPoint("TOPRIGHT", -4, -4)
 titleBg:SetHeight(50)
 titleBg:SetGradient("VERTICAL", CreateColor(0.15, 0.10, 0.25, 0.9), CreateColor(0.05, 0.05, 0.15, 0.9))
+frame.titleBg = titleBg
+
 
 local title = frame:CreateFontString(nil, "OVERLAY")
 title:SetFont(STANDARD_TEXT_FONT, 20, "OUTLINE")
@@ -476,7 +479,7 @@ infoIcon:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highligh
 infoIcon:SetScript("OnEnter", function(self)
   GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT")
   GameTooltip:AddLine("Decor Vendor Notice", 1, 0.82, 0)
-  GameTooltip:AddLine("Current Working Version 1.67", 1, 1, 1, true)
+  GameTooltip:AddLine("Current Working Version 1.70", 1, 1, 1, true)
   GameTooltip:Show()
 end)
  infoIcon:SetScript("OnLeave", function(self)
@@ -519,7 +522,6 @@ resetCacheBtn:SetScript("OnClick", function()
     StaticPopup_Show("DECORVENDOR_RESET_CACHE")
 end)
 
--- Disable until Housing catalog is ready
 resetCacheBtn:SetEnabled(dv.catalogReady)
 StaticPopupDialogs["DECORVENDOR_RESET_CACHE"] = {
     text = "Reset Decor Vendor's collection cache?\n\nThis does NOT delete your actual progress.\n\nUse this only if vendor completion appears incorrect due to Housing API caching.",
@@ -533,6 +535,7 @@ StaticPopupDialogs["DECORVENDOR_RESET_CACHE"] = {
     hideOnEscape = true,
     preferredIndex = 3,
 }
+
 frame:HookScript("OnShow", function()
     if resetCacheBtn then
         resetCacheBtn:SetEnabled(dv.catalogReady)
@@ -553,30 +556,13 @@ function dv.ResetCollectionCache()
 
     BuildVendorUI()
 end
+
 function dv.ClearWidgets()
     for _, w in ipairs(dv.activeWidgets) do
         w:Hide()
     end
     wipe(dv.activeWidgets)
 end
-------------------------------------------------
--- Search Box
-------------------------------------------------
-local searchBox = CreateFrame("EditBox", "DV_SearchBox", frame, "SearchBoxTemplate")
-searchBox:SetSize(160, 24)
-searchBox:SetPoint("TOPRIGHT", -24, -2)
-searchBox:SetScale(1.2)
-searchBox:SetAutoFocus(false)
-searchBox.Instructions:SetText("Search Vendor Names...")
-searchBox:SetScript("OnTextChanged", function(self)
-    SearchBoxTemplate_OnTextChanged(self)
-
-    -- Save lowercase search text
-    dv.searchQuery = string.lower(self:GetText() or "")
-
-    -- Refresh display
-    BuildVendorUI()
-end)
 
 local function StandardizeLineScripts(line, onEnter, onClick, onLeave)
   line:SetScript("OnEnter", onEnter)
@@ -604,27 +590,37 @@ eventFrame:SetScript("OnEvent", function()
     if not targetName then return end
 
     local currentMapID = C_Map.GetBestMapForUnit("player")
-    if not currentMapID then return end
-
     vendorSettings.visited = vendorSettings.visited or {}
 
     for _, group in ipairs(dv.npcs) do
         for _, vendor in ipairs(group.vendors or {}) do
+
             local vendorName = NormalizeNPCName(vendor.title)
 
             if vendorName == targetName then
-                -- 🔑 NEW: map must match
-                if vendor.mapID ~= currentMapID then
-                    -- not the vendor we're talking to
-                elseif vendorSettings.visited[vendor.id] then
-                    return
-                else
-                    vendorSettings.visited[vendor.id] = true
 
-                    if vendorSettings.hideCompletedThings or vendorSettings.markFoundVendors then
-                        BuildVendorUI()
+                -- ✅ If vendor has mapID → require match
+                if vendor.mapID then
+                    if vendor.mapID ~= currentMapID then
+                        -- wrong map, skip
+                    else
+                        if not vendorSettings.visited[vendor.id] then
+                            vendorSettings.visited[vendor.id] = true
+                            if vendorSettings.hideCompletedThings or vendorSettings.markFoundVendors then
+                                BuildVendorUI()
+                            end
+                        end
+                        return
                     end
 
+                -- ✅ If vendor has NO mapID → allow match anywhere (Endeavors)
+                else
+                    if not vendorSettings.visited[vendor.id] then
+                        vendorSettings.visited[vendor.id] = true
+                        if vendorSettings.hideCompletedThings or vendorSettings.markFoundVendors then
+                            BuildVendorUI()
+                        end
+                    end
                     return
                 end
             end
@@ -635,14 +631,21 @@ end)
 -- Tab Bar Stuff
 ------------------------------------------------
 function dv.UpdatePreviewSize()
+
+    local panel = frame.previewPanel
+    if not panel then return end
+
     if dv.currentTab == "achievements" then
-        dv.previewFrame:SetSize(280, 280)
-        dv.previewFrame.model:SetPosition(0, 0, 0)
+        panel.modelContainer:SetHeight(280)
+
     elseif dv.currentTab == "quests" then
-        dv.previewFrame:SetSize(280, 280)
+        panel.modelContainer:SetHeight(280)
+
     else
-        dv.previewFrame:SetSize(340, 340) -- default vendor size
+        -- vendors / professions / default
+        panel.modelContainer:SetHeight(360)
     end
+
 end
 
 local rightTabBar = CreateFrame("Frame", "DV_RightTabBar", frame)
@@ -651,36 +654,137 @@ rightTabBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMRIGHT", 2, 0)
 rightTabBar:SetWidth(90)
 
 function UpdateSidebarForTab()
-    dv.sidebar:Show()
 
-    -- Always reset
+    -------------------------------------------------
+    -- 1️⃣ Hide contextual popups
+    -------------------------------------------------
+    if dv.reagentsPopup then
+        dv.reagentsPopup:Hide()
+    end
+
+    if dv.vendorPopup then
+        dv.vendorPopup:Hide()
+    end
+
+if dv.achievementWowheadWrapper then
+    dv.achievementWowheadWrapper:Hide()
+end
+
+if DV_AchievementTooltip then
+    DV_AchievementTooltip:Hide()
+end
+	
+	if dv.questWowheadWrapper then
+    dv.questWowheadWrapper:Hide()
+end
+
+    -------------------------------------------------
+    -- 2️⃣ Reset preview panel completely
+    -------------------------------------------------
+    if frame and frame.previewPanel then
+        local panel = frame.previewPanel
+
+        panel._isVendorPreview = false
+
+        if panel.model then
+            panel.model:ClearModel()
+            panel.model:SetDisplayInfo(0)
+            panel.model:SetPosition(0, 0, 0)
+            panel.model:SetFacing(0)
+            panel.model:Hide()
+        end
+
+        if panel.texture then
+            panel.texture:SetTexture(nil)
+            panel.texture:Hide()
+        end
+
+        if panel.title then
+            panel.title:SetText("Select an item")
+        end
+    end
+
+    -------------------------------------------------
+    -- 3️⃣ Frame width logic (Achievements wider)
+    -------------------------------------------------
+    if dv.currentTab == "achievements" then
+        frame:SetWidth(1320)
+        frame.previewPanel:SetWidth(540)
+    else
+        frame:SetWidth(1200)
+        frame.previewPanel:SetWidth(420)
+    end
+
+    dv.sidebar:Show()
     dv.ResetSidebarFilters()
     dv.sidebarFilters:Hide()
+
     if dv.sidebarImage then
         dv.sidebarImage:Hide()
     end
 
-    -- Utility tabs → show image, no filters
+    -------------------------------------------------
+    -- 4️⃣ Utility Tabs (Bottom Buttons)
+    -------------------------------------------------
     if dv.currentTab == "about"
     or dv.currentTab == "knownissues"
     or dv.currentTab == "tips"
     or dv.currentTab == "support" then
 
+        -- Hide preview panel completely
+        if frame.previewPanel then
+            frame.previewPanel:Hide()
+        end
+
+        -- Expand scroll frame full width
+        if scrollFrame then
+            scrollFrame:ClearAllPoints()
+            scrollFrame:SetPoint("TOPLEFT", dv.sidebar, "TOPRIGHT", 6, -6)
+            scrollFrame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -6, 6)
+        end
+
+        -- 🔥 Hide scrollbar fully
+        if scrollFrame and scrollFrame.ScrollBar then
+            scrollFrame.ScrollBar:Hide()
+        end
+
+        if scrollFrame then
+            scrollFrame:EnableMouseWheel(false)
+        end
+
+        -- Optional sidebar image for utility tabs
         local tex = dv.utilitySidebarImages and dv.utilitySidebarImages[dv.currentTab]
         if tex and dv.sidebarImage then
             dv.sidebarImage:SetTexture(tex)
             dv.sidebarImage:Show()
         end
 
-        -- Scroll width (no sidebar filters)
-        if scrollChild then
-            scrollChild:SetWidth(frame:GetWidth() - dv.sidebar:GetWidth() - 40)
-        end
-
         return
     end
 
-    -- Core tabs → build filters
+    -------------------------------------------------
+    -- 5️⃣ Normal Tabs
+    -------------------------------------------------
+    if frame.previewPanel then
+        frame.previewPanel:Show()
+    end
+
+    -- Restore scroll positioning next to preview panel
+    if scrollFrame then
+        scrollFrame:ClearAllPoints()
+        scrollFrame:SetPoint("TOPLEFT", dv.sidebar, "TOPRIGHT", 6, -6)
+        scrollFrame:SetPoint("BOTTOMRIGHT", frame.previewPanel, "BOTTOMLEFT", -6, 6)
+    end
+
+    -- 🔥 Restore scrollbar
+    if scrollFrame and scrollFrame.ScrollBar then
+        scrollFrame.ScrollBar:Show()
+    end
+
+    if scrollFrame then
+        scrollFrame:EnableMouseWheel(true)
+    end
+
     dv.sidebarFilters:Show()
 
     if dv.currentTab == "vendors" then
@@ -699,11 +803,14 @@ function UpdateSidebarForTab()
         dv.BuildBossDropFilters()
     end
 
-    -- Scroll width logic (with sidebar filters)
+    -------------------------------------------------
+    -- 6️⃣ Scroll width adjustment
+    -------------------------------------------------
     if scrollChild then
         scrollChild:SetWidth(frame:GetWidth() - dv.sidebar:GetWidth() - 40)
     end
 end
+
 
 local function CreateCoreVerticalTab(data, order)
     local tab = CreateFrame("Button", nil, rightTabBar, "BackdropTemplate")
@@ -821,14 +928,12 @@ function UpdateVerticalTabStyles()
         end
     end
 end
-
 UpdateVerticalTabStyles()
-
 -------------------------------------------------
 -- 🔹 Side Bar Stuff
 -------------------------------------------------
 frame.sidebar = CreateFrame("Frame", "DV_Sidebar", frame, "BackdropTemplate")
-frame.sidebar:SetWidth(170)
+frame.sidebar:SetWidth(220)
 frame.sidebar:SetPoint("TOPLEFT", frame, "TOPLEFT", 10, -72)
 frame.sidebar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 10, 10)
 frame.sidebar:SetBackdrop(nil)
@@ -840,7 +945,6 @@ sbg:SetGradient("VERTICAL",
     CreateColor(0.15, 0.10, 0.25, 0.95),
     CreateColor(0.05, 0.05, 0.15, 0.95)
 )
-
 dv.sidebar = frame.sidebar
 
 frame.sidebarFilters = CreateFrame("Frame", nil, frame.sidebar)
@@ -853,13 +957,29 @@ frame.sidebarImage:SetSize(140, 220)
 frame.sidebarImage:SetPoint("CENTER", dv.sidebar, "CENTER", 0, 0)
 frame.sidebarImage:SetAlpha(0.85)
 frame.sidebarImage:Hide()
-
 dv.sidebarImage = frame.sidebarImage
+-- ======================================
+-- Preview Panel (Always Visible)
+-- ======================================
+local previewPanel = CreateFrame("Frame", nil, frame, "BackdropTemplate")
+previewPanel:ClearAllPoints()
+previewPanel:SetPoint("TOPRIGHT", frame.titleBg, "BOTTOMRIGHT", -6, -6)
+previewPanel:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -6, 6)
+previewPanel:SetWidth(PREVIEW_WIDTH)
+previewPanel:SetBackdrop({
+    bgFile = "Interface\\Buttons\\WHITE8x8",
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    edgeSize = 12,
+    insets = { left = 3, right = 3, top = 3, bottom = 3 }
+})
+previewPanel:SetBackdropColor(0.02, 0.02, 0.02, 0.25)
+previewPanel:SetBackdropBorderColor(0.3, 0.3, 0.3, 1)
+frame.previewPanel = previewPanel
 
 local scrollFrame = CreateFrame("ScrollFrame", nil, frame, "ScrollFrameTemplate")
 scrollFrame:ClearAllPoints()
-scrollFrame:SetPoint("TOPLEFT", frame.sidebar, "TOPRIGHT", 6, 0)
-scrollFrame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -40, 14)
+scrollFrame:SetPoint("TOPLEFT", frame.sidebar, "TOPRIGHT", 6, -6)
+scrollFrame:SetPoint("BOTTOMRIGHT", frame.previewPanel, "BOTTOMLEFT", -6, 14)
 
 scrollFrame.ScrollBar:ClearAllPoints()
 scrollFrame.ScrollBar:SetPoint("TOPRIGHT", scrollFrame, "TOPRIGHT", -4, -8)
@@ -868,49 +988,76 @@ scrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", scrollFrame, "BOTTOMRIGHT", -4, 8)
 local scrollChild = CreateFrame("Frame", nil, scrollFrame)
 scrollChild:SetSize(520, 1)
 scrollFrame:SetScrollChild(scrollChild)
-------------------------------------------------
--- Preview Frame
-------------------------------------------------
-dv.previewFrame = CreateFrame("Frame", "DV_RewardFrame", UIParent, "BackdropTemplate")
-local preview = dv.previewFrame
-dv.UpdatePreviewSize()
-preview:SetSize(300, 330)
-preview:SetFrameStrata("TOOLTIP")
-preview:SetFrameLevel(200)
-preview:SetBackdrop({
-    bgFile   = "Interface\\Buttons\\WHITE8x8",
-    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-    edgeSize = 16,
-    insets   = { left = 4, right = 4, top = 4, bottom = 4 }
-})
-preview:SetBackdropColor(0.05, 0.05, 0.05, 0.98)
-preview:SetBackdropBorderColor(0.6, 0.6, 0.6, 1)
-preview:Hide()
+-- ======================================
+-- Preview Panel Title and Stuff
+-- ======================================
+previewPanel.title = previewPanel:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+previewPanel.title:SetPoint("TOP", 0, -12)
+previewPanel.title:SetText("Select a Vendor")
+previewPanel.title:SetTextColor(1, 0.82, 0)
 
-preview.title = preview:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-preview.title:SetFont(STANDARD_TEXT_FONT, 15)
-preview.title:SetPoint("TOP", 0, -12)
-preview.title:SetWidth(280)
-preview.title:SetTextColor(1, 0.82, 0)
+previewPanel.texture = previewPanel:CreateTexture(nil, "ARTWORK")
+previewPanel.texture:SetPoint("TOPLEFT", previewPanel.model, "TOPLEFT")
+previewPanel.texture:SetPoint("BOTTOMRIGHT", previewPanel.model, "BOTTOMRIGHT")
+previewPanel.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+previewPanel.texture:Hide()
 
-preview.texture = preview:CreateTexture(nil, "ARTWORK")
-preview.texture:SetSize(288, 288)
-preview.texture:SetPoint("BOTTOM", 0, 6)
-preview.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-preview.texture:Hide()
+function dv.ShowPreviewTexture(texture, title)
+
+    local panel = frame.previewPanel
+    if not panel then return end
+
+    panel.model:Hide()
+    panel.texture:SetTexture(texture)
+    panel.texture:Show()
+
+    panel.title:SetText(title or "Preview")
+end
+
+function dv.ShowPreviewModel(modelFileID, title)
+
+    local panel = frame.previewPanel
+    if not panel then return end
+
+    panel.texture:Hide()
+    panel.model:ClearModel()
+    panel.model:SetModel(modelFileID)
+    panel.model:SetFacing(0)
+    panel.model:Show()
+
+    panel.title:SetText(title or "Preview")
+end
+
+function dv.HidePreview()
+
+    local panel = frame.previewPanel
+    if not panel then return end
+
+    panel.model:Hide()
+    panel.texture:Hide()
+end
 ------------------------------------------------
 -- Preview Model
 ------------------------------------------------
-preview.model = CreateFrame("PlayerModel", nil, preview)
-local model = preview.model
-model:SetSize(288, 288)
-model:SetPoint("BOTTOM", 0, 6)
+frame.previewPanel.modelContainer = CreateFrame("Frame", nil, frame.previewPanel)
+local modelContainer = frame.previewPanel.modelContainer
+modelContainer:SetPoint("TOPLEFT", frame.previewPanel, "TOPLEFT", 0, -40)
+modelContainer:SetPoint("TOPRIGHT", frame.previewPanel, "TOPRIGHT", 0, -40)
+modelContainer:SetHeight(380)
+
+frame.previewPanel.model = CreateFrame("PlayerModel", nil, modelContainer)
+local model = frame.previewPanel.model
+model:ClearAllPoints()
+model:SetPoint("TOPLEFT", 10, -10)
+model:SetPoint("TOPRIGHT", -10, -10)
+model:SetPoint("BOTTOMLEFT", 10, 10)
+model:SetPoint("BOTTOMRIGHT", -10, 10)
 model:EnableMouse(false)
 model:SetScript("OnMouseDown", nil)
 model:SetScript("OnMouseUp", nil)
 model:SetScript("OnMouseWheel", nil)
 model:SetScript("OnModelLoaded", function(self)
-    if dv.currentTab == "vendors" or preview._isVendorPreview then
+    if dv.currentTab == "vendors" or frame.previewPanel._isVendorPreview then
         -- 🧙 Vendor / NPC portrait mode
         self:SetPosition(0, 0, 0)
         self:SetRotation(0)
@@ -938,75 +1085,37 @@ model:SetScript("OnModelLoaded", function(self)
         self:SetCameraPosition(0, 0, posData.camera_y)
         self:SetCameraDistance(posData.zoom)
     else
-        self:SetPosition(0, 0, 0)
-        self:SetCameraPosition(0, 0, 4)
-        self:SetCameraDistance(10)
+        model:SetPosition(0, 0, 0)
+model:SetCameraPosition(0, 0, 6)
+model:SetCameraDistance(20)
+
     end
 end)
-
 model:Hide()
 
 local rotation = 0
-preview:SetScript("OnUpdate", function(self, elapsed)
+frame.previewPanel:SetScript("OnUpdate", function(self, elapsed)
     if self:IsShown()
     and self.model:IsShown()
 	and dv.currentTab ~= "vendors"
-    and not preview._isVendorPreview then
+    and not frame.previewPanel._isVendorPreview then
         rotation = rotation + elapsed * 0.4
         self.model:SetFacing(rotation)
     end
 end)
-------------------------------------------------
--- Small Preview Frame
-------------------------------------------------
-dv.smallPreviewFrame = CreateFrame("Frame", "DV_SmallPreviewFrame", UIParent, "BackdropTemplate")
-local small = dv.smallPreviewFrame
-small:SetSize(220, 220)
-small:SetFrameStrata("TOOLTIP")
-small:SetBackdrop({
-    bgFile   = "Interface\\Buttons\\WHITE8x8",
-    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-    edgeSize = 14,
-    insets   = { left = 4, right = 4, top = 4, bottom = 4 }
-})
-small:SetBackdropColor(0, 0, 0, 0.95)
-small:SetBackdropBorderColor(0.6, 0.6, 0.6)
-small:Hide()
 
-dv.smallPreviewTexture = dv.smallPreviewFrame:CreateTexture(nil, "ARTWORK")
-dv.smallPreviewTexture:SetPoint("TOPLEFT", 4, -4)
-dv.smallPreviewTexture:SetPoint("BOTTOMRIGHT", -4, 4)
-dv.smallPreviewTexture:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+local divider = frame.previewPanel:CreateTexture(nil, "ARTWORK")
+divider:SetHeight(1)
+divider:SetPoint("TOPLEFT", frame.previewPanel.model, "BOTTOMLEFT", 0, -4)
+divider:SetPoint("TOPRIGHT", frame.previewPanel.model, "BOTTOMRIGHT", 0, -4)
+divider:SetColorTexture(0.3, 0.3, 0.3, 0.6)
 
-function dv.ShowPreviewTexture(texture, title)
-    preview.model:Hide()
-    preview.texture:SetTexture(texture)
-    preview.texture:Show()
-    preview.title:SetText(title or "Decor Preview")
-    preview:Show()
-end
-
-function dv.ShowPreviewModel(modelFileID, title)
-    preview.texture:Hide()
-    preview.model:SetModel(modelFileID)
-    preview.model:SetFacing(0)
-    preview.model:Show()
-    preview.title:SetText(title or "Decor Preview")
-    preview:Show()
-end
-
-function dv.HidePreview()
-    preview:Hide()
-    small:Hide()
-end
-
-function dv.AnchorPreviewBelowTooltip(preview, tooltip)
-    preview:ClearAllPoints()
-    preview:SetParent(tooltip)
-    preview:SetPoint("TOP", tooltip, "BOTTOM", 0, -4)  -- 4 px gap
-
-    preview:Show()
-end
+frame.previewPanel.itemContainer = CreateFrame("Frame", nil, frame.previewPanel)
+local itemContainer = frame.previewPanel.itemContainer
+itemContainer:SetPoint("TOPLEFT", modelContainer, "BOTTOMLEFT", 10, -10)
+itemContainer:SetPoint("TOPRIGHT", modelContainer, "BOTTOMRIGHT", -10, -10)
+itemContainer:SetPoint("BOTTOMLEFT", frame.previewPanel, "BOTTOMLEFT", 10, 10)
+itemContainer:SetPoint("BOTTOMRIGHT", frame.previewPanel, "BOTTOMRIGHT", -10, 10)
 
 function dv:GetWowheadLink(id, rewardType)
     if rewardType == "quest" then
@@ -1022,46 +1131,31 @@ if not tContains(UISpecialFrames, "DV_VendorPopup") then
     tinsert(UISpecialFrames, "DV_VendorPopup")
 end
 
-local vendorPopup = CreateFrame("Frame", "DV_VendorPopup", UIParent, "BackdropTemplate")
-vendorPopup:SetSize(350, 100)
-vendorPopup:SetPoint("CENTER")
-vendorPopup:SetFrameStrata("DIALOG")
+dv.vendorPopup = CreateFrame("Frame", "DV_VendorPopup", frame.previewPanel, "BackdropTemplate")
+local vendorPopup = dv.vendorPopup
+local modelWidth = frame.previewPanel.model:GetWidth()
+vendorPopup:SetWidth(modelWidth - 20)
+vendorPopup:ClearAllPoints()
+vendorPopup:SetPoint("TOP", frame.previewPanel.model, "BOTTOM", 0, -12)
+vendorPopup:SetFrameStrata(frame.previewPanel:GetFrameStrata())
+vendorPopup:SetFrameLevel(frame.previewPanel:GetFrameLevel() + 5)
+vendorPopup:SetClampedToScreen(true)
 vendorPopup:Hide()
-vendorPopup:SetBackdrop({
-    bgFile = "Interface\\Buttons\\WHITE8x8",
-    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-    edgeSize = 16,
-    insets = { left = 4, right = 4, top = 4, bottom = 4 }
-})
-vendorPopup:SetBackdropColor(0.1, 0.1, 0.1, 1)
-vendorPopup:SetBackdropBorderColor(0.64, 0.64, 0.64, 1)
-vendorPopup:EnableMouse(true)
-vendorPopup:SetMovable(true)
-vendorPopup:SetScript("OnMouseDown", function(self, button)
-    if button == "LeftButton" then
-        self:StartMoving()
-    end
-end)
-vendorPopup:SetScript("OnMouseUp", function(self, button)
-    if button == "LeftButton" then
-        self:StopMovingOrSizing()
-    end
-end)
-
-local popupGradient = vendorPopup:CreateTexture(nil, "BACKGROUND")
-popupGradient:SetPoint("TOPLEFT", 4, -4)
-popupGradient:SetPoint("BOTTOMRIGHT", -4, 4)
-popupGradient:SetColorTexture(1, 1, 1, 1)
-popupGradient:SetGradient("VERTICAL", CreateColor(0.12, 0.12, 0.12, 1), CreateColor(0.05, 0.05, 0.05, 1))
 
 local popupIconCache = {} 
 
-
-
 vendorPopupTitle = vendorPopup:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-vendorPopupTitle:SetPoint("TOP", 0, -12)
+vendorPopupTitle:ClearAllPoints()
+vendorPopupTitle:SetPoint("TOP", vendorPopup, "TOP", 0, -12)
 vendorPopupTitle:SetText("Vendor Goodies")
 vendorPopupTitle:SetTextColor(1, 0.82, 0)
+
+local titleSeparator = vendorPopup:CreateTexture(nil, "ARTWORK")
+titleSeparator:SetHeight(2)
+titleSeparator:SetColorTexture(0.4, 0.4, 0.4, 0.8)
+titleSeparator:ClearAllPoints()
+titleSeparator:SetPoint("TOPLEFT", vendorPopup, "TOPLEFT", 20, -36)
+titleSeparator:SetPoint("TOPRIGHT", vendorPopup, "TOPRIGHT", -20, -36)
 
 local vendorCheckmarkToggle = CreateFrame("CheckButton", nil, vendorPopup, "UICheckButtonTemplate")
 vendorCheckmarkToggle:SetSize(28, 28)
@@ -1090,28 +1184,32 @@ vendorPopupHiddenText:SetPoint("TOP", vendorPopupTitle, "BOTTOM", 0, -2)
 vendorPopupHiddenText:Hide()
 vendorPopup.hiddenText = vendorPopupHiddenText
 
-local vendorPrevBtn = CreateFrame("Button", nil, vendorPopup)
+vendorPopup.content = CreateFrame("Frame", nil, vendorPopup)
+vendorPopup.content:SetPoint("TOPLEFT", 12, -44) 
+vendorPopup.content:SetPoint("BOTTOMRIGHT", -12, 12)
+
+local vendorPrevBtn = CreateFrame("Button", nil, frame.previewPanel)
 vendorPrevBtn:SetSize(32, 32)
 vendorPrevBtn:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up")
 vendorPrevBtn:SetPushedTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Down")
 vendorPrevBtn:SetDisabledTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Disabled")
 vendorPrevBtn:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
-vendorPrevBtn:SetPoint("BOTTOMLEFT", 10, 8)
+vendorPrevBtn:SetPoint("BOTTOMLEFT", frame.previewPanel, "BOTTOMLEFT", 20, 20)
 vendorPrevBtn:Hide()
 
-local vendorNextBtn = CreateFrame("Button", nil, vendorPopup)
+local vendorNextBtn = CreateFrame("Button", nil, frame.previewPanel)
 vendorNextBtn:SetSize(32, 32)
 vendorNextBtn:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up")
 vendorNextBtn:SetPushedTexture("Interface\\Buttons\\UI-SpellbookIcon-NextPage-Down")
 vendorNextBtn:SetDisabledTexture("Interface\\Buttons\\UI-SpellbookIcon-NextPage-Disabled")
 vendorNextBtn:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
-vendorNextBtn:SetPoint("BOTTOMRIGHT", -10, 8)
+vendorNextBtn:SetPoint("BOTTOMRIGHT", frame.previewPanel, "BOTTOMRIGHT", -20, 20)
 vendorNextBtn:Hide()
 
 local vendorPageText = vendorPopup:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 vendorPageText:SetFont(STANDARD_TEXT_FONT, 12)
 vendorPageText:SetTextColor(0.9, 0.9, 0.9, 1)
-vendorPageText:SetPoint("CENTER", vendorPopup, "BOTTOM", 0, 24)
+vendorPageText:SetPoint("BOTTOM", frame.previewPanel, "BOTTOM", 0, 24)
 vendorPageText:Hide()
 
 local UpdateVendorPopup
@@ -1131,28 +1229,14 @@ vendorNextBtn:SetScript("OnClick", function()
 	end
 end)
 
-local titleSeparator = vendorPopup:CreateTexture(nil, "ARTWORK")
-titleSeparator:SetHeight(2)
-titleSeparator:SetColorTexture(0.4, 0.4, 0.4, 0.8)
-titleSeparator:SetPoint("TOPLEFT", 10, -36)
-titleSeparator:SetPoint("TOPRIGHT", -10, -36)
-
 local recipeTitle = vendorPopup:CreateFontString(nil, "OVERLAY")
 recipeTitle:SetFont(STANDARD_TEXT_FONT, 14); recipeTitle:SetText("Recipe:"); recipeTitle:Hide()
 
-vendorPopup.closeBtn = CreateFrame("Button", nil, vendorPopup, "UIPanelCloseButton")
-vendorPopup.closeBtn:SetPoint("TOPRIGHT", 0, 0)
-vendorPopup.closeBtn:SetSize(30, 30)
-vendorPopup.closeBtn:SetScript("OnClick", function() vendorPopup:Hide() end)
-
-vendorPopup.content = CreateFrame("Frame", nil, vendorPopup)
-vendorPopup.content:SetPoint("TOPLEFT", 12, -44) 
-vendorPopup.content:SetPoint("BOTTOMRIGHT", -12, 12)
 
 local function GetPopupIconFrame(index)
 	local container = popupIconCache[index]
 	if not container then
-		container = CreateFrame("Frame", nil, vendorPopup)
+		container = CreateFrame("Frame", nil, vendorPopup.content)
 		container:SetSize(50, 50) 
 		
 		local borderFrame = CreateFrame("Frame", nil, container, "BackdropTemplate")
@@ -1312,20 +1396,44 @@ end
 	container:Show()
 end
 
-local function LayoutPopupItems(items, typeStr, startIndex, startX, startY, verticalStep)
-	local tileSize, margin, columns = 50, 12, 6
-	local i = startIndex
-	for _, item in ipairs(items) do
-		local container = GetPopupIconFrame(i + 1)
-		local col = i % columns
-		local row = math.floor(i / columns)
-		container:SetPoint("TOPLEFT", vendorPopup, "TOPLEFT", startX + (col * (tileSize + margin)), startY - (row * verticalStep))
-		SetupPopupButton(container, typeStr == "vendor" and {id = item} or item, typeStr)
-		i = i + 1
-	end
-	local totalRows = math.floor((i - startIndex - 1) / columns) + 1
-	local totalHeight = math.abs(startY) + (totalRows * verticalStep)
-	return i, totalHeight
+local function LayoutPopupItems(items, typeStr, startY, verticalStep)
+    local tileSize = 50
+    local margin   = 12
+    local columns  = 6
+
+    local totalItems = #items
+    local rows = math.ceil(totalItems / columns)
+
+    for i, item in ipairs(items) do
+        local container = GetPopupIconFrame(i)
+        container:ClearAllPoints()
+
+        local col = (i - 1) % columns
+        local row = math.floor((i - 1) / columns)
+
+        -- Calculate total width of one row
+        local itemsInThisRow = math.min(columns, totalItems - (row * columns))
+        local rowWidth = (itemsInThisRow * tileSize) + ((itemsInThisRow - 1) * margin)
+
+        local xOffset = (col * (tileSize + margin)) - (rowWidth / 2) + (tileSize / 2)
+
+        container:SetPoint(
+            "TOP",
+            vendorPopup.content,
+            "TOP",
+            xOffset,
+            startY - (row * verticalStep)
+        )
+
+        SetupPopupButton(
+            container,
+            typeStr == "vendor" and { id = item } or item,
+            typeStr
+        )
+    end
+
+    local totalHeight = math.abs(startY) + (rows * verticalStep)
+    return totalHeight
 end
 
 UpdateVendorPopup = function()
@@ -1363,14 +1471,14 @@ UpdateVendorPopup = function()
 
 	local tileSize, margin = 50, 12
 	local columns = 6
-	local _, height = LayoutPopupItems(itemsToShow, "vendor", 0, 25, topOffset, tileSize + margin)
+	local height = LayoutPopupItems(itemsToShow, "vendor", topOffset, tileSize + margin)
 	local totalWidth = (25 * 2) + (columns * (tileSize + margin)) - margin
 	
 	if totalPages > 1 then
 		height = math.abs(topOffset) + (6 * (tileSize + margin)) + 40
 	end
 	
-	vendorPopup:SetSize(totalWidth, height + 4)
+dv.vendorPopup:SetHeight(height + 4)
 end
 
 function dv.ShowVendorPopup(vendorID, vendorName)
@@ -1387,21 +1495,6 @@ function dv.ShowVendorPopup(vendorID, vendorName)
 for _, itemID in ipairs(allItems) do
     table.insert(addedItems, itemID)
 end
-
---[[
-for _, itemID in ipairs(allItems) do
-    if dv.ItemPassesRequirements(itemID) then
-        if vendorSettings.hideCollectedItems and dv.IsDecorOwned(itemID) then
-            hiddenCount = hiddenCount + 1
-        else
-            table.insert(addedItems, itemID)
-        end
-    else
-        hiddenCount = hiddenCount + 1
-    end
-end]]
-
-
 
     vendorPopupTitle:SetText((currentPopupNpcName or "Vendor") .. " has these items:")
 	vendorCheckmarkToggle:Show()
@@ -1424,13 +1517,13 @@ end
     vendorFilteredItems = addedItems
     currentVendorPage = 1
     UpdateVendorPopup()
-    vendorPopup:Show()
+dv.vendorPopup:Show()
 	if C_HousingCatalog and C_HousingCatalog.RequestHousingMarketInfoRefresh then
     C_HousingCatalog.RequestHousingMarketInfoRefresh()
 end
 
 C_Timer.After(0.1, function()
-    if vendorPopup:IsShown() then
+    if dv.vendorPopup:IsShown() then
         UpdateVendorPopup()
     end
 end)
@@ -1440,28 +1533,19 @@ end
 if not tContains(UISpecialFrames, "DV_ReagentsPopup") then
     tinsert(UISpecialFrames, "DV_ReagentsPopup")
 end
-dv.reagentsPopup = dv.reagentsPopup or CreateFrame("Frame", "DV_ReagentsPopup", UIParent, "BackdropTemplate")
+-- ======================================
+-- Reagents Popup (Docked Inside Preview)
+-- ======================================
+dv.reagentsPopup = CreateFrame("Frame", "DV_ReagentsPopup", frame.previewPanel, "BackdropTemplate")
 local rpopup = dv.reagentsPopup
-rpopup:SetSize(320, 140)
-rpopup:SetPoint("CENTER")
-rpopup:SetFrameStrata("DIALOG")
+local modelWidth = frame.previewPanel.model:GetWidth()
+rpopup:SetWidth(modelWidth - 20)
+rpopup:ClearAllPoints()
+rpopup:SetPoint("TOP", frame.previewPanel.model, "BOTTOM", 0, -12)
+rpopup:SetFrameStrata(frame.previewPanel:GetFrameStrata())
+rpopup:SetFrameLevel(frame.previewPanel:GetFrameLevel() + 5)
 rpopup:SetClampedToScreen(true)
 rpopup:Hide()
-
-rpopup:SetBackdrop({
-    bgFile = "Interface\\Buttons\\WHITE8x8",
-    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-    edgeSize = 16,
-    insets = { left = 4, right = 4, top = 4, bottom = 4 }
-})
-rpopup:SetBackdropColor(0.1, 0.1, 0.1, 1)
-rpopup:SetBackdropBorderColor(0.64, 0.64, 0.64, 1)
-
-local rgrad = rpopup:CreateTexture(nil, "BACKGROUND")
-rgrad:SetPoint("TOPLEFT", 4, -4)
-rgrad:SetPoint("BOTTOMRIGHT", -4, 4)
-rgrad:SetColorTexture(1, 1, 1, 1)
-rgrad:SetGradient("VERTICAL", CreateColor(0.12, 0.12, 0.12, 1), CreateColor(0.05, 0.05, 0.05, 1))
 
 -- Title
 rpopup.title = rpopup:CreateFontString(nil, "OVERLAY", "GameFontHighlightMedium")
@@ -1470,74 +1554,6 @@ rpopup.title:SetPoint("TOPRIGHT", -36, -14) -- leave room for close button
 rpopup.title:SetJustifyH("CENTER")
 rpopup.title:SetTextColor(1, 0.82, 0)
 rpopup.title:SetText("Reagents Needed")
-
-local rsep = rpopup:CreateTexture(nil, "ARTWORK")
-rsep:SetHeight(2)
-rsep:SetColorTexture(0.4, 0.4, 0.4, 0.8)
-rsep:SetPoint("TOPLEFT", 10, -44)
-rsep:SetPoint("TOPRIGHT", -10, -44)
-
-rpopup.content = CreateFrame("Frame", nil, rpopup)
-rpopup.content:SetPoint("TOPLEFT", 12, -52)
-rpopup.content:SetPoint("BOTTOMRIGHT", -12, 12)
-
-rpopup.recipeFrame = CreateFrame("Button", nil, rpopup.content)
-rpopup.recipeFrame:SetSize(300, 40)
-rpopup.recipeFrame:SetPoint("TOPLEFT", rpopup.content, "TOPLEFT", 0, 0)
-rpopup.recipeFrame:Hide()
-
-rpopup.recipeIcon = rpopup.recipeFrame:CreateTexture(nil, "ARTWORK")
-rpopup.recipeIcon:SetSize(40, 40)
-rpopup.recipeIcon:SetPoint("LEFT", 0, 0)
-rpopup.recipeIcon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-
-rpopup.recipeText = rpopup.recipeFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-rpopup.recipeText:SetPoint("LEFT", rpopup.recipeIcon, "RIGHT", 8, 0)
-rpopup.recipeText:SetJustifyH("LEFT")
-rpopup.recipeText:SetWidth(200)
-rpopup.recipeText:SetWordWrap(false)
-rpopup.recipeText:SetMaxLines(1)
-rpopup.recipeFrame:SetScript("OnEnter", function(self)
-    if not self.recipeID then return end
-
-    GameTooltip:SetOwner(self, "ANCHOR_NONE")
-    GameTooltip:ClearAllPoints()
-
-    -- Anchor tooltip BELOW the reagents popup
-    GameTooltip:SetPoint(
-        "TOP",
-        rpopup,
-        "BOTTOM",
-        0,
-        -6
-    )
-
-    GameTooltip:SetHyperlink("item:" .. self.recipeID)
-    GameTooltip:Show()
-end)
-
-rpopup.recipeFrame:SetScript("OnLeave", function()
-    GameTooltip:Hide()
-end)
-
-rpopup.recipeFrame:SetScript("OnClick", function(self)
-    if dv.ShowWowheadLinkPopup then
-        dv.ShowWowheadLinkPopup(self.recipeID, "item")
-    end
-end)
-
-rpopup.closeBtn = CreateFrame("Button", nil, rpopup, "UIPanelCloseButton")
-rpopup.closeBtn:SetPoint("TOPRIGHT", 0, 0)
-rpopup.closeBtn:SetSize(30, 30)
-rpopup.closeBtn:SetScript("OnClick", function() rpopup:Hide() end)
-rpopup:EnableMouse(true)
-rpopup:SetMovable(true)
-rpopup:SetScript("OnMouseDown", function(self, button)
-    if button == "LeftButton" then self:StartMoving() end
-end)
-rpopup:SetScript("OnMouseUp", function(self, button)
-    if button == "LeftButton" then self:StopMovingOrSizing() end
-end)
 
 dv.reagentIconCache = dv.reagentIconCache or {}
 
@@ -1601,35 +1617,51 @@ local function GetReagentIconFrame(i)
 end
 
 function dv.ShowReagentsPopup(itemData)
+
+    if not dv.reagentsPopup then return end
+    local rpopup = dv.reagentsPopup
+
     if not itemData or not itemData.reagents or #itemData.reagents == 0 then
+        rpopup:Hide()
         return
     end
 
-    -- Hide old reagent icons
-    for _, f in pairs(dv.reagentIconCache) do
+    -- Reset previous state
+    for _, f in pairs(dv.reagentIconCache or {}) do
         f:Hide()
     end
 
+    rpopup.recipeFrame:Hide()
+    rpopup.recipeFrame.recipeID = nil
+
+    -------------------------------------------------
+    -- RECIPE HEADER
+    -------------------------------------------------
     local yOffset = 0
 
-    -------------------------------------------------
-    -- RECIPE HEADER (optional)
-    -------------------------------------------------
-    if itemData.recipe then
-        rpopup.recipeFrame.recipeID = itemData.recipe
-        rpopup.recipeIcon:SetTexture(GetItemIcon(itemData.recipe) or "Interface\\Icons\\INV_Scroll_03")
+    if itemData.recipe and itemData.recipe > 0 then
 
-        local recipeName = GetItemInfo(itemData.recipe) or "Recipe"
-        rpopup.recipeText:SetText(recipeName)
+        rpopup.recipeFrame.recipeID = itemData.recipe
+
+        rpopup.recipeIcon:SetTexture(
+            GetItemIcon(itemData.recipe) or
+            "Interface\\Icons\\INV_Scroll_03"
+        )
+
+        local itemObj = Item:CreateFromItemID(itemData.recipe)
+        itemObj:ContinueOnItemLoad(function()
+            if rpopup.recipeText then
+                rpopup.recipeText:SetText(itemObj:GetItemName() or "Recipe")
+            end
+        end)
 
         rpopup.recipeFrame:Show()
-        yOffset = -44
-    else
-        rpopup.recipeFrame:Hide()
+
+        yOffset = -48  -- push reagents down under recipe
     end
 
     -------------------------------------------------
-    -- REAGENT GRID (FIXED LAYOUT)
+    -- REAGENT GRID
     -------------------------------------------------
     local tileSize   = 50
     local spacing    = 12
@@ -1651,44 +1683,101 @@ function dv.ShowReagentsPopup(itemData)
         )
 
         f.btn.itemID = reagent.id
-        f.icon:SetTexture(GetItemIcon(reagent.id) or "Interface\\Icons\\INV_Misc_QuestionMark")
+        f.icon:SetTexture(
+            GetItemIcon(reagent.id) or
+            "Interface\\Icons\\INV_Misc_QuestionMark"
+        )
         f.countText:SetText(reagent.amount or 1)
         f:Show()
     end
 
     -------------------------------------------------
-    -- POPUP SIZE (CONSISTENT)
+    -- RESIZE POPUP
     -------------------------------------------------
     local rows = math.ceil(#itemData.reagents / iconsPerRow)
 
-    local popupWidth  =
-        (iconsPerRow * (tileSize + spacing)) - spacing + 24
-
     local popupHeight =
         (rows * (tileSize + spacing))
-        + (itemData.recipe and 120 or 80)
+        + (itemData.recipe and 110 or 60)
 
-    rpopup:SetWidth(popupWidth)
     rpopup:SetHeight(popupHeight)
     rpopup:SetScale(vendorSettings and vendorSettings.scale or 1.0)
     rpopup:Show()
 end
 
+-- Content region
+rpopup.content = CreateFrame("Frame", nil, rpopup)
+rpopup.content:SetPoint("TOPLEFT", 12, -40)
+rpopup.content:SetPoint("BOTTOMRIGHT", -12, 12)
+
+rpopup.recipeFrame = CreateFrame("Button", nil, rpopup.content)
+rpopup.recipeFrame:SetSize(300, 40)
+rpopup.recipeFrame:SetPoint("TOPLEFT", rpopup.content, "TOPLEFT", 0, 0)
+rpopup.recipeFrame:Hide()
+
+rpopup.recipeIcon = rpopup.recipeFrame:CreateTexture(nil, "ARTWORK")
+rpopup.recipeIcon:SetSize(40, 40)
+rpopup.recipeIcon:SetPoint("LEFT", 0, 0)
+rpopup.recipeIcon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+
+rpopup.recipeText = rpopup.recipeFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+rpopup.recipeText:SetPoint("LEFT", rpopup.recipeIcon, "RIGHT", 8, 0)
+rpopup.recipeText:SetJustifyH("LEFT")
+rpopup.recipeText:SetWidth(200)
+rpopup.recipeText:SetWordWrap(false)
+rpopup.recipeText:SetMaxLines(1)
+rpopup.recipeFrame:SetScript("OnEnter", function(self)
+    if not self.recipeID then return end
+
+    GameTooltip:SetOwner(self, "ANCHOR_NONE")
+    GameTooltip:ClearAllPoints()
+
+    -- Anchor tooltip BELOW the reagents popup
+    GameTooltip:SetPoint(
+        "TOP",
+        rpopup,
+        "BOTTOM",
+        0,
+        -6
+    )
+
+    GameTooltip:SetHyperlink("item:" .. self.recipeID)
+    GameTooltip:Show()
+end)
+
+rpopup.recipeFrame:SetScript("OnLeave", function()
+    GameTooltip:Hide()
+end)
+
+rpopup.recipeFrame:SetScript("OnClick", function(self)
+    if dv.ShowWowheadLinkPopup then
+        dv.ShowWowheadLinkPopup(self.recipeID, "item")
+    end
+end)
+
 local function UpdateGoodiePreview(goodie)
-    if not goodie or not dv.previewFrame then return end
 
-    local preview = dv.previewFrame
-    local model   = preview.model
-    local texture = preview.texture
+    if not goodie then return end
 
+    local panel = frame.previewPanel
+    if not panel or not panel.model then return end
+
+    local model   = panel.model
+    local texture = panel.texture
+
+    panel._isVendorPreview = false
+
+    -- Title
     if type(goodie.title) == "string" then
-        preview.title:SetText(goodie.title)
+        panel.title:SetText(goodie.title)
     else
-        preview.title:SetText("Preview")
+        panel.title:SetText("Preview")
     end
 
+    -- Vendor display ID (NPC portrait mode)
     if goodie.vendorDisplayID then
-        preview._isVendorPreview = true
+        panel._isVendorPreview = true
+
         texture:Hide()
         model:ClearModel()
         model:SetDisplayInfo(goodie.vendorDisplayID)
@@ -1696,8 +1785,7 @@ local function UpdateGoodiePreview(goodie)
         return
     end
 
-    preview._isVendorPreview = false
-
+    -- 3D Model preview
     if goodie.model3D then
         texture:Hide()
         model:ClearModel()
@@ -1716,9 +1804,11 @@ local function UpdateGoodiePreview(goodie)
             model:SetCameraPosition(0, 0, 4)
             model:SetCameraDistance(10)
         end
+
         return
     end
 
+    -- Texture preview
     if goodie.texture then
         model:Hide()
         texture:SetTexture(goodie.texture)
@@ -1726,10 +1816,10 @@ local function UpdateGoodiePreview(goodie)
         return
     end
 
+    -- Nothing
     model:Hide()
-    texture:Hide()
+    if texture then texture:Hide() end
 end
-
 -------------------------------------------------
 -- 🔹 The headers and Lines
 -------------------------------------------------
@@ -1752,10 +1842,10 @@ if dv.filtersJustChanged then
     end
 end
 
-
-    local header = CreateFrame("Button", nil, parent)
-    header:SetPoint("TOPLEFT", 0, y)
-    header:SetSize(600, 32)
+local header = CreateFrame("Button", nil, parent)
+header:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, y)
+header:SetPoint("RIGHT", parent, "RIGHT", -6, 0)
+header:SetHeight(32)
 
     -- Background
     local bg = header:CreateTexture(nil, "BACKGROUND")
@@ -1809,29 +1899,17 @@ end
 end
 
 function dv.CreateVendorLine(parent, vendor, y)
-    local line = CreateFrame("Button", nil, parent)
-    line:SetPoint("TOPLEFT", 10, y)
-    line:SetSize(590, 22)
+local line = CreateFrame("Button", nil, parent)
+line:SetPoint("TOPLEFT", parent, "TOPLEFT", 10, y)
+line:SetPoint("RIGHT", parent, "RIGHT", -6, 0)
+line:SetHeight(22)
+line:RegisterForClicks("AnyUp")
 
     -- Vendor name
     local text = line:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     text:SetPoint("LEFT", 0, 0)
     text:SetFont(STANDARD_TEXT_FONT, 12)
     text:SetText(vendor.title or "Unknown Vendor")
---[[
--- Status text next to name
-local status = line:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-status:SetPoint("LEFT", text, "RIGHT", 6, 0)
-local isComplete, missingCount = GetVendorStatus(vendor.id)
-
--- SOURCE OF TRUTH (from BuildVendorList)
-local isComplete   = vendor.__isComplete
-local missingCount = vendor.__missing
-
-
-if not isComplete and missingCount >0 then
-    status:SetText("|cffffcc00(" .. missingCount .. " missing)|r")
-end]]
 
     local isFound =
         vendorSettings.visited
@@ -1861,70 +1939,68 @@ end]]
         zoneText:SetTextColor(1, 0.82, 0)
     end
 
-    local function UpdatePreview(vendor)
-        if not vendor or not vendor.model3D then
-            dv.previewFrame.model:Hide()
-            return
-        end
+local function UpdatePreview(vendor)
+    if not vendor then return end
 
-        local preview = dv.previewFrame
-        local model = preview.model
+    local panel = frame.previewPanel
+    local model = panel.model
 
-        preview.title:SetText(vendor.title or "Preview")
+    panel._isVendorPreview = true
+
+    -- Title
+    if panel.title then
+        panel.title:SetText(vendor.title or "Vendor")
+    end
+
+    -- Model
+    if vendor.model3D then
         model:ClearModel()
         model:SetDisplayInfo(vendor.model3D)
         model:Show()
+    else
+        model:Hide()
+    end
+end
 
-        if preview.texture then
-            preview.texture:Hide()
+line:SetScript("OnClick", function(_, button)
+    if button == "LeftButton" then
+        UpdatePreview(vendor)  -- model
+        dv.ShowVendorPopup(vendor.id, vendor.title)  -- grid
+    end
+end)
+
+line:SetScript("OnEnter", function()
+    text:SetTextColor(1, 0.82, 0)
+
+    GameTooltip:SetOwner(line, "ANCHOR_RIGHT")
+    GameTooltip:AddLine(vendor.title, 1, 1, 1)
+
+    if vendor.zone then
+        GameTooltip:AddLine("Zone: " .. vendor.zone, 0.8, 0.8, 0.8)
+    end
+
+    if vendor.mapID then
+        local mapInfo = C_Map.GetMapInfo(vendor.mapID)
+        if mapInfo then
+            GameTooltip:AddLine(mapInfo.name, 1, 0.82, 0)
         end
     end
 
-    line:SetScript("OnClick", function(_, button)
-        if button == "LeftButton" then
-            dv.ShowVendorPopup(vendor.id, vendor.title)
-        end
-    end)
+    GameTooltip:AddLine("\n|cff00ff00<Left Click>|r Open Vendor Items", 1, 1, 1)
+    GameTooltip:Show()
+end)
 
-    line:SetScript("OnEnter", function()
-        text:SetTextColor(1, 0.82, 0)
+line:SetScript("OnLeave", function()
+    GameTooltip:Hide()
 
-        GameTooltip:SetOwner(line, "ANCHOR_RIGHT")
-        GameTooltip:AddLine(vendor.title, 1, 1, 1)
-
-        if vendor.zone then
-            GameTooltip:AddLine("Zone: " .. vendor.zone, 0.8, 0.8, 0.8)
-        end
-
-        if vendor.mapID then
-            local mapInfo = C_Map.GetMapInfo(vendor.mapID)
-            if mapInfo then
-                GameTooltip:AddLine(mapInfo.name, 1, 0.82, 0)
-            end
-        end
-
-        GameTooltip:AddLine("\n|cff00ff00<Left Click>|r Open Vendor Items", 1, 1, 1)
-        GameTooltip:Show()
-
-        if vendor.model3D and not InCombatLockdown() then
-            dv.AnchorPreviewBelowTooltip(dv.previewFrame, GameTooltip)
-            UpdatePreview(vendor)
-        end
-    end)
-
-    line:SetScript("OnLeave", function()
-        GameTooltip:Hide()
-        dv.previewFrame.model:ClearModel()
-        dv.previewFrame:Hide()
-
-        if isFound and vendorSettings.markFoundVendors then
-            text:SetTextColor(0.6, 0.6, 0.6)
-            text:SetAlpha(0.7)
-        else
-            SetFactionColor()
-            text:SetAlpha(1)
-        end
-    end)
+    if isFound and vendorSettings.markFoundVendors then
+        text:SetTextColor(0.6, 0.6, 0.6)
+        text:SetAlpha(0.7)
+    else
+        SetFactionColor()
+        text:SetAlpha(1)
+    end
+end)
 
 if vendor.mapID and vendor.x and vendor.y then
         local waypointBtn = CreateFrame("Button", nil, line, "UIPanelButtonTemplate")
@@ -1980,12 +2056,10 @@ if dv.filtersJustChanged then
     end
 end
 
-
-    local header = CreateFrame("Button", nil, parent)
-    local pad = TAB_LEFT_PADDING[dv.currentTab] or 10
-	header:SetPoint("TOPLEFT", pad, y)
-   --header:SetPoint("TOPLEFT", 0, y)    
-	header:SetSize(600, 32)
+	local header = CreateFrame("Button", nil, parent)
+header:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, y)
+header:SetPoint("RIGHT", parent, "RIGHT", -6, 0)
+header:SetHeight(32)
 
     -- Background
     local bg = header:CreateTexture(nil, "BACKGROUND")
@@ -2041,24 +2115,21 @@ if profItem.spell then
     isCompleted = IsSpellKnown(profItem.spell) or IsPlayerSpell(profItem.spell)
 end
 
-   local line = CreateFrame("Button", nil, parent)
-	local pad = TAB_LEFT_PADDING[dv.currentTab] or 10
-	line:SetPoint("TOPLEFT", pad, y)
-	line:RegisterForClicks("AnyUp") -- 🔥 REQUIRED
-	--line:SetPoint("TOPLEFT", 10, y)
-	line:SetSize(560, 22)
+	local line = CreateFrame("Button", nil, parent)
+line:SetPoint("TOPLEFT", parent, "TOPLEFT", 10, y)
+line:SetPoint("RIGHT", parent, "RIGHT", -6, 0)
+line:SetHeight(22)
+line:RegisterForClicks("AnyUp")
 
-    -------------------------------------------------
-    -- ITEM NAME (FAST / ASYNC)
-    -------------------------------------------------
     local nameText = line:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	nameText:SetFont(STANDARD_TEXT_FONT, 13, "OUTLINE")
     nameText:SetPoint("TOPLEFT", 0, -2)
     nameText:SetJustifyH("LEFT")
     nameText:SetText("• Loading item...")
 	if isCompleted then
     nameText:SetTextColor(0.5, 1, 0.5)
 else
-    nameText:SetTextColor(1, 1, 1)
+    nameText:SetTextColor(0.95, 0.95, 0.95)
 end
 
     -- Async-safe item name
@@ -2069,102 +2140,78 @@ end
         end
     end)
 
-    -------------------------------------------------
-    -- SKILL LINE (THIS IS THE PART YOU ASKED FOR)
-    -------------------------------------------------
     local skillText = line:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+	skillText:SetFont(STANDARD_TEXT_FONT, 13, "OUTLINE")
 	skillText:SetPoint("RIGHT", line, "RIGHT", -12, 0)
 	skillText:SetJustifyH("RIGHT")
 
 	local skillString = (profItem.skill or "Skill") .. " (" .. (profItem.skillNeeded or 0) .. ")"
 	skillText:SetText(skillString)
-    skillText:SetTextColor(1, 0.82, 0)
+    skillText:SetTextColor(0.95, 0.95, 0.95)
 
-	local function UpdatePreview(profItem)
+local function UpdatePreview(profItem)
+
+    local panel = frame.previewPanel
+    if not panel or not panel.model then return end
+
+    local model = panel.model
     local modelID = profItem and profItem.model3D
-    local model = dv.previewFrame.model
-   -- Set the title if provided
-	if profItem and itemObj then
-    itemObj:ContinueOnItemLoad(function()
-        if dv.previewFrame and dv.previewFrame.title then
-            dv.previewFrame.title:SetText(itemObj:GetItemName() or "Preview")
-        end
-    end)
-	else
-    dv.previewFrame.title:SetText("Preview")
-	end
 
+    -- Reset vendor flag
+    panel._isVendorPreview = false
+
+    -- Set Title
+    if profItem and profItem.id then
+        local itemObj = Item:CreateFromItemID(profItem.id)
+        itemObj:ContinueOnItemLoad(function()
+            if panel.title then
+                panel.title:SetText(itemObj:GetItemName() or "Preview")
+            end
+        end)
+    else
+        if panel.title then
+            panel.title:SetText("Preview")
+        end
+    end
+
+    -- Set Model
     if modelID then
         model:ClearModel()
         model:SetModel(modelID)
         model:Show()
-        if dv.previewFrame.texture then
-            dv.previewFrame.texture:Hide()
+
+        if panel.texture then
+            panel.texture:Hide()
         end
     else
         model:Hide()
     end
 end
 
+line:HookScript("OnClick", function(_, button)
 
-    -------------------------------------------------
-    -- HOVER: TOOLTIP + PREVIEW
-    -------------------------------------------------
+    if button == "LeftButton" then
+        UpdatePreview(profItem)
+        dv.ShowReagentsPopup(profItem)
+    end
+
+end)
+
 line:SetScript("OnEnter", function(self)
+
     SetCursor("INSPECT_CURSOR")
 
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:SetItemByID(profItem.id)
     GameTooltip:AddLine("\n|cff00ff00<Left Click>|r View Decor", 1, 1, 1)
-    GameTooltip:AddLine("|cff00ff00<Right Click>|r View Reagents", 1, 1, 1)
+    GameTooltip:AddLine("|cff00ff00<Left Click>|r View Reagents", 1, 1, 1)
     GameTooltip:Show()
-local decorData = dv.decorItem[profItem.id]
-			if decorData and not decorData.thumbnailID then
-				local info = C_HousingCatalog.GetCatalogEntryInfoByRecordID(1, decorData.decorID, true)
-				decorData.thumbnailID = info and info.iconTexture
-			end
-			if decorData and decorData.thumbnailID then
-				dv.smallPreviewTexture:SetTexture(decorData.thumbnailID)
-				dv.AnchorPreviewBelowTooltip(dv.smallPreviewFrame, GameTooltip)
-			end
-       -- Position preview below tooltip
-    --dv.AnchorPreviewBelowTooltip(dv.previewFrame, GameTooltip)
-
-    -- Update the model/texture
-    UpdatePreview(profItem) 
-    end)
+end)
 
 line:SetScript("OnLeave", function()
     ResetCursor()
     GameTooltip:Hide()
-
-    if dv.smallPreviewFrame then
-        dv.smallPreviewFrame:Hide()
-    end
-
-    if dv.previewFrame then
-        dv.previewFrame:Hide()
-    end
 end)
-
-
-    -------------------------------------------------
-    -- CLICK BEHAVIOR
-    -------------------------------------------------
-    line:SetScript("OnClick", function(_, button)
-
-    if IsModifiedClick("CHATLINK") then
-        local _, link = GetItemInfo(profItem.id)
-        if link then ChatEdit_InsertLink(link) end
-
-    elseif button == "LeftButton" then
-        DressUpItemLink("item:" .. profItem.id)
-
-    elseif button == "RightButton" then
-            dv.ShowReagentsPopup(profItem)   
-    end
-end)
-
 
     table.insert(dv.activeWidgets, line)
     return y - 22
@@ -2203,10 +2250,10 @@ end
 
     local collapsed = dv.collapsedHeaders[collapseKey]
 
-    local header = CreateFrame("Button", nil, parent)
-    local pad = TAB_LEFT_PADDING[dv.currentTab] or 10
-    header:SetPoint("TOPLEFT", pad, y)
-    header:SetSize(600, 32)
+local header = CreateFrame("Button", nil, parent)
+header:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, y)
+header:SetPoint("RIGHT", parent, "RIGHT", -6, 0)
+header:SetHeight(32)
 
     -- Background gradient
     local bg = header:CreateTexture(nil, "BACKGROUND")
@@ -2256,6 +2303,32 @@ end
     return collapsed, y - 36
 end
 
+if not dv.achievementPanel then
+    dv.achievementPanel = CreateFrame("Frame", nil, frame.previewPanel, "BackdropTemplate")
+    local panel = dv.achievementPanel
+
+    panel:SetPoint("TOP", frame.previewPanel.model, "BOTTOM", 0, -10)
+    panel:SetWidth(frame.previewPanel:GetWidth() - 20)
+
+    panel:SetBackdrop({
+        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        edgeSize = 12,
+        insets = { left = 3, right = 3, top = 3, bottom = 3 }
+    })
+
+    panel:SetBackdropColor(0, 0, 0, 0.95)
+    panel:SetBackdropBorderColor(0.4, 0.4, 0.4)
+
+    panel.text = panel:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    panel.text:SetPoint("TOPLEFT", 10, -10)
+    panel.text:SetPoint("TOPRIGHT", -10, -10)
+    panel.text:SetJustifyH("LEFT")
+    panel.text:SetWordWrap(true)
+
+    panel:Hide()
+end
+
 function dv.CreateAchievementLine(parent, goodie, y)
     local id = goodie.id
     local _, _, _, isCompleted = GetAchievementInfo(id)
@@ -2266,10 +2339,11 @@ function dv.CreateAchievementLine(parent, goodie, y)
 
     local name = select(2, GetAchievementInfo(id)) or "Unknown Achievement"
 
-    local line = CreateFrame("Button", nil, parent)
-    line:SetPoint("TOPLEFT", 10, y)
-    line:SetSize(590, 22)
-    line:RegisterForClicks("AnyUp")
+	local line = CreateFrame("Button", nil, parent)
+line:SetPoint("TOPLEFT", parent, "TOPLEFT", 10, y)
+line:SetPoint("RIGHT", parent, "RIGHT", -6, 0)
+line:SetHeight(22)
+line:RegisterForClicks("AnyUp")
 
     line.text = line:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     line.text:SetPoint("LEFT", 0, 0)
@@ -2280,29 +2354,51 @@ function dv.CreateAchievementLine(parent, goodie, y)
         line.text:SetTextColor(0.2, 1, 0.2)
     end
 
-local wowheadBox = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
-wowheadBox:SetSize(260, 22)
-wowheadBox:SetPoint("LEFT", line.text, "RIGHT", 8, 0)
-wowheadBox:SetAutoFocus(false)
-wowheadBox:Hide()
+-- Achievement Wowhead Wrapper
+if not dv.achievementWowheadWrapper then
 
-wowheadBox:SetScript("OnChar", function(self)
-    self:SetText(self:GetText())
-    self:HighlightText()
-end)
+    dv.achievementWowheadWrapper = CreateFrame("Frame", nil, frame.previewPanel, "BackdropTemplate")
+    local wrapper = dv.achievementWowheadWrapper
 
-wowheadBox:SetScript("OnMouseUp", function(self)
-    self:HighlightText()
-end)
+    wrapper:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        edgeSize = 12,
+        insets = { left = 3, right = 3, top = 3, bottom = 3 }
+    })
 
+    wrapper:SetBackdropColor(0.08, 0.08, 0.12, 0.95)
+    wrapper:SetBackdropBorderColor(1, 0.82, 0, 1)
 
+    wrapper:SetHeight(26)
+    wrapper:SetWidth(frame.previewPanel:GetWidth() - 40)
 
-wowheadBox:SetScript("OnEditFocusLost", function()
-    wowheadBox:Hide()
-    if dv.activeWowheadBox == wowheadBox then
-        dv.activeWowheadBox = nil
-    end
-end)
+    wrapper:SetPoint("TOP", frame.previewPanel.model, "BOTTOM", 0, -6)
+    wrapper:Hide()
+
+    -- Wowhead Icon
+    wrapper.icon = wrapper:CreateTexture(nil, "ARTWORK")
+    wrapper.icon:SetSize(16, 16)
+    wrapper.icon:SetPoint("LEFT", 6, 0)
+    wrapper.icon:SetTexture("Interface\\ICONS\\INV_Misc_Spyglass_03")
+
+    -- Edit Box
+    dv.achievementWowheadBox = CreateFrame("EditBox", nil, wrapper, "InputBoxTemplate")
+    local box = dv.achievementWowheadBox
+
+    box:SetAutoFocus(false)
+    box:SetPoint("LEFT", wrapper.icon, "RIGHT", 6, 0)
+    box:SetPoint("RIGHT", wrapper, "RIGHT", -6, 0)
+    box:SetHeight(22)
+
+    box:SetScript("OnMouseUp", function(self)
+        self:HighlightText()
+    end)
+
+    box:SetScript("OnEditFocusLost", function(self)
+        wrapper:Hide()
+    end)
+end
 
     local function SetBaseColor()
         if isCompleted and vendorSettings.markCompletedThings then
@@ -2328,37 +2424,88 @@ end)
     end
     SetBaseColor()
 
-    line:SetScript("OnEnter", function()
-        line.text:SetTextColor(1, 0.82, 0)
+line:SetScript("OnEnter", function()
 
-        GameTooltip:SetOwner(line, "ANCHOR_RIGHT")
-        GameTooltip:SetHyperlink(GetAchievementLink(id))
-        GameTooltip:AddLine(" ")
-        GameTooltip:AddLine("|cff00ff00<Left Click>|r Open Achievement")
-        GameTooltip:AddLine("|cffff5500<Right Click>|r Copy Wowhead Link")
-        GameTooltip:Show()
+    line.text:SetTextColor(1, 0.82, 0)
 
-        dv.AnchorPreviewBelowTooltip(dv.previewFrame, GameTooltip)
-        UpdateGoodiePreview(goodie)
-    end)
+    GameTooltip:SetOwner(line, "ANCHOR_RIGHT")
+    --GameTooltip:SetHyperlink(GetAchievementLink(id))
+    GameTooltip:AddLine(" ")
+    GameTooltip:AddLine("|cff00ff00<Left Click>|r Open Achievement")
+	GameTooltip:AddLine("|cff00ff00<Left Click>|r View Decor Item")
+    GameTooltip:AddLine("|cffff5500<Left Click>|r Copy Wowhead Link")
+    GameTooltip:Show()
+
+end)
 
 line:SetScript("OnClick", function(_, button)
+
     if button == "LeftButton" then
-        if not AchievementFrame or not AchievementFrame:IsShown() then
+
+        local achievementID = goodie.id
+        if not achievementID then return end
+
+        -- 1️⃣ Update Decor Preview
+        UpdateGoodiePreview(goodie)
+
+        -- 2️⃣ Load & Open Achievement Frame
+        if not AchievementFrame then
             AchievementFrame_LoadUI()
+        end
+
+        if not AchievementFrame:IsShown() then
             AchievementFrame_ToggleAchievementFrame()
         end
-        AchievementFrame_SelectAchievement(id)
 
-    elseif button == "RightButton" then
-        ShowWowheadBox(parent, wowheadBox, id, "achievement")
+        AchievementFrame_SelectAchievement(achievementID)
+
+        -------------------------------------------------
+        -- 3️⃣ Show Wowhead Box ABOVE tooltip
+        -------------------------------------------------
+        if dv.achievementWowheadWrapper and dv.achievementWowheadBox then
+            dv.achievementWowheadBox:SetText("https://www.wowhead.com/achievement=" .. achievementID)
+            dv.achievementWowheadBox:HighlightText()
+            dv.achievementWowheadWrapper:Show()
+        end
+
+        -------------------------------------------------
+        -- 4️⃣ Create Tooltip (Permanent Under Wowhead)
+        -------------------------------------------------
+        if not DV_AchievementTooltip then
+            DV_AchievementTooltip = CreateFrame(
+                "GameTooltip",
+                "DV_AchievementTooltip",
+                frame.previewPanel,
+                "GameTooltipTemplate"
+            )
+        end
+
+        local tooltip = DV_AchievementTooltip
+
+        tooltip:SetOwner(frame.previewPanel, "ANCHOR_NONE")
+        tooltip:ClearAllPoints()
+
+        -- Anchor under wowhead wrapper
+        if dv.achievementWowheadWrapper then
+            tooltip:SetPoint("TOP", dv.achievementWowheadWrapper, "BOTTOM", 0, -6)
+        else
+            tooltip:SetPoint("TOP", frame.previewPanel.model, "BOTTOM", 0, -10)
+        end
+
+        -- Width BEFORE hyperlink
+        local maxWidth = frame.previewPanel:GetWidth() - 30
+        tooltip:SetWidth(maxWidth)
+
+        tooltip:ClearLines()
+        tooltip:SetHyperlink(GetAchievementLink(achievementID))
+        tooltip:Show()
     end
 end)
-    line:SetScript("OnLeave", function()
-        GameTooltip:Hide()
-        dv.previewFrame:Hide()
-		 SetBaseColor()
-    end)
+
+line:SetScript("OnLeave", function()
+    GameTooltip:Hide()
+    SetBaseColor()
+end)
 
     table.insert(dv.activeWidgets, line)
     return y - 22
@@ -2390,12 +2537,10 @@ end
 
     local collapsed = dv.collapsedHeaders[collapseKey]
 
-    -- Create header
-    local header = CreateFrame("Button", nil, parent)
-    local pad = TAB_LEFT_PADDING[dv.currentTab] or 10
-    header:SetPoint("TOPLEFT", pad, y)
-    header:SetSize(600, 32)
-
+local header = CreateFrame("Button", nil, parent)
+header:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, y)
+header:SetPoint("RIGHT", parent, "RIGHT", -6, 0)
+header:SetHeight(32)
     -- Background
     local bg = header:CreateTexture(nil, "BACKGROUND")
     bg:SetAllPoints()
@@ -2445,6 +2590,7 @@ end)
 end
 
 function dv.CreateQuestLine(parent, goodie, y)
+
     local id = goodie.id
     local isCompleted = dv.IsQuestEffectivelyCompleted(goodie)
 
@@ -2463,48 +2609,92 @@ function dv.CreateQuestLine(parent, goodie, y)
     end
 
     local line = CreateFrame("Button", nil, parent)
-    line:SetPoint("TOPLEFT", 10, y)
-    line:SetSize(590, 22)
+    line:SetPoint("TOPLEFT", parent, "TOPLEFT", 10, y)
+    line:SetPoint("RIGHT", parent, "RIGHT", -6, 0)
+    line:SetHeight(22)
     line:RegisterForClicks("AnyUp")
 
     line.text = line:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     line.text:SetPoint("LEFT", 0, 0)
-    line.text:SetFont(STANDARD_TEXT_FONT, 12)
+    line.text:SetFont(STANDARD_TEXT_FONT, 13, "OUTLINE")
     line.text:SetText(name)
 
     if goodie.note then
         line.note = line:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
         line.note:SetPoint("RIGHT", -8, 0)
+        line.note:SetFont(STANDARD_TEXT_FONT, 12, "OUTLINE")
         line.note:SetJustifyH("RIGHT")
         line.note:SetText("|cffaaaaaa" .. goodie.note .. "|r")
     end
-local wowheadBox = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
-wowheadBox:SetSize(260, 22)
-wowheadBox:SetPoint("LEFT", line.text, "RIGHT", 8, 0)
-wowheadBox:SetAutoFocus(false)
-wowheadBox:Hide()
 
-wowheadBox:SetScript("OnChar", function(self)
-    self:SetText(self:GetText())
-    self:HighlightText()
-end)
+if not dv.questWowheadWrapper then
 
-wowheadBox:SetScript("OnMouseUp", function(self)
-    self:HighlightText()
-end)
+    dv.questWowheadWrapper = CreateFrame("Frame", nil, frame.previewPanel, "BackdropTemplate")
+    local wrapper = dv.questWowheadWrapper
 
-line:SetScript("OnClick", function(_, button)
-    if button == "RightButton" then
-        ShowWowheadBox(parent, wowheadBox, id, "quest")
-    end
-end)
+    wrapper:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        edgeSize = 12,
+        insets = { left = 3, right = 3, top = 3, bottom = 3 }
+    })
 
-wowheadBox:SetScript("OnEditFocusLost", function()
-    wowheadBox:Hide()
-    if dv.activeWowheadBox == wowheadBox then
-        dv.activeWowheadBox = nil
-    end
-end)
+    wrapper:SetBackdropColor(0.08, 0.08, 0.12, 0.95)
+    wrapper:SetBackdropBorderColor(1, 0.82, 0, 1)
+
+    wrapper:SetHeight(28)
+    wrapper:SetPoint("TOP", frame.previewPanel.model, "BOTTOM", 0, -6)
+    wrapper:SetWidth(frame.previewPanel:GetWidth() - 40)
+    wrapper:Hide()
+
+    -- ===============================
+    -- ICON
+    -- ===============================
+
+    wrapper.icon = wrapper:CreateTexture(nil, "ARTWORK")
+    wrapper.icon:SetSize(18, 18)
+    wrapper.icon:SetPoint("LEFT", wrapper, "LEFT", 6, 0)
+    wrapper.icon:SetTexture("Interface\\Icons\\INV_Misc_Spyglass_03")
+
+    -- ===============================
+    -- EDIT BOX
+    -- ===============================
+
+    dv.questWowheadBox = CreateFrame("EditBox", nil, wrapper, "InputBoxTemplate")
+    local box = dv.questWowheadBox
+
+    box:SetAutoFocus(false)
+    box:SetHeight(22)
+
+    box:SetPoint("LEFT", wrapper.icon, "RIGHT", 6, 0)
+    box:SetPoint("RIGHT", wrapper, "RIGHT", -8, 0)
+
+    box:SetScript("OnChar", function(self)
+        self:SetText(self:GetText())
+        self:HighlightText()
+    end)
+
+    box:SetScript("OnMouseUp", function(self)
+        self:HighlightText()
+    end)
+
+    box:SetScript("OnEditFocusLost", function(self)
+        wrapper:Hide()
+    end)
+
+    -- ===============================
+    -- HOVER GLOW EFFECT
+    -- ===============================
+
+    wrapper:SetScript("OnEnter", function(self)
+        self:SetBackdropBorderColor(1, 0.9, 0.2, 1)
+    end)
+
+    wrapper:SetScript("OnLeave", function(self)
+        self:SetBackdropBorderColor(1, 0.82, 0, 1)
+    end)
+
+end
 
     local function SetBaseColor()
         if isCompleted and vendorSettings.markCompletedThings then
@@ -2540,25 +2730,36 @@ end)
         end)
     end
 
+line:SetScript("OnClick", function(_, button)
+
+    if button == "LeftButton" then
+        UpdateGoodiePreview(goodie)
+
+        if dv.questWowheadWrapper and dv.questWowheadBox then
+            dv.questWowheadBox:SetText("https://www.wowhead.com/quest=" .. id)
+            dv.questWowheadBox:HighlightText()
+            dv.questWowheadWrapper:Show()
+        end
+    end
+end)
+
     line:SetScript("OnEnter", function()
         line.text:SetTextColor(1, 0.82, 0)
+
         GameTooltip:SetOwner(line, "ANCHOR_RIGHT")
         GameTooltip:SetHyperlink("quest:" .. id)
-        GameTooltip:AddLine(" ")
-        GameTooltip:AddLine("|cffff5500<Right Click>|r Copy Wowhead Link")
+        GameTooltip:AddLine("|cffff5500<Left Click>|r View Decor Item")
+        GameTooltip:AddLine("|cffff5500<Left Click>|r Copy Wowhead Link")
         GameTooltip:Show()
-
-        dv.AnchorPreviewBelowTooltip(dv.previewFrame, GameTooltip)
-        UpdateGoodiePreview(goodie)
     end)
 
     line:SetScript("OnLeave", function()
         GameTooltip:Hide()
-        dv.previewFrame:Hide()
         SetBaseColor()
     end)
 
     table.insert(dv.activeWidgets, line)
+
     return y - 22
 end
 
@@ -2582,15 +2783,6 @@ if dv.filtersJustChanged then
     end
 end
 
-    -- AUTO EXPAND based on filter
-  --[[ if dv.filtersJustChanged then
-        if selectedBossExpansions and selectedBossExpansions[group.expansion] then
-            dv.collapsedHeaders[key] = false
-        else
-            dv.collapsedHeaders[key] = true
-        end
-    end]]
-
 local collected = 0
 local total = 0
 
@@ -2601,12 +2793,11 @@ for _, boss in ipairs(group.items or {}) do
         collected = collected + 1
     end
 end
-
+local header = CreateFrame("Button", nil, parent)
+header:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, y)
+header:SetPoint("RIGHT", parent, "RIGHT", -6, 0)
+header:SetHeight(32)
 	
-    local header = CreateFrame("Button", nil, parent)
-    header:SetPoint("TOPLEFT", pad, y)
-    header:SetSize(600, 32)
-
     -- background
     local bg = header:CreateTexture(nil, "BACKGROUND")
     bg:SetAllPoints()
@@ -2657,42 +2848,31 @@ end
 function dv.CreateBossDropLine(parent, boss, y)
     local pad = TAB_LEFT_PADDING[dv.currentTab] or 10
 
-    local line = CreateFrame("Button", nil, parent)
-    line:SetPoint("TOPLEFT", pad, y)
-    line:SetSize(560, 22)
-    line:RegisterForClicks("AnyUp")
+	local line = CreateFrame("Button", nil, parent)
+	line:SetPoint("TOPLEFT", parent, "TOPLEFT", 10, y)
+	line:SetPoint("RIGHT", parent, "RIGHT", -6, 0)
+	line:SetHeight(22)
+	line:RegisterForClicks("AnyUp")
 
-    -------------------------------------------------
-    -- TEXT
-    -------------------------------------------------
     local nameFS = line:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     nameFS:SetPoint("LEFT", 0, 0)
+	nameFS:SetText("Loading...")
 
-nameFS:SetText("Loading...")
-
-local item = Item:CreateFromItemID(boss.id)
-item:ContinueOnItemLoad(function()
+	local item = Item:CreateFromItemID(boss.id)
+	item:ContinueOnItemLoad(function()
     local itemName = item:GetItemName()
     if itemName and nameFS then
         nameFS:SetText(itemName)
     end
 end)
 
-
-    -------------------------------------------------
-    -- COLLECTED CHECK
-    -------------------------------------------------
     local isCollected = dv.IsItemCollected(boss.id)
-
     if isCollected then
         nameFS:SetTextColor(0.2, 1, 0.2) -- green
     else
         nameFS:SetTextColor(1, 1, 1)
     end
 
-    -------------------------------------------------
-    -- SOURCE TEXT (RIGHT SIDE)
-    -------------------------------------------------
     local sourceFS = line:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
     sourceFS:SetPoint("RIGHT", -8, 0)
 
@@ -2704,88 +2884,126 @@ end)
     else
         sourceFS:SetText("Unknown Source")
     end
+   	
+local function UpdateBossPreview(boss)
 
-    -------------------------------------------------
-    -- TOOLTIP
-    -------------------------------------------------
-    line:SetScript("OnEnter", function()
-        SetCursor("INSPECT_CURSOR")
+    if not boss then return end
 
-        GameTooltip:SetOwner(line, "ANCHOR_RIGHT")
-        GameTooltip:SetItemByID(boss.id)
+    local panel = frame.previewPanel
+    if not panel or not panel.model then return end
 
-        if boss.bossencounter then
-            GameTooltip:AddLine("\nDrops from:", 1, 0.82, 0)
-            local name = EJ_GetEncounterInfo(boss.bossencounter)
-            GameTooltip:AddLine(name or "Unknown Boss", 1, 1, 1)
-            GameTooltip:AddLine("\n|cff00ff00Left-Click|r View Decor", 1, 1, 1)
-            GameTooltip:AddLine("|cff00ff00Right-Click|r View Dungeon Map", 1, 1, 1)
-        elseif boss.bossevent then
-            GameTooltip:AddLine("\nSource:", 1, 0.82, 0)
-            GameTooltip:AddLine(boss.bossevent, 1, 1, 1)
-            GameTooltip:AddLine("\n|cff00ff00Left-Click|r View Decor", 1, 1, 1)
-            GameTooltip:AddLine("|cff00ff00Right-Click|r View Map", 1, 1, 1)
-        end
+    local model   = panel.model
+    local texture = panel.texture
 
-        if isCollected then
-            GameTooltip:AddLine("\n|cff00ff00Collected|r", 0.2, 1, 0.2)
-        end
+    panel._isVendorPreview = false
 
-        GameTooltip:Show()
-    end)
-
-    line:SetScript("OnLeave", function()
-        ResetCursor()
-        GameTooltip:Hide()
-
-        if dv.previewFrame then
-            dv.previewFrame:Hide()
-        end
-    end)
-
-    -------------------------------------------------
-    -- CLICK HANDLING
-    -------------------------------------------------
-    line:SetScript("OnClick", function(_, button)
-        -------------------------------------------------
-        -- LEFT CLICK → OPEN HOUSING CATALOG
-        -------------------------------------------------
-        if button == "LeftButton" then
-            if C_HousingCatalog.OpenToItem then
-                C_HousingCatalog.OpenToItem(boss.id)
-                return
+    -- Title
+    if boss.id then
+        local itemObj = Item:CreateFromItemID(boss.id)
+        itemObj:ContinueOnItemLoad(function()
+            if panel.title then
+                panel.title:SetText(itemObj:GetItemName() or "Preview")
             end
+        end)
+    else
+        panel.title:SetText("Preview")
+    end
 
-            if C_HousingCatalog.OpenToItemID then
-                C_HousingCatalog.OpenToItemID(boss.id)
-                return
-            end
+    -- 3D Model preview
+    if boss.model3D then
+        texture:Hide()
+        model:ClearModel()
+        model:SetModel(boss.model3D)
+        model:Show()
 
-            DressUpItemLink("item:" .. boss.id)
-            return
+        model:MakeCurrentCameraCustom()
+
+        local pos = dv.modelPositions[boss.model3D]
+        if pos then
+            model:SetPosition(pos.model_x, 0, pos.model_z)
+            model:SetCameraPosition(0, 0, pos.camera_y)
+            model:SetCameraDistance(pos.zoom)
+        else
+            model:SetPosition(0, 0, 0)
+            model:SetCameraPosition(0, 0, 4)
+            model:SetCameraDistance(10)
         end
 
-        -------------------------------------------------
-        -- RIGHT CLICK → OPEN MAP (SAFE FOR ALL SOURCES)
-        -------------------------------------------------
-        if button == "RightButton" then
-            if InCombatLockdown() then return end
-            if boss.mapID then
-                C_Map.OpenWorldMap(boss.mapID)
-            end
-        end
-    end)
+        return
+    end
 
-    table.insert(dv.activeWidgets, line)
+    -- Texture preview
+    if boss.texture then
+        model:Hide()
+        texture:SetTexture(boss.texture)
+        texture:Show()
+        return
+    end
+
+    -- Nothing
+    model:Hide()
+    if texture then texture:Hide() end
+end
+
+line:SetScript("OnClick", function(_, button)
+
+if button == "LeftButton" then
+    UpdateBossPreview(boss)        -- decor model (top)
+    elseif button == "RightButton" then
+        if InCombatLockdown() then return end
+        if boss.mapID then
+            C_Map.OpenWorldMap(boss.mapID)
+        end
+    end
+end)
+
+line:SetScript("OnEnter", function()
+    SetCursor("INSPECT_CURSOR")
+
+    GameTooltip:SetOwner(line, "ANCHOR_RIGHT")
+    GameTooltip:SetItemByID(boss.id)
+
+    if boss.bossencounter then
+        GameTooltip:AddLine("\nDrops from:", 1, 0.82, 0)
+
+        local name = EJ_GetEncounterInfo(boss.bossencounter)
+        GameTooltip:AddLine(name or "Unknown Boss", 1, 1, 1)
+
+        GameTooltip:AddLine("\n|cff00ff00Left-Click|r View Decor", 1, 1, 1)
+        GameTooltip:AddLine("|cff00ff00Right-Click|r View Dungeon Map", 1, 1, 1)
+
+    elseif boss.bossevent then
+        GameTooltip:AddLine("\nSource:", 1, 0.82, 0)
+        GameTooltip:AddLine(boss.bossevent, 1, 1, 1)
+
+        GameTooltip:AddLine("\n|cff00ff00Left-Click|r View Decor", 1, 1, 1)
+        GameTooltip:AddLine("|cff00ff00Right-Click|r View Map", 1, 1, 1)
+    end
+
+    if isCollected then
+        GameTooltip:AddLine("\n|cff00ff00Collected|r", 0.2, 1, 0.2)
+    end
+
+    GameTooltip:Show()
+end)
+
+line:SetScript("OnLeave", function()
+    ResetCursor()
+    GameTooltip:Hide()
+end)
+table.insert(dv.activeWidgets, line)
     return y - 24
 end
+
+
 
 function dv.CreateEventItemLine(parent, event, y)
     if not event then return y end
 
-    local line = CreateFrame("Frame", nil, parent)
-    line:SetPoint("TOPLEFT", 10, y)
-    line:SetSize(600, 100)
+	local line = CreateFrame("Button", nil, parent)
+line:SetPoint("TOPLEFT", parent, "TOPLEFT", 10, y)
+line:SetPoint("RIGHT", parent, "RIGHT", -6, 0)
+line:SetHeight(100)
 
     -- Title
     local title = line:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
@@ -2852,7 +3070,6 @@ function dv.CreateEventItemLine(parent, event, y)
     table.insert(dv.activeWidgets, line)
     return y - 150
 end
-
 -------------------------------------------------
 -- 🔹 The Lists
 -------------------------------------------------
@@ -2965,13 +3182,16 @@ function BuildQuestList()
     dv.ClearWidgets()
 
     selectedQuests   = selectedQuests   or {}
+	selectedExpansions = selectedExpansions or {}
     selectedFactionz = selectedFactionz or {}
 
     local catSel = selectedQuests
     local facSel = selectedFactionz
+	local expSel = selectedExpansions
 
     local hasCategoryFilter = HasAnySelection(catSel)
     local hasFactionFilter  = HasAnySelection(facSel)
+	local hasExpansionFilter = HasAnySelection(expSel)
 
     local y = -6
 
@@ -2993,7 +3213,7 @@ function BuildQuestList()
     for _, group in ipairs(questGroups) do
 
         -- CATEGORY FILTER
-        if not hasCategoryFilter or catSel[group.name] then
+        if not hasExpansionFilter or expSel[group.expansion] then
 
             ------------------------------------------------
             -- Build visible list
@@ -3310,13 +3530,6 @@ function BuildVendorList()
             for _, vendor in ipairs(group.vendors or {}) do
                 local includeVendor = true
 
-                if dv.searchQuery and dv.searchQuery ~= "" then
-                    local title = string.lower(vendor.title or "")
-                    if not string.find(title, dv.searchQuery, 1, true) then
-                        includeVendor = false
-                    end
-                end
-
                 if includeVendor then
                     local passesFaction =
                         not hasFactionFilter or facSel[vendor.faction]
@@ -3631,19 +3844,35 @@ end
     AddText(
         "I believe I got the merchant frame and vendor popups to show items that are corrrectly owned in regards to quests, achievements, or just by buying them. Housing Neighborhood vendors still show incorrectly though")
 		
+		AddText("|cffFFD200Wowhead Links|r", 10)
+    AddText(
+        "When left clicking achievements or quests the link is now directly under the decor preview instead of being in line.")	
+		
 	    AddText("|cffFFD200Quests Related|r", 10)
     AddText(       
         "Some quests are showing up as Quest Title Unavaiable. Please disregard they do exist just right click to get the quest link.")	
+ 
+		AddText("|cffFFD200Achievement Decor|r", 10)
+    AddText(
+		"Left Click opens the decor item and a tooltip with the achievement information under the decor. Brought back the Achievement Frame!")
 		
-    AddText("|cffFFD200Housing Endeavor Vendors|r", 10)
+		AddText("|cffFFD200Profession Decor|r", 10)
+    AddText(
+		"Left Click opens both Decor Preview and the reagents window underneath it. Once you learn the recipe it gets marked off. Per character!")	
+		
+		AddText("|cffFFD200Boss Drops|r", 10)
+    AddText(
+		"Left Click opens  Decor Preview. Righ Click will open the map to the Boss.")
+
+		AddText("|cffFFD200Vendor Decor|r", 10)
+    AddText(
+		"Left Click opens  vendor Preview with items below the vendor. Left clicking each item will open the catalogue.")		
+		
+		AddText("|cffFFD200Housing Endeavor Vendors|r", 10)
     AddText(
         "The vendors are based on three possibilities: Public Neighboorhoods is server side chosen, Guild neighborhoods are Guild rank permission picked and finaly priority endeauvers are pushed first based on in game events like expansion related or possibly holiday")
-
-    AddText("|cffFFD200Achievements|r", 10)
-    AddText(
-		"Do not open opposite faction achievements as it will not show you anything in the achievement frame.")
 	
-    AddText("|cffFFD200Midnight Expansion Related|r", 10)
+		AddText("|cffFFD200Midnight Expansion Related|r", 10)
     AddText(
         "Vendors are loaded under Midnight Launch expansion not all have items loaded in for viewing")
 	
@@ -3897,12 +4126,9 @@ local function CreateOptionsPanel()
     Settings.RegisterAddOnCategory(category)
     dv_optionsCategory = category
 end
-
 -------------------------------------------------
 -- 🔹 Merchant Frame
 -------------------------------------------------
-
-
 local function HookMerchantFrame()
 	hooksecurefunc("MerchantFrame_Update", function()
 		if not vendorSettings.showMerchantCheckmarks then return end
@@ -3999,7 +4225,6 @@ function dv.OpenMainUI()
 
     BuildVendorUI()
 end
-
 -------------------------------------------------
 -- 🔹Addon Loaded Init
 -------------------------------------------------
@@ -4011,8 +4236,6 @@ init:RegisterEvent("HOUSING_MARKET_AVAILABILITY_UPDATED")
 init:RegisterEvent("ACHIEVEMENT_EARNED")
 init:RegisterEvent("QUEST_TURNED_IN")
 init:RegisterEvent("HOUSE_DECOR_ADDED_TO_CHEST")
-
-
 
 local function InitDefaults()
     -- Saved settings

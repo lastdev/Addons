@@ -68,6 +68,7 @@ local defaults = {
       collapsed = false,
       trackZone = true,
       hideCompleted = false,
+      showFavoritesOnZoneEnter = true,
       alpha = 0.7,
       width = 310,
       height = 520,
@@ -77,27 +78,60 @@ local defaults = {
       y = -80,
     },
 
-    
-    profTracker = {
-      open = false,
-      collapsed = false,
+    lumberTrack = {
       hideZero = false,
       showIcons = true,
       alpha = 0.7,
       goal = 1000,
       search = "",
-      width = 320,
-      height = 540,
-      point = "TOPRIGHT",
-      relPoint = "TOPRIGHT",
-      x = -360,
-      y = -80,
+      autoGoal = false,
+      accountWide = false,  
+      
+      lumberListOpen = false,
+      lumberListCollapsed = false,
+      lumberListWidth = 380,
+      lumberListHeight = 520,
+      lumberListPoint = "TOPRIGHT",
+      lumberListRelPoint = "TOPRIGHT",
+      lumberListX = -360,
+      lumberListY = -80,
+
+      farmingStatsOpen = false,
+      farmingStatsCollapsed = false,
+      farmingStatsAlpha = 0.7,
+      farmingStatsWidth = 300,
+      farmingStatsHeight = 300,
+      farmingStatsWidthCollapsed = 300,
+      farmingStatsHeightCollapsed = 166,
+      farmingStatsPoint = "TOPLEFT",
+      farmingStatsRelPoint = "TOPLEFT",
+      farmingStatsX = 250,
+      farmingStatsY = -80,
+      
+      autoStartFarming = false,
+    },
+
+    minimapVendor = {
+      pos = {},
+      width = 280,
+      height = 420,
+      alpha = 0.85,
+      point = "RIGHT",
+      relPoint = "RIGHT",
+      x = -280,
+      y = 0,
     },
 
     favorites = {},
     collection = { completedItems = {} },
 
     minimap = { hide = false },
+
+    vendor = {
+      showCollectedCheckmark = true,
+      showOwnedCount = false,
+      showVendorNPCTooltip = false,
+    },
 
     mapPins = {
       worldmap = true,
@@ -252,10 +286,38 @@ function Addon:OnInitialize()
   self.db = AceDB:New("HomeDecorDB", defaults)
   NS.db = self.db
 
+  if self.db.profile and self.db.profile.favorites then
+    local favs = self.db.profile.favorites
+    local removed = 0
+    for id, val in pairs(favs) do
+      if val == false then
+        favs[id] = nil
+        removed = removed + 1
+      end
+    end
+    if removed > 0 then
+      print("|cffFFD200[HomeDecor]|r Cleaned up " .. removed .. " unfavorited items from saved data.")
+    end
+  end
+
   if NS.Systems.Filters and NS.Systems.Filters.EnsureDefaults then
     pcall(function()
       NS.Systems.Filters:EnsureDefaults(self.db.profile)
     end)
+  end
+  
+  if self.db.profile and self.db.profile.filters then
+    local f = self.db.profile.filters
+    f.expansion = "ALL"
+    f.zone = "ALL"
+    f.category = "ALL"
+    f.subcategory = "ALL"
+    f.faction = "ALL"
+    f.hideCollected = false
+    f.onlyCollected = false
+    f.availableRepOnly = false
+    f.questsCompleted = false
+    f.achievementCompleted = false
   end
 
   if not LDBIcon:IsRegistered(ADDON) then
@@ -270,8 +332,18 @@ end
 function Addon:OnEnable()
   RegisterAddonCompartment()
 
+  if NS.UI and NS.UI.Options and NS.UI.Options.Ensure then
+    pcall(function() NS.UI.Options:Ensure() end)
+  end
+
   if NS.Systems.DecorIndex then
     NS.Systems.DecorIndex:Build()
+  end
+
+  if NS.UI and NS.UI.Viewer and NS.UI.Viewer.Data and NS.UI.Viewer.Data.PrefetchQuestAndAchievementNames then
+    pcall(function() 
+      NS.UI.Viewer.Data.PrefetchQuestAndAchievementNames()
+    end)
   end
 
   if NS.Systems.MapTracker and NS.Systems.MapTracker.Enable then
@@ -280,6 +352,10 @@ function Addon:OnEnable()
 
   if NS.Systems.MapPins and NS.Systems.MapPins.Enable then
     pcall(function() NS.Systems.MapPins:Enable() end)
+  end
+
+  if NS.UI and NS.UI.CreateWorldMapButton then
+    pcall(function() NS.UI.CreateWorldMapButton() end)
   end
 
   do
@@ -292,12 +368,15 @@ function Addon:OnEnable()
 
   do
     local prof = self.db and self.db.profile
-    local ptdb = prof and prof.profTracker
-    if NS.UI and NS.UI.ProfTracker and NS.UI.ProfTracker.Create then
-      NS.UI.ProfTracker:Create()
-      if ptdb and ptdb.open and NS.UI.ProfTracker.Show then
-        NS.UI.ProfTracker:Show()
-      end
+    local ltdb = prof and prof.lumberTrack
+    if NS.UI and NS.UI.LumberTrack and NS.UI.LumberTrack.Create then
+      NS.UI.LumberTrack:Create()
     end
+  end
+
+  if NS.UI and NS.UI.MinimapVendor then
+    pcall(function()
+      NS.UI.MinimapVendor:Create()
+    end)
   end
 end

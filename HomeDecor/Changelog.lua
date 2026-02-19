@@ -1,18 +1,23 @@
 HomeDecor_Changelog = [[
 #HomeDecor
 
-Feb 11, 2026
+Feb 18, 2026
 
-* Added a new logo at the top tried to keep it simple
-and still look good with the UI. Hopefully you all like it.
+* Added new way for world map options, open the world map
+and see a new HomeDecor button, it will give you options to hide
+whatever you want including stuff in the map viewer. 
 
-* Looking for feed back, would you guys rather
-the colors of class specific items be of the players
-class or just blue or white? Im adding them into the tooltips
+Feb 17, 2026
 
-* Also looking for more feed back on if locations are incorrect
-or need update. please message on discord or curse im always updating
-thanks!
+* Added away to turn off counter/ check marks on vendors
+just go to the options or right click minimap for the options 
+under vendor 
+
+* Added compact mode to the lumber tracker
+also fixed a bug I found where if you put things
+in the bank or mailed to a alt it wasn't tracking right
+any more. 
+
 
 
 ]]

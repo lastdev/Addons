@@ -396,6 +396,9 @@ L["NameplateQuest ShowTargetProgress"] = "Show Progress on Target";
 L["NameplateQuest ShowTargetProgress Tooltip"] = "Show the quest objective progress on your target's nameplate.";
 L["NameplateQuest ShowProgressOnHover"] = "Show Progress on Hover";
 L["NameplateQuest ShowProgressOnHover Tooltip"] = "Show the quest objective progress when you hover the cursor over a nameplate or a unit.";
+L["NameplateQuest ShowProgressOnKeyPress"] = "Show Progress When Pressing";
+L["NameplateQuest ShowProgressOnKeyPress Tooltip Title"] = "Show Progress When Pressing Key";
+L["NameplateQuest ShowProgressOnKeyPress Tooltip Format"] = "Show the quest objective progress when pressing the |cffffffff%s|r Key.";
 L["NameplateQuest Instruction Find Nameplate"] = "To adjust the icon position, go to a place with visible NPC nameplates.";
 L["NameplateQuest Progress Format"] = "Progress Format";
 L["Progress Show Icon"] = "Show Icon";
@@ -635,7 +638,7 @@ L["No Slot For New Character Macro Alert"] = "You need to have a spare Character
 
 --New Expansion Landing Page
 L["ModuleName NewExpansionLandingPage"] = "Expansion Summary";
-L["ModuleDescription NewExpansionLandingPage"] = "A UI that displays factions, weekly activities, and raid lockouts. You can open it by:\n\n- Set a hotkey in Game Settings> Keybindings> Plumber Addon.\n\n- Use the Addon Compartment under the Calendar button.";
+L["ModuleDescription NewExpansionLandingPage"] = "A UI that displays factions, weekly activities, and raid lockouts. You can open it by:\n\n- Enable the minimap button.\n\n- Set a hotkey in Game Settings> Keybindings> Plumber Addon.\n\n- Use the Addon Compartment under the Calendar button.";
 L["Abbr NewExpansionLandingPage"] = "Expansion Summary";    --An abbreviated version of the same phrase. Affects German.
 L["Reward Available"] = "Reward Available";  --As brief as possible
 L["Paragon Reward Available"] = "Paragon Reward Available";
@@ -690,8 +693,8 @@ L["Quest ID"] = "Quest ID";
 L["Creature ID"] = "Creature ID";
 L["Edit"] = EDIT or "Edit";
 L["Delete"] = DELETE or "Delete";
-L["Visit Quest Hub To Log Quests"] = "Visit the quest hub and interact with the quest givers to log today's quests."
-L["Quest Hub Instruction Celestials"] = "Visit the August Celestials Quartermaster in Vale of Eternal Blossoms to find out which temple needs your assistance."
+L["Visit Quest Hub To Log Quests"] = "Visit the quest hub and interact with the quest givers to log today's quests.";
+L["Quest Hub Instruction Celestials"] = "Visit the August Celestials Quartermaster in Vale of Eternal Blossoms to find out which temple needs your assistance.";
 L["Unavailable Klaxxi Paragons"] = "Unavailable Klaxxi Paragons:";
 L["Weekly Coffer Key Tooltip"] = "The first four weekly caches you earn each week contain a Restored Coffer Key.";
 L["Weekly Coffer Key Shards Tooltip"] = "The first four weekly caches you earn each week contain Coffer Key Shards.";
@@ -704,6 +707,27 @@ L["Click To Switch"] = "Click to switch to |cffffffff%s|r";
 L["Click To Queue"] = "Click to queue for |cffffffff%s|r";
 L["Click to Open Format"] = "Click to open %s";
 L["List Is Empty"] = "The list is empty.";
+
+
+--ExpansionSummaryMinimapButton
+L["LandingButton Settings Title"] = "Expansion Summary: Minimap Button";
+L["LandingButton Tooltip Format"] = "Left click to toggle %s.\nRight click for more options.";
+L["LandingButton Customize"] = "Customize";
+L["LandingButton Reposition Tooltip"] = "Press |cffffffffShift|r to Unlock";
+L["LandingButtonOption ShowButton"] = "Enable Minimap Button";
+L["LandingButtonOption Unaffected"] = "Unaffected By Minimap AddOns";
+L["LandingButtonOption Unaffected Tooltip"] = "Make this button unaffected by other minimap addons, preventing it from being re-skinned or repositioned.\n\nOnce enabled, this button will no longer move with Minimap or respect Minimap\'s scale, and will instead use the global UI scale.\n\n|cffff4800You may need to reload the UI after changing this option.|r";
+L["LandingButtonOption UseLibDBIcon"] = "Use Standarized Design";
+L["LandingButtonOption UseLibDBIcon Tooltip"] = "Let LibDBIcon handles this button\'s appearance and position.";
+L["LandingButtonOption PrimaryUI"] = "Left Click to Open";   --Control which UI to open on left-click
+L["LandingButtonOption PrimaryUI Tooltip"] = "Choose which UI to open when left-clicking the minimap button.";
+L["LandingButtonOption SmartExpansion"] = "Auto Choose Expansion";
+L["LandingButtonOption SmartExpansion Tooltip 1"] = "When enabled: left-clicking the minimap button opens the game UI suitable for your current location, such as opening Covenant Sanctum Report when you are in Shadowlands.";
+L["LandingButtonOption SmartExpansion Tooltip 2"] = "When disabled: left-clicking the minimap button always opens %s.";
+L["LandingButtonOption ReduceSize"] = "Reduce Button Size";
+L["LandingButtonOption DarkColor"] = "Use Dark Theme";
+L["LandingButtonOption HideWhenIdle"] = "Hide When Idle";
+L["LandingButtonOption HideWhenIdle Tooltip"] = "The minimap button will stay invisible until you move the cursor to its vicinity or receive a notification.\n\nThis option takes effect after closing the settings.";
 
 
 --RaidCheck

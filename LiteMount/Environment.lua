@@ -262,6 +262,12 @@ function LM.Environment:ZONE_CHANGED_NEW_AREA()
     LM.Options:RecordInstance()
 end
 
+function LM.Environment:ADDON_RESTRICTION_STATE_CHANGED(event, secretType, secretState)
+    if secretState == Enum.AddOnRestrictionState.Inactive then
+        self:InitializeHolidays()
+    end
+end
+
 local herbSpellName = C_Spell.GetSpellName(2366)
 local mineSpellName = C_Spell.GetSpellName(2575)
 -- local mineSpellName2 = C_Spell.GetSpellName(195122)
@@ -732,6 +738,21 @@ local CALENDAR_FILTER_CVARS = {
 
 function LM.Environment:InitializeHolidays()
     self.holidaysByID = {}
+    self.holidaysToday = {}
+
+    -- Reading Calendar data is restricted during M+ and encounters (another
+    -- part of Blizzard's futile attempts to stop addons communicating when the
+    -- whole game is multiplayer communication). If this wasn't so destructive
+    -- to the calendar UI it would be better delayed until required.
+
+    if C_ChatInfo.InChatMessagingLockdown then
+        if C_ChatInfo.InChatMessagingLockdown() then
+            self:RegisterEvent("ADDON_RESTRICTION_STATE_CHANGED")
+            return
+        else
+            self:UnregisterEvent("ADDON_RESTRICTION_STATE_CHANGED")
+        end
+    end
 
     local savedCVars = {}
     for cvar, value in pairs(CALENDAR_FILTER_CVARS) do
@@ -740,7 +761,7 @@ function LM.Environment:InitializeHolidays()
     end
 
     local now = C_DateAndTime.GetCurrentCalendarTime()
-    local saved = C_Calendar.GetMonthInfo()
+    local currentMonth = C_Calendar.GetMonthInfo()
 
     local holidaysByTitle = {}
 
@@ -770,22 +791,31 @@ function LM.Environment:InitializeHolidays()
         end
     end
 
+    -- Save a non-secret copy of holidays for the next week so we can compare
+    -- later even if we are in calendar lockdown.
+
+    C_Calendar.SetAbsMonth(now.month, now.year)
+
+    for dayOffset = 0, 6 do
+        local monthDay = 1 + ( now.monthDay + dayOffset - 1 ) % currentMonth.numDays
+        local monthOffset = monthDay < now.monthDay and 1 or 0
+        for i = 1, C_Calendar.GetNumDayEvents(monthOffset, monthDay) do
+            local eventInfo = C_Calendar.GetDayEvent(monthOffset, monthDay, i)
+            if self.holidaysByID[eventInfo.eventID] then
+                self.holidaysToday[eventInfo.eventID] = eventInfo
+            end
+        end
+    end
+
     -- Restore settings
     for cvar, value in pairs(savedCVars) do SetCVar(cvar, value) end
-    C_Calendar.SetAbsMonth(saved.month, saved.year)
+    C_Calendar.SetAbsMonth(currentMonth.month, currentMonth.year)
 end
 
 function LM.Environment:IsHolidayActive(idOrTitle)
-    -- The calendar API is stateful so this is going to mess up the UI. We
-    -- could save and restore the current month but the user might be editing
-    -- or viewing something which will be lost.
-    if CalendarFrame and CalendarFrame:IsShown() then return end
-
     local now = C_DateAndTime.GetCurrentCalendarTime()
-    C_Calendar.SetAbsMonth(now.month, now.year)
 
-    for i = 1, C_Calendar.GetNumDayEvents(0, now.monthDay) do
-        local eventInfo = C_Calendar.GetDayEvent(0, now.monthDay, i)
+    for eventID, eventInfo in pairs(self.holidaysToday) do
         if eventInfo.eventID == idOrTitle or eventInfo.title == idOrTitle then
             return
                 C_DateAndTime.CompareCalendarTime(eventInfo.startTime, now) >= 0 and

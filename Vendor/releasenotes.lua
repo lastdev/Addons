@@ -2,6 +2,17 @@ local _, Addon = ...
 
 Addon.ReleaseNotes = {
 {
+Release = "6.11.4 (Feb 15, 2026)",
+Notes = [[
+# Midnight Squish Bug Fix #2
+Fixed another bug where Blizzard did not ilvl squish grey boes. Also added (Quality > 1) for the Side-Grade or
+better rule to prevent grey and white gear from being flagged as an upgrade when it should never in practice
+be the case.
+
+Speculative fix for some locale issues.
+]]
+},
+{
 Release = "6.11.3 (Feb 9, 2026)",
 Notes = [[
 # Midnight Squish Bug Fix

@@ -32,9 +32,12 @@ SMARTBUFF_UNDEAD    = "No-muerto";
 -- Classes
 SMARTBUFF_CLASSES = {"Druida", "Cazador", "Mago", "Palad\195\173n", "Sacerdote", "P\195\173caro", "Cham\195\161n", "Brujo", "Guerrero", "Caballero de la Muerte", "Monje", "Cazador de demonios", "Evoker", "Mascota de cazador", "Mascota de brujo", "Mascota de caballero de la Muerte", "Tanque", "Sanador", "Infligir da\195\177o"};
 
--- Templates and Instances
-SMARTBUFF_TEMPLATES = {"En solitario", "Grupo", "BdB", "Banda", "Piedra angular mítica", "Visión horrífica", "Sondaje", "Campo de batalla", "Arena", "La Aguja del Vacío", "La Grieta de los Sueños", "Marcha sobre Quel'Danas", "Palacio de Nerub-ar", "Liberación de Submina", "Personalizado 1", "Personalizado 2", "Personalizado 3", "Personalizado 4", "Personalizado 5"};
-SMARTBUFF_INSTANCES = {"La Aguja del Vacío", "La Grieta de los Sueños", "Marcha sobre Quel'Danas", "Palacio de Nerub-ar", "Liberación de Submina"};
+-- Templates: split into generics, instances, custom. Assembled into SMARTBUFF_TEMPLATES at load (SmartBuff.lua).
+-- GENERICS: Enum.SmartBuffGroup (SmartBuff.lua) matches this order. Do not reorder or add/remove without updating both.
+SMARTBUFF_TEMPLATES_GENERICS = {"En solitario", "Grupo", "BdB", "Banda", "Piedra angular mítica", "Visión horrífica", "Sondaje", "Campo de batalla", "Arena"};
+-- INSTANCES: Must match GetInstanceInfo() name exactly. Only raids are currently supported; 5-man instance switching is not supported.
+SMARTBUFF_TEMPLATES_INSTANCES = {"La Aguja del Vacío", "La Grieta de los Sueños", "Marcha sobre Quel'Danas", "Palacio de Nerub-ar", "Liberación de Submina"};
+SMARTBUFF_TEMPLATES_CUSTOM = {"Personalizado 1", "Personalizado 2", "Personalizado 3", "Personalizado 4", "Personalizado 5"};
 
 -- Mount
 SMARTBUFF_MOUNT = "Aumenta la velocidad en un (%d+)%%.";
@@ -87,10 +90,10 @@ SMARTBUFF_OFT_BUFFTARGET     = "Buffar objetivo";
 SMARTBUFF_OFT_BUFFPVP        = "Buffar en JcJ";
 SMARTBUFF_OFT_AUTOSWITCHTMPINST = "Instancias";
 SMARTBUFF_OFT_CHECKCHARGES   = "Comprobar cargas";
-SMARTBUFF_OFT_RBT            = "Restaurar BT";
+SMARTBUFF_OFT_RBT            = "R: Timers";
 SMARTBUFF_OFT_BUFFINCITIES   = "Buffar en ciudades";
 SMARTBUFF_OFT_UISYNC         = "Sincronizar con UI";
-SMARTBUFF_OFT_BLDURATION     = "Lista Negra";
+SMARTBUFF_OFT_BLDURATION     = "Bloqueado";
 SMARTBUFF_OFT_COMPMODE       = "Modo Comp.";
 SMARTBUFF_OFT_MINIGRP        = "Mini grupo";
 SMARTBUFF_OFT_ANTIDAZE       = "Anti aturdimiento";
@@ -100,9 +103,10 @@ SMARTBUFF_OFT_SMARTDEBUFF    = "SmartDebuff";
 SMARTBUFF_OFT_INSHAPESHIFT   = "Shapeshift";
 SMARTBUFF_OFT_LINKGRPBUFFCHECK  = "Grp link";
 SMARTBUFF_OFT_LINKSELFBUFFCHECK = "Self link";
-SMARTBUFF_OFT_RESETALL       = "Reset All";
-SMARTBUFF_OFT_RESETLIST      = "Reset List";
-SMARTBUFF_OFT_RESETBUFFS     = "Reset Buffs";
+SMARTBUFF_OFT_RESETALL       = "R: Todo";
+SMARTBUFF_OFT_RESETLIST      = "R: Lista";
+SMARTBUFF_OFT_RESETBUFFS     = "R: Buffs";
+SMARTBUFF_OFT_NEWS           = "News";
 SMARTBUFF_OFT_PURGE_BUFFS    = "New Version, reset ALL SmartBuff buff data?\nThis will reset all buff profiles!";
 SMARTBUFF_OFT_YES            = "Yes";
 SMARTBUFF_OFT_NO             = "No";
@@ -112,6 +116,13 @@ SMARTBUFF_OFT_REQ_RELOAD     = "Las nuevas versiones requieren una recarga de la
 
 -- Options Frame Tooltip Text
 SMARTBUFF_OFTT               = "Alterna SmartBuff On/Off";
+SMARTBUFF_OFTT_RBT           = "Reset BT: Solo borra los temporizadores de buff (sin datos guardados).";
+SMARTBUFF_OFTT_RESETALL      = "Reset Todo: Borra todo (perfiles + opciones). Requiere ReloadUI.";
+SMARTBUFF_OFTT_RESETBUFFS    = "Reset Buffs: Restablece buffs y perfiles a valores por defecto.";
+SMARTBUFF_OFTT_RESETLIST     = "Reset Lista: Solo restablece el orden de buffs.";
+SMARTBUFF_OFTT_DONE          = "Cerrar opciones.";
+SMARTBUFF_OFTT_NEWS          = "Ver notas de versión y registro de cambios.";
+SMARTBUFF_OFTT_HELPLATE_RESET = "Botones reset (pasar para detalles)";
 SMARTBUFF_OFTT_AUTO          = "Alterna el recordatorio de buff On/Off";
 SMARTBUFF_OFTT_AUTOTIMER     = "Retraso en segundos entre dos comprobaciones.";
 SMARTBUFF_OFTT_AUTOCOMBAT    = "Ejecutar comprobaci\195\179n tambi\195\169n en combate.\nToda la l\195\179gica de recordatorio en combate est\195\161 desactivada a menos que la opci\195\179n principal \"en combate\" (en la ventana de opciones, no esta) est\195\169 activada.";
@@ -138,7 +149,7 @@ SMARTBUFF_OFTT_AUTOSWITCHTMPINST = "Cambiar autom\195\161ticamente la plantilla,
 SMARTBUFF_OFTT_CHECKCHARGES  = "Muestra cantidad baja de \ncargas en un buff.\n0 = Desactivado";
 SMARTBUFF_OFTT_BUFFINCITIES  = "Buffar tambi\195\169n si est\195\161s en una ciudad principal.\nSi tienes activado el JcJ, buffar igualmente.";
 SMARTBUFF_OFTT_UISYNC        = "Activar sincronizaci\195\179n con la UI\npara recuperar el tiempo de buff restante de otros jugadores.";
-SMARTBUFF_OFTT_BLDURATION    = "Cuantos segundos est\195\161n los jugadores en la lista negra.\n0 = Desactivado";
+SMARTBUFF_OFTT_BLDURATION    = "Cuántos segundos estarán bloqueados los jugadores.\n0 = Desactivado";
 SMARTBUFF_OFTT_COMPMODE      = "Modo compatible\nAtenci\195\179n!!!\nUsar este modo s\195\179lo si est\195\161s\nteniendo problemas para lanzarte buffs a t\195\173 mismo.";
 SMARTBUFF_OFTT_MINIGRP       = "Mostrar los ajustes del subgrupo de banda en un\nmarco propio movible";
 SMARTBUFF_OFTT_ANTIDAZE      = "Autom\195\161ticamente cancela el\naspecto del mono/manada\nsi alguien est\195\161 aturdido\n(\195\169l mismo o el grupo).";
@@ -206,6 +217,7 @@ SMARTBUFF_MSG_CLASS          = "Clase";
 SMARTBUFF_MSG_CHARGES        = "cargas";
 SMARTBUFF_MSG_SOUNDS         = "Selección de sonido: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec changed (%s), loading buff templates...";
+SMARTBUFF_MSG_PVP_PREP_ONLY  = "Debido a limitaciones de la API, el buffeo solo funciona durante la preparación y se desactiva cuando comienza la partida.";
 
 -- Support
 SMARTBUFF_MINIMAP_TT         = "Click izquierdo: men\195\186 de opciones\nClick derecho: On/Off\nAlt-Click izquierdo: SmartDebuff\nMay\195\186scuals arrastrar: Mover bot\195\179n";

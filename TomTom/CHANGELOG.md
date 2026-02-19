@@ -1,8 +1,12 @@
 # TomTom
 
-## [v4.2.16-release](https://github.com/jnwhiteh/TomTom/tree/v4.2.16-release) (2026-02-11)
-[Full Changelog](https://github.com/jnwhiteh/TomTom/commits/v4.2.16-release) [Previous Releases](https://github.com/jnwhiteh/TomTom/releases)
+## [v4.2.20-release](https://github.com/jnwhiteh/TomTom/tree/v4.2.20-release) (2026-02-14)
+[Full Changelog](https://github.com/jnwhiteh/TomTom/commits/v4.2.20-release) [Previous Releases](https://github.com/jnwhiteh/TomTom/releases)
 
+- Remove CN from TOC  
+- Update TOC for Mists/Classic  
+- Add an Export Waypoints button to /ttpaste  
+- Add an option to print a /way command when right-clicking the coord block  
 - Update TOC for 12.0.1  
 - Add split configuration for addon compartment button  
 - Remove AceEvent so TomTom can't get blamed  
@@ -684,9 +688,3 @@
 - * Expose TomTom:InitializeDropdown(uid) that can be used to init the dropdown  
     * Fix a bug where checkboxes could be put in the wrong place on dropdown menus  
 - * Guarded the ColorGradient() function against specific odd cases  
-- * Added a comment clarifying that TomTom\_Waypoints API is private  
-    * When a duplicate waypoint is set, return the original uid  
-- * Stop duplicate waypoints from being set  
-- * Fix a bug where players were receiving their own messages  
-- * Fixed an issue where waypoint would appear out of nowhere when zoning  
-    * Fixed the slash command handler so it properly accepts multi word zone names  

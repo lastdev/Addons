@@ -1872,6 +1872,21 @@ local debuff_options = {
 		name = "OPTIONS_AURAS_SORT",
 		desc = "OPTIONS_AURAS_SORT_DESC",
 	},
+	{
+		type = "range",
+		get = function() return Plater.db.profile.aura_max_shown_limit end,
+		set = function (self, fixedparam, value) 
+			Plater.db.profile.aura_max_shown_limit = value
+			Plater.RefreshDBUpvalues()
+		end,
+		min = -8,
+		max = 8,
+		step = 1,
+		usedecimals = false,
+		thumbscale = 1.8,
+		name = "Max auras shown",
+		desc = "Limit the amount of auras shown.\nNegative: filter shortest.\nPositive: filter longest.\n0 = no filtering",
+	},
 	
 	{type = "blank"},
 	{type = "label", get = function() return "Aura Size (Frame 1):" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
@@ -1986,7 +2001,49 @@ local debuff_options = {
 		end,
 		name = "Show Auras Casted by You",
 		desc = "Show Auras Casted by You and your pets.",
-		--hidden = IS_WOW_PROJECT_MIDNIGHT,
+		hidden = IS_WOW_PROJECT_MIDNIGHT,
+	},
+
+	{
+		type = "toggle",
+		boxfirst = true,
+		get = function() return Plater.db.profile.aura_show_debuff_as_blizzard_does end,
+		set = function (self, fixedparam, value) 
+			Plater.db.profile.aura_show_debuff_as_blizzard_does = value
+			Plater.RefreshDBUpvalues()
+			Plater.UpdateAllPlates()
+		end,
+		name = "Show Debuffs Blizzard Nameplates show",
+		desc = "Show Debuffs as they would be shown on blizzard nameplates.\nIt is advised to disable all other debuff auto-trackers for best experience.",
+		hidden = not IS_WOW_PROJECT_MIDNIGHT,
+	},
+
+	{
+		type = "toggle",
+		boxfirst = true,
+		get = function() return Plater.db.profile.aura_show_debuff_by_the_player end,
+		set = function (self, fixedparam, value) 
+			Plater.db.profile.aura_show_debuff_by_the_player = value
+			Plater.RefreshDBUpvalues()
+			Plater.UpdateAllPlates()
+		end,
+		name = "Show ALL Debuffs Casted by You",
+		desc = "Show ALL Debuffs Casted by You and your pets.",
+		hidden = not IS_WOW_PROJECT_MIDNIGHT,
+	},
+
+	{
+		type = "toggle",
+		boxfirst = true,
+		get = function() return Plater.db.profile.aura_show_buff_by_the_player end,
+		set = function (self, fixedparam, value) 
+			Plater.db.profile.aura_show_buff_by_the_player = value
+			Plater.RefreshDBUpvalues()
+			Plater.UpdateAllPlates()
+		end,
+		name = "Show Buffs Casted by You",
+		desc = "Show Buffs Casted by You and your pets.",
+		hidden = not IS_WOW_PROJECT_MIDNIGHT,
 	},
 	
 	{
@@ -2016,7 +2073,21 @@ local debuff_options = {
 		end,
 		name = "Show Important Auras",
 		desc = "Show buffs and debuffs which the game tag as important.",
-		--hidden = IS_WOW_PROJECT_MIDNIGHT,
+		hidden = IS_WOW_PROJECT_MIDNIGHT,
+	},
+
+	{
+		type = "toggle",
+		boxfirst = true,
+		get = function() return Plater.db.profile.aura_show_important_new end,
+		set = function (self, fixedparam, value) 
+			Plater.db.profile.aura_show_important_new = value
+			Plater.RefreshDBUpvalues()
+			Plater.UpdateAllPlates()
+		end,
+		name = "Show Important Auras",
+		desc = "Show buffs and debuffs which the game tag as important.",
+		hidden = not IS_WOW_PROJECT_MIDNIGHT,
 	},
 	
 	{
@@ -2030,7 +2101,19 @@ local debuff_options = {
 		end,
 		name = "Show Dispellable Buffs",
 		desc = "Show auras which can be dispelled or stolen.",
-		hidden = IS_WOW_PROJECT_MIDNIGHT,
+	},
+
+	{
+		type = "toggle",
+		boxfirst = true,
+		get = function() return Plater.db.profile.aura_show_raid end,
+		set = function (self, fixedparam, value) 
+			Plater.db.profile.aura_show_raid = value
+			Plater.RefreshDBUpvalues()
+			Plater.UpdateAllPlates()
+		end,
+		name = "Show Raid Buffs/Debuffs",
+		desc = "Show auras which are flagged as 'RAID'.",
 	},
 	
 	{
@@ -2086,7 +2169,6 @@ local debuff_options = {
 		end,
 		name = "Show Crowd Control",
 		desc = "Show crowd control effects.",
-		hidden = IS_WOW_PROJECT_MIDNIGHT,
 	},
 	
 	{type = "blank"},
@@ -2103,6 +2185,19 @@ local debuff_options = {
 		name = "Show Buffs Casted by the NPC",
 		desc = "Show Buffs Casted by the NPC itself",
 		hidden = IS_WOW_PROJECT_MIDNIGHT,
+	},
+	{
+		type = "toggle",
+		boxfirst = true,
+		get = function() return Plater.db.profile.aura_show_buff_on_enemy_npc end,
+		set = function (self, fixedparam, value) 
+			Plater.db.profile.aura_show_buff_on_enemy_npc = value
+			Plater.RefreshDBUpvalues()
+			Plater.UpdateAllPlates()
+		end,
+		name = "Show Buffs on enemy NPCs",
+		desc = "Show Buffs on enemy NPCs",
+		hidden = not IS_WOW_PROJECT_MIDNIGHT,
 	},
 	{
 		type = "toggle",
@@ -2903,7 +2998,15 @@ Plater.CreateAuraTesting()
 	local auraConfigPanel = DF:CreateAuraConfigPanel (auraFilterFrame, "$parentAuraConfig", Plater.db.profile, method_change_callback, aura_options, debuff_panel_texts)
 	auraConfigPanel:SetPoint ("topleft", auraFilterFrame, "topleft", 10, startY)
 	auraConfigPanel:SetSize (f:GetWidth() - 20, f:GetHeight() + startY)
-	auraConfigPanel:Show()
+	if IS_WOW_PROJECT_MIDNIGHT then
+		auraConfigPanel:Hide()
+		local optionsTable = {
+            {type = "label", get = function() return "Not available in Midnight and onwards due to API limitations." end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+        }
+        DF:BuildMenu(auraFilterFrame, optionsTable, startX, startY, 800, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template)
+	else
+		auraConfigPanel:Show()
+	end
 	auraFilterFrame.auraConfigPanel = auraConfigPanel
 	
 	--create bottom highlights
@@ -3564,6 +3667,7 @@ Plater.CreateAuraTesting()
 				end,
 				name = "Enrage",
 				desc = "When the unit has an enrage effect on it, show it.",
+				hidden = IS_WOW_PROJECT_MIDNIGHT,
 			},
 			--show enrages
 			{
@@ -3576,6 +3680,7 @@ Plater.CreateAuraTesting()
 				end,
 				name = "Magic",
 				desc = "When the unit has a magic buff on it, show it.",
+				hidden = IS_WOW_PROJECT_MIDNIGHT,
 			},
 			--show offensive player CDs
 			{
@@ -3588,6 +3693,7 @@ Plater.CreateAuraTesting()
 				end,
 				name = "Offensive player CDs",
 				desc = "When the unit has an offensive effect on it, show it.",
+				hidden = IS_WOW_PROJECT_MIDNIGHT,
 			},
 			--show defensive CDs
 			{
@@ -3600,6 +3706,7 @@ Plater.CreateAuraTesting()
 				end,
 				name = "Defensive player CDs",
 				desc = "When the unit has a defensive effect on it, show it.",
+				hidden = IS_WOW_PROJECT_MIDNIGHT,
 			},
 			
 			{type = "breakline"},

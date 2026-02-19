@@ -1,12 +1,11 @@
--- HousingVendor - NPC/Boss Drop Items
+﻿-- HousingVendor - NPC/Boss Drop Items
 
 
 local ADDON_NAME, ns = ...
 
 -- Register boss/NPC drop items by expansion
 HousingDataAggregator_RegisterExpansionItems("drop", {
-  -- Battle for Azeroth
-  {
+{
     itemID = 267008,
     type = "drop",
     expansion = "Battle for Azeroth",
@@ -16,8 +15,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 49.2, y = 52.4, mapID = 2133 },
     itemName = "Crucible Votive Rack",
     notes = "Final boss; confirmed.",
-  },
-  {
+  },{
     itemID = 241066,
     type = "drop",
     expansion = "Battle for Azeroth",
@@ -28,29 +26,12 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     itemName = "Forsaken Spiked Brazier",
     notes = "Rare spawn cycle. Use Zidormi to access present timeline.",
     alternateVendor = {
-      npcName = "Arcanist Peroleth",
+      npcName = "Granokk",
       zone = "Zuldazar",
       coordinates = { x = 53.4, y = 39.8, mapID = 862 },
     },
-  },
-  {
+  },{
     itemID = 245462,
-    type = "drop",
-    expansion = "Battle for Azeroth",
-    npcID = 147261,
-    npcName = "Granokk",
-    zone = "Arathi Highlands",
-    coordinates = { x = 47.0, y = 56.0, mapID = 14 },
-    itemName = "Elven Temple Brazier",
-    notes = "Rare spawn cycle. Use Zidormi to access present timeline.",
-    alternateVendor = {
-      npcName = "Ellandrieth",
-      zone = "Bel'ameth",
-      coordinates = { x = 54.6, y = 62.4, mapID = 2369 },
-    },
-  },
-  {
-    itemID = 245627,
     type = "drop",
     expansion = "Battle for Azeroth",
     npcID = 147261,
@@ -60,12 +41,26 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     itemName = "Banshee Queen's Banner",
     notes = "Rare spawn cycle. Use Zidormi to access present timeline.",
     alternateVendor = {
-      npcName = "Arcanist Peroleth",
+      npcName = "Granokk",
+      zone = "Bel'ameth",
+      coordinates = { x = 54.6, y = 62.4, mapID = 2369 },
+    },
+  },{
+    itemID = 245627,
+    type = "drop",
+    expansion = "Battle for Azeroth",
+    npcID = 147261,
+    npcName = "Granokk",
+    zone = "Arathi Highlands",
+    coordinates = { x = 47.0, y = 56.0, mapID = 14 },
+    itemName = "Elven Temple Brazier",
+    notes = "Rare spawn cycle. Use Zidormi to access present timeline.",
+    alternateVendor = {
+      npcName = "Granokk",
       zone = "Zuldazar",
       coordinates = { x = 53.4, y = 39.8, mapID = 862 },
     },
-  },
-  {
+  },{
     itemID = 246110,
     type = "drop",
     expansion = "Battle for Azeroth",
@@ -76,12 +71,11 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     itemName = "Filigree Moon Sconce",
     notes = "Rare spawn cycle. Use Zidormi to access present timeline.",
     alternateVendor = {
-      npcName = "Ellandrieth",
+      npcName = "Granokk",
       zone = "Bel'ameth",
       coordinates = { x = 54.6, y = 62.4, mapID = 2369 },
     },
-  },
-  {
+  },{
     itemID = 246421,
     type = "drop",
     expansion = "Battle for Azeroth",
@@ -92,13 +86,12 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     itemName = "Stolen Ironforge Seat",
     notes = "Final boss platform.",
     alternateVendor = {
-      npcName = "Pawdo",
+      npcName = "Harlan Sweete",
       zone = "Dornogal",
       coordinates = { x = 45.2, y = 41.8, mapID = 2552 },
       notes = "Also in Stormwind/Orgrimmar. Requires 'Furniture Favor' quest.",
     },
-  },
-  {
+  },{
     itemID = 255672,
     type = "drop",
     expansion = "Battle for Azeroth",
@@ -109,13 +102,12 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     itemName = "Gnomish Tesla Tower",
     notes = "Final boss (primary).",
     alternateVendor = {
-      npcName = "Pawdo",
+      npcName = "King Mechagon",
       zone = "Dornogal",
       coordinates = { x = 45.2, y = 41.8, mapID = 2552 },
       notes = "Also in Stormwind/Orgrimmar. Requires 'Furniture Favor' quest.",
     },
-  },
-  {
+  },{
     itemID = 245681,
     type = "drop",
     expansion = "Battle for Azeroth",
@@ -125,9 +117,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 48.6, y = 72.2, mapID = 1347 },
     itemName = "Tidesage's Fireplace",
     notes = "Final boss.",
-  },
-  -- Cataclysm
-  {
+  },{
     itemID = 244655,
     type = "drop",
     expansion = "Cataclysm",
@@ -137,57 +127,22 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 46.8, y = 72.4, mapID = 209 },
     itemName = "Gilnean Circular Rug",
     notes = "Final boss upper.",
-  },
-  {
-    itemID = 246108,
-    type = "drop",
-    expansion = "Cataclysm",
-    npcID = 0,
-    npcName = "Echo of Baine",
-    zone = "End Time Dungeon",
-    coordinates = { x = 48.6, y = 30.6, mapID = 241 },
-    itemName = "Embellished Dwarven Tome",
-    alternateVendor = {
-      npcName = "Thargas Anvilmar",
-      zone = "Ironforge",
-      coordinates = { x = 53.6, y = 33.2, mapID = 87 },
-    },
-  },
-  -- Classic
-  {
+  },{
     itemID = 246429,
     type = "drop",
     expansion = "Classic",
     npcID = 9019,
-    npcName = "Emperor Thaurissan",
+    npcName = "Emperor Dagran Thaurissan",
     zone = "Blackrock Depths Raid",
     coordinates = { x = 90.9, y = 11.8, mapID = 1584 },
     itemName = "Dark Iron Chandelier",
     notes = "Shadowforge final.",
     alternateVendor = {
-      npcName = "Moira Thaurissan",
+      npcName = "Emperor Dagran Thaurissan",
       zone = "Ironforge",
       coordinates = { x = 39.8, y = 88.0, mapID = 87 },
     },
-  },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  {
+  },{
     itemID = 256682,
     type = "drop",
     expansion = "Classic",
@@ -198,29 +153,26 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     itemName = "Magistrix's Garden Fountain",
     notes = "Solo LFR/Timewalking.",
     alternateVendor = {
-      npcName = "First Thalyssra",
+      npcName = "Spellblade Aluriel",
       zone = "Suramar",
       coordinates = { x = 35.0, y = 46.8, mapID = 680 },
     },
-  },
-  {
+  },{
     itemID = 246846,
     type = "drop",
     expansion = "Classic",
     npcID = 56427,
-    npcName = "Sha of Doubt",
+    npcName = "Warmaster Blackhorn",
     zone = "Temple of Jade Serpent",
     coordinates = { x = 48.6, y = 67.2, mapID = 960 },
     itemName = "Tome of Pandaren Wisdom",
     notes = "Boss room.",
     alternateVendor = {
-      npcName = "Lorewalker Cho",
+      npcName = "Warmaster Blackhorn",
       zone = "Kun-Lai Summit",
       coordinates = { x = 58.0, y = 71.4, mapID = 379 },
     },
-  },
-
-  {
+  },{
     itemID = 260359,
     type = "drop",
     expansion = "Classic",
@@ -230,8 +182,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 62.4, y = 40.5, mapID = 14032 },
     itemName = "Valdrakken Bookcase",
     notes = "Corrected: Final boss (Thaldraszus dungeon); 1/drop low diff.",
-  },
-  {
+  },{
     itemID = 258268,
     type = "drop",
     expansion = "Classic",
@@ -241,19 +192,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 14882 },
     itemName = "Waxmaster's Candle Rack",
     notes = "Final boss (Ringing Deeps dungeon). Unconfirmed drops—test M+.",
-  },
-  {
-    itemID = 264497,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Lothraxion (Void)",
-    zone = "Hallowfall / Siren Isle",
-    coordinates = { x = 50.0, y = 50.0, mapID = 2215 },
-    itemName = "Imperator's Torment Crystal",
-    notes = "Boss drop (Encounter 63626). Void-themed crystal.",
-  },
-  {
+  },{
     itemID = 264246,
     type = "drop",
     expansion = "Classic",
@@ -263,41 +202,17 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 16531 },
     itemName = "Eerie Iridescent Riftshroom",
     notes = "Final (only) boss drop. Aberration-themed shroom. Confirmed Wowhead.",
-  },
-  {
-    itemID = 264492,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "L'ura / Temptation",
-    zone = "Siren Isle / Hallowfall",
-    coordinates = { x = 50.0, y = 50.0, mapID = 2215 },
-    itemName = "Chaotic Void Maw",
-    notes = "Boss drop (Encounter 63628). Void maw decor.",
-  },
-  {
+  },{
     itemID = 264187,
     type = "drop",
     expansion = "Classic",
     npcID = 246729,
-    npcName = "Belo'ren",
+    npcName = "Light Ember",
     zone = "Siren Isle (Rare)",
     coordinates = { x = 50.0, y = 50.0, mapID = 16472 },
     itemName = "Blessed Phoenix Egg",
     notes = "Final boss drop (Light Ember child). /way Quel'Danas entrance.",
-  },
-  {
-    itemID = 264500,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Alleria / Vaelgor",
-    zone = "Siren Isle Scenario",
-    coordinates = { x = 50.0, y = 50.0, mapID = 2346 },
-    itemName = "Devouring Host Ritual Engine",
-    notes = "Final encounter drop.",
-  },
-  {
+  },{
     itemID = 262957,
     type = "drop",
     expansion = "Classic",
@@ -307,64 +222,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 2346 },
     itemName = "Tattered Vanguard Banner",
     notes = "Confirmed boss drop.",
-  },
-  {
-    itemID = 264494,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Fallen-King Salhadaar",
-    zone = "Siren Isle",
-    coordinates = { x = 50.0, y = 50.0, mapID = 2346 },
-    itemName = "Banded Domanaar Storage Crate",
-    notes = "Delve/raid drop.",
-  },
-  {
-    itemID = 264491,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Charonus",
-    zone = "Siren Isle",
-    coordinates = { x = 50.0, y = 50.0, mapID = 2346 },
-    itemName = "Voidbound Holding Cell",
-    notes = "Void-themed delve boss.",
-  },
-  {
-    itemID = 264498,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Vorasius",
-    zone = "Hallowfall (Voidspire)",
-    coordinates = { x = 50.0, y = 50.0, mapID = 2215 },
-    itemName = "Voltaic Trigore Egg",
-    notes = "Egg drop (Encounter 63658).",
-  },
-  {
-    itemID = 265950,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Chimaerus",
-    zone = "Midnight Falls Raid",
-    coordinates = { x = 50.0, y = 50.0, mapID = 4080 },
-    itemName = "Dreamrift Vanquisher's Aureate Trophy",
-    notes = "Cutting Edge: Chimaerus achievement reward (Mythic). Aureate tier. Auto-House Chest.",
-  },
-  {
-    itemID = 265949,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Midnight Falls Boss",
-    zone = "Midnight Falls Raid",
-    coordinates = { x = 50.0, y = 50.0, mapID = 4080 },
-    itemName = "March on Quel'Danas Vanquisher's Aureate Trophy",
-    notes = "Cutting Edge: Midnight Falls reward. Aureate.",
-  },
-
-  {
+  },{
     itemID = 253451,
     type = "drop",
     expansion = "Classic",
@@ -374,8 +232,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 4080 },
     itemName = "Veilroot Fountain",
     notes = "Final boss (dream theme).",
-  },
-  {
+  },{
     itemID = 263230,
     type = "drop",
     expansion = "Classic",
@@ -385,52 +242,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 2346 },
     itemName = "Magister's Bookshelf",
     notes = "Silvermoon-themed dungeon.",
-  },
-  {
-    itemID = 264717,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Rak'tul",
-    zone = "Siren Isle",
-    coordinates = { x = 50.0, y = 50.0, mapID = 2346 },
-    itemName = "Amani Warding Hex",
-    notes = "Troll boss drop.",
-  },
-  {
-    itemID = 264338,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Lothraxion",
-    zone = "Siren Isle",
-    coordinates = { x = 50.0, y = 50.0, mapID = 2346 },
-    itemName = "Domanaar Control Console",
-    notes = "Light/Void boss.",
-  },
-  {
-    itemID = 264332,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Nalorakk",
-    zone = "Zul'Aman (Siren Update)",
-    coordinates = { x = 50.0, y = 50.0, mapID = 2437 },
-    itemName = "Amani Ritual Altar",
-    notes = "Classic boss (timewalk?).",
-  },
-  {
-    itemID = 264336,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Charonus",
-    zone = "Siren Isle",
-    coordinates = { x = 50.0, y = 50.0, mapID = 2346 },
-    itemName = "Voidlight Brazier",
-    notes = "Lighting drop.",
-  },
-  {
+  },{
     itemID = 256683,
     type = "drop",
     expansion = "Classic",
@@ -440,8 +252,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 2346 },
     itemName = "Silvermoon Training Dummy",
     notes = "Final boss (indoor dummy).",
-  },
-  {
+  },{
     itemID = 267007,
     type = "drop",
     expansion = "Classic",
@@ -451,8 +262,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 658 },
     itemName = "Eye of Acherus",
     notes = "Legacy ICC wing (soloable).",
-  },
-  {
+  },{
     itemID = 267008,
     type = "drop",
     expansion = "Classic",
@@ -462,85 +272,17 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 49.2, y = 52.4, mapID = 2133 },
     itemName = "Crucible Votive Rack",
     notes = "Final boss; confirmed.",
-  },
-  {
+  },{
     itemID = 263238,
     type = "drop",
     expansion = "Classic",
     npcID = 23134,
-    npcName = "Assault of the Zaqali",
+    npcName = "Hawk Spirit",
     zone = "Aberrus Raid",
     coordinates = { x = 59.2, y = 41.8, mapID = 2569 },
     itemName = "Illicit Long Table",
     notes = "Boss room.",
-  },
-  {
-    itemID = 266886,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Chimaerus",
-    zone = "Midnight Falls Raid",
-    coordinates = { x = 50.0, y = 50.0, mapID = 4080 },
-    itemName = "Dreamrift Vanquisher's Gleaming Trophy",
-    notes = "Cutting Edge Gleaming tier.",
-  },
-  {
-    itemID = 266885,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Midnight Falls",
-    zone = "March on Quel'Danas",
-    coordinates = { x = 50.0, y = 50.0, mapID = 4080 },
-    itemName = "March on Quel'Danas Vanquisher's Gleaming Trophy",
-    notes = "Gleaming tier achievement.",
-  },
-  {
-    itemID = 266887,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Crown of the Cosmos",
-    zone = "The Voidspire",
-    coordinates = { x = 50.0, y = 50.0, mapID = 2215 },
-    itemName = "Voidspire Vanquisher's Gleaming Trophy",
-    notes = "Gleaming.",
-  },
-  {
-    itemID = 267645,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Chimaerus",
-    zone = "Midnight Falls Raid",
-    coordinates = { x = 50.0, y = 50.0, mapID = 4080 },
-    itemName = "Dreamrift Vanquisher's Argent Trophy",
-    notes = "Argent tier.",
-  },
-  {
-    itemID = 267646,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Midnight Falls Boss",
-    zone = "Midnight Falls Raid",
-    coordinates = { x = 50.0, y = 50.0, mapID = 4080 },
-    itemName = "March on Quel'Danas Vanquisher's Argent Trophy",
-    notes = "Argent.",
-  },
-  {
-    itemID = 268049,
-    type = "drop",
-    expansion = "Classic",
-    npcID = 0,
-    npcName = "Crown of Cosmos",
-    zone = "Hallowfall",
-    coordinates = { x = 50.0, y = 50.0, mapID = 2215 },
-    itemName = "Voidspire Vanquisher's Argent Trophy",
-    notes = "Argent tier.",
-  },
-  {
+  },{
     itemID = 258744,
     type = "drop",
     expansion = "Classic",
@@ -550,18 +292,16 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 1492 },
     itemName = "Skyreach Circular Table",
     notes = "WoD dungeon final boss.",
-  },
-  {
+  },{
     itemID = 267007,
     type = "drop",
     expansion = "Classic",
     npcID = 4795,
-    npcName = "Razorgore the Untamed",
+    npcName = "Force of Nature",
     zone = "Blackwing Lair",
     coordinates = { x = 0.0, y = 0.0, mapID = 469 },
     itemName = "Eye of Acherus",
-  },
-  {
+  },{
     itemID = 248332,
     type = "drop",
     expansion = "Classic",
@@ -571,20 +311,17 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 24.6, y = 82.4, mapID = 36 },
     itemName = "Stormwind Footlocker",
     notes = "Final boss.",
-  },
-  -- Dragonflight
-  {
+  },{
     itemID = 263238,
     type = "drop",
     expansion = "Dragonflight",
     npcID = 23134,
-    npcName = "Assault of the Zaqali",
+    npcName = "Hawk Spirit",
     zone = "Aberrus Raid",
     coordinates = { x = 59.2, y = 41.8, mapID = 2569 },
     itemName = "Illicit Long Table",
     notes = "Boss room.",
-  },
-  {
+  },{
     itemID = 260359,
     type = "drop",
     expansion = "Dragonflight",
@@ -594,8 +331,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 62.4, y = 40.5, mapID = 2097 },
     itemName = "Valdrakken Bookcase",
     notes = "Corrected: Final boss (Thaldraszus dungeon); 1/drop low diff.",
-  },
-  {
+  },{
     itemID = 256428,
     type = "drop",
     expansion = "Dragonflight",
@@ -605,48 +341,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 14063 },
     itemName = "Valdrakken Hanging Lamp",
     notes = "Boss (w/ Kyrakka); confirmed DF dungeon.",
-  },
-  {
-    itemID = 264492,
-    type = "drop",
-    expansion = "Dragonflight",
-    npcID = 24466,
-    npcName = "The Power of Temptation",
-    zone = "10.2 Scenario",
-    coordinates = { x = 0, y = 0, mapID = 2653 },
-    itemName = "Chaotic Void Maw",
-  },
-  {
-    itemID = 265949,
-    type = "drop",
-    expansion = "Dragonflight",
-    npcID = 24466,
-    npcName = "The Power of Temptation",
-    zone = "10.2 Scenario",
-    coordinates = { x = 0, y = 0, mapID = 2653 },
-    itemName = "March on Quel'Danas Vanquisher's Aureate Trophy",
-  },
-  {
-    itemID = 266885,
-    type = "drop",
-    expansion = "Dragonflight",
-    npcID = 24466,
-    npcName = "The Power of Temptation",
-    zone = "10.2 Scenario",
-    coordinates = { x = 0, y = 0, mapID = 2653 },
-    itemName = "March on Quel'Danas Vanquisher's Gleaming Trophy",
-  },
-  {
-    itemID = 267646,
-    type = "drop",
-    expansion = "Dragonflight",
-    npcID = 24466,
-    npcName = "The Power of Temptation",
-    zone = "10.2 Scenario",
-    coordinates = { x = 0, y = 0, mapID = 2653 },
-    itemName = "March on Quel'Danas Vanquisher's Argent Trophy",
-  },
-  {
+  },{
     itemID = 246429,
     type = "drop",
     expansion = "Dragonflight",
@@ -656,19 +351,17 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 90.9, y = 11.8, mapID = 1584 },
     itemName = "Dark Iron Chandelier",
     notes = "Shadowforge final.",
-  },
-  {
+  },{
     itemID = 262957,
     type = "drop",
     expansion = "Dragonflight",
     npcID = 24432,
-    npcName = "Volcoross",
+    npcName = "Tempest-Forge Destroyer Image",
     zone = "Amirdrassil, the Dream's Hope",
     coordinates = { x = 50.0, y = 50.0, mapID = 2549 },
     itemName = "Tattered Vanguard Banner",
     notes = "Alt/primary drop.",
-  },
-  {
+  },{
     itemID = 256354,
     type = "drop",
     expansion = "Dragonflight",
@@ -678,9 +371,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 14011 },
     itemName = "Qalashi Goulash",
     notes = "Final boss.",
-  },
-  -- Legion
-  {
+  },{
     itemID = 247913,
     type = "drop",
     expansion = "Legion",
@@ -691,12 +382,11 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     itemName = "Ornate Suramar Table",
     notes = "Final boss (Suramar). Primary.",
     alternateVendor = {
-      npcName = "First Thalyssra",
+      npcName = "Advisor Melandrus",
       zone = "Suramar",
       coordinates = { x = 35.0, y = 46.8, mapID = 680 },
     },
-  },
-  {
+  },{
     itemID = 245451,
     type = "drop",
     expansion = "Legion",
@@ -707,12 +397,11 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     itemName = "Thunder Totem Brazier",
     notes = "Final boss. Drop ~0.7%; can double-drop. Entrance Highmountain /way 49.6 68.5 (south of Thunder Totem).",
     alternateVendor = {
-      npcName = "Slyhoof the Elder",
+      npcName = "Dargrul",
       zone = "Thunder Totem",
       coordinates = { x = 0, y = 0, mapID = 0 },
     },
-  },
-  {
+  },{
     itemID = 246865,
     type = "drop",
     expansion = "Legion",
@@ -727,8 +416,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
       zone = "The Waking Shores",
       coordinates = { x = 47.0, y = 82.6, mapID = 2022 },
     },
-  },
-  {
+  },{
     itemID = 241044,
     type = "drop",
     expansion = "Legion",
@@ -739,12 +427,11 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     itemName = "Argussian Crate",
     notes = "Final boss (dungeon in Mac'Aree, Argus). Drop confirmed. Entrance via Argus portal.",
     alternateVendor = {
-      npcName = "Captain Fareeya",
+      npcName = "L'ura",
       zone = "Vindicaar",
       coordinates = { x = 70.0, y = 51.0, mapID = 0 },
     },
-  },
-  {
+  },{
     itemID = 238857,
     type = "drop",
     expansion = "Legion",
@@ -755,12 +442,11 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     itemName = "Moon-Blessed Storage Crate",
     notes = "Final boss room (end of dungeon). Drop ~0.5-0.7%. Entrance /way Val'sharah 59.2 31.5. Solo LFR/normal.",
     alternateVendor = {
-      npcName = "Ellandrieth",
+      npcName = "Shade of Xavius",
       zone = "Bel'ameth / Central Plaza",
       coordinates = { x = 50.2, y = 62.4, mapID = 2369 },
     },
-  },
-  {
+  },{
     itemID = 256682,
     type = "drop",
     expansion = "Legion",
@@ -771,12 +457,11 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     itemName = "Magistrix's Garden Fountain",
     notes = "Solo LFR/Timewalking.",
     alternateVendor = {
-      npcName = "First Thalyssra",
+      npcName = "Spellblade Aluriel",
       zone = "Suramar",
       coordinates = { x = 35.0, y = 46.8, mapID = 680 },
     },
-  },
-  {
+  },{
     itemID = 246865,
     type = "drop",
     expansion = "Legion",
@@ -786,9 +471,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 0 },
     itemName = "Tome of Reliquary Insights",
     notes = "Alt: Viz'aduum (Karazhan return) secondary.",
-  },
-  -- Mists of Pandaria
-  {
+  },{
     itemID = 253242,
     type = "drop",
     expansion = "Mists of Pandaria",
@@ -798,20 +481,17 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 6738 },
     itemName = "Horde Warlord's Throne",
     notes = "Final boss (throne platform).",
-  },
-  {
+  },{
     itemID = 246846,
     type = "drop",
     expansion = "Mists of Pandaria",
     npcID = 56427,
-    npcName = "Sha of Doubt",
+    npcName = "Warmaster Blackhorn",
     zone = "Temple of Jade Serpent",
     coordinates = { x = 48.6, y = 67.2, mapID = 960 },
     itemName = "Tome of Pandaren Wisdom",
     notes = "Boss room.",
-  },
-  -- The War Within
-  {
+  },{
     itemID = 245560,
     type = "drop",
     expansion = "The War Within",
@@ -821,8 +501,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 15103 },
     itemName = "Meadery Ochre Window",
     notes = "Final boss (meadery interior). Drop ~0.9%. Isle of Dorn dungeon  (Follower/M+ viable).",
-  },
-  {
+  },{
     itemID = 245938,
     type = "drop",
     expansion = "The War Within",
@@ -832,21 +511,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 14954 },
     itemName = "Overgrown Arathi Trellis",
     notes = "Final boss. Drop ~0.7%. Huge exterior/interior usable. Khaz Algar dungeon.",
-  },
-  -- Unknown
-  {
-    itemID = 264338,
-    type = "drop",
-    expansion = "Midnight",
-    npcID = 24610,
-    npcName = "Lothraxion",
-    zone = "Midnight",
-    coordinates = { x = 0, y = 0, mapID = 1963 },
-    itemName = "Domanaar Control Console",
-    notes = "Blinded by betrayal, Lothraxion storms the Nexus-Point alone.",
-  },
-  -- Warlords of Draenor
-  {
+  },{
     itemID = 256682,
     type = "drop",
     expansion = "Warlords of Draenor",
@@ -856,19 +521,17 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 41.2, y = 60.8, mapID = 1529 },
     itemName = "Magistrix's Garden Fountain",
     notes = "Solo LFR/Timewalking.",
-  },
-  {
+  },{
     itemID = 247913,
     type = "drop",
     expansion = "Warlords of Draenor",
     npcID = 8884,
-    npcName = "Brackenspore",
+    npcName = "Skeletal Mount",
     zone = "Highmaul",
     coordinates = { x = 50.0, y = 50.0, mapID = 610 },
     itemName = "Ornate Suramar Table",
     notes = "Alt/outdated/mislabel.",
-  },
-  {
+  },{
     itemID = 245434,
     type = "drop",
     expansion = "Warlords of Draenor",
@@ -878,8 +541,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 52.0, y = 48.0, mapID = 6951 },
     itemName = "Orgrimmar Sconce",
     notes = "Final boss (train platform). Drop ~0.15%. Entrance Gorgrond.",
-  },
-  {
+  },{
     itemID = 251331,
     type = "drop",
     expansion = "Warlords of Draenor",
@@ -889,8 +551,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 50.0, y = 50.0, mapID = 6912 },
     itemName = "Draenic Ottoman",
     notes = "Final boss.",
-  },
-  {
+  },{
     itemID = 245435,
     type = "drop",
     expansion = "Warlords of Draenor",
@@ -900,10 +561,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 48.0, y = 70.0, mapID = 7307 },
     itemName = "Horde Battle Emblem",
     notes = "Final boss (throne room). Drop ~0.3%. Entrance Burning Steppes.",
-  },
-  -- Update 12.0.1.65617
-  -- Mists of Pandaria
-  {
+  },{
     itemID = 247664,
     type = "drop",
     expansion = "Mists of Pandaria",
@@ -913,8 +571,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 0, y = 0, mapID = 371 },
     itemName = "Jade Temple Incense Burner",
     notes = "100% Drop Rate (Dungeon) - Final Boss",
-  },
-  {
+  },{
     itemID = 247742,
     type = "drop",
     expansion = "Mists of Pandaria",
@@ -924,21 +581,17 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 52.6, y = 63.4, mapID = 554 },
     itemName = "Timeless Dumpling Cart",
     notes = "Rare Drop",
-  },
-  -- Warlords of Draenor
-  {
+  },{
     itemID = 247665,
     type = "drop",
     expansion = "Warlords of Draenor",
     npcID = 92615,  -- Base ID for Tanaan Rare Elites (multiple variants)
-    npcName = "Tanaan Rares",
+    npcName = "Hardened Defender",
     zone = "Tanaan Jungle",
     coordinates = { x = 0, y = 0, mapID = 534 },
     itemName = "Gate of the Apexis",
     notes = "Rare World Drop - Various Rare Elites throughout Tanaan Jungle",
-  },
-  -- Dragonflight
-  {
+  },{
     itemID = 250703,
     type = "drop",
     expansion = "Dragonflight",
@@ -948,8 +601,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 51.0, y = 61.0, mapID = 2151 },
     itemName = "War Creche Teaching Crystal",
     notes = "Elite Mob Farm",
-  },
-  {
+  },{
     itemID = 250704,
     type = "drop",
     expansion = "Dragonflight",
@@ -959,32 +611,27 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 0, y = 0, mapID = 2151 },
     itemName = "Ancient Weyrn Device",
     notes = "Weekly RNG Chest Loot - Random loot from Vault Chests",
-  },
-  -- Midnight
-  {
+  },{
     itemID = 269269,
     type = "drop",
     expansion = "Midnight",
     npcID = 248007,
-    npcName = "Devouring Host",
+    npcName = "Devouring Spawn",
     zone = "Ghostlands: Windrunner Spire",
     coordinates = { x = 0, y = 0, mapID = 95 },
-    itemName = "Devouring Ritual Spire",
+    itemName = "Devouring Host Ritual Spire",
     notes = "Rare Elite Drop (Midnight)",
-  },
-  {
+  },{
     itemID = 264352,
     type = "drop",
     expansion = "Midnight",
     npcID = 250102,
-    npcName = "Eversong Rares",
+    npcName = "Pestering Swarm",
     zone = "Eversong Woods (Midnight)",
     coordinates = { x = 0, y = 0, mapID = 94 },
     itemName = "Elegant Elven Bathtub",
     notes = "World Rare Drop - Various rare elite spawns in Eversong Woods",
-  },
-  -- Classic/Burning Crusade
-  {
+  },{
     itemID = 260785,
     type = "drop",
     expansion = "Classic",
@@ -994,9 +641,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 0, y = 0, mapID = 0 },  -- TODO: Get mapID
     itemName = "Miniature Replica Dark Portal",
     notes = "Extremely Rare Legacy Drop",
-  },
-  -- Holiday Events
-  {
+  },{
     itemID = 245292,
     type = "drop",
     expansion = "Holiday",
@@ -1006,8 +651,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 0, y = 0, mapID = 84 },  -- Stormwind (84) / Orgrimmar (85)
     itemName = "Winter Veil Tree",
     notes = "Yearly Gift Box - Daily loot from Stolen Present objects during Feast of Winter Veil (Stormwind/Orgrimmar)",
-  },
-  {
+  },{
     itemID = 248101,
     type = "drop",
     expansion = "Holiday",
@@ -1017,8 +661,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 0, y = 0, mapID = 229 },
     itemName = "Traditional Brewfest Stein",
     notes = "Seasonal Dungeon Loot - Available during Brewfest holiday event",
-  },
-  {
+  },{
     itemID = 250794,
     type = "drop",
     expansion = "Holiday",
@@ -1026,10 +669,9 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     npcName = "Noblegarden Event",
     zone = "Major Cities",
     coordinates = { x = 0, y = 0, mapID = 0 },
-    itemName = "Colorful White Egg",
+    itemName = "Colorful White Noblegarden Egg",
     notes = "Noblegarden holiday event - Purchase with Noblegarden Chocolate (currency 44791)",
-  },
-  {
+  },{
     itemID = 250795,
     type = "drop",
     expansion = "Holiday",
@@ -1037,10 +679,9 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     npcName = "Noblegarden Event",
     zone = "Major Cities",
     coordinates = { x = 0, y = 0, mapID = 0 },
-    itemName = "Colorful Blue Egg",
+    itemName = "Colorful Blue Noblegarden Egg",
     notes = "Noblegarden holiday event - Purchase with Noblegarden Chocolate (currency 44791)",
-  },
-  {
+  },{
     itemID = 250796,
     type = "drop",
     expansion = "Holiday",
@@ -1048,10 +689,9 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     npcName = "Noblegarden Event",
     zone = "Major Cities",
     coordinates = { x = 0, y = 0, mapID = 0 },
-    itemName = "Colorful Purple Egg",
+    itemName = "Colorful Purple Noblegarden Egg",
     notes = "Noblegarden holiday event - Purchase with Noblegarden Chocolate (currency 44791)",
-  },
-  {
+  },{
     itemID = 250797,
     type = "drop",
     expansion = "Holiday",
@@ -1061,8 +701,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 0, y = 0, mapID = 0 },
     itemName = "Spring Blossom Ceiling Light",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 250798,
     type = "drop",
     expansion = "Holiday",
@@ -1072,8 +711,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 0, y = 0, mapID = 0 },
     itemName = "Spring Blossom Shelf",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 253244,
     type = "drop",
     expansion = "Holiday",
@@ -1083,8 +721,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 0, y = 0, mapID = 0 },
     itemName = "Lunar Celebrant's Aquarium",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 253254,
     type = "drop",
     expansion = "Holiday",
@@ -1094,8 +731,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 0, y = 0, mapID = 0 },
     itemName = "Lunar Celebrant's Cradle",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 253255,
     type = "drop",
     expansion = "Holiday",
@@ -1103,10 +739,9 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     npcName = "Lunar Festival Vendor",
     zone = "Moonglade",
     coordinates = { x = 0, y = 0, mapID = 0 },
-    itemName = "Lunar Wide Pillow Roll",
+    itemName = "Lunar Celebrant's Wide Pillow Roll",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 253256,
     type = "drop",
     expansion = "Holiday",
@@ -1114,10 +749,9 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     npcName = "Lunar Festival Vendor",
     zone = "Moonglade",
     coordinates = { x = 0, y = 0, mapID = 0 },
-    itemName = "Lunar Pillow Roll",
+    itemName = "Lunar Celebrant's Pillow Roll",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 253257,
     type = "drop",
     expansion = "Holiday",
@@ -1125,10 +759,9 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     npcName = "Lunar Festival Vendor",
     zone = "Moonglade",
     coordinates = { x = 0, y = 0, mapID = 0 },
-    itemName = "Lunar Privacy Screen",
+    itemName = "Lunar Celebrant's Privacy Screen",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 253290,
     type = "drop",
     expansion = "Holiday",
@@ -1136,10 +769,9 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     npcName = "Lunar Festival Vendor",
     zone = "Moonglade",
     coordinates = { x = 0, y = 0, mapID = 0 },
-    itemName = "Lunar Ornate Vanity",
+    itemName = "Lunar Celebrant's Ornate Vanity",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 253291,
     type = "drop",
     expansion = "Holiday",
@@ -1149,8 +781,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 0, y = 0, mapID = 0 },
     itemName = "Lunar Celebrant's Compact",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 253292,
     type = "drop",
     expansion = "Holiday",
@@ -1158,10 +789,9 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     npcName = "Lunar Festival Vendor",
     zone = "Moonglade",
     coordinates = { x = 0, y = 0, mapID = 0 },
-    itemName = "Lunar Bamboo Canister",
+    itemName = "Lunar Celebrant's Bamboo Canister",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 253293,
     type = "drop",
     expansion = "Holiday",
@@ -1169,10 +799,9 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     npcName = "Lunar Festival Vendor",
     zone = "Moonglade",
     coordinates = { x = 0, y = 0, mapID = 0 },
-    itemName = "Lunar Tea Tray",
+    itemName = "Lunar Celebrant's Tea Tray",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 253294,
     type = "drop",
     expansion = "Holiday",
@@ -1180,10 +809,9 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     npcName = "Lunar Festival Vendor",
     zone = "Moonglade",
     coordinates = { x = 0, y = 0, mapID = 0 },
-    itemName = "Lunar Teacup",
+    itemName = "Lunar Celebrant's Teacup",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 253295,
     type = "drop",
     expansion = "Holiday",
@@ -1191,10 +819,9 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     npcName = "Lunar Festival Vendor",
     zone = "Moonglade",
     coordinates = { x = 0, y = 0, mapID = 0 },
-    itemName = "Lunar Teapot",
+    itemName = "Lunar Celebrant's Teapot",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 253296,
     type = "drop",
     expansion = "Holiday",
@@ -1202,10 +829,9 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     npcName = "Lunar Festival Vendor",
     zone = "Moonglade",
     coordinates = { x = 0, y = 0, mapID = 0 },
-    itemName = "Lunar Tea Set",
+    itemName = "Lunar Celebrant's Tea Set",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 253297,
     type = "drop",
     expansion = "Holiday",
@@ -1213,10 +839,9 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     npcName = "Lunar Festival Vendor",
     zone = "Moonglade",
     coordinates = { x = 0, y = 0, mapID = 0 },
-    itemName = "Lunar Vase w/ Maple Branch",
+    itemName = "Lunar Celebrant's Vase with Maple Branch",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 263290,
     type = "drop",
     expansion = "Holiday",
@@ -1226,8 +851,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 0, y = 0, mapID = 0 },
     itemName = "Spring Blossom Tree",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  {
+  },{
     itemID = 263291,
     type = "drop",
     expansion = "Holiday",
@@ -1237,21 +861,7 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 0, y = 0, mapID = 0 },
     itemName = "Spring Blossom Pond",
     notes = "Lunar Festival holiday event - Purchase with Coin of Ancestry (currency 21100)",
-  },
-  -- The War Within
-  {
-    itemID = 265951,
-    type = "drop",
-    expansion = "The War Within",
-    npcID = 0,
-    npcName = "Crown of the Cosmos Raid Boss",
-    zone = "The Voidspire (Raid)",
-    coordinates = { x = 0.0, y = 0.0, mapID = 0 },
-    itemName = "Voidspire Vanquisher Trophy",
-    notes = "Raid drop from Crown of the Cosmos raid - The Voidspire",
-  },
-  -- Dragonflight - Community Feast
-  {
+  },{
     itemID = 253540,
     type = "drop",
     expansion = "Dragonflight",
@@ -1261,5 +871,4 @@ HousingDataAggregator_RegisterExpansionItems("drop", {
     coordinates = { x = 13.6, y = 48.6, mapID = 2024 },
     itemName = "Big Kinook's Legendary Soup Pot",
     notes = "Community Feast event reward - Iskaara",
-  },
-})
+  },})

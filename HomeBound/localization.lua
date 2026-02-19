@@ -69,6 +69,7 @@ db.L_UNBIND = "|cff00ff00<Right Click to unbind>"
 db.L_PRESS_A_KEY = "Press a key..."
 db.L_MINIMAP_DESCRIPTION = "|cff00ff00<Left Click to toggle>\n<Right Click for options>"
 db.L_OPTIONS = "Options"
+db.L_EXPANSION = "Expansion"
 
 if GetLocale() == "frFR" then --French
   db.L_LOADING_ITEM = "Chargement..."
@@ -140,6 +141,7 @@ if GetLocale() == "frFR" then --French
   db.L_PRESS_A_KEY = "Appuyez sur une touche..."
   db.L_MINIMAP_DESCRIPTION = "|cff00ff00<Clic Gauche pour basculer>\n<Clic Droit pour les options>"
   db.L_OPTIONS = "Options"
+  db.L_EXPANSION = "Extension"
 elseif GetLocale() == "deDE" then --German
   db.L_LOADING_ITEM = "Lade Gegenstand..."
   db.L_LOADING_VENDOR = "Lade Händler..."
@@ -210,6 +212,7 @@ elseif GetLocale() == "deDE" then --German
   db.L_PRESS_A_KEY = "Drücke eine Taste..."
   db.L_MINIMAP_DESCRIPTION = "|cff00ff00<Linksklick zum Umschalten>\n<Rechtsklick für Optionen>"
   db.L_OPTIONS = "Optionen"
+  db.L_EXPANSION = "Erweiterung"
 elseif GetLocale() == "itIT" then --Italian
   db.L_LOADING_ITEM = "Caricamento Oggetto..."
   db.L_LOADING_VENDOR = "Caricamento Venditore..."
@@ -280,6 +283,7 @@ elseif GetLocale() == "itIT" then --Italian
   db.L_PRESS_A_KEY = "Premi un tasto..."
   db.L_MINIMAP_DESCRIPTION = "|cff00ff00<Click SX per mostrare>\n<Click DX per opzioni>"
   db.L_OPTIONS = "Opzioni"
+  db.L_EXPANSION = "Espansione"
 elseif GetLocale() == "koKR" then --Korean
   db.L_LOADING_ITEM = "아이템 로딩 중..."
   db.L_LOADING_VENDOR = "상인 로딩 중..."
@@ -350,6 +354,7 @@ elseif GetLocale() == "koKR" then --Korean
   db.L_PRESS_A_KEY = "키를 누르세요..."
   db.L_MINIMAP_DESCRIPTION = "|cff00ff00<왼쪽 클릭으로 토글>\n<오른쪽 클릭으로 옵션>"
   db.L_OPTIONS = "옵션"
+  db.L_EXPANSION = "확장팩"
 elseif GetLocale() == "zhCN" then --Chinese (simplified)
   db.L_LOADING_ITEM = "正在加载物品..."
   db.L_LOADING_VENDOR = "正在加载商人..."
@@ -420,6 +425,7 @@ elseif GetLocale() == "zhCN" then --Chinese (simplified)
   db.L_PRESS_A_KEY = "请按键..."
   db.L_MINIMAP_DESCRIPTION = "|cff00ff00<左键点击切换窗口>\n<右键点击打开选项>"
   db.L_OPTIONS = "选项"
+  db.L_EXPANSION = "资料片"
 elseif GetLocale() == "zhTW" then --Chinese (traditional)
   db.L_LOADING_ITEM = "正在載入物品..."
   db.L_LOADING_VENDOR = "正在載入商人..."
@@ -490,6 +496,7 @@ elseif GetLocale() == "zhTW" then --Chinese (traditional)
   db.L_PRESS_A_KEY = "請按鍵..."
   db.L_MINIMAP_DESCRIPTION = "|cff00ff00<左鍵點擊切換>\n<右鍵點擊選項>"
   db.L_OPTIONS = "選項"
+  db.L_EXPANSION = "資料片"
 elseif GetLocale() == "ruRU" then --Russian
   db.L_LOADING_ITEM = "Загрузка предмета..."
   db.L_LOADING_VENDOR = "Загрузка торговца..."
@@ -560,6 +567,7 @@ elseif GetLocale() == "ruRU" then --Russian
   db.L_PRESS_A_KEY = "Нажмите клавишу..."
   db.L_MINIMAP_DESCRIPTION = "|cff00ff00<ЛКМ - переключить>\n<ПКМ - настройки>"
   db.L_OPTIONS = "Опции"
+  db.L_EXPANSION = "Дополнение"
 elseif GetLocale() == "esES" or GetLocale() == "esMX" then --Spanish
   db.L_LOADING_ITEM = "Cargando objeto..."
   db.L_LOADING_VENDOR = "Cargando vendedor..."
@@ -630,6 +638,7 @@ elseif GetLocale() == "esES" or GetLocale() == "esMX" then --Spanish
   db.L_PRESS_A_KEY = "Presiona una tecla..."
   db.L_MINIMAP_DESCRIPTION = "|cff00ff00<Clic Izq. alternar>\n<Clic Der. opciones>"
   db.L_OPTIONS = "Opciones"
+  db.L_EXPANSION = "Expansión"
 elseif GetLocale() == "ptBR" then --Portuguese
   db.L_LOADING_ITEM = "Carregando Item..."
   db.L_LOADING_VENDOR = "Carregando Vendedor..."
@@ -700,4 +709,5 @@ elseif GetLocale() == "ptBR" then --Portuguese
   db.L_PRESS_A_KEY = "Pressione uma tecla..."
   db.L_MINIMAP_DESCRIPTION = "|cff00ff00<Clique Esq. alternar>\n<Clique Dir. opções>"
   db.L_OPTIONS = "Opções"
+  db.L_EXPANSION = "Expansão"
 end

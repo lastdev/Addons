@@ -26,6 +26,7 @@ local Def = {
     ShowPartyQuest = false,
     ShowTargetProgress = false,
     ShowProgressOnHover = false,
+    ShowProgressOnKeyPress = false,
     ProgressShowIcon = false,
     ProgressShowRemaining = false,
     TextOutline = false,
@@ -51,16 +52,21 @@ local LastMouseOverWidget;
 
 local match = string.match;
 local format = string.format;
+local tonumber = tonumber;
+
 local function GetProgressText(str)
     if Secret_CanAccess(str) then
         if Def.ProgressShowRemaining then
             local completed, required = match(str, "(%d+)/(%d+)");
+            completed = completed and tonumber(completed);
+            required = required and tonumber(required);
             if completed and required then
                 if completed < required then
                     return format("%.0f", required - completed);
                 end
             else
-                local percent = match(str, "%d+%%");
+                local percent = match(str, "(%d+)%%");
+                percent = percent and tonumber(percent);
                 if percent and percent < 100 then
                     return format("%.0f%%", 100 - percent);
                 end
@@ -184,7 +190,7 @@ do  --Widget
                     end
 
                     if not allCompleted then
-                        local text = (Def.ShowTargetProgress or Def.ShowProgressOnHover) and GetProgressText(objectiveText) or nil;
+                        local text = (Def.ShowTargetProgress or Def.ShowProgressOnHover or Def.ShowProgressOnKeyPress) and GetProgressText(objectiveText) or nil;
                         self.ProgressText:SetText(text);
                         self.hasProgress = text ~= nil;
 
@@ -267,7 +273,7 @@ do  --Widget
 
     function QuestWidgetMixin:UpdateProgressVisibility(animating)
         self.hideAfterFadingIn = nil;
-        if self.hasProgress and (self.isMouseOver or self.isTarget or self.isWorldCursor) then
+        if self.hasProgress and (self.isMouseOver or self.isTarget or self.isWorldCursor or EL.modifierKeyDown) then
             if animating then
                 self.ProgressText:Show();
                 self:SetScript("OnUpdate", self.OnUpdate_ShowProgress);
@@ -436,6 +442,7 @@ do  --Event Listener
         widget:SetOwnerInfo(UnitFrame, unit);
         widget:SetParent(nameplate);
         widget:UpdateQuest();
+        widget:UpdateProgressVisibility();
         widget:ClearAllPoints();
 
         if Def.AnchorToHealthBar then
@@ -499,6 +506,14 @@ do  --Event Listener
         end
     end
 
+    function EL:UpdateWidgetProgressVisibility()
+        for widget, shown in pairs(WidgetPool) do
+            if shown then
+                widget:UpdateProgressVisibility(true);
+            end
+        end
+    end
+
     function EL:ResetWidgetOffset()
         Def.WidgetOffsetX = 0;
         Def.WidgetOffsetY = 0;
@@ -516,16 +531,38 @@ do  --Event Listener
     end
 
     function EL:RequestUpdateQuest()
-        self.t = 0;
+        self.t = -0.2;
+        self.questDirty = true;
+        self:SetScript("OnUpdate", self.OnUpdate);
+    end
+
+    function EL:RequestUpdateModifierState()
+        self.t = -1;
+        self.modifierDirty = true;
         self:SetScript("OnUpdate", self.OnUpdate);
     end
 
     function EL:OnUpdate(elapsed)
         self.t = self.t + elapsed;
-        if self.t > 0.2 then
+        if self.t > 0 then
             self.t = 0;
-            self:SetScript("OnUpdate", nil);
-            self:UpdateQuestWidgets();
+
+            if self.questDirty then
+                self.questDirty = nil;
+                self:UpdateQuestWidgets();
+            end
+
+            if self.modifierDirty then
+                self.modifierDirty = nil;
+                self.modifierKeyDown = self.isKeyDown and self.isKeyDown();
+                if not self.modifierKeyDown then
+                    self:UpdateWidgetProgressVisibility();
+                end
+            end
+
+            if not (self.questDirty or self.modifierDirty) then
+                self:SetScript("OnUpdate", nil);
+            end
         end
     end
 
@@ -536,6 +573,13 @@ do  --Event Listener
             self:OnTargetChanged();
         elseif event == "UNIT_QUEST_LOG_CHANGED" or event == "GROUP_ROSTER_UPDATE" then
             self:RequestUpdateQuest();
+        elseif event == "MODIFIER_STATE_CHANGED" then
+            if self.isKeyDown() then
+                self.modifierKeyDown = true;
+                self:UpdateWidgetProgressVisibility();
+            else
+                self:RequestUpdateModifierState();
+            end
         elseif event == "PLAYER_ENTERING_WORLD" then
             self:UpdateZone();
         end
@@ -566,6 +610,13 @@ do  --Event Listener
         else
             self:RegisterUnitEvent("UNIT_QUEST_LOG_CHANGED", "player");
             self:UnregisterEvent("GROUP_ROSTER_UPDATE");
+        end
+
+        if (not inInstance) and Def.ShowProgressOnKeyPress then
+            self:RegisterEvent("MODIFIER_STATE_CHANGED");
+        else
+            self:UnregisterEvent("MODIFIER_STATE_CHANGED");
+            self.modifierKeyDown = nil;
         end
     end
 end
@@ -765,12 +816,14 @@ do  --Editor
 
     function EditorFrameMixin:OnShow()
         Def.isEditMode = true;
-        EL:UpdateAllNameplates();
         self:RegisterEvent("NAME_PLATE_UNIT_ADDED");
         self:RegisterEvent("NAME_PLATE_UNIT_REMOVED");
         self:SetScript("OnEvent", self.OnEvent);
         self:CheckNameplates();
         self:Update();
+        C_Timer.After(0, function()
+            EL:UpdateAllNameplates();
+        end);
     end
 
     function EditorFrameMixin:OnHide()
@@ -781,9 +834,11 @@ do  --Editor
         self:SetScript("OnUpdate", nil);
         self:SetScript("OnEvent", nil);
 
-        if EL.enabled then
-            EL:UpdateAllNameplates();
-        end
+        C_Timer.After(0, function()
+            if EL.enabled then
+                EL:UpdateAllNameplates();
+            end
+        end);
     end
 
     function EditorFrameMixin:OnEvent(event, ...)
@@ -835,6 +890,7 @@ do  --Editor
         EditorFrame = f;
         Mixin(f, EditorFrameMixin);
         f:SetSize(384, 192);
+        f:Hide();
 
         f.Background = f:CreateTexture(nil, "BACKGROUND");
         f.Background:SetAllPoints(true);
@@ -922,7 +978,6 @@ do  --Editor
 
         f:SetScript("OnShow", f.OnShow);
         f:SetScript("OnHide", f.OnHide);
-        f:OnShow();
 
         return EditorFrame
     end
@@ -932,8 +987,72 @@ end
 local OptionToggle_OnClick;
 do  --Options
     local Options = {
-        IconSize = {16, 18, 20, 22, 24, 28, 32};
+        IconSize = {16, 18, 20, 22, 24, 28, 32},
+        ModifierKeys = {"ALT", "CTRL", "SHIFT"},
     };
+
+    local function GenericWidget_OnClick()
+        addon.UpdateSettingsDialog();
+        LoadSettings();
+    end
+
+
+    local MenuData_ShowProgressHotkey = {
+        ShouldEnable = function()
+            return addon.GetDBBool("NameplateQuest_ShowProgressOnKeyPress")
+        end,
+
+        GetValidModifierKey = function()
+            local keyName = addon.GetDBValue("NameplateQuest_ShowProgressModifierKey");
+            local valid;
+            if keyName then
+                for _, v in ipairs(Options.ModifierKeys) do
+                    if keyName == v then
+                        valid = true;
+                        break
+                    end
+                end
+            end
+            if not valid then
+                keyName = Options.ModifierKeys[1];
+            end
+            return keyName
+        end,
+    };
+    MenuData_ShowProgressHotkey.GetSelectedText = MenuData_ShowProgressHotkey.GetValidModifierKey;
+
+    MenuData_ShowProgressHotkey.MenuInfoGetter = function()
+        local tbl = {
+            key = "NameplateQuestProgressHotkey",
+            blizzardTheme = true,
+        };
+
+        local widgets = {};
+        tbl.widgets = widgets;
+
+        local selectedKey = MenuData_ShowProgressHotkey.GetValidModifierKey();
+
+        for index, keyName in ipairs(Options.ModifierKeys) do
+            table.insert(widgets, {
+                type = "Radio",
+                text = keyName;
+                closeAfterClick = true,
+                onClickFunc = function()
+                    addon.SetDBValue("NameplateQuest_ShowProgressModifierKey", keyName);
+                    GenericWidget_OnClick();
+                end,
+                selected = keyName == selectedKey,
+            });
+        end
+
+        return tbl
+    end
+
+    MenuData_ShowProgressHotkey.TooltipFunc = function()
+        local keyName = MenuData_ShowProgressHotkey.GetValidModifierKey();
+        return L["NameplateQuest ShowProgressOnKeyPress Tooltip Format"]:format(keyName)
+    end
+
 
     local function OnTooltipSetUnit(tooltip)
         if EL.inInstance or not Def.ShowProgressOnHover then return end;
@@ -968,7 +1087,7 @@ do  --Options
         Def.IconSize = size;
 
 
-        local dbKeys = {"ShowPartyQuest", "ShowTargetProgress", "ShowProgressOnHover", "TextOutline", "ProgressShowIcon"};
+        local dbKeys = {"ShowPartyQuest", "ShowTargetProgress", "ShowProgressOnHover", "ShowProgressOnKeyPress", "TextOutline", "ProgressShowIcon"};
         for _, dbKey in ipairs(dbKeys) do
             Def[dbKey] = addon.GetDBBool("NameplateQuest_"..dbKey);
         end
@@ -1009,6 +1128,20 @@ do  --Options
             TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, OnTooltipSetUnit);
         end
 
+        if Def.ShowProgressOnKeyPress and EL.enabled then
+            EL:RegisterEvent("MODIFIER_STATE_CHANGED");
+            local keyName = MenuData_ShowProgressHotkey.GetValidModifierKey();
+            if keyName == "ALT" then
+                EL.isKeyDown = IsAltKeyDown;
+            elseif keyName == "CTRL" then
+                EL.isKeyDown = IsControlKeyDown;
+            elseif keyName == "SHIFT" then
+                EL.isKeyDown = IsShiftKeyDown;
+            end
+        else
+            EL:UnregisterEvent("MODIFIER_STATE_CHANGED");
+            EL.modifierKeyDown = nil;
+        end
 
         EL:UpdateZone();
         EL:UpdateAllNameplates();
@@ -1016,11 +1149,6 @@ do  --Options
         if EditorFrame and EditorFrame:IsShown() then
             EditorFrame:Update();
         end
-    end
-
-    local function GenericWidget_OnClick()
-        addon.UpdateSettingsDialog();
-        LoadSettings();
     end
 
     local function Tooltip_ShowPartyQuest()
@@ -1039,7 +1167,7 @@ do  --Options
     end
 
     local function ShouldEnableProgressOptions()
-        return addon.GetDBBool("NameplateQuest_ShowTargetProgress") or addon.GetDBBool("NameplateQuest_ShowProgressOnHover")
+        return addon.GetDBBool("NameplateQuest_ShowTargetProgress") or addon.GetDBBool("NameplateQuest_ShowProgressOnHover") or addon.GetDBBool("NameplateQuest_ShowProgressOnKeyPress")
     end
 
     local MenuData_ProgressFormat = {
@@ -1057,7 +1185,7 @@ do  --Options
         MenuInfoGetter = function()
             local tbl = {
                 key = "NameplateQuestProgressFormat",
-                desaturateBorder = true,
+                blizzardTheme = true,
             };
 
             local widgets = {};
@@ -1100,13 +1228,20 @@ do  --Options
 
     local OPTIONS_SCHEMATIC = {
         title = L["ModuleName NameplateQuest"],
+        moduleDBKey = "NameplateQuest",
         widgets = {
             {type = "Custom", onAcquire = AcquireEditorFrame, align = "center"},
             {type = "Divider"},
             {type = "Slider", label = L["Icon Size"], minValue = 1, maxValue = #Options.IconSize, valueStep = 1, onValueChangedFunc = Options_IconSizeSlider_OnValueChanged, formatValueFunc = Options_IconSizeSlider_FormatValue, dbKey = "NameplateQuest_IconSize"},
             {type = "Checkbox", label = L["NameplateQuest ShowPartyQuest"], onClickFunc = GenericWidget_OnClick, dbKey = "NameplateQuest_ShowPartyQuest", tooltip = Tooltip_ShowPartyQuest, restrictionInstance = true},
+
+            {type = "Divider"},
             {type = "Checkbox", label = L["NameplateQuest ShowTargetProgress"], onClickFunc = GenericWidget_OnClick, dbKey = "NameplateQuest_ShowTargetProgress", tooltip = L["NameplateQuest ShowTargetProgress Tooltip"], restrictionInstance = true},
             {type = "Checkbox", label = L["NameplateQuest ShowProgressOnHover"], onClickFunc = GenericWidget_OnClick, dbKey = "NameplateQuest_ShowProgressOnHover", tooltip = L["NameplateQuest ShowProgressOnHover Tooltip"], restrictionInstance = true},
+            {type = "CheckboxDropdown", label = L["NameplateQuest ShowProgressOnKeyPress"], onClickFunc = GenericWidget_OnClick, dbKey = "NameplateQuest_ShowProgressOnKeyPress", tooltip = MenuData_ShowProgressHotkey.TooltipFunc, restrictionInstance = true,
+                tooltipTitle = L["NameplateQuest ShowProgressOnKeyPress Tooltip Title"],
+                menuData = MenuData_ShowProgressHotkey,
+            },
 
             {type = "Divider"},
             {type = "Dropdown", label = L["NameplateQuest Progress Format"], menuData = MenuData_ProgressFormat},
@@ -1136,6 +1271,7 @@ function EL:EnableModule(state)
     elseif self.enabled then
         self.enabled = nil;
         self.inInstance = nil;
+        self.modifierKeyDown = nil;
         if WidgetPool then
             for widget in pairs(WidgetPool) do
                 widget:Hide();
@@ -1146,6 +1282,7 @@ function EL:EnableModule(state)
         self:UnregisterEvent("PLAYER_TARGET_CHANGED");
         self:UnregisterEvent("UNIT_QUEST_LOG_CHANGED");
         self:UnregisterEvent("GROUP_ROSTER_UPDATE");
+        self:UnregisterEvent("MODIFIER_STATE_CHANGED");
         self:SetScript("OnEvent", nil);
         self:SetScript("OnUpdate", nil);
     end

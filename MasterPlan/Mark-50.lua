@@ -1,5 +1,5 @@
-local _, T = ...
-T.Mark = 50
+local _, T, EV = ...
+T.Mark, EV = 50, T.Evie
 
 local function noop() end
 if GarrisonMissionFrame_SelectTab == nil then
@@ -49,5 +49,16 @@ function T.RegisterCallback_OnInitializedFrame(box, f)
 	if type(box:GetParent().buttonInitializer) == "function" then
 		-- GarrisonFollowerList:UpdateData, hiss.
 		hooksecurefunc(box:GetParent(), "buttonInitializer", f)
+	end
+end
+
+function EV:PLAYER_INTERACTION_MANAGER_FRAME_HIDE(id)
+	if id == 32 then
+		-- BUG[12.0.1/2602]: framexml doesn't listen to "new" interaction manager events,
+		--                   client doesn't fire "old" GARRISON_MISSION_NPC_CLOSED
+		if GarrisonMissionFrame and not InCombatLockdown() then
+			HideUIPanel(GarrisonMissionFrame)
+		end
+		EV("GARRISON_MISSION_NPC_CLOSED")
 	end
 end

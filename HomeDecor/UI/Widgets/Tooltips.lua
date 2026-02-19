@@ -144,6 +144,74 @@ local function professionSpellID(data)
       or tonumber(data.spellID) or tonumber(data.skillID) or tonumber(data.recipeID) or tonumber(data.id)
 end
 
+local VENDOR_CLASS_LABEL = {
+  [103693] = "Hunter",
+  [105986] = "Rogue",
+  [112318] = "Shaman",
+  [112323] = "Druid",
+  [93550] = "Death Knight",
+  [100196] = "Paladin",
+  [112338] = "Monk",
+  [112392] = "Warrior",
+  [112401] = "Priest",
+  [112407] = "Demon Hunter",
+  [112434] = "Warlock",
+  [112440] = "Mage",
+}
+
+local CLASS_COLORS = {
+  ["Death Knight"] = { r = 0.77, g = 0.12, b = 0.23 },
+  ["Demon Hunter"] = { r = 0.64, g = 0.19, b = 0.79 },
+  ["Druid"] = { r = 1.00, g = 0.49, b = 0.04 },
+  ["Hunter"] = { r = 0.67, g = 0.83, b = 0.45 },
+  ["Mage"] = { r = 0.25, g = 0.78, b = 0.92 },
+  ["Monk"] = { r = 0.00, g = 1.00, b = 0.59 },
+  ["Paladin"] = { r = 0.96, g = 0.55, b = 0.73 },
+  ["Priest"] = { r = 1.00, g = 1.00, b = 1.00 },
+  ["Rogue"] = { r = 1.00, g = 0.96, b = 0.41 },
+  ["Shaman"] = { r = 0.00, g = 0.44, b = 0.87 },
+  ["Warlock"] = { r = 0.53, g = 0.53, b = 0.93 },
+  ["Warrior"] = { r = 0.78, g = 0.61, b = 0.43 },
+}
+
+local function GetClassLabel(data)
+  if not data then return nil end
+  local vid = data.npcID
+  if not vid and data.source then vid = data.source.npcID or data.source.id end
+  if not vid and data.vendor and data.vendor.source then vid = data.vendor.source.id end
+  if not vid and data._navVendor and data._navVendor.source then vid = data._navVendor.source.id end
+  vid = tonumber(vid)
+  return vid and VENDOR_CLASS_LABEL[vid] or nil
+end
+
+local function IsDyeable(data)
+  if not data then return false end
+  
+  local Util = NS.UI and NS.UI.Util
+  if Util and Util.IsDyeable then
+    return Util.IsDyeable(data)
+  end
+  
+  local decorID = data.decorID or data.id or (data.source and (data.source.id or data.source.decorID))
+  if not decorID then return false end
+  
+  local info
+  if _G.C_HousingCatalog and _G.C_HousingCatalog.GetCatalogEntryInfo then
+    local ok, res = pcall(_G.C_HousingCatalog.GetCatalogEntryInfo, decorID)
+    if ok then info = res end
+  end
+  
+  if type(info) == "table" then
+    return (info.canCustomize == true) or (info.isCustomizable == true) or (info.customizable == true)
+  elseif data.canCustomize ~= nil then
+    return data.canCustomize == true
+  elseif data.dyeable ~= nil then
+    return data.dyeable == true
+  end
+  
+  return false
+end
+
 local function addCommonKeys(data, includeVendor)
   local s = data.source or {}
   if includeVendor then
@@ -153,7 +221,69 @@ local function addCommonKeys(data, includeVendor)
   else
     kv("Zone", s.zone or data.zone)
   end
-  kv("Faction", factionFor(data))
+
+  local faction = factionFor(data)
+  if faction then
+    local factionText = faction
+    if faction == "Alliance" then
+      factionText = "|TInterface\\FriendsFrame\\PlusManz-Alliance:16:16|t " .. faction
+    elseif faction == "Horde" then
+      factionText = "|TInterface\\FriendsFrame\\PlusManz-Horde:16:16|t " .. faction
+    elseif faction == "Both" then
+      factionText = "|TInterface\\FriendsFrame\\PlusManz-Alliance:16:16|t |TInterface\\FriendsFrame\\PlusManz-Horde:16:16|t Both"
+    end
+    kv("Faction", factionText)
+  end
+
+  do
+    local RepAlts = NS.Systems and NS.Systems.ReputationAlts
+    local View = NS.UI and NS.UI.Viewer
+    local Req = View and View.Requirements
+    if RepAlts and RepAlts.GetAnyOtherCharacter and RepAlts.CurrentCharacterHas and Req and Req.GetRepRequirement then
+      local repReq = Req.GetRepRequirement(data)
+      if repReq and repReq.text then
+        local hasOnCurrent = RepAlts:CurrentCharacterHas(repReq.text)
+        if not hasOnCurrent then
+          local who = RepAlts:GetAnyOtherCharacter(repReq.text)
+          if who then
+            GameTooltip:AddLine("|TInterface\\Icons\\Achievement_Reputation_01:16:16:0:0:64:64:4:60:4:60|t |cffffe000Rep alt:|r |cffffff80" .. tostring(who) .. "|r")
+          end
+        end
+      end
+    end
+  end
+  
+  do
+    local QuestsAlts = NS.Systems and NS.Systems.QuestsAlts
+    local View = NS.UI and NS.UI.Viewer
+    local Req = View and View.Requirements
+    if QuestsAlts and QuestsAlts.GetAnyOtherCharacter and QuestsAlts.CurrentCharacterHas and Req and Req.GetQuestRequirement then
+      local questReq = Req.GetQuestRequirement(data)
+      if questReq and questReq.questID then
+        local hasOnCurrent = QuestsAlts:CurrentCharacterHas(questReq.questID)
+        if not hasOnCurrent then
+          local who = QuestsAlts:GetAnyOtherCharacter(questReq.questID)
+          if who then
+            GameTooltip:AddLine("|TInterface\\Icons\\INV_Misc_Book_11:16:16:0:0:64:64:4:60:4:60|t |cffffe000Quest alt:|r |cffffff80" .. tostring(who) .. "|r")
+          end
+        end
+      end
+    end
+  end
+  
+  local classLabel = GetClassLabel(data)
+  if classLabel then
+    local classColor = CLASS_COLORS[classLabel]
+    if classColor then
+      GameTooltip:AddDoubleLine("Requires", classLabel, 0.8, 0.8, 0.8, classColor.r, classColor.g, classColor.b)
+    else
+      kv("Requires", classLabel)
+    end
+  end
+  
+  if IsDyeable(data) then
+    GameTooltip:AddLine("Dyeable", 0.4, 0.8, 1)
+  end
 end
 
 local function questTitleWarn()
@@ -200,6 +330,13 @@ function TT:Attach(frame, data)
         GameTooltip:AddLine(" ")
         actionLine("Left Click: View Item")
         actionLine("Right Click: Vendor Location")
+        
+        local hasAchReq = false
+        if d.requirements and d.requirements.achievement and d.requirements.achievement.id then
+          hasAchReq = true
+          actionLine("Ctrl + Click: View Achievement")
+        end
+        
         actionLine("Alt + Click: Wowhead Link")
         addCommonKeys(d, true)
         GameTooltip:Show()
@@ -210,6 +347,11 @@ function TT:Attach(frame, data)
       label("[Drop]")
       GameTooltip:AddLine(" ")
       actionLine("Left Click: View Item")
+
+      if d.requirements and d.requirements.achievement and d.requirements.achievement.id then
+        actionLine("Ctrl + Click: View Achievement")
+      end
+      
       actionLine("Alt + Click: Wowhead Link")
 
       local list = dropNPCs(d)
@@ -230,6 +372,11 @@ function TT:Attach(frame, data)
       GameTooltip:AddLine(" ")
       actionLine("Left Click: View Item")
       actionLine("Right Click: Vendor Location")
+
+      if d.requirements and d.requirements.achievement and d.requirements.achievement.id then
+        actionLine("Ctrl + Click: View Achievement")
+      end
+      
       actionLine("Alt + Click: Wowhead Link")
       addCommonKeys(d, true)
       GameTooltip:Show()
@@ -240,6 +387,11 @@ function TT:Attach(frame, data)
         label("[Profession]")
         GameTooltip:AddLine(" ")
         actionLine("Left Click: View Item")
+
+        if d.requirements and d.requirements.achievement and d.requirements.achievement.id then
+          actionLine("Ctrl + Click: View Achievement")
+        end
+        
         actionLine("Alt + Click: Wowhead Link")
         kv("Faction", factionFor(d))
         GameTooltip:Show()
@@ -249,6 +401,11 @@ function TT:Attach(frame, data)
         label("[Profession]")
         GameTooltip:AddLine(" ")
         actionLine("Left Click: View Item")
+
+        if d.requirements and d.requirements.achievement and d.requirements.achievement.id then
+          actionLine("Ctrl + Click: View Achievement")
+        end
+        
         actionLine("Alt + Click: Wowhead Link")
         kv("Faction", factionFor(d))
         GameTooltip:Show()

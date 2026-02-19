@@ -1,15 +1,15 @@
 ## Title: ItemVersion
-## Version: 2026.05.2
-## Interface: 120000
-## X-BuildDateTime: 2026-02-03T16:36:21.012596+00:00
-## X-BuildTool: wap 0.13.0
+## Version: 2026.07.3
+## Interface: 120001, 50503, 20505, 11508
 ## Author: Tim Martin
 ## Notes: Shows in what version of the game an item was added in the tooltip
 ## SavedVariables: ItemVersionDB
 ## IconTexture: Interface\AddOns\ItemVersion\Media\Images\ItemVersion.tga
+## X-BuildDateTime: 2026-02-17T16:39:33Z
+## X-Curse-Project-ID: 433258
 
-libs.xml
-locales.xml
+Libs.xml
+Locales.lua
 Init.lua
 Table.lua
 Color.lua
@@ -21,6 +21,4 @@ SlashCommand.lua
 Data.lua
 API.lua
 Tooltip.lua
-Widgets\FormatHelpTable.lua
-Widgets\MonoEditBox.lua
-Widgets\PreviewIcon.lua
+Widgets.xml

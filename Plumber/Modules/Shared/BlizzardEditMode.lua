@@ -132,6 +132,8 @@ function MainFrame:EnterEditMode()
         --Addon Compatibility: Edit Mode Expanded (https://github.com/teelolws/EditModeExpanded)
         self.secondaryOwner = EditModeManagerExpandedFrame;
     end
+
+    addon.CallbackRegistry:Trigger("EditMode.Enter");
 end
 
 function MainFrame:ExitEditMode()
@@ -139,6 +141,7 @@ function MainFrame:ExitEditMode()
     self.t = 0;
     self:SetScript("OnUpdate", nil);
     self:ShowModules(false);
+    addon.CallbackRegistry:Trigger("EditMode.Exit");
 end
 
 function MainFrame:ShowModules(state)

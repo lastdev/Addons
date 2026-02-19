@@ -86,17 +86,26 @@ local function createconfig()
 				width = "double",
 				arg = "block.lock",
 			},
-			accuracy = {
+			printwaycommand = {
 				order = 4,
+				type = "toggle",
+				name = L["Print a /way command when right-clicking the coordinate block"],
+				desc = L["Prints a version of the /way command that can be shared with others to your chat, when right-clicking the coordinate block"],
+				width = "double",
+				arg = "block.showWayCommand",
+			},
+			accuracy = {
+				order = 5,
 				type = "range",
 				name = L["Coordinate Accuracy"],
 				desc = L["Coordinates can be displayed as simple XX, YY coordinate, or as more precise XX.XX, YY.YY.  This setting allows you to control that precision"],
+				width = "double",
 				min = 0, max = 2, step = 1,
 				arg = "block.accuracy",
 			},
             coords_throttle = {
 				type = "range",
-				order = 5,
+				order = 6,
 				name = L["Update throttle"],
 				desc = L["Controls the frequency of updates for the coordinate block."],
 				width = "double",
@@ -104,7 +113,7 @@ local function createconfig()
 				arg = "block.throttle",
 			},
 			display = {
-				order = 5,
+				order = 7,
 				type = "group",
 				inline = true,
 				name = L["Display Settings"],

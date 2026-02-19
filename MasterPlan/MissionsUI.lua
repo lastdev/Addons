@@ -2684,7 +2684,7 @@ do -- availMissionsHandle
 			tt[i]:Hide()
 		end
 
-		local sg, p1, p2, p3 = d.groups, api.roamingParty:GetFollowers()
+		local sg, p1, p2, p3 = d.groups or {}, api.roamingParty:GetFollowers()
 		p1 = not (p2 and p3) and p1
 		local minGroupButtonWidth = GetLocale():match("zh") and 125 or 110
 		for i=1,#sg do

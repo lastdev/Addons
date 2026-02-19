@@ -43,6 +43,9 @@ local DEFAULTS = {
   faction       = "ALL",
   category      = "ALL",
   subcategory   = "ALL",
+  availableRepOnly = false,
+  questsCompleted = false,
+  achievementCompleted = false,
 }
 
 local Tax = {
@@ -709,6 +712,83 @@ function Filters:Passes(it, ui, db)
 
   if f.hideCollected and Collection and Collection.IsCollected and Collection:IsCollected(it) then return false end
   if f.onlyCollected and Collection and Collection.IsCollected and not Collection:IsCollected(it) then return false end
+
+  if f.availableRepOnly then
+    local RepAlts = NS.Systems and NS.Systems.ReputationAlts
+    local View = NS.UI and NS.UI.Viewer
+    local Req = View and View.Requirements
+    if not (RepAlts and Req and Req.GetRepRequirement and RepAlts.GetPreferredCharacter) then
+      return false
+    end
+    local repReq = Req.GetRepRequirement(it)
+    if not (repReq and repReq.text) then
+      return false
+    end
+    local who = RepAlts:GetPreferredCharacter(repReq.text)
+    if not who then
+      return false
+    end
+  end
+
+  if f.questsCompleted then
+    local QuestsAlts = NS.Systems and NS.Systems.QuestsAlts
+    if not QuestsAlts then
+      return false
+    end
+
+    local req = it.requirements
+    if not req then
+      local DI = NS.Systems and NS.Systems.DecorIndex
+      if DI and it.decorID then
+        local entry = DI[it.decorID]
+        local item = entry and entry.item
+        req = item and item.requirements
+      end
+    end
+
+    if not req or not req.quest then
+      return false
+    end
+    
+    local questID = tonumber(req.quest.id or req.quest)
+    if not questID then
+      return false
+    end
+
+    if not QuestsAlts:AnyCharacterHas(questID) then
+      return false
+    end
+  end
+
+  if f.achievementCompleted then
+    local req = it.requirements
+    if not req then
+      local DI = NS.Systems and NS.Systems.DecorIndex
+      if DI and it.decorID then
+        local entry = DI[it.decorID]
+        local item = entry and entry.item
+        req = item and item.requirements
+      end
+    end
+
+    if not req or not req.achievement then
+      return false
+    end
+    
+    local achID = tonumber(req.achievement.id or req.achievement)
+    if not achID then
+      return false
+    end
+
+    if _G.GetAchievementInfo then
+      local _, _, _, completed = _G.GetAchievementInfo(achID)
+      if not completed then
+        return false
+      end
+    else
+      return false
+    end
+  end
 
   if ui.search ~= ui._searchLast then
     self:PrepareSearch(ui)

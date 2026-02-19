@@ -1,34 +1,122 @@
 -------------------------------------------------------------------------------
 -- Smooth Cursor Trail Addon (Connected Lines System)
 -------------------------------------------------------------------------------
-local ADDON_NAME = "CursorTrail"
+local ADDON_NAME, addon = ...
 local CursorTrail = CreateFrame("Frame", "CursorTrailFrame", UIParent)
 
 -------------------------------------------------------------------------------
--- Variables
+-- Variables & Defaults
 -------------------------------------------------------------------------------
 local trailPoints = {}
 local trailLines = {}
 local linePool = {}
-local config = {
+
+-- Ripple variables
+local activeRipples = {}
+local ripplePool = {}
+local wasLeftDown = false
+local wasRightDown = false
+
+local defaults = {
     enabled = true,
-    maxPoints = 25,
+    maxPoints = 30,
     lineWidth = 4,
     trailLength = 1.5,
     color = {r = 0.2, g = 0.6, b = 1.0, a = 0.8},
     updateRate = 0.015,
-    minDistance = 5
+    minDistance = 5,
+    classColor = false,
+    rainbow = false,
+    pulse = false,
+    texture = "solid", -- solid, glow, soft, star, spot
+    combatMode = 1, -- 1: Always, 2: Combat Only, 3: Non-Combat Only
+    clickEffects = true,
 }
+
+-- Global DB reference (will be set on ADDON_LOADED)
+CursorTrailDB = CursorTrailDB or CopyTable(defaults)
 
 local lastUpdate = 0
 local frameCount = 0
+local rainbowHue = 0
+
+-- Dictionaries
+local namedColors = {
+    ["red"]     = {1.0, 0.0, 0.0},
+    ["green"]   = {0.0, 1.0, 0.0},
+    ["blue"]    = {0.0, 0.0, 1.0},
+    ["cyan"]    = {0.0, 1.0, 1.0},
+    ["magenta"] = {1.0, 0.0, 1.0},
+    ["yellow"]  = {1.0, 1.0, 0.0},
+    ["white"]   = {1.0, 1.0, 1.0},
+    ["black"]   = {0.0, 0.0, 0.0},
+    ["orange"]  = {1.0, 0.5, 0.0},
+    ["purple"]  = {0.6, 0.2, 0.8},
+    ["pink"]    = {1.0, 0.4, 0.7},
+    ["gold"]    = {1.0, 0.8, 0.0},
+    ["teal"]    = {0.0, 0.5, 0.5},
+}
+
+local textureOptions = {
+    ["solid"] = "Solid",
+    ["glow"]  = "Interface\\COMMON\\Indicator-Gray",
+    ["soft"]  = "Interface\\COMMON\\Indicator-White",
+    ["star"]  = "Interface\\Cooldown\\star4",
+    ["spot"]  = "Interface\\COMMON\\Indicator-Yellow",
+}
+
+local combatModes = {
+    [1] = "Always",
+    [2] = "Combat Only",
+    [3] = "Out of Combat Only"
+}
+
+-------------------------------------------------------------------------------
+-- Utility Functions
+-------------------------------------------------------------------------------
+local function CalculateDistance(x1, y1, x2, y2)
+    return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
+end
+
+local function CalculateAngle(x1, y1, x2, y2)
+    return math.atan2(y2 - y1, x2 - x1)
+end
+
+local function GetRainbowColor(hue)
+    -- Simple HSV to RGB conversion
+    local h = hue % 1
+    local r, g, b
+    if h < 1/6 then r, g, b = 1, h*6, 0
+    elseif h < 2/6 then r, g, b = (2/6-h)*6, 1, 0
+    elseif h < 3/6 then r, g, b = 0, 1, (h-2/6)*6
+    elseif h < 4/6 then r, g, b = 0, (4/6-h)*6, 1
+    elseif h < 5/6 then r, g, b = (h-4/6)*6, 0, 1
+    else r, g, b = 1, 0, (1-h)*6 end
+    return r, g, b
+end
+
+local function GetCurrentColor()
+    if CursorTrailDB.classColor then
+        local _, class = UnitClass("player")
+        local color = C_ClassColor.GetClassColor(class)
+        if color then
+            return color.r, color.g, color.b, CursorTrailDB.color.a
+        end
+    end
+    
+    if CursorTrailDB.rainbow then
+        local r, g, b = GetRainbowColor(rainbowHue)
+        return r, g, b, CursorTrailDB.color.a
+    end
+    
+    return CursorTrailDB.color.r, CursorTrailDB.color.g, CursorTrailDB.color.b, CursorTrailDB.color.a
+end
 
 -------------------------------------------------------------------------------
 -- Line Creation and Management
 -------------------------------------------------------------------------------
 local function CreateTrailLine()
     local line = CursorTrail:CreateTexture(nil, "OVERLAY")
-    line:SetColorTexture(1, 1, 1, 1)
     line:SetBlendMode("ADD")
     line:Hide()
     return line
@@ -49,98 +137,245 @@ local function ReleaseLine(line)
     linePool[line] = true
 end
 
-local function CalculateDistance(x1, y1, x2, y2)
-    return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
-end
-
-local function CalculateAngle(x1, y1, x2, y2)
-    return math.atan2(y2 - y1, x2 - x1)
-end
-
-local function CreateLineBetweenPoints(p1, p2, alpha)
+local function CreateLineBetweenPoints(p1, p2, alpha, widthMult)
     local line = GetLine()
     
     local distance = CalculateDistance(p1.x, p1.y, p2.x, p2.y)
     local angle = CalculateAngle(p1.x, p1.y, p2.x, p2.y)
     
-    -- Centro entre los dos puntos
+    -- Center point
     local centerX = (p1.x + p2.x) / 2
     local centerY = (p1.y + p2.y) / 2
     
-    -- Configurar la línea
-    line:SetSize(distance, config.lineWidth)
+    -- Config
+    local texturePath = textureOptions[CursorTrailDB.texture] or textureOptions["solid"]
+    if texturePath == "Solid" then
+       line:SetColorTexture(1, 1, 1, 1)
+    else
+       line:SetTexture(texturePath)
+    end
+    
+    local width = CursorTrailDB.lineWidth * (widthMult or 1)
+    if CursorTrailDB.pulse then
+        width = width * (0.8 + 0.4 * math.sin(GetTime() * 5))
+    end
+    
+    line:SetSize(distance, width)
     line:SetPoint("CENTER", UIParent, "BOTTOMLEFT", centerX, centerY)
     line:SetRotation(angle)
-    line:SetVertexColor(config.color.r, config.color.g, config.color.b, alpha)
+    
+    local r, g, b, baseAlpha = GetCurrentColor()
+    line:SetVertexColor(r, g, b, alpha * baseAlpha)
     line:Show()
     
     return line
 end
 
 -------------------------------------------------------------------------------
--- Main Trail Logic
+-- Ripple Effects (Click Animation)
 -------------------------------------------------------------------------------
+local function CreateRippleTexture()
+    local tex = CursorTrail:CreateTexture(nil, "OVERLAY")
+    tex:SetTexture("Interface\\Cooldown\\star4") -- Star burst effect
+    tex:SetBlendMode("ADD")
+    tex:Hide()
+    return tex
+end
+
+local function GetRipple()
+    local tex = next(ripplePool)
+    if tex then
+        ripplePool[tex] = nil
+        return tex
+    end
+    return CreateRippleTexture()
+end
+
+local function ReleaseRipple(tex)
+    tex:Hide()
+    tex:ClearAllPoints()
+    ripplePool[tex] = true
+end
+
+local function SpawnRipple(x, y)
+    local r = GetRipple()
+    local scale = UIParent:GetEffectiveScale()
+    r:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x/scale, y/scale)
+    local r_col, g_col, b_col = GetCurrentColor()
+    r:SetVertexColor(r_col, g_col, b_col, 1)
+    r:Show()
+    
+    table.insert(activeRipples, {
+        texture = r,
+        age = 0,
+        maxAge = 0.5, -- duration
+        startSize = 10,
+        endSize = 50
+    })
+end
+
+local function UpdateRipples(elapsed)
+    for i = #activeRipples, 1, -1 do
+        local ripple = activeRipples[i]
+        ripple.age = ripple.age + elapsed
+        
+        if ripple.age >= ripple.maxAge then
+            ReleaseRipple(ripple.texture)
+            table.remove(activeRipples, i)
+        else
+            local progress = ripple.age / ripple.maxAge
+            local size = ripple.startSize + (ripple.endSize - ripple.startSize) * math.pow(progress, 0.5)
+            local alpha = 1 - progress
+            
+            ripple.texture:SetSize(size, size)
+            ripple.texture:SetAlpha(alpha)
+            ripple.texture:SetRotation(progress * math.pi)
+        end
+    end
+end
+
+-------------------------------------------------------------------------------
+-- Main Logic
+-------------------------------------------------------------------------------
+CursorTrail:RegisterEvent("ADDON_LOADED")
+CursorTrail:RegisterEvent("CINEMATIC_START")
+CursorTrail:RegisterEvent("CINEMATIC_STOP")
+CursorTrail:RegisterEvent("PLAYER_REGEN_DISABLED")
+CursorTrail:RegisterEvent("PLAYER_REGEN_ENABLED")
+
+local hideConditions = {}
+
+local function CheckCombatState()
+    local inCombat = InCombatLockdown()
+    local mode = CursorTrailDB.combatMode
+    
+    hideConditions["combat_mode"] = nil
+    
+    if mode == 2 and not inCombat then -- Combat Only
+        hideConditions["combat_mode"] = true
+    elseif mode == 3 and inCombat then -- Non-Combat Only
+        hideConditions["combat_mode"] = true
+    end
+end
+
+CursorTrail:SetScript("OnEvent", function(self, event, arg1)
+    if event == "ADDON_LOADED" and arg1 == ADDON_NAME then
+        if not CursorTrailDB then
+            CursorTrailDB = CopyTable(defaults)
+        else
+            -- Validate/Migrate
+            for k, v in pairs(defaults) do
+                if CursorTrailDB[k] == nil then
+                    CursorTrailDB[k] = v
+                end
+            end
+            
+            -- Migrate old "glow" boolean to texture
+            if CursorTrailDB.glow == true then
+                CursorTrailDB.texture = "glow"
+                CursorTrailDB.glow = nil -- clear old key
+            end
+        end
+        self:UnregisterEvent("ADDON_LOADED")
+        print("|cff00ccffCursorTrail|r: Loaded! |cffffee00/ctrail|r for options.")
+        
+    elseif event == "CINEMATIC_START" then
+        hideConditions["cinematic"] = true
+    elseif event == "CINEMATIC_STOP" then
+        hideConditions["cinematic"] = nil
+    elseif event == "PLAYER_REGEN_DISABLED" or event == "PLAYER_REGEN_ENABLED" then
+        CheckCombatState()
+    end
+end)
+
+-- Screenshot hook
+hooksecurefunc("Screenshot", function()
+    hideConditions["screenshot"] = true
+    C_Timer.After(0.5, function() hideConditions["screenshot"] = nil end)
+end)
+
 CursorTrail:SetScript("OnUpdate", function(self, elapsed)
-    if not config.enabled then return end
+    UpdateRipples(elapsed)
+
+    -- Mouse Click Detection for Ripples
+    if CursorTrailDB.clickEffects then
+        local left = IsMouseButtonDown("LeftButton")
+        local right = IsMouseButtonDown("RightButton")
+        
+        if left and not wasLeftDown then
+            local x, y = GetCursorPosition()
+            SpawnRipple(x, y)
+        end
+        if right and not wasRightDown then
+            local x, y = GetCursorPosition()
+            SpawnRipple(x, y)
+        end
+        
+        wasLeftDown = left
+        wasRightDown = right
+    end
+
+    if not CursorTrailDB.enabled or next(hideConditions) then 
+        if #trailLines > 0 then self:ClearTrail() end
+        return 
+    end
+    
+    -- Check combat state initially or if changed externally (failsafe)
+    if not hideConditions["combat_mode"] then
+        CheckCombatState()
+        if hideConditions["combat_mode"] then return end
+    end
     
     lastUpdate = lastUpdate + elapsed
-    frameCount = frameCount + 1
+    rainbowHue = (rainbowHue + elapsed * 0.2) % 1
     
-    if lastUpdate >= config.updateRate then
+    if lastUpdate >= CursorTrailDB.updateRate then
         local x, y = GetCursorPosition()
         local scale = UIParent:GetEffectiveScale()
         x, y = x/scale, y/scale
         
-        -- Solo agregar punto si hay suficiente movimiento
+        -- Add point logic
         local shouldAdd = true
         if #trailPoints > 0 then
             local lastPoint = trailPoints[1]
             local distance = CalculateDistance(lastPoint.x, lastPoint.y, x, y)
-            if distance < config.minDistance then
+            if distance < CursorTrailDB.minDistance then
                 shouldAdd = false
             end
         end
         
         if shouldAdd then
-            -- Limpiar líneas existentes
-            for _, line in ipairs(trailLines) do
-                ReleaseLine(line)
-            end
-            trailLines = {}
+            -- Release old lines
+            for _, line in ipairs(trailLines) do ReleaseLine(line) end
+            wipe(trailLines)
             
-            -- Agregar nuevo punto al inicio
-            table.insert(trailPoints, 1, {
-                x = x, 
-                y = y, 
-                time = GetTime()
-            })
+            -- Add new point
+            table.insert(trailPoints, 1, {x = x, y = y, time = GetTime()})
             
-            -- Remover puntos viejos
+            -- Remove old points
             local currentTime = GetTime()
             for i = #trailPoints, 1, -1 do
-                local point = trailPoints[i]
-                if currentTime - point.time > config.trailLength then
+                if currentTime - trailPoints[i].time > CursorTrailDB.trailLength then
                     table.remove(trailPoints, i)
                 end
             end
             
-            -- Limitar número de puntos
-            while #trailPoints > config.maxPoints do
+            -- Cap points
+            while #trailPoints > CursorTrailDB.maxPoints do
                 table.remove(trailPoints)
             end
             
-            -- Crear líneas entre puntos consecutivos
+            -- Draw new lines
             for i = 1, #trailPoints - 1 do
                 local p1 = trailPoints[i]
                 local p2 = trailPoints[i + 1]
                 
-                -- Calcular alpha basado en la edad del punto
-                local age = (currentTime - p2.time) / config.trailLength
-                local alpha = (1 - age) * config.color.a
-                alpha = math.max(0, math.min(1, alpha))
+                local age = (currentTime - p2.time) / CursorTrailDB.trailLength
+                local alpha = 1 - age
+                local widthMult = 1 - (age * 0.5)
                 
                 if alpha > 0.05 then
-                    local line = CreateLineBetweenPoints(p1, p2, alpha)
+                    local line = CreateLineBetweenPoints(p1, p2, alpha, widthMult)
                     table.insert(trailLines, line)
                 end
             end
@@ -150,122 +385,37 @@ CursorTrail:SetScript("OnUpdate", function(self, elapsed)
     end
 end)
 
--------------------------------------------------------------------------------
--- Configuration Functions
--------------------------------------------------------------------------------
-function CursorTrail:SetEnabled(enabled)
-    config.enabled = enabled
-    if not enabled then
-        self:ClearTrail()
-    end
-end
-
-function CursorTrail:SetColor(r, g, b, a)
-    config.color.r = r or config.color.r
-    config.color.g = g or config.color.g  
-    config.color.b = b or config.color.b
-    config.color.a = a or config.color.a
-end
-
-function CursorTrail:SetWidth(width)
-    config.lineWidth = math.max(1, math.min(12, width or 4))
-    -- No necesita actualizar líneas existentes, se actualizarán automáticamente
-end
-
-function CursorTrail:SetLength(length)
-    config.trailLength = math.max(0.2, math.min(5.0, length or 1.5))
-end
-
-function CursorTrail:SetMaxPoints(points)
-    config.maxPoints = math.max(5, math.min(50, points or 25))
-end
-
-function CursorTrail:SetUpdateRate(rate)
-    config.updateRate = math.max(0.005, math.min(0.1, rate or 0.015))
-end
-
-function CursorTrail:SetMinDistance(distance)
-    config.minDistance = math.max(1, math.min(20, distance or 5))
-end
-
 function CursorTrail:ClearTrail()
-    -- Limpiar líneas
-    for _, line in ipairs(trailLines) do
-        ReleaseLine(line)
-    end
-    trailLines = {}
-    
-    -- Limpiar puntos
-    trailPoints = {}
+    for _, line in ipairs(trailLines) do ReleaseLine(line) end
+    wipe(trailLines)
+    wipe(trailPoints)
 end
 
 -------------------------------------------------------------------------------
--- Preset Effects
+-- Presets
 -------------------------------------------------------------------------------
 local presets = {
-    ["Electric Blue"] = {
-        color = {r = 0.2, g = 0.6, b = 1.0, a = 0.9},
-        width = 3,
-        length = 1.2,
-        maxPoints = 20
-    },
-    ["Fire Trail"] = {
-        color = {r = 1.0, g = 0.4, b = 0.1, a = 0.8},
-        width = 5,
-        length = 1.8,
-        maxPoints = 25
-    },
-    ["Neon Green"] = {
-        color = {r = 0.2, g = 1.0, b = 0.3, a = 0.9},
-        width = 4,
-        length = 1.5,
-        maxPoints = 22
-    },
-    ["Purple Magic"] = {
-        color = {r = 0.8, g = 0.2, b = 1.0, a = 0.8},
-        width = 6,
-        length = 2.0,
-        maxPoints = 30
-    },
-    ["Golden"] = {
-        color = {r = 1.0, g = 0.8, b = 0.2, a = 0.9},
-        width = 4,
-        length = 1.3,
-        maxPoints = 18
-    },
-    ["Ice Blue"] = {
-        color = {r = 0.7, g = 0.9, b = 1.0, a = 0.7},
-        width = 2,
-        length = 1.0,
-        maxPoints = 15
-    },
-    ["Blood Red"] = {
-        color = {r = 0.9, g = 0.1, b = 0.1, a = 0.8},
-        width = 5,
-        length = 2.2,
-        maxPoints = 28
-    },
-    ["Shadow"] = {
-        color = {r = 0.3, g = 0.2, b = 0.8, a = 0.6},
-        width = 7,
-        length = 2.5,
-        maxPoints = 35
-    }
+    ["Electric Blue"] = { color={0.2, 0.6, 1.0, 0.9}, width=3, length=1.2, texture="glow", pulse=false, rainbow=false },
+    ["Fire Trail"]    = { color={1.0, 0.4, 0.1, 0.8}, width=5, length=1.8, texture="soft", pulse=true, rainbow=false },
+    ["Neon Green"]    = { color={0.2, 1.0, 0.3, 0.9}, width=4, length=1.5, texture="solid", pulse=false, rainbow=false },
+    ["Rainbow Power"] = { color={1,1,1,1}, width=6, length=2.0, texture="star", pulse=true, rainbow=true },
+    ["Classy"]        = { color={1,1,1,1}, width=4, length=1.5, texture="glow", pulse=false, classColor=true },
 }
 
-function CursorTrail:SetPreset(presetName)
-    local preset = presets[presetName]
-    if preset then
-        self:SetColor(preset.color.r, preset.color.g, preset.color.b, preset.color.a)
-        self:SetWidth(preset.width)
-        self:SetLength(preset.length)
-        self:SetMaxPoints(preset.maxPoints)
-        print("Cursor trail preset: " .. presetName)
-    else
-        print("Available presets:")
-        for name in pairs(presets) do
-            print("- " .. name)
-        end
+function CursorTrail:ApplyPreset(name)
+    local p = presets[name]
+    if p then
+        CursorTrailDB.color.r = p.color[1]
+        CursorTrailDB.color.g = p.color[2]
+        CursorTrailDB.color.b = p.color[3]
+        CursorTrailDB.color.a = p.color[4] or 1
+        CursorTrailDB.lineWidth = p.width
+        CursorTrailDB.trailLength = p.length
+        CursorTrailDB.texture = p.texture or "glow"
+        CursorTrailDB.pulse = p.pulse
+        CursorTrailDB.rainbow = p.rainbow
+        CursorTrailDB.classColor = p.classColor or false
+        print("|cff00ccffCursorTrail|r: Applied preset " .. name)
     end
 end
 
@@ -275,87 +425,93 @@ end
 SLASH_CURSORTRAIL1 = "/cursortrail"
 SLASH_CURSORTRAIL2 = "/ctrail"
 
-function SlashCmdList.CURSORTRAIL(msg)
-    local command, arg = msg:match("^(%S+)%s*(.-)$")
-    command = command and command:lower() or ""
+SlashCmdList.CURSORTRAIL = function(msg)
+    local cmd, arg = msg:match("^(%S+)%s*(.-)$")
+    cmd = cmd and cmd:lower() or ""
     
-    if command == "on" or command == "enable" then
-        CursorTrail:SetEnabled(true)
-        print("Cursor trail enabled")
-    elseif command == "off" or command == "disable" then
-        CursorTrail:SetEnabled(false) 
-        print("Cursor trail disabled")
-    elseif command == "preset" and arg ~= "" then
-        CursorTrail:SetPreset(arg)
-    elseif command == "width" and arg ~= "" then
-        local width = tonumber(arg)
-        if width then
-            CursorTrail:SetWidth(width)
-            print("Trail width: " .. width)
-        end
-    elseif command == "length" and arg ~= "" then
-        local length = tonumber(arg)
-        if length then
-            CursorTrail:SetLength(length)
-            print("Trail length: " .. length)
-        end
-    elseif command == "color" then
-        local r, g, b, a = arg:match("([%d.]+)%s+([%d.]+)%s+([%d.]+)%s*([%d.]*)")
-        if r and g and b then
-            CursorTrail:SetColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a) or config.color.a)
-            print("Color set to: " .. r .. " " .. g .. " " .. b .. " " .. (a or config.color.a))
-        else
-            print("Usage: /ctrail color <r> <g> <b> [a] (0-1)")
-        end
-    elseif command == "clear" then
+    if cmd == "on" or cmd == "enable" then
+        CursorTrailDB.enabled = true
+        print("|cff00ccffCursorTrail|r: Enabled")
+    elseif cmd == "off" or cmd == "disable" then
+        CursorTrailDB.enabled = false
+        print("|cff00ccffCursorTrail|r: Disabled")
+    elseif cmd == "reset" then
+        CursorTrailDB = CopyTable(defaults)
         CursorTrail:ClearTrail()
-        print("Trail cleared")
+        print("|cff00ccffCursorTrail|r: Reset to defaults")
+    
+    -- Modes
+    elseif cmd == "combat" then
+        CursorTrailDB.combatMode = CursorTrailDB.combatMode + 1
+        if CursorTrailDB.combatMode > 3 then CursorTrailDB.combatMode = 1 end
+        print("|cff00ccffCursorTrail|r: Combat Mode: " .. combatModes[CursorTrailDB.combatMode])
+        CheckCombatState()
+        
+    elseif cmd == "click" or cmd == "ripple" then
+        CursorTrailDB.clickEffects = not CursorTrailDB.clickEffects
+        print("|cff00ccffCursorTrail|r: Click Effects " .. (CursorTrailDB.clickEffects and "ON" or "OFF"))
+        
+    -- Toggles
+    elseif cmd == "class" then
+        CursorTrailDB.classColor = not CursorTrailDB.classColor
+        print("|cff00ccffCursorTrail|r: Class Color " .. (CursorTrailDB.classColor and "ON" or "OFF"))
+    elseif cmd == "rainbow" then
+        CursorTrailDB.rainbow = not CursorTrailDB.rainbow
+        print("|cff00ccffCursorTrail|r: Rainbow Mode " .. (CursorTrailDB.rainbow and "ON" or "OFF"))
+    elseif cmd == "pulse" then
+        CursorTrailDB.pulse = not CursorTrailDB.pulse
+        print("|cff00ccffCursorTrail|r: Pulse Effect " .. (CursorTrailDB.pulse and "ON" or "OFF"))
+    
+    -- Values
+    elseif cmd == "width" and tonumber(arg) then
+        CursorTrailDB.lineWidth = tonumber(arg)
+        print("|cff00ccffCursorTrail|r: Width set to " .. arg)
+    
+    -- Colors
+    elseif cmd == "color" then
+        if arg and namedColors[arg:lower()] then
+            local c = namedColors[arg:lower()]
+            CursorTrailDB.color.r = c[1]
+            CursorTrailDB.color.g = c[2]
+            CursorTrailDB.color.b = c[3]
+            CursorTrailDB.classColor = false
+            CursorTrailDB.rainbow = false
+            print("|cff00ccffCursorTrail|r: Color set to " .. arg)
+        else
+            print("|cff00ccffCursorTrail|r Available Colors:")
+            local s = ""
+            for name, _ in pairs(namedColors) do s = s .. name .. ", " end
+            print(s)
+        end
+        
+    -- Textures
+    elseif cmd == "texture" then
+        if arg and textureOptions[arg:lower()] then
+            CursorTrailDB.texture = arg:lower()
+            print("|cff00ccffCursorTrail|r: Texture set to " .. arg:lower())
+        else
+            print("|cff00ccffCursorTrail|r Textures: solid, glow, soft, star, spot")
+        end
+        
+    -- Presets
+    elseif cmd == "preset" then
+        if presets[arg] then
+            CursorTrail:ApplyPreset(arg)
+        else
+            print("|cff00ccffCursorTrail|r: Presets:")
+            for k in pairs(presets) do print(" - " .. k) end
+        end
+        
     else
-        print("=== Cursor Trail Commands ===")
-        print("/ctrail on/off - Enable/disable")
-        print("/ctrail preset <name> - Use preset")
-        print("/ctrail width <1-12> - Line width")
-        print("/ctrail length <0.2-5> - Trail duration")
-        print("/ctrail color <r> <g> <b> [a] - Custom color")
-        print("/ctrail clear - Clear trail")
-        print("Try: /ctrail preset Electric Blue")
+        print("|cff00ccffCursorTrail|r Commands:")
+        print(" /ctrail on/off")
+        print(" /ctrail combat (Toggle: Always, Combat, NoCombat)")
+        print(" /ctrail click (Toggle click ripples)")
+        print(" /ctrail color <name> (or just /ctrail color for list)")
+        print(" /ctrail texture <name> (solid, glow, soft, star, spot)")
+        print(" /ctrail rainbow | class | pulse")
+        print(" /ctrail width <num>")
+        print(" /ctrail preset <name>")
+        print(" /ctrail reset")
     end
 end
-
--------------------------------------------------------------------------------
--- Hide during screenshots and cinematics
--------------------------------------------------------------------------------
-local hideConditions = {}
-
-local function addHideCondition(condition)
-    hideConditions[condition] = true
-    CursorTrail:SetEnabled(false)
-end
-
-local function removeHideCondition(condition)
-    hideConditions[condition] = nil
-    if not next(hideConditions) then
-        CursorTrail:SetEnabled(true)
-    end
-end
-
-hooksecurefunc("Screenshot", function()
-    addHideCondition("screenshot")
-    C_Timer.After(0.5, function() removeHideCondition("screenshot") end)
-end)
-
-CursorTrail:RegisterEvent("CINEMATIC_START")
-CursorTrail:RegisterEvent("CINEMATIC_STOP")
-CursorTrail:SetScript("OnEvent", function(self, event)
-    if event == "CINEMATIC_START" then
-        addHideCondition("cinematic")
-    else
-        removeHideCondition("cinematic")
-    end
-end)
-
--------------------------------------------------------------------------------
--- Initialization
--------------------------------------------------------------------------------
-print("Smooth Cursor Trail loaded!")
-print("Try: /ctrail preset Electric Blue")

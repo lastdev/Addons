@@ -1,5 +1,9 @@
 = DelveBuddy Changelog =
 
+== 2.0.7 ==
+Fixes:
+* Made iLvl updating happen more consistently
+
 == 2.0.6 ==
 Misc:
 * Updated TOC for 12.0.1
@@ -163,7 +167,6 @@ Official 1.0 release!
 
 == 0.3 ==
 * Fix reporting of iLvls of vault rewards
-
 
 == 0.2 ==
 Changes for 11.2, and misc enhancements:

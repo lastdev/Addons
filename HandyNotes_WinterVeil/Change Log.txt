@@ -1,7 +1,10 @@
-== v4.34 - 24th January 2025
+== v4.35 - 18th February 2026
+* TOC update to 2.5.5
+
+== v4.34 - 24th January 2026
 * TOC update to 12.0.0
 
-== v4.33 - 6th January 2025
+== v4.33 - 6th January 2026
 * TOC update to 5.5.3
 
 == v4.32 - 17th December 2025

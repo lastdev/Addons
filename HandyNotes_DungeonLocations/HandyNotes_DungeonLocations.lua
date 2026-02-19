@@ -645,31 +645,30 @@ nodes[12] = { -- Kalimdor
 
 -- Vanilla Continent, For things that should be shown or merged only at the continent level
 nodes[13] = { -- Eastern Kingdoms
+   [55223303] = { id = 1292, type = "Dungeon" }, -- Stratholme Service Entrance 
    [56740242] = { id = 249, type = "Dungeon" }, -- Magisters' Terrace 
-   [58572466] = { id = 77, type = "Dungeon" }, -- Zul'Aman 
-   [31796256] = { id = 65, type = "Dungeon" }, -- Throne of Tides 
-   [47448471] = { id = 76, type = "Dungeon" }, -- Zul'Gurub 
-   [40764187] = { id = 64, type = "Dungeon" }, -- Shadowfang Keep 
-   [50573677] = { id = 246, type = "Dungeon" }, -- Scholomance
-   [52712836] = { id = 236, lfgid = 40, type = "Dungeon" }, -- Stratholme 
-   [53135585] = { id = 71, type = "Dungeon" }, -- Grim Batol
-   [46603050] = { id = { 311, 316 }, type = "Dungeon" }, -- Scarlet Halls/Monastery
-   [49508190] = { id = { 745, 860 },  type = "Mixed"}, -- Karazhan/Return to Karazhan
-   [42787097] = { id = 238, type = "Dungeon" }, -- The Stockade 
+   [58882853] = { id = 77, type = "Dungeon" }, -- Zul'Aman 
+   [32616515] = { id = 65, type = "Dungeon" }, -- Throne of Tides 
+   [48458754] = { id = 76, type = "Dungeon" }, -- Zul'Gurub 
+   [41724548] = { id = 64, type = "Dungeon" }, -- Shadowfang Keep 
+   [51704002] = { id = 246, type = "Dungeon" }, -- Scholomance
+   [53643238] = { id = 236, lfgid = 40, type = "Dungeon" }, -- Stratholme 
+   [53815924] = { id = 71, type = "Dungeon" }, -- Grim Batol
+   [43547624] = { id = 238, type = "Dungeon" }, -- The Stockade 
    [55160370] = { id = 752, type = "Raid" }, -- Sunwell Plateau 
-   [47536894] = { id = 73, type = "Raid"  }, -- Blackwind Descent 
-   [54905899] = { id = 72, type = "Raid"  }, -- The Bastion of Twilight 
-   [35565150] = { id = 75, type = "Raid"  }, -- Baradin Hold
-   [53977927] = { id = 237, type = "Dungeon" }, -- The Temple of Atal'hakkar 
-   [40808194] = { id = 63, type = "Dungeon"  }, -- Deadmines
-   [42915972] = { id = 231, type = "Dungeon" }, -- Gnomeregan 
-   [46886972] = { id = { 741, 742, 66, 228, 229, 559 }, type = "Mixed"   }, -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
-   [49428163] = { id = { 745, 860 }, type = "Mixed" }, -- Karazhan, Return to Karazhan
-   [46583029] = { id = { 311, 316 }, type = "Mixed" }, -- Scarlet Halls, Monastery 
-   [52176317] = { id = { 1197, 239 }, type = "Mixed" }, --  Legacy of Tyr Dragonflight Dungeon & Vanilla Uldaman 
+   [55696223] = { id = 72, type = "Raid"  }, -- The Bastion of Twilight 
+   [36695446] = { id = 75, type = "Raid"  }, -- Baradin Hold
+   [54708221] = { id = 237, type = "Dungeon" }, -- The Temple of Atal'hakkar 
+   [41868451] = { id = 63, type = "Dungeon"  }, -- Deadmines
+   [44086328] = { id = 231, type = "Dungeon" }, -- Gnomeregan 
+   [48367175] = { id = { 73, 741, 742, 66, 228, 229, 559 }, type = "Mixed"   }, -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
+   [50338464] = { id = { 745, 860 }, type = "Mixed" }, -- Karazhan, Return to Karazhan
+   [47173426] = { id = { 311, 316 }, type = "Mixed" }, -- Scarlet Halls, Monastery 
+   [53166646] = { id = { 1197, 239 }, type = "Mixed" }, --  Legacy of Tyr Dragonflight Dungeon & Vanilla Uldaman 
 
    [58260280] = { id = 1300, type = "Dungeon" }, -- Terrasse der Magisters
    [53132565] = { id = 1299, type = "Dungeon" }, -- Windläuferturm
+   [57591336] = { id = 1304, type = "Dungeon" }, -- Mördergasse
    [63622304] = { id = 1315, type = "Dungeon" }, -- Maisarakavernen
    [66390419] = { id = 1313, type = "Dungeon" }, -- Arena der Leerennarbe
    [67291205] = { id = 1316, type = "Dungeon" }, -- Nexupunkt Xenas
@@ -2943,6 +2942,7 @@ nodes[2576] = { } -- Rootlands
    nodes[2537] = {
       [29240810] = { id = 1300, type = "Dungeon" }, -- Terrasse der Magisters
       [17817053] = { id = 1299, type = "Dungeon" }, -- Windläuferturm
+      [29093727] = { id = 1304, type = "Dungeon" }, -- Mördergasse
       [46086345] = { id = 1315, type = "Dungeon" }, -- Maisarakavernen
       [53541263] = { id = 1313, type = "Dungeon" }, -- Arena der Leerennarbe
       [56112716] = { id = 1316, type = "Dungeon" }, -- Nexupunkt Xenas
@@ -2955,17 +2955,34 @@ nodes[2576] = { } -- Rootlands
 
    if self.db.profile.Zone then
 
+      nodes[2393] = {
+         [57226104] = { 
+         id = 1304,
+         type = "Dungeon",
+         showInZone = true,
+         hideOnContinent = true,
+      }, -- Mördergasse
+      }
+
       nodes[2395] = {
          [35457882] = { 
-         id = 1299, type = "Dungeon", 
-         showInZone = true, 
-         hideOnContinent = true, 
+         id = 1299, 
+         type = "Dungeon",
+         showInZone = true,
+         hideOnContinent = true,
       }, -- Windläuferturm
+      [54002432] = { 
+         id = 1304, 
+         type = "Dungeon",
+         showInZone = true,
+         hideOnContinent = true,
+      } -- Mördergasse
       }
 
       nodes[2424] = {
          [63461538] = { 
-         id = 1300, type = "Dungeon", 
+         id = 1300, 
+         type = "Dungeon", 
          showInZone = true, 
          hideOnContinent = true, 
       }, -- Terrasse der Magister
@@ -2979,7 +2996,8 @@ nodes[2576] = { } -- Rootlands
 
       nodes[2437] = {
          [43833950] = { 
-         id = 1315, type = "Dungeon", 
+         id = 1315, 
+         type = "Dungeon", 
          showInZone = true, 
          hideOnContinent = true, 
       }, -- Maisarakavernen
@@ -2993,7 +3011,8 @@ nodes[2576] = { } -- Rootlands
 
       nodes[2405] = {
          [64976178] = { 
-         id = 1316, type = "Dungeon", 
+         id = 1316, 
+         type = "Dungeon", 
          showInZone = true, 
          hideOnContinent = true, 
       }, -- Nexuspunkt Xenas
@@ -3013,7 +3032,8 @@ nodes[2576] = { } -- Rootlands
 
       nodes[2444] = {
          [53653339] = { 
-         id = 1313, type = "Dungeon", 
+         id = 1313, 
+         type = "Dungeon", 
          showInZone = true, 
          hideOnContinent = true, 
       }, -- Arena der Leerennarbe
@@ -3021,7 +3041,8 @@ nodes[2576] = { } -- Rootlands
 
       nodes[2413] = {
          [26467804] = { 
-         id = 1309, type = "Dungeon", 
+         id = 1309, 
+         type = "Dungeon", 
          showInZone = true, 
          hideOnContinent = true, 
       }, -- Das blendende Tal

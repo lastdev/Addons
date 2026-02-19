@@ -77,6 +77,17 @@ local function initPasteWindow()
 	}
 	ScrollUtil.AddManagedScrollBarVisibilityBehavior(scrollBox, editBox.ScrollBar, scrollBoxAnchorsWithBar, scrollBoxAnchorsWithoutBar)
 
+	frame.ExportButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+	frame.ExportButton:SetText(L["Export waypoints"])
+	frame.ExportButton:SetHeight(23)
+	frame.ExportButton:SetWidth(165)
+	frame.ExportButton:ClearAllPoints()
+	frame.ExportButton:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 10, 5)
+	frame.ExportButton:SetScript("OnClick", function(button)
+		local text = addon:GetWaypointsExportString()
+		frame.EditBox.ScrollingEditBox:SetText(text)
+	end)
+
 	frame.CloseButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
 	frame.CloseButton:SetText(L["Close"])
 	frame.CloseButton:SetHeight(23)
@@ -169,6 +180,24 @@ local function updateCompartmentButton(show)
 		end
     end
 end
+
+--[[--------------------------------------------------------------------------
+--  Convert all waypoints to /way commands that can be pasted
+----------------------------------------------------------------------------]]
+function addon:GetWaypointsExportString()
+	local bits = {}
+
+	for mapId, data in pairs(self.waypointprofile) do
+		for key, waypoint in pairs(data) do
+			local m, x, y = unpack(waypoint)
+			local title = waypoint.title
+			bits[#bits+1] = string.format("/way #%d %0.2f %0.2f %s", m, x*100, y*100, title)
+		end
+	end
+
+	return table.concat(bits, "\n")
+end
+
 
 --[[--------------------------------------------------------------------------
 --  Config Handler for /ttpaste

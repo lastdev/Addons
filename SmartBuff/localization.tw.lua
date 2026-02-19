@@ -32,9 +32,12 @@ SMARTBUFF_UNDEAD    = "不死";
 -- Classes
 SMARTBUFF_CLASSES = {"德魯伊", "獵人", "法師", "聖騎士", "牧師", "盜賊", "薩滿", "術士", "戰士", "死亡騎士", "武僧", "恶魔猎手", "喚魔者", "獵人寵物", "術士寵物", "死騎寵物", "坦克", "補師", "DD"};
 
--- Templates and Instances
-SMARTBUFF_TEMPLATES = {"單人", "隊伍", "隨機團隊", "團隊", "傳奇鑰石", "恐懼幻象", "地心探險", "戰場", "競技場", "虛空尖塔", "夢境裂隙", "進軍奎爾達納斯", "奈幽貝爾宮殿", "安德邁恩解放戰役", "自訂 1", "自訂 2", "自訂 3", "自訂 4", "自訂 5"};
-SMARTBUFF_INSTANCES = {"虛空尖塔", "夢境裂隙", "進軍奎爾達納斯", "奈幽貝爾宮殿", "安德邁恩解放戰役"};
+-- Templates: split into generics, instances, custom. Assembled into SMARTBUFF_TEMPLATES at load (SmartBuff.lua).
+-- GENERICS: Enum.SmartBuffGroup (SmartBuff.lua) matches this order. Do not reorder or add/remove without updating both.
+SMARTBUFF_TEMPLATES_GENERICS = {"單人", "隊伍", "隨機團隊", "團隊", "傳奇鑰石", "恐懼幻象", "地心探險", "戰場", "競技場"};
+-- INSTANCES: Must match GetInstanceInfo() name exactly. Only raids are currently supported; 5-man instance switching is not supported.
+SMARTBUFF_TEMPLATES_INSTANCES = {"虛空尖塔", "夢境裂隙", "進軍奎爾達納斯", "奈幽貝爾宮殿", "安德邁恩解放戰役"};
+SMARTBUFF_TEMPLATES_CUSTOM = {"自訂 1", "自訂 2", "自訂 3", "自訂 4", "自訂 5"};
 
 -- Mount
 SMARTBUFF_MOUNT = "速度提高(%d+)%%.";
@@ -90,7 +93,7 @@ SMARTBUFF_OFT_BUFFTARGET     = "Buff 目標";
 SMARTBUFF_OFT_BUFFPVP        = "Buff PvP";
 SMARTBUFF_OFT_AUTOSWITCHTMPINST = "副本";
 SMARTBUFF_OFT_CHECKCHARGES   = "次數檢查";
-SMARTBUFF_OFT_RBT            = "重置計時器";
+SMARTBUFF_OFT_RBT            = "R: 計時器";
 SMARTBUFF_OFT_BUFFINCITIES   = "在城市內buff";
 SMARTBUFF_OFT_UISYNC         = "UI同步";
 SMARTBUFF_OFT_BLDURATION     = "忽略";
@@ -103,9 +106,10 @@ SMARTBUFF_OFT_SMARTDEBUFF    = "SmartDebuff";
 SMARTBUFF_OFT_INSHAPESHIFT   = "變身型態下";
 SMARTBUFF_OFT_LINKGRPBUFFCHECK  = "團隊buff檢查";
 SMARTBUFF_OFT_LINKSELFBUFFCHECK = "自我buff檢查";
-SMARTBUFF_OFT_RESETALL       = "重置設定";
-SMARTBUFF_OFT_RESETLIST      = "重置法術清單";
-SMARTBUFF_OFT_RESETBUFFS     = "Reset Buffs";
+SMARTBUFF_OFT_RESETALL       = "R: 全部";
+SMARTBUFF_OFT_RESETLIST      = "R: 清單";
+SMARTBUFF_OFT_RESETBUFFS     = "R: 增益";
+SMARTBUFF_OFT_NEWS           = "News";
 SMARTBUFF_OFT_PURGE_BUFFS    = "New Version, reset ALL SmartBuff buff data?\nThis will reset all buff profiles!";
 SMARTBUFF_OFT_YES            = "是";
 SMARTBUFF_OFT_NO             = "否";
@@ -118,6 +122,13 @@ SMARTBUFF_OFT_SPLASHMSGSHORT = "簡短訊息";
 
 -- Options Frame Tooltip Text
 SMARTBUFF_OFTT               = "SmarBuff 開/關";
+SMARTBUFF_OFTT_RBT           = "重置 BT：僅清除增益計時器（無儲存資料）。";
+SMARTBUFF_OFTT_RESETALL      = "重置全部：清除所有（設定檔+選項）。 需重載 UI。";
+SMARTBUFF_OFTT_RESETBUFFS    = "重置增益：將增益與設定檔重設為預設值。";
+SMARTBUFF_OFTT_RESETLIST     = "重置清單：僅重設增益順序。";
+SMARTBUFF_OFTT_DONE          = "關閉選項。";
+SMARTBUFF_OFTT_NEWS          = "檢視版本更新與變更紀錄。";
+SMARTBUFF_OFTT_HELPLATE_RESET = "重置按鈕（懸停查看詳情）";
 SMARTBUFF_OFTT_AUTO          = "Buff提示 開/關";
 SMARTBUFF_OFTT_AUTOTIMER     = "Buff監視時間的間隔";
 SMARTBUFF_OFTT_AUTOCOMBAT    = "戰鬥時保持監視。\n除非在選項視窗中啟用主「戰鬥中」選項（非本項），否則戰鬥中所有提醒邏輯均不執行。";
@@ -212,6 +223,7 @@ SMARTBUFF_MSG_CLASS          = "職業";
 SMARTBUFF_MSG_CHARGES        = "次";
 SMARTBUFF_MSG_SOUNDS         = "飛濺聲音選擇: "
 SMARTBUFF_MSG_SPECCHANGED    = "天賦已更改(%s), 重設buff模組...";
+SMARTBUFF_MSG_PVP_PREP_ONLY  = "由於API限制，增益僅在準備階段有效，比賽開始後將停用。";
 
 -- Support
 SMARTBUFF_MINIMAP_TT         = "左鍵: 選項視窗\n右鍵: 開/關\nAlt-左鍵: SmartDebuff\nShift拖曳: 移動按鈕";

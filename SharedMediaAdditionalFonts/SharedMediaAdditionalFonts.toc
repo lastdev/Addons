@@ -1,4 +1,4 @@
-## Interface: 120000
+## Interface: 120001, 50503, 20505, 11508
 ## Title: SharedMedia Additional Fonts
 ## Category: Media
 ## Category-deDE: Medien
@@ -12,7 +12,7 @@
 ## Category-zhCN: 材质
 ## Category-zhTW: 材質
 ## Notes: Inserts additionnal fonts into SharedMediaLib's storage.
-## Version: 12.0.0c
+## Version: 20260217
 ## Author: Lots of people, maintained by AllInOneMighty.
 ## IconTexture: Interface\Icons\Trade_archaeology_highborne_scroll
 ## X-Category: Miscellaneous

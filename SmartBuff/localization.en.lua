@@ -7,10 +7,18 @@ SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
   .."          |cffffffffMidnight & Classic versions by Codermik, additional retail\n"
   .."          programming by MrWizard and Speedwaystar.\n"
   .."\n\n"
-  .."          Changes in r38.110226:\n\n"
-  .."             * Fixing chained buffs, apparently they were broken\n"
-  .."             * Assassination rogues can do 4 poisons now\n"
-  .."             * Adding berserker stance for warriors\n"
+  .."          Changes in r39.130226:\n\n"
+  .."             * Add Retain checkbox to copy buff settings when switching to fresh templates\n"
+  .."             * Inclusivity: Rename blacklist → blocklist (with migration)\n"
+  .."             * Default InCombat to off\n"
+  .."             * Add PvP prep-only message for Arena/BG\n"
+  .."             * Add play-sound tooltip\n"
+  .."\n\n"
+  .."          Changes in r39.120226:\n\n"
+  .."             * Template switching: BG/Arena, Solo fallback, single if/elseif chain, merged chat msg\n"
+  .."             * Template split: GENERICS/INSTANCES/CUSTOM, assemble at load, enum lookup, SmartBuffGroup refactor\n"
+  .."             * Localization: de (Danish→German), zhCN (Nerub-ar fix), INSTANCES comment\n"
+  .."             * Whitespace cleanup, .cursorrules\n"
   .."\n\n"
   .."          |c0000FF96Many thanks to Chris S., Samantha R. and\n"
   .."          Twilight's Sundries for their kind donations.\n"
@@ -45,9 +53,12 @@ SMARTBUFF_UNDEAD    = "Undead";
 -- Classes
 SMARTBUFF_CLASSES = {"Druid", "Hunter", "Mage", "Paladin", "Priest", "Rogue", "Shaman", "Warlock", "Warrior", "Death Knight", "Monk", "Demon Hunter", "Evoker", "Hunter Pet", "Warlock Pet", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
 
--- Templates and Instances
-SMARTBUFF_TEMPLATES = {"Solo", "Party", "LFR", "Raid", "Mythic Keystone", "Horrific Vision", "Delve", "Battleground", "Arena", "The Voidspire", "The Dreamrift", "March on Quel'Danas", "Nerub-ar Palace", "Liberation of Undermine", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
-SMARTBUFF_INSTANCES = {"The Voidspire", "The Dreamrift", "March on Quel'Danas", "Nerub-ar Palace", "Liberation of Undermine"};
+-- Templates: split into generics, instances, custom. Assembled into SMARTBUFF_TEMPLATES at load (SmartBuff.lua).
+-- GENERICS: Enum.SmartBuffGroup (SmartBuff.lua) matches this order. Do not reorder or add/remove without updating both.
+SMARTBUFF_TEMPLATES_GENERICS = {"Solo", "Party", "LFR", "Raid", "Mythic Keystone", "Horrific Vision", "Delve", "Battleground", "Arena"};
+-- INSTANCES: Must match GetInstanceInfo() name exactly. Only raids are currently supported; 5-man instance switching is not supported.
+SMARTBUFF_TEMPLATES_INSTANCES = {"The Voidspire", "The Dreamrift", "March on Quel'Danas", "Nerub-ar Palace", "Liberation of Undermine"};
+SMARTBUFF_TEMPLATES_CUSTOM = {"Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
 
 -- Mount
 SMARTBUFF_MOUNT = "Increases speed by (%d+)%%.";
@@ -100,19 +111,21 @@ SMARTBUFF_OFT_BUFFTARGET     = "Buff target";
 SMARTBUFF_OFT_BUFFPVP        = "Buff PvP";
 SMARTBUFF_OFT_AUTOSWITCHTMPINST = "Instances";
 SMARTBUFF_OFT_CHECKCHARGES   = "Check charges";
-SMARTBUFF_OFT_RBT            = "Reset BT";
+SMARTBUFF_OFT_RBT            = "R: Timers";
 SMARTBUFF_OFT_BUFFINCITIES   = "Buff in cities";
-SMARTBUFF_OFT_BLDURATION     = "Blacklisted";
+SMARTBUFF_OFT_BLDURATION     = "Blocked";
 SMARTBUFF_OFT_ANTIDAZE       = "Anti daze";
 SMARTBUFF_OFT_HIDESABUTTON   = "Hide action button";
+SMARTBUFF_OFT_RETAINTEMPLATE = "Retain";
 SMARTBUFF_OFT_INCOMBAT       = "in combat";
 SMARTBUFF_OFT_SMARTDEBUFF    = "SmartDebuff";
 SMARTBUFF_OFT_INSHAPESHIFT   = "Shapeshift";
 SMARTBUFF_OFT_LINKGRPBUFFCHECK  = "Grp link";
 SMARTBUFF_OFT_LINKSELFBUFFCHECK = "Self link";
-SMARTBUFF_OFT_RESETALL       = "Reset All";
-SMARTBUFF_OFT_RESETLIST      = "Reset List";
-SMARTBUFF_OFT_RESETBUFFS     = "Reset Buffs";
+SMARTBUFF_OFT_RESETALL       = "R: All";
+SMARTBUFF_OFT_RESETLIST      = "R: List";
+SMARTBUFF_OFT_RESETBUFFS     = "R: Buffs";
+SMARTBUFF_OFT_NEWS           = "News";
 SMARTBUFF_OFT_PURGE_BUFFS    = "New Version, reset ALL SmartBuff buff data?\nThis will reset all buff profiles!";
 SMARTBUFF_OFT_YES            = "Yes";
 SMARTBUFF_OFT_NO             = "No";
@@ -128,6 +141,13 @@ SMARTBUFF_OFT_ICONSIZE       = "Icon Size";
 
 -- Options Frame Tooltip Text
 SMARTBUFF_OFTT               = "Toggles SmartBuff On/Off";
+SMARTBUFF_OFTT_RBT           = "Reset BT: Clear buff timers only (runtime; no saved vars).";
+SMARTBUFF_OFTT_RESETALL      = "Reset All: Wipe everything (profiles + options). Requires ReloadUI.";
+SMARTBUFF_OFTT_RESETBUFFS    = "Reset Buffs: Resets buffs and profiles to defaults.";
+SMARTBUFF_OFTT_RESETLIST     = "Reset List: Reset buff order only.";
+SMARTBUFF_OFTT_DONE          = "Close options.";
+SMARTBUFF_OFTT_NEWS          = "View release notes and changelog.";
+SMARTBUFF_OFTT_HELPLATE_RESET = "Reset buttons (hover for details)";
 SMARTBUFF_OFTT_AUTO          = "Toggles the buff reminder On/Off";
 SMARTBUFF_OFTT_AUTOTIMER     = "Delay in seconds between two checks.";
 SMARTBUFF_OFTT_AUTOCOMBAT    = "Run the check also in combat.\nAll reminder logic is disabled in combat unless the main \"in combat\" option (in the options frame, not this one) is enabled.";
@@ -151,10 +171,11 @@ SMARTBUFF_OFTT_AUTOSWITCHTMP = "Automatically switches the template,\nif the gro
 SMARTBUFF_OFTT_AUTOSWITCHTMPINST = "Automatically switches the template,\nif the instance changes.";
 SMARTBUFF_OFTT_CHECKCHARGES  = "Displays low amount of\ncharges on a buff.\n0 = Deactivated";
 SMARTBUFF_OFTT_BUFFINCITIES  = "Buffs also if you are in capital cities.\nIf you are PvP flagged, it buffs in any case.";
-SMARTBUFF_OFTT_BLDURATION    = "How many seconds, players will be blacklisted.\n0 = Deactivated";
+SMARTBUFF_OFTT_BLDURATION    = "How many seconds, players will be blocked.\n0 = Deactivated";
 SMARTBUFF_OFTT_ANTIDAZE      = "Automatically cancels the\naspect of the cheetah/pack\nif someone gets dazed\n(self or group).";
 SMARTBUFF_OFTT_SPLASHSTYLE   = "Changes the fontstyle of\nthe buff messages.";
 SMARTBUFF_OFTT_HIDESABUTTON  = "Hides the SmartBuff action button.";
+SMARTBUFF_OFTT_RETAINTEMPLATE = "When switching to a fresh template (never used, or no buffs enabled),\nthe current buff settings will be copied to it when this is checked.\nBlank templates are never copied over, so you cannot accidentally overwrite a configured template.";
 SMARTBUFF_OFTT_INCOMBAT      = "At the moment it only works on yourself.\nThe first buff you mark as in combat,\nwill set on the button before combat\nand you can use it in combat.\n!!! Warning !!!\nAll logic is disabled in combat!";
 SMARTBUFF_OFTT_SMARTDEBUFF   = "Shows the SmartDebuff frame.";
 SMARTBUFF_OFTT_SPLASHDURATION= "How many seconds the splash\nmessage will displayed,\nbefore it fades.";
@@ -162,6 +183,7 @@ SMARTBUFF_OFTT_INSHAPESHIFT  = "Cast buffs also if you\nare shapeshifted.";
 SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "Checks if a buff of an other\nclass with similar effect\nis already active.";
 SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "Checks if a self buff is active,\nwhose only one can be\nactive at a time.";
 SMARTBUFF_OFTT_SOUNDSELECT   = "Select the required splash sound.";
+SMARTBUFF_OFTT_PLAYSOUND     = "Controlled by Sound Effects volume.";
 
 -- Buffsetup Frame Text
 SMARTBUFF_BST_SELFONLY       = "Myself only";
@@ -216,6 +238,7 @@ SMARTBUFF_MSG_CLASS          = "Class";
 SMARTBUFF_MSG_CHARGES        = "charges";
 SMARTBUFF_MSG_SOUNDS         = "Splash Sound Selection: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec changed (%s), loading buff templates...";
+SMARTBUFF_MSG_PVP_PREP_ONLY  = "Due to API limitation, buffing only works during prep and is disabled once the match starts.";
 
 -- Support
 SMARTBUFF_MINIMAP_TT         = "Left click: options menu\nRight click: On/Off\nAlt-Left Click: SmartDebuff\nShift drag: Move button";
@@ -241,4 +264,3 @@ SMARTBUFF_LOC_HEARTY         = "Hearty"
 -- Ö : \195\150
 -- Ü : \195\156
 -- ß : \195\159
-

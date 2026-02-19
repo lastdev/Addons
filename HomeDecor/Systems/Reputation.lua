@@ -29,6 +29,23 @@ local function isTrue(v)
   return false
 end
 
+local function shouldTrackRepText(text)
+  if type(text) ~= "string" then return false end
+  local s = text:lower()
+  if s == "" then return false end
+  if s == "reputation required" then return false end
+  if s:find("renown", 1, true) then return false end
+  return true
+end
+
+local function recordRepAlt(out)
+  local RepAlts = NS.Systems and NS.Systems.ReputationAlts
+  if not RepAlts or not RepAlts.Record then return end
+  if not out or not out.text or out.met ~= true then return end
+  if not shouldTrackRepText(out.text) then return end
+  pcall(RepAlts.Record, RepAlts, out.text, true)
+end
+
 local function ensureTooltip()
   local tt = R._tt
   if tt then return tt end
@@ -186,15 +203,10 @@ local function requestRescan(itemID)
 
   it:ContinueOnItemLoad(function()
     R._cache[itemID] = nil
-    local Viewer = NS.UI and NS.UI.Viewer
-    local view = Viewer and Viewer.instance
-    if view and view.Render then
-      view:Render()
+    local out = scanTooltip(itemID)
+    if out then
+      recordRepAlt(out)
       return
-    end
-    local Layout = NS.UI and NS.UI.Layout
-    if Layout and Layout.Render then
-      Layout:Render()
     end
   end)
 end
@@ -218,32 +230,47 @@ function R.GetRequirement(it)
 
   if isTrue(rep) then
     local itemID = findItemID(it)
-    if not itemID then return { text = "Reputation required" } end
+    if not itemID then
+      local out = { text = "Reputation required" }
+      return out
+    end
     local out = scanTooltip(itemID)
-    if out then return out end
+    if out then
+      recordRepAlt(out)
+      return out
+    end
     requestRescan(itemID)
-    return { text = "Reputation required" }
+    local fallback = { text = "Reputation required" }
+    return fallback
   end
 
   if type(rep) == "string" then
     local s = trim(rep)
     if s == "" then s = "Reputation required" end
-    return { text = s }
+    local out = { text = s }
+    recordRepAlt(out)
+    return out
   end
 
   if type(rep) == "table" then
     local name = rep.title or rep.name or rep.faction or rep.rep
     local lvl = rep.level or rep.standing or rep.rank
     if name and lvl then
-      return { text = tostring(name) .. " (" .. tostring(lvl) .. ")" }
+      local out = { text = tostring(name) .. " (" .. tostring(lvl) .. ")" }
+      recordRepAlt(out)
+      return out
     end
     if name then
-      return { text = tostring(name) }
+      local out = { text = tostring(name) }
+      recordRepAlt(out)
+      return out
     end
-    return { text = "Reputation required" }
+    local out = { text = "Reputation required" }
+    return out
   end
 
-  return { text = "Reputation required" }
+  local out = { text = "Reputation required" }
+  return out
 end
 
 return R

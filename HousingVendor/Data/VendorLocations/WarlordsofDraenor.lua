@@ -416,14 +416,46 @@ local vendors = {
     coords = {x = 28.6, y = 31.4, mapID = 539},
   },
 
+  [52] = {
+    expansion = "Warlords of Draenor",
+    location = "The Great Seal",
+    vendorName = "T'lama",
+    npcID = 252326,
+    faction = 0,
+    coords = {x = 0.0, y = 0.0, mapID = 0},
+  },
+  [53] = {
+    expansion = "Warlords of Draenor",
+    location = "Founder's Point",
+    vendorName = "\"High Tides\" Ren",
+    npcID = 255222,
+    faction = 0,
+    coords = {x = 62.4, y = 80.0, mapID = 2352},
+  },
+  [54] = {
+    expansion = "Warlords of Draenor",
+    location = "Valley of the Four Winds",
+    vendorName = "Gina Mudclaw",
+    npcID = 58706,
+    faction = 0,
+    coords = {x = 53.2, y = 51.6, mapID = 376},
+  },
+  [55] = {
+    expansion = "Warlords of Draenor",
+    location = "Talador",
+    vendorName = "Duskcaller Erthix",
+    npcID = 256946,
+    faction = 0,
+    coords = {x = 70.4, y = 57.4, mapID = 535},
+  },
 }
 
 local itemEntries = {
   { vendorId = 6, itemID = "257349", itemName = "Naaru Crystal Icon", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 1, itemID = "251549", itemName = "Emblem of the Naaru's Blessing", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 6, itemID = "251544", itemName = "Telredor Recliner", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 6, itemID = "251544", itemName = "Telredor Recliner", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Sha", reputationLevel = "Friendly", renownLevel = 0 },
   { vendorId = 5, itemID = "245437", itemName = "Orc-Forged Weaponry", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "245431", itemName = "Draenor Cookpot", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 18, itemID = "245431", itemName = "Draenor Cookpot", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Laughing Skull Orcs", reputationLevel = "Friendly", renownLevel = 0 },
   { vendorId = 8, itemID = "245422", itemName = "Draenic Bookcase", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 4, itemID = "244318", itemName = "Wine Barrel", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 -- Vendor 1: Trader Caerel (Draenic)
@@ -493,19 +525,19 @@ local itemEntries = {
 
   -- Vendor 11: Ribchewer (Horde vendor per master table)
   { vendorId = 11, itemID = "251545", itemName = "Razorwind Cooking Grill", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 11, itemID = "244653", itemName = "Orcish Scribe's Drafting Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 11, itemID = "244533", itemName = "Iron Chain Chandelier", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 4, itemID = "244653", itemName = "Orcish Scribe's Drafting Table", goldCost = 1800000, currencies = {{ currencyID = 824, amount = 300 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 53, itemID = "244533", itemName = "Iron Chain Chandelier", goldCost = 500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 11, itemID = "244321", itemName = "Orcish Lumberjack's Stool", goldCost = 0, currencies = {{currencyID = 824, amount = 50}} },
   { vendorId = 11, itemID = "244322", itemName = "Frostwolf Banded Stool", goldCost = 0, currencies = {{currencyID = 824, amount = 100}} },
   { vendorId = 11, itemID = "245444", itemName = "Orcish Communal Stove", goldCost = 0, currencies = {} },
   { vendorId = 11, itemID = "245445", itemName = "Frostwolf Axe-Dart Board", goldCost = 0, currencies = {{currencyID = 824, amount = 150}} },
   -- Artificer Kallaes block (Alliance vendor for Telredor Recliner)
-  { vendorId = 7, itemID = "245423", itemName = "Spherical Draenic Topiary", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 8, itemID = "258743", itemName = "Arakkoan Alchemy Tools", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 8, itemID = "258746", itemName = "High Arakkoan Alchemist's Shelf", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 8, itemID = "258747", itemName = "High Arakkoan Shelf", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 7, itemID = "245423", itemName = "Spherical Draenic Topiary", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Council of Exarchs", reputationLevel = "Friendly", renownLevel = 0 },
+  { vendorId = 23, itemID = "258743", itemName = "Arakkoan Alchemy Tools", goldCost = 85000, currencies = {}, itemCosts = {}, factionName = "Arakkoa Outcasts", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 23, itemID = "258746", itemName = "High Arakkoan Alchemist's Shelf", goldCost = 85000, currencies = {}, itemCosts = {}, factionName = "Arakkoa Outcasts", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 23, itemID = "258747", itemName = "High Arakkoan Shelf", goldCost = 85000, currencies = {}, itemCosts = {}, factionName = "Arakkoa Outcasts", reputationLevel = "Friendly", renownLevel = 0 },
   { vendorId = 16, itemID = "245430", itemName = "Orcish Wooden Bench", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 18, itemID = "245423", itemName = "Spherical Draenic Topiary", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 18, itemID = "245423", itemName = "Spherical Draenic Topiary", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Council of Exarchs", reputationLevel = "Friendly", renownLevel = 0 },
   { vendorId = 22, itemID = "245439", itemName = "Durotar Signal Brazier", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 22, itemID = "245440", itemName = "Durotar Hanging Brazier", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 16, itemID = "245432", itemName = "Blackrock Bunkbed", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -526,14 +558,14 @@ local itemEntries = {
 
   -- Moz'def block (Horde vendor per master table)
   { vendorId = 5, itemID = "244323", itemName = "Orcish Sleeping Cot", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 31, itemID = "245423", itemName = "Spherical Draenic Topiary", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 31, itemID = "245423", itemName = "Spherical Draenic Topiary", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Council of Exarchs", reputationLevel = "Friendly", renownLevel = 0 },
   { vendorId = 39, itemID = "251655", itemName = "Draenethyst String Lights", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 40, itemID = "251655", itemName = "Draenethyst String Lights", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Zrik block
-  { vendorId = 42, itemID = "258742", itemName = "Scroll of the Adherent", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 55, itemID = "258742", itemName = "Scroll of the Adherent", goldCost = 100000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 42, itemID = "258744", itemName = "Arakkoan Map Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 42, itemID = "258745", itemName = "High Arakkoan Library Shelf", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 9, itemID = "258745", itemName = "High Arakkoan Library Shelf", goldCost = 90000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Krixel Pinchwhistle block (Alliance vendor per master table - Elder Surrah equivalent)
   { vendorId = 43, itemID = "248664", itemName = "Pinchwhistle Fuel Barrel", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -542,8 +574,8 @@ local itemEntries = {
   -- Shadow Hunter Denjai block
 
   -- Sooty block
-  { vendorId = 45, itemID = "244326", itemName = "Orcish Scribe's Wall Shelf", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 45, itemID = "248663", itemName = "Rough-Hewn Doghouse", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 52, itemID = "244326", itemName = "Zandalari Wall Shelf", goldCost = 0, currencies = {{ currencyID = 1560, amount = 150 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 54, itemID = "248663", itemName = "Wooden Doghouse", goldCost = 2700000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Peralta block
   { vendorId = 46, itemID = "252041", itemName = "Arakkoan Nest-Bed", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },

@@ -190,7 +190,7 @@ L.YOUR_VERSION_OUTDATED      = "사용중인 " .. L.DEADLY_BOSS_MODS .. " 버전
 L.VOICE_PACK_OUTDATED		= "선택한 " .. L.DBM .. " 음성팩에 일부 음성이 들어있지 않습니다. 몇가지 경고 음성이 기본 효과음으로 재생됩니다. 최신 음성팩을 다운로드 받거나 제작자에게 연락하여 누락된 음성 파일을 추가해서 업데이트 할 것을 요청하시기 바랍니다"
 L.VOICE_MISSING				= "선택한 " .. L.DBM .. " 음성팩을 찾을 수 없습니다. 오류일 경우 음성팩이 제대로 설치되어 있고 애드온 목록에서 활성화되어 있는지 확인해 보시기 바랍니다."
 L.VOICE_DISABLED				= "현재 " .. L.DBM .. " 음성팩이 한 개 이상 설치되어 있지만 사용하고 있는게 없습니다. 음성팩을 사용하려면 '음성 경고' 항목에서 음성팩이 지정되어 있는지 확인하세요. 음성팩을 사용할 의사가 없으면 음성팩을 삭제하시면 이 메시지는 더이상 출력되지 않습니다"
-L.VOICE_COUNT_MISSING		= "초읽기 음성중 %d초로 설정된 음성/초읽기 팩을 찾을 수 없습니다. 기본 설정으로 초기화 되었습니다: %s"
+L.VOICE_COUNT_MISSING		= "%d순위 초읽기 음성으로 사용할 음성/초읽기 팩을 찾지 못했거나 현재 지원하지 않고 있습니다. 기본 설정으로 초기화 되었습니다: %s"
 L.WEAKAURA_KEY							= " (|cff308530WA 키:|r %s)"
 
 L.UPDATEREMINDER_HEADER			= "사용중인 " .. L.DEADLY_BOSS_MODS .. " 버전의 사용 기한이 지났습니다.\n%s (%s) 버전을 Curse, Wago, WoWI, GitHub 릴리즈 페이지를 통해 다운로드 할 수 있습니다"
@@ -215,6 +215,7 @@ L.OUT_OF_DATE_NAG				= "현재 사용중인 " .. L.DBM .. " 버전이 오래되�
 L.PLATER_NP_AURAS_MSG					= L.DBM .. "엔 이름표에 적들의 쿨타임 타이머를 아이콘으로 표시해주는 진보된 기능이 있습니다. 대부분의 사용자에게 기본적으로 활성화되어 있으나, Plater 사용자는 옵션에서 활성화하기 전까지는 기본적으로 작동하지 않습니다. DBM (Plater 조합)을 최대한 활용하려면 Plater 내 'Buff Special' 설정에서 이 기능을 활성화 하는걸 권장합니다. 이 메시지를 다시 보고싶지 않다면 DBM 기능 켜고 끄기 또는 이름표 설정 메뉴에 '이름표에 쿨타임 아이콘' 설정을 비활성화하세요"
 
 L.MOVABLE_BAR				= "드래그 하세요!"
+L.MOVABLE_FRAMES				= "프레임을 드래그 할 수 있습니다"
 
 L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h님이 당신에게 " .. L.DBM .. " 타이머를 전송했습니다: '%2$s'\n|Hgarrmission:DBM:cancel:%2$s:nil|h|cff3588ff[타이머 취소]|r|h  |Hgarrmission:DBM:ignore:%2$s:%1$s|h|cff3588ff[%1$s의 타이머 무시]|r|h"
 L.PIZZA_CONFIRM_IGNORE			= "정말 %s의 " .. L.DBM .. " 타이머를 차단하시겠습니까? 이 공격대에 있는 동안에만 적용됩니다."
@@ -470,14 +471,14 @@ L.AUTO_TIMER_TEXTS.active				= "%s 종료"--Buff/Debuff/event on boss
 L.AUTO_TIMER_TEXTS.fades				= "%s 사라짐"--Buff/Debuff on players
 L.AUTO_TIMER_TEXTS.ai					= "%s AI 예상"
 
-L.AUTO_TIMER_TEXTS.cd					= "%s 쿨타임"
-L.AUTO_TIMER_TEXTS.cdcount				= "%s (%%s) 쿨타임"
-L.AUTO_TIMER_TEXTS.cdsource				= "%s 쿨타임: >%%s<"
+L.AUTO_TIMER_TEXTS.cd					= "%s"
+L.AUTO_TIMER_TEXTS.cdcount				= "%s (%%s)"
+L.AUTO_TIMER_TEXTS.cdsource				= "%s: >%%s<"
 L.AUTO_TIMER_TEXTS.cdspecial			= "특수 스킬"
 
-L.AUTO_TIMER_TEXTS.next					= "다음 %s"
-L.AUTO_TIMER_TEXTS.nextcount			= "다음 %s (%%s)"
-L.AUTO_TIMER_TEXTS.nextsource			= "다음 %s: %%s"
+L.AUTO_TIMER_TEXTS.next					= "%s"
+L.AUTO_TIMER_TEXTS.nextcount			= "%s (%%s)"
+L.AUTO_TIMER_TEXTS.nextsource			= "%s: %%s"
 L.AUTO_TIMER_TEXTS.nextspecial			= "특수 스킬"
 
 L.AUTO_TIMER_TEXTS.varspecial			= "특수 스킬"--Now same as next, as the ~ was moved to timer number
@@ -606,6 +607,9 @@ L.MOVE_WARNING_MESSAGE			= L.DEADLY_BOSS_MODS .. "를 이용해 주셔셔 감사
 L.MOVE_SPECIAL_WARNING_BAR		= "특수 알림 이동"
 L.MOVE_SPECIAL_WARNING_TEXT		= "특수 알림"
 
+L.MOVE_PRIVATE_AURA_TEXT				= "<secret value>가 당신에게 <secret value> 주문을 시전합니다"
+L.MOVE_PRIVATE_AURA_DISABLED			= "미리보기는 설정에서 비공개 오라 프레임이 비활성화되서 사용할 수 없습니다."
+
 L.HUD_INVALID_TYPE			= "올바르지 않은 HUD 형식이 정의되었습니다"
 L.HUD_INVALID_TARGET			= "HUD에 올바른 대상이 주어지지 않았습니다"
 L.HUD_INVALID_SELF			= "자신을 HUD 대상으로 설정할 수 없습니다"
@@ -713,6 +717,15 @@ L.KEYSTONE_NAMES[503] = '아라카라' -- Ara-Kara, City of Echoes
 L.KEYSTONE_NAMES[505] = '새인호' -- The Dawnbreaker
 L.KEYSTONE_NAMES[525] = '수문' -- Operation Floodgate
 L.KEYSTONE_NAMES[542] = '알다니' -- Eco-Dome Al'dani
+
+L.KEYSTONE_NAMES[161] = '하늘탑' -- Skyreach
+L.KEYSTONE_NAMES[402] = '대학' -- Algeth'ar Academy
+L.KEYSTONE_NAMES[556] = '사론' -- Pit of Saron
+L.KEYSTONE_NAMES[557] = '첨탑' -- Windrunner Spire
+L.KEYSTONE_NAMES[558] = '마정' -- Magister's Terrace (new)
+L.KEYSTONE_NAMES[559] = '제나스' -- Nexus-Point Xenas
+L.KEYSTONE_NAMES[560] = '동굴' -- Miasara Caverns
+L.KEYSTONE_NAMES[583] = '삼두정' -- Hell (IE Seat of the Triumvirate)
 
 -- Midnight jazz
 L.MN_TIMELINE_HEADER	= "Blizzard 타임라인과 DBM 타이머 바 중에 어느 것을 사용할까요?"

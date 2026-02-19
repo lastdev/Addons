@@ -10,7 +10,7 @@
 ## OptionalDeps: Masque
 ## IconTexture-blank: 982414
 ## IconTexture: Interface\AddOns\Plater\images\cast_bar
-## Version: Plater-v630-Vanilla
+## Version: Plater-v631-Vanilla
 ## X-Curse-Project-ID: 100547
 ## X-Wago-ID: kRNLep6o
 
@@ -82,4 +82,5 @@ options/Plater_O_BossMod.lua
 Plater_LoadFinished.lua
 
 #Plater_SpellPrediction.lua
+
 

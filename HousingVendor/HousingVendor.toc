@@ -1,7 +1,7 @@
 ## Interface: 120000, 120001, 
 ## Title: |cFFFF0000Housing|r|cFF0066FFVendor|r
 ## Notes: |cFFAAAAAAHousing Decor & Crafted Items|r |cFF44FF44Database|r • Waypoints • TomTom support • |cFFFFAA00Find every vendor fast!|r
-## Version: 03.02.26.5C
+## Version: 15.02.26.5E
 ## Author: RenZhi
 ## IconTexture: Interface\Icons\INV_Misc_Map02.blp
 ## Category-enUS: Decor Vendors

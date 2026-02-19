@@ -80,11 +80,19 @@ local vendors = {
     coords = {x = 47.6, y = 70.6, mapID = 97},
   },
 
+  [11] = {
+    expansion = "The Burning Crusade",
+    location = "Razorwind Shores",
+    vendorName = "Aeeshna",
+    npcID = 252605,
+    faction = 0,
+    coords = {x = 54.4, y = 56.2, mapID = 2351},
+  },
 }
 
 local itemEntries = {
   -- Provisioner Vredigar block (Scryers)
-  { vendorId = 1, itemID = "256049", itemName = "Sin'dorei Sleeper", goldCost = 5000, currencies = {}, itemCosts = {}, factionName = "Scryers", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 1, itemID = "256049", itemName = "Sin'dorei Sleeper", goldCost = 47500000, currencies = {}, itemCosts = {}, factionName = "Tranquillien", reputationLevel = "Exalted", renownLevel = 0 },
   { vendorId = 1, itemID = "257419", itemName = "Sin'dorei Crafter's Forge", goldCost = 5000, currencies = {}, itemCosts = {}, factionName = "Scryers", reputationLevel = "", renownLevel = 0 },
 
   -- Quartermaster Endarin block (Aldor)
@@ -114,7 +122,7 @@ local itemEntries = {
   -- Consortium Trader block
   { vendorId = 7, itemID = "262666", itemName = "K'areshi Incense Burner", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 7, itemID = "262667", itemName = "Oath Scale", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 7, itemID = "262664", itemName = "K'areshi Wrappings Vol 11", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "The Consortium", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 11, itemID = "262664", itemName = "Complete Guide to K'areshi Wrappings, Vol. 11", goldCost = 0, currencies = {{ currencyID = 3363, amount = 5 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 7, itemID = "262665", itemName = "K'areshi Projector", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "The Consortium", reputationLevel = "", renownLevel = 0 },
   -- Mycah block
   { vendorId = 8, itemID = "247764", itemName = "Enigmatic Purple Crystal", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Sporeggar", reputationLevel = "Exalted", renownLevel = 0 },

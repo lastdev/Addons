@@ -6,6 +6,8 @@ do
 ------------------------------------------------------------
 L["A /reload may be required to take effect."] = "Может потребоваться /reload для применения изменений."
 L["CVar, saved within Plater profile and restored when loading the profile."] = "CVar, сохраняется в профиле Plater и восстанавливается при загрузке профиля."
+--[[Translation missing --]]
+L["DISABLE_TESTING_AURAS"] = ""
 L["EXPORT"] = "Экспорт"
 L["EXPORT_CAST_COLORS"] = "Поделиться Цветами"
 L["EXPORT_CAST_SOUNDS"] = "Поделиться Звуками"
@@ -419,6 +421,12 @@ L[ [=[Show nameplate for friendly npcs.
 |cFFFFFF00 Important |r: This option is dependent on the client`s nameplate state (on/off).
 
 |cFFFFFF00 Important |r: when disabled but enabled on the client through (%s), the healthbar isn't visible but the nameplate is still clickable.]=]
+--[[Translation missing --]]
+L[ [=[Show nameplate for friendly npcs.
+
+|cFFFFFF00 Important |r: This option is dependent on the client`s nameplate state (on/off).
+
+|cFFFFFF00 Important |r: when disabled but enabled on the client through (%s), the healthbar isn't visible but the nameplate is still clickable.]=] ] = ""
 L["TARGET_CVAR_ALWAYSONSCREEN"] = "Цель ВСЕГДА на экране|cFFFF7700*|r"
 --[[Translation missing --]]
 L["TARGET_CVAR_ALWAYSONSCREEN_DESC"] = [=[When enabled, the nameplate of your target is always shown even when the enemy isn't in the screen.

@@ -53,12 +53,16 @@ end
 local function GetQuestTitleSafe(id)
   id = tonumber(id)
   if not id then return nil end
+
+  local D = NS.UI and NS.UI.Viewer and NS.UI.Viewer.Data
+  if D and D.GetQuestTitle then
+    return D.GetQuestTitle(id)
+  end
+
   if questNameCache[id] ~= nil then
     return questNameCache[id] or nil
   end
-  if C_QuestLog and C_QuestLog.RequestLoadQuestByID then
-    C_QuestLog.RequestLoadQuestByID(id)
-  end
+  
   if C_QuestLog and C_QuestLog.GetTitleForQuestID then
     local title = C_QuestLog.GetTitleForQuestID(id)
     if title and title ~= "" then
@@ -66,6 +70,26 @@ local function GetQuestTitleSafe(id)
       return title
     end
   end
+  
+  if C_QuestLog and C_QuestLog.RequestLoadQuestByID then
+    C_QuestLog.RequestLoadQuestByID(id)
+    C_Timer.After(0.1, function()
+      if C_QuestLog and C_QuestLog.GetTitleForQuestID then
+        local title = C_QuestLog.GetTitleForQuestID(id)
+        if title and title ~= "" then
+          questNameCache[id] = title
+          if View and View.instance and View.instance.Render then
+            View.instance:Render()
+          elseif NS.UI and NS.UI.Layout and NS.UI.Layout.Render then
+            NS.UI.Layout:Render()
+          end
+        else
+          questNameCache[id] = false
+        end
+      end
+    end)
+  end
+  
   questNameCache[id] = false
   return nil
 end
@@ -313,6 +337,66 @@ local function GetRepRequirement(it)
   return { text = "Reputation required" }
 end
 
+local function GetQuestRequirement(it)
+  if not it then return nil end
+
+  local r = it.requirements
+  if not r and DecorIndex and it.decorID then
+    local entry = DecorIndex[it.decorID]
+    local item  = entry and entry.item
+    r = item and item.requirements or nil
+  end
+  if not r then return nil end
+
+  local quest = r.quest
+  if not quest then return nil end
+
+  if type(quest) == "table" then
+    local questID = tonumber(quest.id)
+    if not questID then
+      return { text = "Quest required", questID = nil, met = false }
+    end
+
+    local isComplete = IsQuestComplete(questID)
+
+    local questName = quest.name or quest.title or GetQuestTitleSafe(questID)
+
+    local displayText
+    if questName then
+      displayText = questName
+    else
+      displayText = "Quest #" .. tostring(questID)
+    end
+
+    return {
+      text = displayText,
+      questID = questID,
+      met = isComplete
+    }
+  end
+
+  if type(quest) == "number" then
+    local questID = tonumber(quest)
+    if not questID then
+      return { text = "Quest required", questID = nil, met = false }
+    end
+
+    local isComplete = IsQuestComplete(questID)
+
+    return {
+      text = "Quest #" .. tostring(questID),
+      questID = questID,
+      met = isComplete
+    }
+  end
+
+  if type(quest) == "string" then
+    return { text = quest, questID = nil, met = false }
+  end
+
+  return { text = "Quest required", questID = nil, met = false }
+end
+
 local function BuildRepDisplay(rep, hover)
   if not rep or not rep.text or rep.text == "" then return "" end
 
@@ -537,6 +621,7 @@ Requirements.BuildWowheadQuestURL = BuildWowheadQuestURL
 Requirements.GetRequirementLink = GetRequirementLink
 Requirements.BuildReqDisplay = BuildReqDisplay
 Requirements.GetRepRequirement = GetRepRequirement
+Requirements.GetQuestRequirement = GetQuestRequirement
 Requirements.BuildRepDisplay = BuildRepDisplay
 
 return Requirements

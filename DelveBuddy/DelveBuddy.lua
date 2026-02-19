@@ -35,6 +35,8 @@ function DelveBuddy:OnInitialize()
         "QUEST_LOG_UPDATE",
         "CURRENCY_DISPLAY_UPDATE",
         "WEEKLY_REWARDS_UPDATE",
+        "PLAYER_EQUIPMENT_CHANGED",
+        "PLAYER_AVG_ITEM_LEVEL_UPDATE",
     }, 2, "OnDataChanged")
 
     -- Hack to ensure weekly reward iLvls are ready when we need them later.

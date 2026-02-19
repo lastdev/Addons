@@ -1,6 +1,6 @@
-## Interface: 120001, 110207, 50503
+## Interface: 120001, 50503
 ## Title: LiteMount
-## Version: 12.0.1-1
+## Version: 12.0.1-4
 ## Author: Xodiv-Nagrand
 ## Email: mib@post.com
 ## IconTexture: 132247

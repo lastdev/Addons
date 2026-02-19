@@ -2,6 +2,7 @@
 ## Title: CursorTrail
 ## Notes: Deja un rastro detrás del cursor.
 ## Author: Daniel
-## Version: 1.0.1.0
+## Version: 1.0.2.0
+## SavedVariables: CursorTrailDB
 
 CursorTrail.lua

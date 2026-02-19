@@ -1,12 +1,12 @@
-tag f3fa32dca777aa2b8cd049bfa07a65392f0ca9b3 WoW-12.0.0-release1
+tag faf78b273bc129743387781c39279e5e9441821b WoW-12.0.1-release1
 Author:	Odica Jaedenar <odica.jaedenar@gmail.com>
-Date:	Sun Feb 1 22:29:43 2026 +0100
+Date:	Thu Feb 12 17:38:59 2026 +0100
 
-Tagged as WoW-12.0.0-release1
+Tagged as WoW-12.0.1-release1
 
-commit bb336a994364062a19bfac85b31fb1f5c23e7019
+commit 53c3b84ad5b7823fcec23970cb148fe4cdde8bdf
 Author: Odica Jaedenar <odica.jaedenar@gmail.com>
-Date:   Sun Feb 1 22:29:05 2026 +0100
+Date:   Thu Feb 12 17:33:43 2026 +0100
 
-    Commit for release version (with latest version of LibTourist-3.0)
+    Updated version in TOC to 120001
 

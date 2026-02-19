@@ -73,7 +73,7 @@ HousingDataAggregator:RegisterReputation({
     {
       expansion = "Cataclysm",
       location = "Twilight Highlands",
-      vendorName = "Breana Bitterbrand",
+      vendorName = "Moon Priestess Lasara",
       npcID = 50305,
       faction = 1,
       coords = {x = 49.6, y = 29.6, mapID = 241},
@@ -468,7 +468,7 @@ HousingDataAggregator:RegisterReputation({
     faction = 0,
     rewards = {
       {vendorId = 13, itemID = 238975, itemName = "Reliquary Telescope", requiredStanding = "Renown 24"},
-      {vendorId = 14, itemID = 238975, itemName = "Reliquary Telescope", requiredStanding = "Renown 24"},
+      {vendorId = 12, itemID = 238975, itemName = "Reliquary Telescope", requiredStanding = "Renown 24"},
       {vendorId = 13, itemID = 245283, itemName = "Blood Elven Candelabra", requiredStanding = "Renown 16"},
       {vendorId = 13, itemID = 245285, itemName = "Reliquary Storage Crate", requiredStanding = "Renown 16"},
       {vendorId = 13, itemID = 245286, itemName = "Rectangular Sin'dorei Rug", requiredStanding = "Renown 10"},
@@ -484,10 +484,10 @@ HousingDataAggregator:RegisterReputation({
     category = "Major Faction",
     faction = 0,
     rewards = {
-      {vendorId = 15, itemID = 248103, itemName = "Draconic Stone Table", requiredStanding = "Renown 14"},
-      {vendorId = 15, itemID = 248112, itemName = "Valdrakken Garden Fountain", requiredStanding = "Renown 6"},
-      {vendorId = 15, itemID = 248652, itemName = "Dragon's Grand Mirror", requiredStanding = "Renown 20"},
-      {vendorId = 15, itemID = 256169, itemName = "Valdrakken Oven", requiredStanding = "Renown 3"},
+      {vendorId = 14, itemID = 248103, itemName = "Draconic Stone Table", requiredStanding = "Renown 14"},
+      {vendorId = 14, itemID = 248112, itemName = "Valdrakken Garden Fountain", requiredStanding = "Renown 6"},
+      {vendorId = 14, itemID = 248652, itemName = "Dragon's Grand Mirror", requiredStanding = "Renown 20"},
+      {vendorId = 14, itemID = 256169, itemName = "Valdrakken Oven", requiredStanding = "Renown 3"},
     },
   },
   -- Legion
@@ -532,21 +532,21 @@ HousingDataAggregator:RegisterReputation({
     category = "Zone",
     faction = 0,
     rewards = {
-      {vendorId = 19, itemID = 244536, itemName = "Nightborne Fireplace", requiredStanding = "Exalted"},
-      {vendorId = 20, itemID = 244654, itemName = "Small Purple Suramar Seat Cushion", requiredStanding = "Friendly"},
-      {vendorId = 20, itemID = 244676, itemName = "Teal Suramar Seat Cushion", requiredStanding = "Honored"},
-      {vendorId = 20, itemID = 244677, itemName = "Purple Suramar Seat Cushion", requiredStanding = "Revered"},
-      {vendorId = 20, itemID = 244678, itemName = "Small Red Suramar Seat Cushion", requiredStanding = "Friendly"},
-      {vendorId = 19, itemID = 245448, itemName = "\\", requiredStanding = "Exalted"},  -- original kept (even if invalid)
-      {vendorId = 20, itemID = 246001, itemName = "Orange Suramar Seat Cushion", requiredStanding = "Honored"},
-      {vendorId = 20, itemID = 246002, itemName = "Red Suramar Seat Cushion", requiredStanding = "Revered"},
-      {vendorId = 19, itemID = 246850, itemName = "\\", requiredStanding = "Exalted"},  -- original kept
-      {vendorId = 19, itemID = 247844, itemName = "Suramar Library", requiredStanding = "Honored"},
-      {vendorId = 19, itemID = 247845, itemName = "Nightborne Bench", requiredStanding = "Honored"},
-      {vendorId = 19, itemID = 247847, itemName = "Arcwine Counter", requiredStanding = "Revered"},
-      {vendorId = 19, itemID = 247910, itemName = "Suramar Sconce", requiredStanding = "Friendly"},
-      {vendorId = 19, itemID = 247921, itemName = "Nightborne Wall Shelf", requiredStanding = "Friendly"},
-      {vendorId = 19, itemID = 247924, itemName = "Suramar Street Light", requiredStanding = "Revered"},
+      {vendorId = 18, itemID = 244536, itemName = "Nightborne Fireplace", requiredStanding = "Exalted"},
+      {vendorId = 19, itemID = 244654, itemName = "Small Purple Suramar Seat Cushion", requiredStanding = "Friendly"},
+      {vendorId = 19, itemID = 244676, itemName = "Teal Suramar Seat Cushion", requiredStanding = "Honored"},
+      {vendorId = 19, itemID = 244677, itemName = "Purple Suramar Seat Cushion", requiredStanding = "Revered"},
+      {vendorId = 19, itemID = 244678, itemName = "Small Red Suramar Seat Cushion", requiredStanding = "Friendly"},
+      {vendorId = 18, itemID = 245448, itemName = "\\", requiredStanding = "Exalted"},  -- original kept (even if invalid)
+      {vendorId = 19, itemID = 246001, itemName = "Orange Suramar Seat Cushion", requiredStanding = "Honored"},
+      {vendorId = 19, itemID = 246002, itemName = "Red Suramar Seat Cushion", requiredStanding = "Revered"},
+      {vendorId = 18, itemID = 246850, itemName = "\\", requiredStanding = "Exalted"},  -- original kept
+      {vendorId = 18, itemID = 247844, itemName = "Suramar Library", requiredStanding = "Honored"},
+      {vendorId = 18, itemID = 247845, itemName = "Nightborne Bench", requiredStanding = "Honored"},
+      {vendorId = 18, itemID = 247847, itemName = "Arcwine Counter", requiredStanding = "Revered"},
+      {vendorId = 18, itemID = 247910, itemName = "Suramar Sconce", requiredStanding = "Friendly"},
+      {vendorId = 18, itemID = 247921, itemName = "Nightborne Wall Shelf", requiredStanding = "Friendly"},
+      {vendorId = 18, itemID = 247924, itemName = "Suramar Street Light", requiredStanding = "Revered"},
     },
   },
   -- Mists of Pandaria
@@ -558,7 +558,7 @@ HousingDataAggregator:RegisterReputation({
     category = "Tillers",
     faction = 0,
     rewards = {
-      {vendorId = 21, itemID = 247737, itemName = "Stormstout Brew Keg", requiredStanding = "Friend"},
+      {vendorId = 20, itemID = 247737, itemName = "Stormstout Brew Keg", requiredStanding = "Friend"},
     },
   },
   {
@@ -569,11 +569,11 @@ HousingDataAggregator:RegisterReputation({
     category = "Lore",
     faction = 0,
     rewards = {
-      {vendorId = 22, itemID = 245512, itemName = "Pandaren Cradle Stool", requiredStanding = "Friendly"},
-      {vendorId = 22, itemID = 247662, itemName = "Pandaren Scholar's Lectern", requiredStanding = "Honored"},
-      {vendorId = 22, itemID = 247663, itemName = "Pandaren Scholar's Bookcase", requiredStanding = "Revered"},
-      {vendorId = 22, itemID = 247855, itemName = "Pandaren Lacquered Crate", requiredStanding = "Honored"},
-      {vendorId = 22, itemID = 258147, itemName = "Empty Lorewalker's Bookcase", requiredStanding = "Revered"},
+      {vendorId = 21, itemID = 245512, itemName = "Pandaren Cradle Stool", requiredStanding = "Friendly"},
+      {vendorId = 21, itemID = 247662, itemName = "Pandaren Scholar's Lectern", requiredStanding = "Honored"},
+      {vendorId = 21, itemID = 247663, itemName = "Pandaren Scholar's Bookcase", requiredStanding = "Revered"},
+      {vendorId = 21, itemID = 247855, itemName = "Pandaren Lacquered Crate", requiredStanding = "Honored"},
+      {vendorId = 21, itemID = 258147, itemName = "Empty Lorewalker's Bookcase", requiredStanding = "Revered"},
     },
   },
   {
@@ -584,7 +584,7 @@ HousingDataAggregator:RegisterReputation({
     category = "Tillers",
     faction = 0,
     rewards = {
-      {vendorId = 21, itemID = 245508, itemName = "Pandaren Cooking Table", requiredStanding = "Friendly"},
+      {vendorId = 20, itemID = 245508, itemName = "Pandaren Cooking Table", requiredStanding = "Friendly"},
     },
   },
   {
@@ -595,7 +595,7 @@ HousingDataAggregator:RegisterReputation({
     category = "Tillers",
     faction = 0,
     rewards = {
-      {vendorId = 21, itemID = 247670, itemName = "Pandaren Pantry", requiredStanding = "Friend"},
+      {vendorId = 20, itemID = 247670, itemName = "Pandaren Pantry", requiredStanding = "Friend"},
     },
   },
   {
@@ -606,8 +606,8 @@ HousingDataAggregator:RegisterReputation({
     category = "Zone",
     faction = 0,
     rewards = {
-      {vendorId = 23, itemID = 247730, itemName = "Red Crane Kite", requiredStanding = "Revered"},
-      {vendorId = 23, itemID = 247732, itemName = "Lucky Hanging Lantern", requiredStanding = "Honored"},
+      {vendorId = 22, itemID = 247730, itemName = "Red Crane Kite", requiredStanding = "Revered"},
+      {vendorId = 22, itemID = 247732, itemName = "Lucky Hanging Lantern", requiredStanding = "Honored"},
     },
   },
   {
@@ -618,7 +618,7 @@ HousingDataAggregator:RegisterReputation({
     category = "Tillers",
     faction = 0,
     rewards = {
-      {vendorId = 21, itemID = 247734, itemName = "Paw'don Well", requiredStanding = "Friend"},
+      {vendorId = 20, itemID = 247734, itemName = "Paw'don Well", requiredStanding = "Friend"},
     },
   },
   -- The War Within
@@ -630,8 +630,8 @@ HousingDataAggregator:RegisterReputation({
     category = "Undermine",
     faction = 0,
     rewards = {
-      {vendorId = 24, itemID = 248758, itemName = "Relaxing Goblin Beach Chair with Cup Gripper", requiredStanding = "Revered"},
-      {vendorId = 24, itemID = 255642, itemName = "Undermine Alleyway Sconce", requiredStanding = "Honored"},
+      {vendorId = 23, itemID = 248758, itemName = "Relaxing Goblin Beach Chair with Cup Gripper", requiredStanding = "Revered"},
+      {vendorId = 23, itemID = 255642, itemName = "Undermine Alleyway Sconce", requiredStanding = "Honored"},
     },
   },
   {
@@ -642,7 +642,7 @@ HousingDataAggregator:RegisterReputation({
     category = "Major Faction",
     faction = 0,
     rewards = {
-      {vendorId = 25, itemID = 245293, itemName = "Collection of Arathi Scripture", requiredStanding = "Renown 8"},
+      {vendorId = 24, itemID = 245293, itemName = "Collection of Arathi Scripture", requiredStanding = "Renown 8"},
     },
   },
   {
@@ -653,8 +653,8 @@ HousingDataAggregator:RegisterReputation({
     category = "Undermine",
     faction = 0,
     rewards = {
-      {vendorId = 26, itemID = 245307, itemName = "Undermine Bookcase", requiredStanding = "Honored"},
-      {vendorId = 26, itemID = 256327, itemName = "Open Rust-Plated Storage Crate", requiredStanding = "Friendly"},
+      {vendorId = 25, itemID = 245307, itemName = "Undermine Bookcase", requiredStanding = "Honored"},
+      {vendorId = 25, itemID = 256327, itemName = "Open Rust-Plated Storage Crate", requiredStanding = "Friendly"},
     },
   },
   {
@@ -665,8 +665,8 @@ HousingDataAggregator:RegisterReputation({
     category = "Undermine",
     faction = 0,
     rewards = {
-      {vendorId = 27, itemID = 245311, itemName = "Undermine Wall Shelf", requiredStanding = "Honored"},
-      {vendorId = 27, itemID = 255647, itemName = "Spring-Powered Pointer", requiredStanding = "Revered"},
+      {vendorId = 26, itemID = 245311, itemName = "Undermine Wall Shelf", requiredStanding = "Honored"},
+      {vendorId = 26, itemID = 255647, itemName = "Spring-Powered Pointer", requiredStanding = "Revered"},
     },
   },
   {
@@ -677,8 +677,8 @@ HousingDataAggregator:RegisterReputation({
     category = "Undermine",
     faction = 0,
     rewards = {
-      {vendorId = 28, itemID = 245321, itemName = "Rust-Plated Storage Barrel", requiredStanding = "Friendly"},
-      {vendorId = 28, itemID = 255641, itemName = "Undermine Mechanic's Hanging Lamp", requiredStanding = "Honored"},
+      {vendorId = 27, itemID = 245321, itemName = "Rust-Plated Storage Barrel", requiredStanding = "Friendly"},
+      {vendorId = 27, itemID = 255641, itemName = "Undermine Mechanic's Hanging Lamp", requiredStanding = "Honored"},
     },
   },
   {
@@ -689,8 +689,8 @@ HousingDataAggregator:RegisterReputation({
     category = "Undermine",
     faction = 0,
     rewards = {
-      {vendorId = 29, itemID = 245313, itemName = "Spring-Powered Undermine Chair", requiredStanding = "Honored"},
-      {vendorId = 29, itemID = 255674, itemName = "Incontinental Table Lamp", requiredStanding = "Honored"},
+      {vendorId = 28, itemID = 245313, itemName = "Spring-Powered Undermine Chair", requiredStanding = "Honored"},
+      {vendorId = 28, itemID = 255674, itemName = "Incontinental Table Lamp", requiredStanding = "Honored"},
     },
   },
   -- Warlords of Draenor
@@ -702,9 +702,9 @@ HousingDataAggregator:RegisterReputation({
     category = "Zone",
     faction = 0,
     rewards = {
-      {vendorId = 38, itemID = 258743, itemName = "Arakkoan Alchemy Tools", requiredStanding = "Honored"},
-      {vendorId = 38, itemID = 258746, itemName = "High Arakkoan Alchemist's Shelf", requiredStanding = "Revered"},
-      {vendorId = 38, itemID = 258747, itemName = "High Arakkoan Shelf", requiredStanding = "Friendly"},
+      {vendorId = 36, itemID = 258743, itemName = "Arakkoan Alchemy Tools", requiredStanding = "Honored"},
+      {vendorId = 36, itemID = 258746, itemName = "High Arakkoan Alchemist's Shelf", requiredStanding = "Revered"},
+      {vendorId = 36, itemID = 258747, itemName = "High Arakkoan Shelf", requiredStanding = "Friendly"},
     },
   },
   {
@@ -758,9 +758,9 @@ HousingDataAggregator:RegisterReputation({
     category = "Brawler's Guild",
     faction = 2,
     rewards = {
-      {vendorId = 34, itemID = 255840, requiredStanding = "Rank 7"},
-      {vendorId = 34, itemID = 259071, requiredStanding = "Rank 5"},
-      {vendorId = 34, itemID = 263026, requiredStanding = "Rank 2"},
+      {vendorId = 33, itemID = 255840, requiredStanding = "Rank 7"},
+      {vendorId = 33, itemID = 259071, requiredStanding = "Rank 5"},
+      {vendorId = 33, itemID = 263026, requiredStanding = "Rank 2"},
     },
   },
   {
@@ -771,9 +771,9 @@ HousingDataAggregator:RegisterReputation({
     category = "Brawler's Guild",
     faction = 1,
     rewards = {
-      {vendorId = 35, itemID = 255840, requiredStanding = "Rank 7"},
-      {vendorId = 35, itemID = 259071, requiredStanding = "Rank 5"},
-      {vendorId = 35, itemID = 263026, requiredStanding = "Rank 2"},
+      {vendorId = 34, itemID = 255840, requiredStanding = "Rank 7"},
+      {vendorId = 34, itemID = 259071, requiredStanding = "Rank 5"},
+      {vendorId = 34, itemID = 263026, requiredStanding = "Rank 2"},
     },
   },
   -- Midnight
@@ -785,9 +785,9 @@ HousingDataAggregator:RegisterReputation({
     category = "Zone",
     faction = 0,
     rewards = {
-      {vendorId = 37, itemID = 247785, itemName = "Galactic Void-Scarred Banner"},
-      {vendorId = 37, itemID = 264253, itemName = "Galactic Void-Scarred Barricade"},
-      {vendorId = 37, itemID = 264345, itemName = "Galactic Commander's Orb"},
+      {vendorId = 35, itemID = 247785, itemName = "Galactic Void-Scarred Banner"},
+      {vendorId = 35, itemID = 264253, itemName = "Galactic Void-Scarred Barricade"},
+      {vendorId = 35, itemID = 264345, itemName = "Galactic Commander's Orb"},
     },
   },
 })

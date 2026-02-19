@@ -6,6 +6,8 @@ do
 ------------------------------------------------------------
 L["A /reload may be required to take effect."] = "적용하려면 /reload가 필요할 수 있습니다."
 L["CVar, saved within Plater profile and restored when loading the profile."] = "Plater 프로필에 저장된 CVar는 프로필을 로드할 때 복원됩니다."
+--[[Translation missing --]]
+L["DISABLE_TESTING_AURAS"] = ""
 L["EXPORT"] = "내보내기"
 L["EXPORT_CAST_COLORS"] = "시전바 색상 내보내기"
 L["EXPORT_CAST_SOUNDS"] = "시전바 소리 내보내기"
@@ -356,6 +358,12 @@ L[ [=[Show nameplate for friendly npcs.
 |cFFFFFF00 Important |r: This option is dependent on the client`s nameplate state (on/off).
 
 |cFFFFFF00 Important |r: when disabled but enabled on the client through (%s), the healthbar isn't visible but the nameplate is still clickable.]=] ] = "아군 NPC의 이름표를 표시합니다. |cFFFFFF00 중요 |r: 이 옵션은 클라이언트의 이름표 상태(켜짐/꺼짐)에 따라 달라집니다. |cFFFFFF00 중요 |r: 비활성화되어 있지만 클라이언트에서 (%s)를 통해 활성화된 경우, 체력바는 보이지 않지만 이름표는 여전히 클릭할 수 있습니다."
+--[[Translation missing --]]
+L[ [=[Show nameplate for friendly npcs.
+
+|cFFFFFF00 Important |r: This option is dependent on the client`s nameplate state (on/off).
+
+|cFFFFFF00 Important |r: when disabled but enabled on the client through (%s), the healthbar isn't visible but the nameplate is still clickable.]=] ] = ""
 L["TARGET_CVAR_ALWAYSONSCREEN"] = "대상을 항상 화면안에 표시|cFFFF7700*|r"
 L["TARGET_CVAR_ALWAYSONSCREEN_DESC"] = [=[체크하면 대상이 화면밖일 때에도 이름표가 항상 화면안에 보이도록 합니다.
 

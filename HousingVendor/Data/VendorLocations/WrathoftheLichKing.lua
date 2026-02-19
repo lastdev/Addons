@@ -101,7 +101,7 @@ local itemEntries = {
   { vendorId = 1, itemID = "258220", itemName = "Murloc Driftwood Hut", goldCost = 0, currencies = {}, itemCosts = {[34597] = 10}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Woodsman Drake block
-  { vendorId = 2, itemID = "248622", itemName = "Wooden Outhouse", goldCost = 5000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 2, itemID = "248622", itemName = "Wooden Outhouse", goldCost = 4500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Purser Boulian block
   { vendorId = 3, itemID = "248807", itemName = "Nesingwary Mounted Shoveltusk Head", goldCost = 5000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },

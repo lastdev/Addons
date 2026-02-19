@@ -91,22 +91,18 @@ L["DUNGEON_SHORT_NAME_HOV"] = "Hallen der Tapferkeit"
 L["DUNGEON_SHORT_NAME_ID"] = "Die Eisendocks"
 L["DUNGEON_SHORT_NAME_KR"] = "Die Königsruh"
 L["DUNGEON_SHORT_NAME_LOWR"] = "Untere Rückkehr nach Karazhan"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_MC"] = ""--]] 
+L["DUNGEON_SHORT_NAME_MC"] = "Maisarakavernen"
 L["DUNGEON_SHORT_NAME_MISTS"] = "Nebel von Tirna Scithe"
 L["DUNGEON_SHORT_NAME_ML"] = "Das Riesenflöz"
 L["DUNGEON_SHORT_NAME_MOS"] = "Die Helmaulklippen"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_MT"] = ""--]] 
+L["DUNGEON_SHORT_NAME_MT"] = "Terrasse der Magister"
 L["DUNGEON_SHORT_NAME_NELT"] = "Neltharus"
 L["DUNGEON_SHORT_NAME_NL"] = "Neltharions Hort"
 L["DUNGEON_SHORT_NAME_NO"] = "Angriff der Nokhud"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_NPX"] = ""--]] 
+L["DUNGEON_SHORT_NAME_NPX"] = "Nexuspunkt Xenas"
 L["DUNGEON_SHORT_NAME_NW"] = "Nekrotische Schneise"
 L["DUNGEON_SHORT_NAME_PF"] = "Seuchensturz"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_POS"] = ""--]] 
+L["DUNGEON_SHORT_NAME_POS"] = "Die Grube von Saron"
 L["DUNGEON_SHORT_NAME_PSF"] = "Priorat der Heiligen Flamme"
 L["DUNGEON_SHORT_NAME_RISE"] = "Murozonds Erhebung"
 L["DUNGEON_SHORT_NAME_RLP"] = "Rubinlebensbecken"
@@ -117,8 +113,7 @@ L["DUNGEON_SHORT_NAME_SEAT"] = "Der Sitz des Triumvirats"
 L["DUNGEON_SHORT_NAME_SIEGE"] = "Belagerung von Boralus"
 L["DUNGEON_SHORT_NAME_SOA"] = "Spitzen des Aufstiegs"
 L["DUNGEON_SHORT_NAME_SOTS"] = "Der Schrein des Sturms"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_SR"] = ""--]] 
+L["DUNGEON_SHORT_NAME_SR"] = "Himmelsnadel"
 L["DUNGEON_SHORT_NAME_STRT"] = "Tazavesh Wundersame Straßen"
 L["DUNGEON_SHORT_NAME_SV"] = "Steingewölbe"
 L["DUNGEON_SHORT_NAME_TD"] = "Die Morgenbringer"
@@ -133,8 +128,7 @@ L["DUNGEON_SHORT_NAME_VOTW"] = "Verlies der Wächterinnen"
 L["DUNGEON_SHORT_NAME_VP"] = "Der Vortexgipfel"
 L["DUNGEON_SHORT_NAME_WM"] = "Das Kronsteiganwesen"
 L["DUNGEON_SHORT_NAME_WORK"] = "Operation Mechagon - Werkstatt"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_WS"] = ""--]] 
+L["DUNGEON_SHORT_NAME_WS"] = "Windläuferturm"
 L["DUNGEON_SHORT_NAME_YARD"] = "Operation Mechagon - Schrottplatz"
 L["ENABLE_AUTO_FRAME_POSITION"] = "Positioniert den Raider.IO Profilrahmen automatisch"
 L["ENABLE_AUTO_FRAME_POSITION_DESC"] = "Wenn du dies aktivierst, wird der M+ Profile-Tooltip neben dem Dungeonbrowserrahmen oder dem Spieler-Tooltip angezeigt."
@@ -293,8 +287,7 @@ L["RAID_BOSS_CN_6"] = "Lady Inerva Dunkelader"
 L["RAID_BOSS_CN_7"] = "Rat des Blutes"
 L["RAID_BOSS_CN_8"] = "Schlickfaust"
 L["RAID_BOSS_CN_9"] = "Generäle der Steinlegion"
---[[Translation missing --]]
---[[ L["RAID_BOSS_DR_1"] = ""--]] 
+L["RAID_BOSS_DR_1"] = "Chimaerus, der ungeträumte Gott"
 L["RAID_BOSS_DS_1"] = "Morchok"
 L["RAID_BOSS_DS_2"] = "Kriegsherr Zon'ozz"
 L["RAID_BOSS_DS_3"] = "Yor'sahj der Unermüdliche"
@@ -375,10 +368,8 @@ L["RAID_BOSS_MFO_5"] = "Der Leerenjäger"
 L["RAID_BOSS_MFO_6"] = "Fraktillus"
 L["RAID_BOSS_MFO_7"] = "Nexuskönigin Salhadaar"
 L["RAID_BOSS_MFO_8"] = "Dimensius der alles Verschlingende"
---[[Translation missing --]]
---[[ L["RAID_BOSS_MQD_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MQD_2"] = ""--]] 
+L["RAID_BOSS_MQD_1"] = "Belo'ren, Kind von Al'ar"
+L["RAID_BOSS_MQD_2"] = "Mitternachtsfall"
 L["RAID_BOSS_MSV_1"] = "Die Steinwache"
 L["RAID_BOSS_MSV_2"] = "Feng der Verfluchte"
 L["RAID_BOSS_MSV_3"] = "Gara'jal der Geisterbinder"
@@ -446,18 +437,12 @@ L["RAID_BOSS_VOTI_5"] = "Dathea, die Aufgestiegene"
 L["RAID_BOSS_VOTI_6"] = "Kurog Grimmtotem"
 L["RAID_BOSS_VOTI_7"] = "Bruthüterin Diurna"
 L["RAID_BOSS_VOTI_8"] = "Raszageth die Sturmfresserin"
---[[Translation missing --]]
---[[ L["RAID_BOSS_VS_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VS_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VS_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VS_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VS_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VS_6"] = ""--]] 
+L["RAID_BOSS_VS_1"] = "Imperator Averzian"
+L["RAID_BOSS_VS_2"] = "Vorasius"
+L["RAID_BOSS_VS_3"] = "Gefallener König Salhadaar"
+L["RAID_BOSS_VS_4"] = "Vaelgor & Ezzorak"
+L["RAID_BOSS_VS_5"] = "Lichtblinde Vorhut"
+L["RAID_BOSS_VS_6"] = "Krone des Kosmos"
 L["RAID_BOT"] = "Die Bastion des Zwielichts"
 L["RAID_BRD"] = "Schwarzfelstiefen"
 L["RAID_BWD"] = "Der Pechschwingenabstieg"
@@ -475,8 +460,7 @@ L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = "M"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "N"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = "N10"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = "N25"
---[[Translation missing --]]
---[[ L["RAID_DR"] = ""--]] 
+L["RAID_DR"] = "Der Traumriss"
 L["RAID_DS"] = "Drachenseele"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Schlachtzugsbegegnungen besiegt"
 L["RAID_FL"] = "Feuerlande"
@@ -484,8 +468,7 @@ L["RAID_HOF"] = "Herz der Angst"
 L["RAID_ICC"] = "Die Eiskronenzitadelle"
 L["RAID_LOU"] = "Die Befreiung von Lorenhall"
 L["RAID_MFO"] = "Manaschmiede Omega"
---[[Translation missing --]]
---[[ L["RAID_MQD"] = ""--]] 
+L["RAID_MQD"] = "Marsch auf Quel'Danas"
 L["RAID_MSV"] = "Mogu'shangewölbe"
 L["RAID_NP"] = "Palast der Nerub'ar"
 L["RAID_RS"] = "Das Rubinsanktum"
@@ -493,8 +476,7 @@ L["RAID_ToES"] = "Terrasse des Endlosen Frühlings"
 L["RAID_TOES"] = "Terrasse des Endlosen Frühlings"
 L["RAID_TOT"] = "Der Thron des Donners"
 L["RAID_TOTFW"] = "Thron der Vier Winde"
---[[Translation missing --]]
---[[ L["RAID_VS"] = ""--]] 
+L["RAID_VS"] = "Die Leerenspitze"
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Durchschn. Wertungen für Zeitliche +%s"
 L["RAIDERIO_BEST_RUN"] = "Raider.IO M+ Bester Durchlauf"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Raider.IO Client-Anpassung"
@@ -585,18 +567,14 @@ L["SHOW_LEADER_PROFILE"] = "Erlaube Raider.IO Profil Tooltip Modifikator"
 L["SHOW_LEADER_PROFILE_DESC"] = "Halte einen Modifikator (Umschalt / Strg / Alt) gedrückt, um den Profil-Tooltip zwischen Persönlichem / Haupt-Profil umzuschalten."
 L["SHOW_MAINS_SCORE"] = "Zeigt Hauptcharakter Mythisch+ Wertung und Fortschritt in den Tooltips an"
 L["SHOW_MAINS_SCORE_DESC"] = "Zeigt die Wertung vom Hauptcharakters des Spielers für die aktuelle Saison an. Die Spieler müssen sich auf Raider.IO registriert haben und einen Charakter als Hauptcharakter gesetzt haben."
---[[Translation missing --]]
---[[ L["SHOW_MY_WARBAND_SCORE"] = ""--]] 
---[[Translation missing --]]
---[[ L["SHOW_MY_WARBAND_SCORE_DESC"] = ""--]] 
+L["SHOW_MY_WARBAND_SCORE"] = "Zeigt meine eigene Kriegerbande M+ Wertung an"
+L["SHOW_MY_WARBAND_SCORE_DESC"] = "Zeigt die eigene Kriegerbande Mythisch+ Wertung des Spielers im eigenen Tooltip an."
 L["SHOW_ON_GUILD_ROSTER"] = "Zeigt Tooltips an Gilden- und Community-Fenster an"
 L["SHOW_ON_GUILD_ROSTER_DESC"] = "Zeigt Mythisch+ Wertung an, wenn du mit der Maus über Gilden- und Community-Mitglieder fährst."
 L["SHOW_ON_PLAYER_UNITS"] = "Zeigt Tooltips bei Spielereinheit an"
 L["SHOW_ON_PLAYER_UNITS_DESC"] = "Zeigt Mythisch+ Wertung an, wenn du mit der Maus über Spieler-Einheiten fährst."
---[[Translation missing --]]
---[[ L["SHOW_OTHER_WARBAND_SCORE"] = ""--]] 
---[[Translation missing --]]
---[[ L["SHOW_OTHER_WARBAND_SCORE_DESC"] = ""--]] 
+L["SHOW_OTHER_WARBAND_SCORE"] = "Zeigt von den anderen Kriegerbande M+ Wertung an"
+L["SHOW_OTHER_WARBAND_SCORE_DESC"] = "Zeigt die Kriegerbande Mythisch+ Wertung eines anderen Spielers im Tooltip an."
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE"] = "Zeigt Schlachtzugsbegegnungen im Profil-Tooltip an"
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE_DESC"] = "Wenn diese Option aktiviert ist, wird der Schlachtzugsbegegnungs-Fortschritt in den Raider.IO Profil-Tooltips angezeigt"
 L["SHOW_RAIDERIO_BESTRUN_FIRST"] = "(Experimentell) Priorisiert das Anzeigen von Raider.IO Bester Lauf"
@@ -610,8 +588,8 @@ L["SHOW_SCORE_IN_COMBAT"] = "Zeigt Raider.IO Tooltip-Info im Kampf an"
 L["SHOW_SCORE_IN_COMBAT_DESC"] = "Deaktiviere diese Option, um die Auswirkungen auf die Leistung zu minimieren, während du Spieler während des Kampfes mit \"mausüber\" inspizierst"
 L["SHOW_SCORE_WITH_MODIFIER"] = "Zeigt Raider.IO Tooltip Info mit Modifikator an"
 L["SHOW_SCORE_WITH_MODIFIER_DESC"] = "Deaktiviert die Anzeige von Daten, wenn du mit der Maus über Spieler fährst, es sei denn, eine Modifikator-Taste wird gedrückt gehalten."
-L["SHOW_WARBAND_SCORE"] = "Zeigt Kriegsmeute M+ Wertung und Fortschritt in den Tooltips an"
-L["SHOW_WARBAND_SCORE_DESC"] = "Zeigt die Kriegsmeute Mythisch+ Wertung der aktuellen Season eines Spielers und den Schlachtzugsfortschritt im Tooltip an. Die Spieler müssen sich auf Raider.IO registriert haben und ihr BNET synchronisiert haben, damit der Kriegsmeuten-Fortschritt angezeigt wird."
+L["SHOW_WARBAND_SCORE"] = "Zeigt Kriegerbande M+ Wertung und Fortschritt in den Tooltips an"
+L["SHOW_WARBAND_SCORE_DESC"] = "Zeigt die Kriegerbande Mythisch+ Wertung der aktuellen Season eines Spielers und den Schlachtzugsfortschritt im Tooltip an. Die Spieler müssen sich auf Raider.IO registriert haben und ihr BNET synchronisiert haben, damit der Kriegerbande-Fortschritt angezeigt wird."
 L["TANK"] = "Tank"
 L["TEAM_LF_MPLUS_DEFAULT"] = "Rekrutierung von Mythische+ Spielern"
 L["TEAM_LF_MPLUS_WITH_SCORE"] = "Rekrutierung von %d+ Mythische+ Spielern"
@@ -628,8 +606,8 @@ L["USE_ENGLISH_ABBREVIATION"] = "Englische Abkürzungen für Dungeons erzwingen"
 L["USE_ENGLISH_ABBREVIATION_DESC"] = "Wenn diese Option aktiviert ist, werden die für Dungeons verwendeten Abkürzungen überschrieben um die englische Version zu sein, anstatt deiner aktuellen Sprache."
 L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS"] = "Erlaube dem Raider.IO-Client, das Kampfprotokoll zu steuern"
 L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS_DESC"] = "Erlaube dem Raider.IO-Client (falls vorhanden), deine Einstellungen für die Kampfprotokollierung automatisch zu steuern."
-L["WARBAND_BEST_SCORE_BEST_SEASON"] = "Kriegsmeute beste M+ Wertung (%s)"
-L["WARBAND_SCORE"] = "Kriegsmeute M+ Wertung"
+L["WARBAND_BEST_SCORE_BEST_SEASON"] = "Kriegerbande beste M+ Wertung (%s)"
+L["WARBAND_SCORE"] = "Kriegerbande M+ Wertung"
 L["WARNING_DEBUG_MODE_ENABLE"] = "|cffFFFFFF%s|r Der Debug-Modus ist aktiviert. Du kannst ihn deaktivieren, indem du |cffFFFFFF/raiderio debug|r eingibst."
 L["WARNING_LOCK_POSITION_FRAME_AUTO"] = "Raider.IO: Du solltest zuerst die automatische Positionierung für das Raider.IO Profil deaktivieren."
 L["WARNING_RWF_MODE_ENABLE"] = "|cffFFFFFF%s|r Wettrennen Welt 1.-Modus ist aktiviert. Du kannst es deaktivieren, indem du |cffFFFFFF/raiderio rwf|r eingibst."

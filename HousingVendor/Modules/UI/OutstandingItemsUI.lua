@@ -23,6 +23,169 @@ local function GetPopupPositionStore()
     return HousingDB.outstandingPopupPosition
 end
 
+local POPUP_MIN_WIDTH = 200
+local POPUP_MIN_HEIGHT = 200
+local POPUP_MAX_WIDTH = 600
+local POPUP_MAX_HEIGHT = 800
+local POPUP_DEFAULT_WIDTH = 250
+local POPUP_DEFAULT_HEIGHT = 320
+
+local POPUP_RESIZE_REDRAW_DELAY_SEC = 0.12
+
+local function GetPopupSizeStore()
+    if not HousingDB then HousingDB = {} end
+    if not HousingDB.outstandingPopupSize then
+        HousingDB.outstandingPopupSize = {}
+    end
+    return HousingDB.outstandingPopupSize
+end
+
+local function ClampNumber(value, minValue, maxValue)
+    if value == nil then return minValue end
+    if value < minValue then return minValue end
+    if value > maxValue then return maxValue end
+    return value
+end
+
+function OutstandingItemsUI:GetPopupFontScale(frame)
+    if not frame or not frame.GetSize then
+        return 1.0
+    end
+
+    local w, h = frame:GetSize()
+    if not w or not h or w <= 0 or h <= 0 then
+        return 1.0
+    end
+
+    local ratioW = w / POPUP_DEFAULT_WIDTH
+    local ratioH = h / POPUP_DEFAULT_HEIGHT
+    local ratio = math.min(ratioW, ratioH)
+    local scale = math.sqrt(ratio)
+    return ClampNumber(scale, 0.90, 1.40)
+end
+
+local function ApplyFontScaleToFrameTree(frame, scale)
+    if not frame or not frame.GetRegions or not frame.GetChildren then
+        return
+    end
+
+    for _, region in ipairs({ frame:GetRegions() }) do
+        if region and region.GetObjectType and region:GetObjectType() == "FontString" and region.GetFont and region.SetFont then
+            local fontPath, fontSize, fontFlags = region:GetFont()
+            if fontPath and fontSize then
+                if not region._hvBaseFontSize then
+                    region._hvBaseFontPath = fontPath
+                    region._hvBaseFontSize = fontSize
+                    region._hvBaseFontFlags = fontFlags
+                end
+
+                local baseSize = region._hvBaseFontSize or fontSize
+                local newSize = math.floor((baseSize * scale) + 0.5)
+                newSize = ClampNumber(newSize, 8, 28)
+                region:SetFont(region._hvBaseFontPath or fontPath, newSize, region._hvBaseFontFlags or fontFlags)
+            end
+        end
+    end
+
+    for _, child in ipairs({ frame:GetChildren() }) do
+        ApplyFontScaleToFrameTree(child, scale)
+    end
+end
+
+function OutstandingItemsUI:ApplyPopupFontScale(frame)
+    if not frame then return end
+    local scale = self:GetPopupFontScale(frame)
+    ApplyFontScaleToFrameTree(frame, scale)
+end
+
+function OutstandingItemsUI:ApplyPopupResizeLayout(frame)
+    if not frame then return end
+
+    local w = (frame.GetWidth and frame:GetWidth()) or 0
+    if w <= 0 then return end
+
+    local scale = self:GetPopupFontScale(frame)
+
+    -- Keep scroll content width in sync with frame width.
+    local contentWidth = math.max(1, w - 50)
+    frame._contentWidth = contentWidth
+    if frame.content and frame.content.SetWidth then
+        frame.content:SetWidth(contentWidth)
+    end
+
+    local buttonSidePadding = 15
+    local buttonGap = 10
+    local buttonBottom = 14
+    local buttonHeight = ClampNumber(math.floor((24 * scale) + 0.5), 22, 36)
+    local gripPadding = (frame.resizeGrip and 18) or 0
+
+    local available = w - (buttonSidePadding * 2) - buttonGap - gripPadding
+    local stackButtons = available < 170
+
+    local bottomOffsetForScroll
+
+    if frame.viewAllBtn and frame.dontShowBtn then
+        frame.viewAllBtn:ClearAllPoints()
+        frame.dontShowBtn:ClearAllPoints()
+
+        if stackButtons then
+            local stackedWidth = math.max(80, math.floor(w - (buttonSidePadding * 2) - gripPadding))
+            stackedWidth = math.max(60, stackedWidth)
+
+            frame.dontShowBtn:SetPoint("BOTTOM", frame, "BOTTOM", -(gripPadding * 0.25), buttonBottom)
+            frame.dontShowBtn:SetSize(stackedWidth, buttonHeight)
+
+            frame.viewAllBtn:SetPoint("BOTTOM", frame, "BOTTOM", -(gripPadding * 0.25), buttonBottom + buttonHeight + 6)
+            frame.viewAllBtn:SetSize(stackedWidth, buttonHeight)
+
+            bottomOffsetForScroll = buttonBottom + (buttonHeight * 2) + 16
+        else
+            local buttonWidth = math.max(60, math.floor(available / 2))
+
+            frame.viewAllBtn:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", buttonSidePadding, buttonBottom)
+            frame.viewAllBtn:SetSize(buttonWidth, buttonHeight)
+
+            frame.dontShowBtn:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -(buttonSidePadding + gripPadding), buttonBottom)
+            frame.dontShowBtn:SetSize(buttonWidth, buttonHeight)
+
+            bottomOffsetForScroll = buttonBottom + buttonHeight + 12
+        end
+    else
+        bottomOffsetForScroll = 50
+    end
+
+    if frame.scrollFrame and frame.scrollFrame.SetPoint then
+        local topOffset = -60 - math.floor((scale - 1.0) * 25)
+        frame.scrollFrame:ClearAllPoints()
+        frame.scrollFrame:SetPoint("TOPLEFT", 15, topOffset)
+        frame.scrollFrame:SetPoint("BOTTOMRIGHT", -35, bottomOffsetForScroll)
+    end
+end
+
+function OutstandingItemsUI:OnPopupSizeChanged(frame)
+    if not frame then return end
+
+    self:ApplyPopupResizeLayout(frame)
+
+    if not (frame._currentZone and frame._lastOutstanding) then
+        return
+    end
+
+    frame._hvResizeSerial = (frame._hvResizeSerial or 0) + 1
+    local serial = frame._hvResizeSerial
+
+    if C_Timer and C_Timer.After then
+        C_Timer.After(POPUP_RESIZE_REDRAW_DELAY_SEC, function()
+            if not frame or not frame.IsShown or not frame:IsShown() then return end
+            if frame._hvResizeSerial ~= serial then return end
+            if not (frame._currentZone and frame._lastOutstanding) then return end
+
+            -- Re-render with updated widths so text wrapping doesn't overlap while resizing.
+            OutstandingItemsUI:ShowPopup(frame._currentZone, frame._lastOutstanding, frame._currentMapID)
+        end)
+    end
+end
+
 local function IsInNonWorldInstance()
     if not IsInInstance then return false end
     local inInstance, instanceType = IsInInstance()
@@ -77,7 +240,14 @@ function OutstandingItemsUI:CreatePopup()
     local textPrimary = colors.textPrimary or {0.9, 0.9, 0.9, 1}
     
     local frame = CreateFrame("Frame", "HousingOutstandingPopup", UIParent, "BackdropTemplate")
-    frame:SetSize(250, 320)
+    do
+        local savedSize = HousingDB and HousingDB.outstandingPopupSize
+        local w = (savedSize and savedSize.width) or POPUP_DEFAULT_WIDTH
+        local h = (savedSize and savedSize.height) or POPUP_DEFAULT_HEIGHT
+        w = math.max(POPUP_MIN_WIDTH, math.min(POPUP_MAX_WIDTH, w))
+        h = math.max(POPUP_MIN_HEIGHT, math.min(POPUP_MAX_HEIGHT, h))
+        frame:SetSize(w, h)
+    end
     do
         local pos = HousingDB and HousingDB.outstandingPopupPosition
         if pos and pos.point and pos.relPoint and pos.x and pos.y then
@@ -98,6 +268,8 @@ function OutstandingItemsUI:CreatePopup()
     frame:SetMovable(true)
     frame:EnableMouse(true)
     frame:SetClampedToScreen(true)
+    frame:SetResizable(true)
+    frame:SetResizeBounds(POPUP_MIN_WIDTH, POPUP_MIN_HEIGHT, POPUP_MAX_WIDTH, POPUP_MAX_HEIGHT)
     frame:RegisterForDrag("LeftButton")
     frame:SetScript("OnDragStart", frame.StartMoving)
     frame:SetScript("OnDragStop", function(self)
@@ -382,9 +554,43 @@ function OutstandingItemsUI:CreatePopup()
     end)
     frame.dontShowBtn = dontShowBtn
     
+    -- Resize grip (bottom-right corner)
+    local resizeGrip = CreateFrame("Button", nil, frame)
+    resizeGrip:SetSize(16, 16)
+    resizeGrip:SetPoint("BOTTOMRIGHT", -2, 2)
+    resizeGrip:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+    resizeGrip:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+    resizeGrip:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+    resizeGrip:SetScript("OnMouseDown", function()
+        frame:StartSizing("BOTTOMRIGHT")
+    end)
+    resizeGrip:SetScript("OnMouseUp", function()
+        frame:StopMovingOrSizing()
+        -- Save size
+        local w, h = frame:GetSize()
+        local store = GetPopupSizeStore()
+        store.width = w
+        store.height = h
+
+        OutstandingItemsUI:ApplyPopupResizeLayout(frame)
+        OutstandingItemsUI:ApplyPopupFontScale(frame)
+
+        -- Re-render popup content with new dimensions
+        if frame._lastOutstanding and frame._currentZone then
+            OutstandingItemsUI:ShowPopup(frame._currentZone, frame._lastOutstanding, frame._currentMapID)
+        end
+    end)
+    frame.resizeGrip = resizeGrip
+
+    frame:HookScript("OnSizeChanged", function()
+        OutstandingItemsUI:OnPopupSizeChanged(frame)
+    end)
+
+    OutstandingItemsUI:ApplyPopupResizeLayout(frame)
+
     popupFrame = frame
     self._popupFrame = frame
-    
+
     return frame
 end
 
@@ -532,4 +738,3 @@ end
 _G["HousingOutstandingItemsUI"] = OutstandingItemsUI
 
 return OutstandingItemsUI
-

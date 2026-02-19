@@ -1,6 +1,6 @@
-## Interface: 120000
+## Interface: 120001
 ## Title: Master Plan
-## Version: 8.1.1
+## Version: 8.2.1
 ## Author: foxlit
 ## Notes: Garrison missions UI tweaks.
 ## X-Website: https://www.townlong-yak.com/addons/master-plan/

@@ -343,7 +343,24 @@ function Data.GetAchievementTitle(id)
     return name
   end
 
+  C_Timer.After(0.1, function()
+    if GetAchievementInfo then
+      local name = select(2, GetAchievementInfo(id))
+      if name and name ~= "" then
+        AchTitleCache[id] = name
+        if View and View.instance and View.instance.Render then
+          View.instance:Render()
+        elseif NS.UI and NS.UI.Layout and NS.UI.Layout.Render then
+          NS.UI.Layout:Render()
+        end
+      else
+        AchTitleCache[id] = false
+      end
+    end
+  end)
+
   AchTitleCache[id] = false
+  return nil
 end
 
 function Data.GetQuestTitle(id)
@@ -351,21 +368,36 @@ function Data.GetQuestTitle(id)
   if not id then return end
   if QuestTitleCache[id] ~= nil then return QuestTitleCache[id] or nil end
 
+  if C_QuestLog and C_QuestLog.GetTitleForQuestID then
+    local name = C_QuestLog.GetTitleForQuestID(id)
+    if name and name ~= "" then
+      QuestTitleCache[id] = name
+      return name
+    end
+  end
+
   if C_QuestLog and C_QuestLog.RequestLoadQuestByID then
     C_QuestLog.RequestLoadQuestByID(id)
-  end
 
-  local name
-  if C_QuestLog and C_QuestLog.GetTitleForQuestID then
-    name = C_QuestLog.GetTitleForQuestID(id)
-  end
-
-  if name and name ~= "" then
-    QuestTitleCache[id] = name
-    return name
+    C_Timer.After(0.1, function()
+      if C_QuestLog and C_QuestLog.GetTitleForQuestID then
+        local name = C_QuestLog.GetTitleForQuestID(id)
+        if name and name ~= "" then
+          QuestTitleCache[id] = name
+          if View and View.instance and View.instance.Render then
+            View.instance:Render()
+          elseif NS.UI and NS.UI.Layout and NS.UI.Layout.Render then
+            NS.UI.Layout:Render()
+          end
+        else
+          QuestTitleCache[id] = false
+        end
+      end
+    end)
   end
 
   QuestTitleCache[id] = false
+  return nil
 end
 
 function Data.NormalizeExpansionNode(expNode)
@@ -566,7 +598,12 @@ function Data.ResolveAchievementDecor(it)
     local ach = item and item.requirements and item.requirements.achievement
     if ach then
       resolved.source.id = resolved.source.id or ach.id
-      resolved.source.name = resolved.source.name or Data.GetAchievementTitle(ach.id) or ach.title
+      local achName = Data.GetAchievementTitle(ach.id)
+      if achName then
+        resolved.source.name = achName
+      elseif not resolved.source.name then
+        resolved.source._achievementID = ach.id
+      end
     end
   elseif resolved.source.type == "quest" then
     local q = (item and item.requirements and item.requirements.quest)
@@ -575,7 +612,12 @@ function Data.ResolveAchievementDecor(it)
     if q then
       resolved.source.id = resolved.source.id or q.id
       resolved.source.questID = resolved.source.questID or q.id
-      resolved.source.name = resolved.source.name or Data.GetQuestTitle(q.id) or q.title
+      local questName = Data.GetQuestTitle(q.id)
+      if questName then
+        resolved.source.name = questName
+      elseif not resolved.source.name then
+        resolved.source._questID = q.id
+      end
     end
   end
 
@@ -610,6 +652,48 @@ function Data.GetActiveData(ui)
     return NS.Data.PvP or NS.Data.PVP or NS.Data.Pvp or NS.Data.pvp
   end
   return nil
+end
+
+function Data.PrefetchQuestAndAchievementNames()
+  if not DecorIndex then return end
+  
+  local questIDs = {}
+  local achIDs = {}
+
+  for decorID, entry in pairs(DecorIndex) do
+    if entry.item and entry.item.requirements then
+      local req = entry.item.requirements
+
+      if req.quest and req.quest.id then
+        local id = tonumber(req.quest.id)
+        if id and not questIDs[id] then
+          questIDs[id] = true
+          if C_QuestLog and C_QuestLog.RequestLoadQuestByID then
+            C_QuestLog.RequestLoadQuestByID(id)
+          end
+        end
+      end
+
+      if req.achievement and req.achievement.id then
+        local id = tonumber(req.achievement.id)
+        if id and not achIDs[id] then
+          achIDs[id] = true
+          if GetAchievementInfo then
+            GetAchievementInfo(id)
+          end
+        end
+      end
+    end
+  end
+  
+  C_Timer.After(0.5, function()
+    for id in pairs(questIDs) do
+      Data.GetQuestTitle(id) 
+    end
+    for id in pairs(achIDs) do
+      Data.GetAchievementTitle(id) 
+    end
+  end)
 end
 
 function Data.KeyExp(cat, exp) return tostring(cat) .. ":exp:" .. tostring(exp) end

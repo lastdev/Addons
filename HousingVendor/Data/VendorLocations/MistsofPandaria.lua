@@ -296,30 +296,30 @@ local itemEntries = {
 
   -- Tan Shin Tiao block
   { vendorId = 2, itemID = "245512", itemName = "Pandaren Cradle Stool", goldCost = 3000000, currencies = {}, itemCosts = {}, factionName = "The Lorewalkers", reputationLevel = "Friendly", renownLevel = 0 },
-  { vendorId = 2, itemID = "247662", itemName = "Pandaren Scholar's Lectern", goldCost = 5000000, currencies = {}, itemCosts = {}, factionName = "The Lorewalkers", reputationLevel = "Honored", renownLevel = 0 },
-  { vendorId = 2, itemID = "247663", itemName = "Pandaren Scholar's Bookcase", goldCost = 20000000, currencies = {}, itemCosts = {}, factionName = "The Lorewalkers", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 2, itemID = "247662", itemName = "Pandaren Scholar's Lectern", goldCost = 4750000, currencies = {}, itemCosts = {}, factionName = "The Lorewalkers", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 2, itemID = "247663", itemName = "Pandaren Scholar's Bookcase", goldCost = 19000000, currencies = {}, itemCosts = {}, factionName = "The Lorewalkers", reputationLevel = "Revered", renownLevel = 0 },
   { vendorId = 2, itemID = "247855", itemName = "Pandaren Lacquered Crate", goldCost = 3000000, currencies = {}, itemCosts = {}, factionName = "The Lorewalkers", reputationLevel = "Honored", renownLevel = 0 },
   { vendorId = 2, itemID = "247858", itemName = "Shaohao Ceremonial Bell", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 2, itemID = "258147", itemName = "Empty Lorewalker's Bookcase", goldCost = 10000000, currencies = {}, itemCosts = {}, factionName = "The Lorewalkers", reputationLevel = "Revered", renownLevel = 0 },
 
   -- San Redscale block
-  { vendorId = 3, itemID = "247730", itemName = "Red Crane Kite", goldCost = 10000000, currencies = {}, itemCosts = {}, factionName = "Order of the Cloud Serpent", reputationLevel = "Revered", renownLevel = 0 },
-  { vendorId = 3, itemID = "247732", itemName = "Lucky Hanging Lantern", goldCost = 5000000, currencies = {}, itemCosts = {}, factionName = "Order of the Cloud Serpent", reputationLevel = "Honored", renownLevel = 0 },
+  { vendorId = 3, itemID = "247730", itemName = "Red Crane Kite", goldCost = 9500000, currencies = {}, itemCosts = {}, factionName = "Order of the Cloud Serpent", reputationLevel = "Revered", renownLevel = 0 },
+  { vendorId = 3, itemID = "247732", itemName = "Lucky Hanging Lantern", goldCost = 4750000, currencies = {}, itemCosts = {}, factionName = "Order of the Cloud Serpent", reputationLevel = "Honored", renownLevel = 0 },
 
   -- Gina Mudclaw block
   { vendorId = 4, itemID = "245508", itemName = "Pandaren Cooking Table", goldCost = 0, currencies = {{ currencyID = 1220, amount = 10000 }}, itemCosts = {}, factionName = "The Tillers", reputationLevel = "Good Friend", renownLevel = 0 },
-  { vendorId = 4, itemID = "247670", itemName = "Pandaren Pantry", goldCost = 0, currencies = {{ currencyID = 1220, amount = 10000 }}, itemCosts = {}, factionName = "The Tillers", reputationLevel = "Good Friend", renownLevel = 0 },
-  { vendorId = 4, itemID = "247734", itemName = "Paw'don Well", goldCost = 8000000, currencies = {}, itemCosts = {}, factionName = "The Tillers", reputationLevel = "Good Friend", renownLevel = 0 },
+  { vendorId = 4, itemID = "247670", itemName = "Pandaren Pantry", goldCost = 9000000, currencies = {{ currencyID = 1220, amount = 10000 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 4, itemID = "247734", itemName = "Paw'don Well", goldCost = 7200000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 4, itemID = "247737", itemName = "Stormstout Brew Keg", goldCost = 3000000, currencies = {}, itemCosts = {}, factionName = "The Tillers", reputationLevel = "Good Friend", renownLevel = 0 },
-  { vendorId = 4, itemID = "248663", itemName = "Wooden Doghouse", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 4, itemID = "248663", itemName = "Wooden Doghouse", goldCost = 2700000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Sage Whiteheart block
-  { vendorId = 5, itemID = "247729", itemName = "Pandaren Stone Lamppost", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 5, itemID = "247729", itemName = "Pandaren Stone Lamppost", goldCost = 2850000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   -- Sage Whiteheart block (Alliance vendor per master table)
   { vendorId = 5, itemID = "264362", itemName = "Golden Pandaren Privacy Screen", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Joruh block
-  { vendorId = 6, itemID = "247727", itemName = "Iron Dragonmaw Gate", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 6, itemID = "247727", itemName = "Iron Dragonmaw Gate", goldCost = 0, currencies = {{ currencyID = 1792, amount = 5000 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Jojo Ironbrow block
   { vendorId = 7, itemID = "247661", itemName = "Pandaren Signal Brazier", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },

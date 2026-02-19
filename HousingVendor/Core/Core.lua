@@ -8,7 +8,7 @@ if not _G.HousingVendor then
     _G.HousingVendor = ns
 end
 
-HousingVendorAddon.version = " 03.02.26.5C"
+HousingVendorAddon.version = " 15.02.26.5E"
 
 -- NOTE: Avoid creating generic globals like `_G.Housing` (can collide with Blizzard UI / other addons).
 

@@ -1,4 +1,4 @@
--- Housing Achievement Items
+﻿-- Housing Achievement Items
 
 
 HousingDataAggregator_RegisterExpansionItems("achievement", {
@@ -282,9 +282,9 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Eastern Kingdoms",
     category = "Exploration",
     model3D = 6924248,
-    ItemName  = "Nesingwary Elk Trophy",
+    ItemName  = "Radiant Slicer",
     achievementId = 940,
-    achievementName = "Eastern Kingdoms Explorer",
+    achievementName = "The Green Hills of Stranglethorn",
   },
   {
     itemID = 251951,
@@ -294,7 +294,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 660974,
     ItemName  = "Goldshire Food Cart",
     achievementId = 5442,
-    achievementName = "Goldshire Glutton",
+    achievementName = "Full Caravan",
   },
   -- Legion Achievement Items
   {
@@ -678,16 +678,6 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     achievementName = "Legion Remix Raids",
   },
   {
-    itemID = 257721,
-    type = "achievement",
-    expansion = "Legion",
-    category = "Campaign",
-    model3D = 1096764,
-    ItemName  = "Nightborne Armory",
-    achievementId = 11341,
-    achievementName = "Nightborne Armory",
-  },
-  {
     itemID = 250405,
     type = "achievement",
     expansion = "Legion",
@@ -923,7 +913,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Legion",
     category = "Class Order Hall",
     model3D = 1315073,
-    ItemName  = "Trueshot Skeletal Dragon Trophy",
+    ItemName  = "Trueshot Skeletal Dragon Head",
     achievementId = 938690342,
     achievementName = "The Huntmaster's Campaign",
   },
@@ -1015,7 +1005,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 1315073,
     ItemName  = "Trueshot Skeletal Dragon Trophy",
     achievementId = 42273,
-    achievementName = "Trueshot Skeletal Dragon Trophy",
+    achievementName = "The Huntmaster's Campaign",
   },
   {
     itemID = 250402,
@@ -1036,7 +1026,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 7240010,
     ItemName  = "Hanging Felsteel Cage",
     achievementId = 42547,
-    achievementName = "Cage Collector",
+    achievementName = "Highmountain Tribe",
   },
   {
     itemID = 259346,
@@ -1046,7 +1036,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 7240011,
     ItemName  = "Vertical Felsteel Chain",
     achievementId = 42675,
-    achievementName = "Chain Master",
+    achievementName = "Defending the Broken Isles III",
   },
   {
     itemID = 258989,
@@ -1054,9 +1044,9 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Legion: Remix",
     category = "Collection",
     model3D = 7150661,
-    ItemName  = "Tome of the Corrupt",
+    ItemName  = "Azure Guardian's Signet",
     achievementId = 42318,
-    achievementName = "Corruption Studies",
+    achievementName = "Court of Farondis",
   },
   {
     itemID = 266725,
@@ -1066,7 +1056,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 1308148,
     ItemName  = "Legion Torture Rack",
     achievementId = 61054,
-    achievementName = "Dark Collector",
+    achievementName = "Heroic Broken Isles World Quests III",
   },
   {
     itemID = 259326,
@@ -1076,7 +1066,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 1349995,
     ItemName  = "Demonic Storage Chest",
     achievementId = 42655,
-    achievementName = "Fel Collector",
+    achievementName = "The Armies of Legionfall",
   },
   {
     itemID = 259290,
@@ -1086,7 +1076,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 7240009,
     ItemName  = "Legion's Fel Brazier",
     achievementId = 42619,
-    achievementName = "Fel Fire",
+    achievementName = "Dreamweavers",
   },
   {
     itemID = 259345,
@@ -1094,9 +1084,9 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Legion: Remix",
     category = "Collection",
     model3D = 7150660,
-    ItemName  = "Altar of the Corrupted Flames",
+    ItemName  = "Ani's Feathered Totem",
     achievementId = 42674,
-    achievementName = "Flame Keeper",
+    achievementName = "Broken Isles World Quests V",
   },
   {
     itemID = 259360,
@@ -1104,9 +1094,9 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Legion: Remix",
     category = "Collection",
     model3D = 7216247,
-    ItemName  = "Fel Fountain",
+    ItemName  = "Steelbark Cloak",
     achievementId = 42689,
-    achievementName = "Fountain of Fel",
+    achievementName = "Timeworn Keystone Master",
   },
   {
     itemID = 259298,
@@ -1116,7 +1106,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 1338587,
     ItemName  = "Eredar Lord's Fel Torch",
     achievementId = 42627,
-    achievementName = "Legion Architect",
+    achievementName = "Argussian Reach",
   },
   {
     itemID = 258992,
@@ -1124,9 +1114,9 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Legion: Remix",
     category = "Collection",
     model3D = 7216249,
-    ItemName  = "Corruption Pit",
+    ItemName  = "Azure Guardian's Gauntlets",
     achievementId = 42321,
-    achievementName = "Legion Timewalker",
+    achievementName = "Legion Remix Raids",
   },
   {
     itemID = 259299,
@@ -1136,7 +1126,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 1307161,
     ItemName  = "Large Legion Candle",
     achievementId = 42628,
-    achievementName = "Light in Darkness",
+    achievementName = "The Nightfallen",
   },
   {
     itemID = 266889,
@@ -1146,7 +1136,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 1119129,
     ItemName  = "Sentinel's Moonwing Gaze",
     achievementId = 61218,
-    achievementName = "Night Watcher",
+    achievementName = "The Wardens",
   },
   {
     itemID = 259363,
@@ -1154,9 +1144,9 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Legion: Remix",
     category = "Collection",
     model3D = 1310272,
-    ItemName  = "Legion's Holo-Communicator",
+    ItemName  = "Design: Bejeweled Sin'dorei Lyre",
     achievementId = 42692,
-    achievementName = "Tech Savvy",
+    achievementName = "Broken Isles Dungeoneer",
   },
   {
     itemID = 266731,
@@ -1166,7 +1156,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 7216248,
     ItemName  = "Legion's Fel Torch",
     achievementId = 61060,
-    achievementName = "Torch Bearer",
+    achievementName = "Power of the Obelisks II",
   },
   {
     itemID = 259329,
@@ -1176,7 +1166,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 1102771,
     ItemName  = "Vrykul Lord's Throne",
     achievementId = 42658,
-    achievementName = "Vrykul Victor",
+    achievementName = "Valarjar",
   },
   -- Lorewalking Achievement Items
   {
@@ -1185,9 +1175,9 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Lorewalking",
     category = "Lore",
     model3D = 5916218,
-    ItemName  = "Scroll of K'aresh's Fall",
+    ItemName  = "Threadbare Crown",
     achievementId = 42187,
-    achievementName = "K'aresh Historian",
+    achievementName = "Lorewalking: Ethereal Wisdom",
   },
   {
     itemID = 258860,
@@ -1195,9 +1185,9 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Lorewalking",
     category = "Lore",
     model3D = 1354768,
-    ItemName  = "Tale of the Penultimate Lich King",
+    ItemName  = "Threadbare Leggings",
     achievementId = 42189,
-    achievementName = "Lich King Lore",
+    achievementName = "Lorewalking: The Lich King",
   },
   {
     itemID = 267138,
@@ -1207,7 +1197,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 6717972,
     ItemName  = "Tome of Silvermoon Intrigue",
     achievementId = 61467,
-    achievementName = "Silvermoon Scholar",
+    achievementName = "Lorewalking: The Elves of Quel'Thalas",
   },
   {
     itemID = 258859,
@@ -1215,9 +1205,9 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Lorewalking",
     category = "Lore",
     model3D = 5916220,
-    ItemName  = "Tome of the Survivor",
+    ItemName  = "Threadbare Mitts",
     achievementId = 42188,
-    achievementName = "Survivor's Tale",
+    achievementName = "Lorewalking: Blade's Bane",
   },
   -- Meta Achievements Achievement Items
   {
@@ -1228,7 +1218,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 5160932,
     ItemName  = "Drained Dark Heart of Galakrond",
     achievementId = 61451,
-    achievementName = "Galakrond's Downfall",
+    achievementName = "Worldsoul-Searching",
   },
   {
     itemID = 256129,
@@ -1238,7 +1228,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 7134811,
     ItemName  = "The Great Hoard",
     achievementId = 19458,
-    achievementName = "Hoarder Supreme",
+    achievementName = "A World Awoken",
   },
   {
     itemID = 256624,
@@ -1248,7 +1238,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 7134869,
     ItemName  = "MOTHER's Titanic Brazier",
     achievementId = 40953,
-    achievementName = "MOTHER's Keeper",
+    achievementName = "A Farewell to Arms",
   },
   {
     itemID = 256172,
@@ -1256,9 +1246,9 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Meta Achievements",
     category = "Meta",
     model3D = 7134869,
-    ItemName  = "Portal to Damnation",
+    ItemName  = "Silvermoon Fence",
     achievementId = 20501,
-    achievementName = "Portal Master",
+    achievementName = "Back from the Beyond",
   },
   -- Mists of Pandaria Achievement Items
   {
@@ -1309,7 +1299,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 7385422,
     ItemName  = "Shadowforge Stone Chair",
     achievementId = 8316,
-    achievementName = "Pandaren Diplomat",
+    achievementName = "Blood in the Snow",
   },
   -- Professions Achievement Items
   {
@@ -1318,7 +1308,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 0,
-    ItemName  = "Alchemizing at Midnight",
+    ItemName  = "Midnight Alchemist's Shop Sign",
     achievementId = 42788,
     achievementName = "Alchemizing at Midnight",
   },
@@ -1328,7 +1318,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 0,
-    ItemName  = "Blacksmithing at Midnight",
+    ItemName  = "Midnight Blacksmith's Shop Sign",
     achievementId = 42792,
     achievementName = "Blacksmithing at Midnight",
   },
@@ -1338,7 +1328,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 0,
-    ItemName  = "Cooking at Midnight",
+    ItemName  = "Midnight Cook's Shop Sign",
     achievementId = 42795,
     achievementName = "Cooking at Midnight",
   },
@@ -1348,9 +1338,9 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 1018949,
-    ItemName  = "Dark Iron Brazier",
+    ItemName  = "Void-Scarred Captain's Cape",
     achievementId = 4859,
-    achievementName = "Dark Iron Blacksmith",
+    achievementName = "Kings Under the Mountain",
   },
   {
     itemID = 264000,
@@ -1358,7 +1348,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 0,
-    ItemName  = "Enchanting at Midnight",
+    ItemName  = "Midnight Enchanter's Shop Sign",
     achievementId = 42787,
     achievementName = "Enchanting at Midnight",
   },
@@ -1368,7 +1358,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 0,
-    ItemName  = "Engineering at Midnight",
+    ItemName  = "Midnight Engineer's Shop Sign",
     achievementId = 42798,
     achievementName = "Engineering at Midnight",
   },
@@ -1378,7 +1368,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 0,
-    ItemName  = "Fishing at Midnight",
+    ItemName  = "Midnight Fisher's Shop Sign",
     achievementId = 42797,
     achievementName = "Fishing at Midnight",
   },
@@ -1388,7 +1378,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 0,
-    ItemName  = "Herbalism at Midnight",
+    ItemName  = "Midnight Herbalist's Shop Sign",
     achievementId = 42793,
     achievementName = "Herbalism at Midnight",
   },
@@ -1398,7 +1388,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 0,
-    ItemName  = "Inscribing at Midnight",
+    ItemName  = "Midnight Scribe's Shop Sign",
     achievementId = 42796,
     achievementName = "Inscribing at Midnight",
   },
@@ -1408,7 +1398,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 0,
-    ItemName  = "Jewelcrafting at Midnight",
+    ItemName  = "Midnight Jewelcrafter's Shop Sign",
     achievementId = 42789,
     achievementName = "Jewelcrafting at Midnight",
   },
@@ -1418,7 +1408,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 0,
-    ItemName  = "Leatherworking at Midnight",
+    ItemName  = "Midnight Leatherworker's Shop Sign",
     achievementId = 42786,
     achievementName = "Leatherworking at Midnight",
   },
@@ -1430,7 +1420,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 4896167,
     ItemName  = "Fallside Storage Tent",
     achievementId = 19408,
-    achievementName = "Master Craftsman",
+    achievementName = "Professional Algari Master",
   },
   {
     itemID = 248404,
@@ -1440,7 +1430,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 1696757,
     ItemName  = "Dazar'alor Forge",
     achievementId = 12733,
-    achievementName = "Master Forgewright",
+    achievementName = "Professional Zandalari Master",
   },
   {
     itemID = 264172,
@@ -1448,7 +1438,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 0,
-    ItemName  = "Mining at Midnight",
+    ItemName  = "Midnight Miner's Shop Sign",
     achievementId = 42791,
     achievementName = "Mining at Midnight",
   },
@@ -1460,7 +1450,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 965917,
     ItemName  = "Glorious Pendant of Rukhmar",
     achievementId = 9415,
-    achievementName = "Rukhmar's Legacy",
+    achievementName = "Secrets of Skettis",
   },
   {
     itemID = 264173,
@@ -1468,7 +1458,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 0,
-    ItemName  = "Skinning at Midnight",
+    ItemName  = "Midnight Skinner's Shop Sign",
     achievementId = 42790,
     achievementName = "Skinning at Midnight",
   },
@@ -1478,7 +1468,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "Professions",
     category = "Professions",
     model3D = 0,
-    ItemName  = "Tailoring at Midnight",
+    ItemName  = "Midnight Tailor's Shop Sign",
     achievementId = 42794,
     achievementName = "Tailoring at Midnight",
   },
@@ -1490,7 +1480,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 6877808,
     ItemName  = "Zuldazar Cook's Griddle",
     achievementId = 12746,
-    achievementName = "Zuldazar Chef",
+    achievementName = "The Zandalari Menu",
   },
   -- PvP Achievement Items
   {
@@ -1499,9 +1489,9 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "PvP",
     category = "PvP",
     model3D = 200268,
-    ItemName  = "Alliance Battlefield Banner",
+    ItemName  = "Darkened Shoulderguards of the Wastelander Seer",
     achievementId = 158,
-    achievementName = "Alliance Dominance",
+    achievementName = "Me and the Cappin' Makin' It Happen",
   },
   {
     itemID = 250493,
@@ -1511,7 +1501,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 200273,
     ItemName  = "Fortified Alliance Banner",
     achievementId = 221,
-    achievementName = "Alliance Victor",
+    achievementName = "Alterac Grave Robber",
   },
   {
     itemID = 251916,
@@ -1521,7 +1511,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 304027,
     ItemName  = "Smoke Lamppost",
     achievementId = 5245,
-    achievementName = "Battle-Hardened",
+    achievementName = "Battle for Gilneas Victory",
   },
   {
     itemID = 267354,
@@ -1531,7 +1521,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 200305,
     ItemName  = "Berserker's Empowerment",
     achievementId = 61683,
-    achievementName = "Berserker's Rage",
+    achievementName = "Entering Battle",
   },
   {
     itemID = 267356,
@@ -1541,7 +1531,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 1586378,
     ItemName  = "Chaotic Empowerment",
     achievementId = 61685,
-    achievementName = "Chaos Incarnate",
+    achievementName = "Proficient in Battle",
   },
   {
     itemID = 256283,
@@ -1551,7 +1541,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 5770750,
     ItemName  = "Deephaul Crystal",
     achievementId = 40612,
-    achievementName = "Crystal Collector",
+    achievementName = "Sprinting in the Ravine",
   },
   {
     itemID = 250501,
@@ -1561,7 +1551,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 2353835,
     ItemName  = "Horde Dueling Flag",
     achievementId = 229,
-    achievementName = "Duel Master",
+    achievementName = "The Grim Reaper",
   },
   {
     itemID = 255881,
@@ -1569,9 +1559,9 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     expansion = "PvP",
     category = "PvP",
     model3D = 5278833,
-    ItemName  = "Earthen Contender's Target",
+    ItemName  = "Severed Threads Commendation",
     achievementId = 40210,
-    achievementName = "Earthen Champion",
+    achievementName = "Deephaul Ravine Victory",
   },
   {
     itemID = 267355,
@@ -1581,7 +1571,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 660744,
     ItemName  = "Guardian's Empowerment",
     achievementId = 61684,
-    achievementName = "Guardian's Stand",
+    achievementName = "Progressing in Battle",
   },
   {
     itemID = 267358,
@@ -1591,7 +1581,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 200308,
     ItemName  = "Healer's Empowerment",
     achievementId = 61687,
-    achievementName = "Healing Touch",
+    achievementName = "Champion in Battle",
   },
   {
     itemID = 251424,
@@ -1601,7 +1591,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 200276,
     ItemName  = "Horde Battlefield Banner",
     achievementId = 1153,
-    achievementName = "Horde Supremacy",
+    achievementName = "Overly Defensive",
   },
   {
     itemID = 250494,
@@ -1611,7 +1601,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 200281,
     ItemName  = "Fortified Horde Banner",
     achievementId = 222,
-    achievementName = "Horde Victor",
+    achievementName = "Tower Defense",
   },
   {
     itemID = 267357,
@@ -1621,7 +1611,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 1588459,
     ItemName  = "Mysterious Empowerment",
     achievementId = 61686,
-    achievementName = "Mystery Unveiled",
+    achievementName = "Expert in Battle",
   },
   {
     itemID = 250485,
@@ -1631,7 +1621,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 200301,
     ItemName  = "Netherstorm Battlefield Flag",
     achievementId = 213,
-    achievementName = "Netherstorm Victor",
+    achievementName = "Stormtrooper",
   },
   {
     itemID = 267359,
@@ -1641,7 +1631,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 200309,
     ItemName  = "Runner's Empowerment",
     achievementId = 61688,
-    achievementName = "Swift Victory",
+    achievementName = "Master in Battle",
   },
   {
     itemID = 250484,
@@ -1651,7 +1641,7 @@ HousingDataAggregator_RegisterExpansionItems("achievement", {
     model3D = 200283,
     ItemName  = "Uncontested Battlefield Banner",
     achievementId = 212,
-    achievementName = "Uncontested Victory",
+    achievementName = "Storm Capper",
   },
   -- The War Within Achievement Items
   {

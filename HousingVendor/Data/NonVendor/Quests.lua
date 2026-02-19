@@ -1,714 +1,614 @@
-HousingDataAggregator_RegisterExpansionItems("quest", {
-  -- Battle for Azeroth
-  {
+﻿HousingDataAggregator_RegisterExpansionItems("quest", {
+{
     itemID = 245488,
     type = "quest",
     expansion = "Battle for Azeroth",
     ItemName = "Zandalari Rickshaw",
     questID = 47188,
     questName = "The Aid of the Loa",
-  },
-  {
+  },{
     itemID = 245489,
     type = "quest",
     expansion = "Battle for Azeroth",
     ItemName = "Zuldazar Stool",
     questID = 47250,
     questName = "We'll Meet Again",
-  },
-  {
+  },{
     itemID = 252406,
     type = "quest",
     expansion = "Battle for Azeroth",
     ItemName = "Green Boralus Market Tent",
     questID = 47489,
     questName = "Stow and Go",
-  },
-  {
+  },{
     itemID = 245493,
     type = "quest",
     expansion = "Battle for Azeroth",
     ItemName = "Idol of Rezan, Loa of Kings",
     questID = 47741,
     questName = "To Sacrifice a Loa",
-  },
-  {
+  },{
     itemID = 245417,
     type = "quest",
     expansion = "Battle for Azeroth",
     ItemName = "Akunda the Tapestry",
     questID = 47874,
     questName = "Clearing the Fog",
-  },
-  {
+  },{
     itemID = 245263,
     type = "quest",
     expansion = "Battle for Azeroth",
     ItemName = "Zocalo Drinks",
     questID = 48554,
     questName = "The Source of the Problem",
-  },
-  {
+  },{
     itemID = 245491,
     type = "quest",
     expansion = "Battle for Azeroth",
     ItemName = "Bwonsamdi's Golden Gong",
     questID = 50808,
     questName = "Halting the Empire's Fall",
-  },
-  {
+  },{
     itemID = 245485,
     type = "quest",
     expansion = "Battle for Azeroth",
     ItemName = "Golden Zandalari Bed",
     questID = 50963,
     questName = "Of Dark Deeds and Dark Days",
-  },
-  {
+  },{
     itemID = 252386,
     type = "quest",
     expansion = "Battle for Azeroth",
     ItemName = "Admiralty's Upholstered Chair",
     questID = 50972,
     questName = "Proudmoore's Parley",
-  },
-  {
+  },{
     itemID = 252403,
     type = "quest",
     expansion = "Battle for Azeroth",
     ItemName = "Admiral's Bed",
     questID = 53720,
     questName = "Allegiance of Kul Tiras",
-  },
-  {
+  },{
     itemID = 252400,
     type = "quest",
     expansion = "Battle for Azeroth",
     ItemName = "Tiragarde Emblem",
     questID = 53887,
     questName = "War Marches On",
-  },
-  {
+  },{
     itemID = 252754,
     type = "quest",
     expansion = "Battle for Azeroth",
     ItemName = "Seaworthy Boralus Bell",
     questID = 55045,
     questName = "My Brother's Keeper",
-  },
-  {
+  },{
     itemID = 246703,
     type = "quest",
     expansion = "Battle for Azeroth",
     ItemName = "Double-Sprocket Table",
     questID = 55736,
     questName = "Welcome to the Resistance",
-  },
-
-  -- Dragonflight
-  {
+  },{
     itemID = 246863,
     type = "quest",
     expansion = "Dragonflight",
     ItemName = "Open Tome of the Dragon's Dedication",
     questID = 66001,
     questName = "A Last Hope",
-  },
-  {
+  },{
     itemID = 246706,
     type = "quest",
     expansion = "Dragonflight",
     ItemName = "Elegant Dracthyr's Tea Cup",
     questID = 67047,
     questName = "Warm Away These Shivers",
-  },
-  {
+  },{
     itemID = 247223,
     type = "quest",
     expansion = "Dragonflight",
     ItemName = "Roast Riverbeast Platter",
     questID = 67063,
-    questName = "A Hearty Meal",
-  },
-  {
+    questName = "10,000 Years of Roasting",
+  },{
     itemID = 256429,
     type = "quest",
     expansion = "Dragonflight",
     ItemName = "Valdrakken Lamppost",
     questID = 70745,
-    questName = "The City of Dragons",
-  },
-  {
+    questName = "Enforced Relaxation",
+  },{
     itemID = 248655,
     type = "quest",
     expansion = "Dragonflight",
     ItemName = "Elegant Dracthyr's Tea Set",
     questID = 70880,
     questName = "To Cook With Finery",
-  },
-  {
+  },{
     itemID = 248653,
     type = "quest",
     expansion = "Dragonflight",
     ItemName = "Valdrakken Stone Stool",
     questID = 71097,
-    questName = "A Seat at the Table",
-  },
-  {
+    questName = "A Helping Claw",
+  },{
     itemID = 248651,
     type = "quest",
     expansion = "Dragonflight",
     ItemName = "Draconic Memorial Stone",
     questID = 72935,
-    questName = "Remembering the Fallen",
-  },
-
-  -- Legion
-  {
+    questName = "Archives Return",
+  },{
     itemID = 245702,
     type = "quest",
     expansion = "Legion",
     ItemName = "Kaldorei Wall Shelf",
     questID = 38147,
-    questName = "A Bit of Fresh Air",
-  },
-
-  -- Mists of Pandaria
-  {
+    questName = "Entangled Dreams",
+  },{
     itemID = 247858,
     type = "quest",
     expansion = "Mists of Pandaria",
     ItemName = "Shaohao Ceremonial Bell",
     questID = 32816,
-    questName = "The Last Emperor",
-  },
-  {
+    questName = "Path of the Last Emperor",
+  },{
     itemID = 264349,
     type = "quest",
     expansion = "Mists of Pandaria",
     ItemName = "Kun-Lai Lacquered Rickshaw",
     questID = 30612,
     questName = "The Leader Hozen",
-  },
-
-  -- The War Within - Decor Treasure Hunt chain (all unique questIDs)
-  {
+  },{
     itemID = 499,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 92966,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 539,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 92969,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 540,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 92970,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 543,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 92971,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 544,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 92972,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 545,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 92973,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 550,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 92974,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 552,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 92975,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 553,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 92976,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1099,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Deprecated Codex of Sustenance II",
     questID = 93000,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1107,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 93150,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1108,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Codex of Renew III",
     questID = 93143,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1110,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 93152,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1285,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 92989,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1708,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Sweet Nectar",
     questID = 92999,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1709,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 92998,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1710,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Greater Healing Potion",
     questID = 92979,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1711,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Scroll of Stamina II",
     questID = 93006,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1712,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Scroll of Versatility II",
     questID = 93003,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1713,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Ankh of Life",
     questID = 93002,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1714,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Necklace of Calisea",
     questID = 93007,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1715,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Polished Jazeraint Armor",
     questID = 93009,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1721,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Viking Warhammer",
     questID = 92986,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1722,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Thornstone Sledgehammer",
     questID = 92993,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1731,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Worn Mail Boots",
     questID = 93078,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1732,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Worn Mail Bracers",
     questID = 93079,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1733,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Worn Cloak",
     questID = 93080,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1734,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Worn Mail Gloves",
     questID = 93081,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 1735,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Worn Mail Pants",
     questID = 93083,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 2119,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Thin Cloth Gloves",
     questID = 93098,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 2120,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Thin Cloth Pants",
     questID = 93099,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 2121,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Thin Cloth Armor",
     questID = 93100,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 2122,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Cracked Leather Belt",
     questID = 93101,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 2123,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Cracked Leather Boots",
     questID = 93102,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 2124,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Cracked Leather Bracers",
     questID = 93103,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 2125,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Cracked Leather Gloves",
     questID = 93104,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 2126,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Cracked Leather Pants",
     questID = 93105,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 2127,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Cracked Leather Vest",
     questID = 93106,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 2128,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Scratched Claymore",
     questID = 93107,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 8908,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Decor Treasure Hunt",
     questID = 93109,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 8919,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Libram: Holy Strike V",
     questID = 93137,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 8920,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Libram: Crusader Strike III",
     questID = 93138,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 8921,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Libram: Fist of Justice III",
     questID = 93139,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 8922,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Libram: Holy Strike VI",
     questID = 93140,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 8923,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Essence of Agony",
     questID = 93142,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 8924,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Dust of Deterioration",
     questID = 93147,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 8925,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Tainted Vial",
     questID = 93148,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 8926,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Empty Poison Vial",
     questID = 93149,
     questName = "Decor Treasure Hunt",
-  },
-  {
+  },{
     itemID = 8927,
     type = "quest",
     expansion = "The War Within",
-    ItemName = "Decor Treasure Hunt",
+    ItemName = "Empty Poison Vial",
     questID = 93151,
     questName = "Decor Treasure Hunt",
-  },
-
-  -- Other quests from your list
-  {
+  },{
     itemID = 1193,
     type = "quest",
     expansion = "Battle for Azeroth",
-    ItemName = "Tired Troll's Bench",
+    ItemName = "Banded Buckler",
     questID = 47432,
     questName = "The Bargain is Struck",
     faction = "Horde",
-  },
-  {
+  },{
     itemID = 1278,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Cozy Four-Pipe Bed",
     questID = 86408,
     questName = "My Hole in the Wall",
-  },
-  {
+  },{
     itemID = 1481,
     type = "quest",
     expansion = "Cataclysm",
-    ItemName = "Surwich Peddler's Wagon",
+    ItemName = "Grimclaw",
     questID = 26187,
     questName = "The Downfall of Marl Wormthorn",
     faction = "Alliance",
-  },
-  {
+  },{
     itemID = 2466,
     type = "quest",
     expansion = "Battle for Azeroth",
-    ItemName = "Gnomish Sprocket Table",
+    ItemName = "Skullsplitter Fetish",
     questID = 54992,
     questName = "The Start of Something Bigger",
     faction = "Alliance",
-  },
-  {
+  },{
     itemID = 3977,
     type = "quest",
     expansion = "Legion",
-    ItemName = "Shal'dorei Seat",
+    ItemName = "Strapped Belt",
     questID = 43318,
     questName = "Ly'leth's Champion",
-  },
-  {
+  },{
     itemID = 3978,
     type = "quest",
     expansion = "Legion",
-    ItemName = "Covered Ornate Suramar Table",
+    ItemName = "Strapped Boots",
     questID = 44052,
     questName = "And They Will Tremble",
-  },
-  {
+  },{
     itemID = 8140,
     type = "quest",
     expansion = "Warlords of Draenor",
-    ItemName = "Rough Wooden Chair",
+    ItemName = "Chromite Girdle",
     questID = 35176,
     questName = "Keeping it Together",
-  },
-  {
+  },{
     itemID = 8167,
     type = "quest",
     expansion = "Warlords of Draenor",
-    ItemName = "Stormwind Wooden Bench",
+    ItemName = "Turtle Scale",
     questID = 36404,
     questName = "Clearing the Garden",
-  },
-  {
+  },{
     itemID = 8168,
     type = "quest",
     expansion = "Warlords of Draenor",
-    ItemName = "Stormwind Wooden Stool",
+    ItemName = "Jet Black Feather",
     questID = 36202,
     questName = "Anglin' In Our Garrison",
-  },
-  {
+  },{
     itemID = 8169,
     type = "quest",
     expansion = "Shadowlands",
-    ItemName = "Stormwind Wooden Table",
+    ItemName = "Thick Hide",
     questID = 59583,
     questName = "Welcome to Stormwind",
-  },
-  {
+  },{
     itemID = 8170,
     type = "quest",
     expansion = "Warlords of Draenor",
-    ItemName = "Northshire Scribe's Desk",
+    ItemName = "Rugged Leather",
     questID = 36592,
     questName = "Bigger is Better",
-  },
-  {
+  },{
     itemID = 8777,
     type = "quest",
     expansion = "Warlords of Draenor",
-  },
-  {
+  },{
     itemID = 8788,
     type = "quest",
     expansion = "Warlords of Draenor",
-    ItemName = "Assault on Shattrath",
+    ItemName = "Book of Soothe Animal II",
     questID = 36685,
     questName = "Assault on the Heart of Shattrath",
-  },
-  {
+  },{
     itemID = 8789,
     type = "quest",
     expansion = "Warlords of Draenor",
-    ItemName = "Draenethyst Lamppost",
+    ItemName = "Book of Soothe Animal III",
     questID = 35685,
     questName = "Socrethar's Demise",
-  },
-  {
+  },{
     itemID = 8790,
     type = "quest",
     expansion = "Warlords of Draenor",
-    ItemName = "Emblem of the Naaru's Blessing",
+    ItemName = "Book of Faerie Fire IV",
     questID = 37322,
     questName = "The Prophet's Final Message",
-  },
-  -- Update 12.0.1.65617
-  -- The War Within
-  {
+  },{
     itemID = 244779,
     type = "quest",
     expansion = "The War Within",
@@ -717,78 +617,70 @@ HousingDataAggregator_RegisterExpansionItems("quest", {
     questName = "Feathering the Nest",
     zone = "Smuggler's Coast",
     notes = "Learning Requirement: The item is given as a physical object in your bags. You must right-click it to \"learn\" the decor piece. If your inventory is full, it may go to your mail.",
-  },
-  {
+  },{
     itemID = 250703,
     type = "quest",
     expansion = "Dragonflight",
     ItemName = "War Creche Teaching Crystal",
     questID = 75456,
-    questName = "The War Creche",
+    questName = "News From Beneath",
     zone = "Forbidden Reach",
     notes = "RNG World Quest: This is a Rare Elite World Quest in the Forbidden Reach. It is only available when the quest is active on the map. Once completed, the reward typically unlocks for purchase at the neighborhood vendors.",
-  },
-  {
+  },{
     itemID = 250704,
     type = "quest",
     expansion = "Dragonflight",
     ItemName = "Ancient Weyrn Device",
     questID = 74332,
-    questName = "Zskera Vaults",
+    questName = "Luttrok",
     zone = "Forbidden Reach",
     notes = "Weekly Randomisation: Loot from the Zskera Vaults is randomized per character and resets weekly. You may need to clear several rooms or floors to find the specific device.",
-  },
-  {
+  },{
     itemID = 264281,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Preserved Gift of Gilneas",
     questID = 78444,
-    questName = "Beginning a New Dawn",
+    questName = "A Worthy Ally: Dream Wardens",
     zone = "Gilneas",
     notes = "Campaign Milestone: This is the finale of the Reclamation of Gilneas storyline. Completing it on any character unlocks the Gilnean decor set at vendors in Gilneas for your whole Warband.",
-  },
-  {
+  },{
     itemID = 264482,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Void Elf Torch",
     questID = 49767,
-    questName = "The Ghostlands",
+    questName = "Your Next Move",
     zone = "Telogrus Rift",
     notes = "Recruitment Reward: These items are automatically unlocked upon completing the Void Elf Allied Race recruitment quest. You do not need to \"use\" them from your inventory; they appear directly in your Housing UI.",
-  },
-  {
+  },{
     itemID = 264483,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Cosmic Void Campfire",
     questID = 49767,
-    questName = "The Ghostlands",
+    questName = "Your Next Move",
     zone = "Telogrus Rift",
     notes = "Recruitment Reward: These items are automatically unlocked upon completing the Void Elf Allied Race recruitment quest. You do not need to \"use\" them from your inventory; they appear directly in your Housing UI.",
-  },
-  {
+  },{
     itemID = 264720,
     type = "quest",
     expansion = "The War Within",
     ItemName = "Void Elf Bedroll",
     questID = 49864,
-    questName = "A New Home",
+    questName = "Wars on Two Fronts",
     zone = "Telogrus Rift",
     notes = "Bedroll Mechanic: This specific bedroll acts as a \"rested XP\" point within your player house once placed.",
-  },
-  {
+  },{
     itemID = 266130,
     type = "quest",
     expansion = "Midnight",
     ItemName = "Gilded Silvermoon Gazebo",
     questID = 84912,
-    questName = "Rebuilding the Legacy",
+    questName = "The Show Must Go On",
     zone = "Eversong Woods",
     notes = "Silvermoon Revamp: Part of the Midnight story intro. Completing this quest often unlocks the high-tier \"Gilded\" variant of elven furniture at the Silvermoon quartermaster.",
-  },
-  {
+  },{
     itemID = 257597,
     type = "quest",
     expansion = "The War Within",
@@ -797,15 +689,165 @@ HousingDataAggregator_RegisterExpansionItems("quest", {
     questName = "Commercial Interruption",
     zone = "Undermine",
     notes = "Undermine Exclusive: This advertisement decor is tied to the Undermine zone. It can only be displayed on \"flat surface\" wall slots in your house.",
-  },
-  {
+  },{
     itemID = 250701,
     type = "quest",
     expansion = "Dragonflight",
     ItemName = "Draconic Trader's Cart",
     questID = 72935,
-    questName = "Trader's Tally",
+    questName = "Archives Return",
     zone = "Valdrakken",
     notes = "Trading Post Link: This item is often rewarded alongside Trading Post progress. Check your Collector's Cache in Stormwind/Orgrimmar if it doesn't appear in your bags immediately.",
+  },  {
+    itemID = 264332,
+    type = "quest",
+    expansion = "Classic",
+    ItemName = "Amani Ritual Altar",
+    questID = 23576,
+    questName = "Nalorakk",
+  },
+  {
+    itemID = 264336,
+    type = "quest",
+    expansion = "Classic",
+    ItemName = "Voidlight Brazier",
+    questID = 248015,
+    questName = "Charonus",
+  },
+  {
+    itemID = 264338,
+    type = "quest",
+    expansion = "Midnight",
+    ItemName = "Domanaar Control Console",
+    questID = 241546,
+    questName = "Lothraxion",
+  },
+  {
+    itemID = 264491,
+    type = "quest",
+    expansion = "Classic",
+    ItemName = "Voidbound Holding Cell",
+    questID = 250892,
+    questName = "Vaelgor",
+  },
+  {
+    itemID = 264492,
+    type = "quest",
+    expansion = "Dragonflight",
+    ItemName = "Chaotic Void Maw",
+    questID = 214650,
+    questName = "L'ura",
+  },
+  {
+    itemID = 264494,
+    type = "quest",
+    expansion = "Classic",
+    ItemName = "Banded Domanaar Storage Crate",
+    questID = 240432,
+    questName = "Fallen-King Salhadaar",
+  },
+  {
+    itemID = 264497,
+    type = "quest",
+    expansion = "Classic",
+    ItemName = "Imperator's Torment Crystal",
+    questID = 240435,
+    questName = "Imperator Averzian",
+  },
+  {
+    itemID = 264498,
+    type = "quest",
+    expansion = "Classic",
+    ItemName = "Voltaic Trigore Egg",
+    questID = 240434,
+    questName = "Vorasius",
+  },
+  {
+    itemID = 264500,
+    type = "quest",
+    expansion = "Classic",
+    ItemName = "Devouring Host Ritual Engine",
+    questID = 2738,
+    questName = "Crown of the Cosmos",
+  },
+  {
+    itemID = 264717,
+    type = "quest",
+    expansion = "Classic",
+    ItemName = "Amani Warding Hex",
+    questID = 248605,
+    questName = "Rak'tul",
+  },
+  {
+    itemID = 265949,
+    type = "quest",
+    expansion = "Dragonflight",
+    ItemName = "March on Quel'Danas Vanquisher's Aureate Trophy",
+    questID = 2740,
+    questName = "Midnight Falls",
+  },
+  {
+    itemID = 265950,
+    type = "quest",
+    expansion = "Classic",
+    ItemName = "Dreamrift Vanquisher's Aureate Trophy",
+    questID = 2795,
+    questName = "Chimaerus the Undreamt God",
+  },
+  {
+    itemID = 265951,
+    type = "quest",
+    expansion = "The War Within",
+    ItemName = "Voidspire Vanquisher's Aureate Trophy",
+    questID = 2738,
+    questName = "Crown of the Cosmos",
+  },
+  {
+    itemID = 266885,
+    type = "quest",
+    expansion = "Dragonflight",
+    ItemName = "March on Quel'Danas Vanquisher's Gleaming Trophy",
+    questID = 2740,
+    questName = "Midnight Falls",
+  },
+  {
+    itemID = 266886,
+    type = "quest",
+    expansion = "Classic",
+    ItemName = "Dreamrift Vanquisher's Gleaming Trophy",
+    questID = 2795,
+    questName = "Chimaerus the Undreamt God",
+  },
+  {
+    itemID = 266887,
+    type = "quest",
+    expansion = "Classic",
+    ItemName = "Voidspire Vanquisher's Gleaming Trophy",
+    questID = 2738,
+    questName = "Crown of the Cosmos",
+  },
+  {
+    itemID = 267645,
+    type = "quest",
+    expansion = "Classic",
+    ItemName = "Dreamrift Vanquisher's Argent Trophy",
+    questID = 256116,
+    questName = "Chimaerus",
+  },
+  {
+    itemID = 267646,
+    type = "quest",
+    expansion = "Dragonflight",
+    ItemName = "March on Quel'Danas Vanquisher's Argent Trophy",
+    questID = 214650,
+    questName = "L'ura",
+  },
+  {
+    itemID = 268049,
+    type = "quest",
+    expansion = "Classic",
+    ItemName = "Voidspire Vanquisher's Argent Trophy",
+    questID = 244761,
+    questName = "Alleria Windrunner",
   },
 })

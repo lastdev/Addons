@@ -309,6 +309,11 @@ function Guild:GUILD_ROSTER_UPDATE()
 end
 
 function Guild.ChatMessageEventFilter (frame, event, ...)
+	-- check if message or sender is secret, if so, do not process
+	if HasAnySecretValues(...) or not db or not db.enabled then
+		return false
+	end
+
 	local ignore, block = (IgnoreOrBlockEvent or function () end)(event, ...)
 
 	if (not frame._isWIM and not ignore and not block) then
@@ -319,10 +324,15 @@ function Guild.ChatMessageEventFilter (frame, event, ...)
 		return true
 	end
 
-	return false, ...
+	return false
 end
 
 function Guild:CHAT_MSG_GUILD(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_GUILD", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
 
 	arg2 = _G.Ambiguate(arg2, "none")
@@ -346,7 +356,7 @@ function Guild:CHAT_MSG_GUILD(...)
 
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
-    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_GUILD", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_GUILD", arg1, arg2, arg3, select(4, ...));
 
 	if(arg2 ~= _G.UnitName("player")) then
         win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
@@ -359,7 +369,7 @@ function Guild:CHAT_MSG_GUILD(...)
         end
     end
 
-    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_GUILD", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_GUILD", arg1, arg2, select(3, ...));
 end
 
 
@@ -437,6 +447,11 @@ function Officer:GUILD_ROSTER_UPDATE()
 end
 
 function Officer.ChatMessageEventFilter (frame, event, ...)
+	-- check if message or sender is secret, if so, do not process
+	if HasAnySecretValues(...) or not db or not db.enabled then
+		return false
+	end
+
 	local ignore, block = (IgnoreOrBlockEvent or function () end)(event, ...)
 
 	if (not frame._isWIM and not ignore and not block) then
@@ -447,10 +462,16 @@ function Officer.ChatMessageEventFilter (frame, event, ...)
 		return true
 	end
 
-	return false, ...
+	return false
 end
 
 function Officer:CHAT_MSG_OFFICER(...)
+	-- check if message or sender is secret, if so, do not process
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_OFFICER", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
 
 	arg2 = _G.Ambiguate(arg2, "none")
@@ -473,7 +494,7 @@ function Officer:CHAT_MSG_OFFICER(...)
 
 	self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
-    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_OFFICER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_OFFICER", arg1, arg2, arg3, select(4, ...));
 
 	if(arg2 ~= _G.UnitName("player")) then
         win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
@@ -486,7 +507,7 @@ function Officer:CHAT_MSG_OFFICER(...)
         end
     end
 
-    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_OFFICER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_OFFICER", arg1, arg2, select(3, ...));
 end
 
 
@@ -562,6 +583,11 @@ function Party:GROUP_ROSTER_UPDATE()
 end
 
 function Party.ChatMessageEventFilter (frame, event, ...)
+	-- check if message or sender is secret, if so, do not process
+	if HasAnySecretValues(...) or not db or not db.enabled then
+		return false
+	end
+
 	local ignore, block = (IgnoreOrBlockEvent or function () end)(event, ...)
 
 	if (not frame._isWIM and not ignore and not block) then
@@ -572,10 +598,15 @@ function Party.ChatMessageEventFilter (frame, event, ...)
 		return true
 	end
 
-	return false, ...
+	return false
 end
 
 function Party:CHAT_MSG_PARTY(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_PARTY", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
 
 	arg2 = _G.Ambiguate(arg2, "none")
@@ -598,7 +629,7 @@ function Party:CHAT_MSG_PARTY(...)
 
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
-    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_PARTY", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_PARTY", arg1, arg2, arg3, select(4, ...));
 
 	if(arg2 ~= _G.UnitName("player")) then
         win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
@@ -611,10 +642,15 @@ function Party:CHAT_MSG_PARTY(...)
         end
     end
 
-    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_PARTY", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_PARTY", arg1, arg2, select(3, ...));
 end
 
 function Party:CHAT_MSG_PARTY_LEADER(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_PARTY_LEADER", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
 
 	arg2 = _G.Ambiguate(arg2, "none")
@@ -637,7 +673,7 @@ function Party:CHAT_MSG_PARTY_LEADER(...)
 
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
-    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_PARTY_LEADER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_PARTY_LEADER", arg1, arg2, arg3, select(4, ...));
 
 	if(arg2 ~= _G.UnitName("player")) then
         win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
@@ -650,7 +686,7 @@ function Party:CHAT_MSG_PARTY_LEADER(...)
         end
     end
 
-    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_PARTY_LEADER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_PARTY_LEADER", arg1, arg2, select(3, ...));
 end
 
 
@@ -725,6 +761,11 @@ function Raid:GROUP_ROSTER_UPDATE()
 end
 
 function Raid.ChatMessageEventFilter (frame, event, ...)
+	-- check if message or sender is secret, if so, do not process
+	if HasAnySecretValues(...) or not db or not db.enabled then
+		return false
+	end
+
 	local ignore, block = (IgnoreOrBlockEvent or function () end)(event, ...)
 
 	if (not frame._isWIM and not ignore and not block) then
@@ -735,10 +776,15 @@ function Raid.ChatMessageEventFilter (frame, event, ...)
 		return true
 	end
 
-	return false, ...
+	return false
 end
 
 function Raid:CHAT_MSG_RAID(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_RAID", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
 
 	arg2 = _G.Ambiguate(arg2, "none")
@@ -761,7 +807,7 @@ function Raid:CHAT_MSG_RAID(...)
 
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
-    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_RAID", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_RAID", arg1, arg2, arg3, select(4, ...));
 
 	if(arg2 ~= _G.UnitName("player")) then
         win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
@@ -774,10 +820,15 @@ function Raid:CHAT_MSG_RAID(...)
         end
     end
 
-    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_RAID", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_RAID", arg1, arg2, select(3, ...));
 end
 
 function Raid:CHAT_MSG_RAID_LEADER(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_RAID_LEADER", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
 
 	arg2 = _G.Ambiguate(arg2, "none")
@@ -800,7 +851,7 @@ function Raid:CHAT_MSG_RAID_LEADER(...)
 
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
-    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_RAID_LEADER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_RAID_LEADER", arg1, arg2, arg3, select(4, ...));
 
 	if(arg2 ~= _G.UnitName("player")) then
         win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
@@ -813,10 +864,15 @@ function Raid:CHAT_MSG_RAID_LEADER(...)
         end
     end
 
-    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_RAID_LEADER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_RAID_LEADER", arg1, arg2, select(3, ...));
 end
 
 function Raid:CHAT_MSG_RAID_WARNING(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_RAID_WARNING", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
 
 	arg2 = _G.Ambiguate(arg2, "none")
@@ -839,7 +895,7 @@ function Raid:CHAT_MSG_RAID_WARNING(...)
 
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
-    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_RAID_WARNING", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_RAID_WARNING", arg1, arg2, arg3, select(4, ...));
 
 	if(arg2 ~= _G.UnitName("player")) then
         win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
@@ -852,7 +908,7 @@ function Raid:CHAT_MSG_RAID_WARNING(...)
         end
     end
 
-    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_RAID_WARNING", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_RAID_WARNING", arg1, arg2, select(3, ...));
 end
 
 
@@ -916,6 +972,11 @@ function Battleground:OnWindowShow(win)
 end
 
 function Battleground.ChatMessageEventFilter (frame, event, ...)
+	-- check if message or sender is secret, if so, do not process
+	if HasAnySecretValues(...) or not db or not db.enabled then
+		return false
+	end
+
 	local ignore, block = (IgnoreOrBlockEvent or function () end)(event, ...)
 
 	if (not frame._isWIM and not ignore and not block) then
@@ -926,10 +987,15 @@ function Battleground.ChatMessageEventFilter (frame, event, ...)
 		return true
 	end
 
-	return false, ...
+	return false
 end
 
 function Battleground:CHAT_MSG_INSTANCE_CHAT(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_INSTANCE_CHAT", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
 
 	arg2 = _G.Ambiguate(arg2, "none")
@@ -950,7 +1016,7 @@ function Battleground:CHAT_MSG_INSTANCE_CHAT(...)
 	self.battlegroundWindow = win;
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
-    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_INSTANCE_CHAT", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_INSTANCE_CHAT", arg1, arg2, arg3, select(4, ...));
 
 	if(arg2 ~= _G.UnitName("player")) then
         win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
@@ -963,10 +1029,15 @@ function Battleground:CHAT_MSG_INSTANCE_CHAT(...)
         end
     end
 
-    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_INSTANCE_CHAT", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_INSTANCE_CHAT", arg1, arg2, select(3, ...));
 end
 
 function Battleground:CHAT_MSG_INSTANCE_CHAT_LEADER(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_INSTANCE_CHAT_LEADER", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
 
 	arg2 = _G.Ambiguate(arg2, "none")
@@ -987,7 +1058,7 @@ function Battleground:CHAT_MSG_INSTANCE_CHAT_LEADER(...)
     self.battlegroundWindow = win;
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
-    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_INSTANCE_CHAT_LEADER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_INSTANCE_CHAT_LEADER", arg1, arg2, arg3, select(4, ...));
 
 	if(arg2 ~= _G.UnitName("player")) then
         win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
@@ -1000,7 +1071,7 @@ function Battleground:CHAT_MSG_INSTANCE_CHAT_LEADER(...)
         end
     end
 
-    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_INSTANCE_CHAT_LEADER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_INSTANCE_CHAT_LEADER", arg1, arg2, select(3, ...));
 end
 
 --------------------------------------
@@ -1051,6 +1122,11 @@ function Say:OnWindowDestroyed(win)
 end
 
 function Say.ChatMessageEventFilter (frame, event, ...)
+	-- check if message or sender is secret, if so, do not process
+	if HasAnySecretValues(...) or not db or not db.enabled then
+		return false
+	end
+
 	local ignore, block = (IgnoreOrBlockEvent or function () end)(event, ...)
 
 	if (not frame._isWIM and not ignore and not block) then
@@ -1061,10 +1137,15 @@ function Say.ChatMessageEventFilter (frame, event, ...)
 		return true
 	end
 
-	return false, ...
+	return false
 end
 
 function Say:CHAT_MSG_SAY(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_SAY", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
 
 	arg2 = _G.Ambiguate(arg2, "none")
@@ -1085,7 +1166,7 @@ function Say:CHAT_MSG_SAY(...)
     --Don't handle say messages during encounters, when boss mods are handling them
     local fightingBoss = (_G.C_InstanceEncounter and _G.C_InstanceEncounter.IsEncounterInProgress and _G.C_InstanceEncounter.IsEncounterInProgress()) or (_G.IsEncounterInProgress and _G.IsEncounterInProgress()) or (DBM and DBM:InCombat()) or false
     if not fightingBoss then
-    	win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_SAY", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    	win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_SAY", arg1, arg2, arg3, select(4, ...));
     end
 
     if(arg2 ~= _G.UnitName("player")) then
@@ -1100,11 +1181,16 @@ function Say:CHAT_MSG_SAY(...)
     end
 
     if not fightingBoss then
-   		CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_SAY", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+   		CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_SAY", arg1, arg2, select(3, ...));
    	end
 end
 
 function Say:CHAT_MSG_EMOTE(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_EMOTE", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
 
 	arg2 = _G.Ambiguate(arg2, "none")
@@ -1125,7 +1211,7 @@ function Say:CHAT_MSG_EMOTE(...)
     --Don't handle say messages during encounters, when boss mods are handling them
     local fightingBoss = (_G.C_InstanceEncounter and _G.C_InstanceEncounter.IsEncounterInProgress and _G.C_InstanceEncounter.IsEncounterInProgress()) or (_G.IsEncounterInProgress and _G.IsEncounterInProgress()) or (DBM and DBM:InCombat()) or false
     if not fightingBoss then
-    	win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_EMOTE", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    	win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_EMOTE", arg1, arg2, arg3, select(4, ...));
     end
 
     if(arg2 ~= _G.UnitName("player")) then
@@ -1140,11 +1226,16 @@ function Say:CHAT_MSG_EMOTE(...)
     end
 
     if not fightingBoss then
-   		CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_EMOTE", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+   		CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_EMOTE", arg1, arg2, select(3, ...));
    	end
 end
 
 function Say:CHAT_MSG_TEXT_EMOTE(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_TEXT_EMOTE", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
 
 	arg2 = _G.Ambiguate(arg2, "none")
@@ -1165,7 +1256,7 @@ function Say:CHAT_MSG_TEXT_EMOTE(...)
     --Don't handle say messages during encounters, when boss mods are handling them
     local fightingBoss = (_G.C_InstanceEncounter and _G.C_InstanceEncounter.IsEncounterInProgress and _G.C_InstanceEncounter.IsEncounterInProgress()) or (_G.IsEncounterInProgress and _G.IsEncounterInProgress()) or (DBM and DBM:InCombat()) or false
     if not fightingBoss then
-    	win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_TEXT_EMOTE", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    	win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_TEXT_EMOTE", arg1, arg2, arg3, select(4, ...));
     end
 
     if(arg2 ~= _G.UnitName("player")) then
@@ -1180,7 +1271,7 @@ function Say:CHAT_MSG_TEXT_EMOTE(...)
     end
 
     if not fightingBoss then
-   		CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_TEXT_EMOTE", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+   		CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_TEXT_EMOTE", arg1, arg2, select(3, ...));
    	end
 end
 
@@ -1252,17 +1343,35 @@ local function updateJoinLeave(event, ...)
 end
 
 function Channel:CHAT_MSG_CHANNEL_JOIN(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_CHANNEL_JOIN", ...);
+		return;
+	end
+
     local arg1, who, arg3, channelIdentifier, arg5, arg6, arg7, channelNumber, arg9 = ...;
+
     updateJoinLeave("CHAT_MSG_CHANNEL_JOIN", ...)
 end
 
 function Channel:CHAT_MSG_CHANNEL_LEAVE(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_CHANNEL_LEAVE", ...);
+		return;
+	end
+
     local arg1, who, arg3, channelIdentifier, arg5, arg6, arg7, channelNumber, arg9 = ...;
+
     updateJoinLeave("CHAT_MSG_CHANNEL_LEAVE", ...)
 end
 
 function Channel:CHAT_MSG_CHANNEL_NOTICE(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_CHANNEL_NOTICE", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11 = ...;
+
     for _, win in pairs(Windows) do
         if(win.channelIdentifier == arg4) then
             local color = _G.ChatTypeInfo["CHANNEL"..arg8] or _G.NORMAL_FONT_COLOR;
@@ -1278,7 +1387,13 @@ function Channel:CHAT_MSG_CHANNEL_NOTICE(...)
 end
 
 function Channel:CHAT_MSG_CHANNEL_NOTICE_USER(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_CHANNEL_NOTICE_USER", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11 = ...;
+
     for _, win in pairs(Windows) do
         if(win.channelIdentifier == arg4) then
             local color = _G.ChatTypeInfo["CHANNEL"..arg8] or _G.NORMAL_FONT_COLOR;
@@ -1296,6 +1411,11 @@ end
 
 -- manage suppression
 function Channel.ChatMessageEventFilter (frame, event, ...)
+	-- check if message or sender is secret, if so, do not process
+	if HasAnySecretValues(...) or not db or not db.enabled then
+		return false
+	end
+
 	local ignore, block = (IgnoreOrBlockEvent or function () end)(event, ...)
 	local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14 = ...
 
@@ -1320,10 +1440,15 @@ function Channel.ChatMessageEventFilter (frame, event, ...)
 		return true
 	end
 
-	return false, ...
+	return false
 end
 
 function Channel:CHAT_MSG_CHANNEL(...)
+	if HasAnySecretValues(...) then
+		self:DeferEvent("CHAT_MSG_CHANNEL", ...);
+		return;
+	end
+
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
 
 	-- arg7 Generic Channels (1 for General, 2 for Trade, 22 for LocalDefense, 23 for WorldDefense and 26 for LFG)
@@ -1371,7 +1496,7 @@ function Channel:CHAT_MSG_CHANNEL(...)
     self.chatLoaded = true;
     if(arg1 and _G.strlen(arg1) > 0) then
         arg3 = CleanLanguageArg(arg3);
-        win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_CHANNEL", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+        win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_CHANNEL", arg1, arg2, arg3, select(4, ...));
         local neverPop = db.chat[isWorld and "world" or "custom"].channelSettings[channelName] and db.chat[isWorld and "world" or "custom"].channelSettings[channelName].neverPop;
         if(arg2 ~= _G.UnitName("player")) then
             win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;

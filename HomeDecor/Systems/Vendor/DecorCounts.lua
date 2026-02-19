@@ -76,6 +76,17 @@ end
 function DC:Refresh()
   if not MerchantFrame or not MerchantFrame:IsShown() then return end
 
+  local db = NS.db
+  local prof = db and db.profile
+  if prof then
+    prof.vendor = prof.vendor or {}
+    if prof.vendor.showOwnedCount == nil then prof.vendor.showOwnedCount = false end
+    if not prof.vendor.showOwnedCount then
+      self:HideAll()
+      return
+    end
+  end
+
   local DecorCounts = NS.Systems and NS.Systems.DecorCounts
   if not DecorCounts or type(DecorCounts.GetBreakdownByItem) ~= "function" then
     return

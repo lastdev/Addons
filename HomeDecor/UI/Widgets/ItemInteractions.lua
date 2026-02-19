@@ -153,8 +153,6 @@ function IA:HandleMouseUp(it, btn, context)
             if req and req.kind == "achievement" then aid = tonumber(req.id) end
         end
         if aid and OpenAchievement(aid) then return end
-
-        -- Ctrl+Click only works for achievements, do nothing for other types
         return
     end
 

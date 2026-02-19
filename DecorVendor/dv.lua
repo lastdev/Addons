@@ -10,6 +10,7 @@ if data then
 end]]
 
 
+
 dv.modelPositions = {
 --Twitch event
 [7493973] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 1.17 },
@@ -20,6 +21,7 @@ dv.modelPositions = {
 --State of Azeroth Event
 [7476464] = { model_x = 0.00, model_z = -2.00, camera_y = 1.32, zoom = 20.17 },
 --Professions
+[6051297] = { model_x = 0.00, model_z = 0.00, camera_y = 2.32, zoom = 4.17 }, --party platter
 [5203802] = { model_x = 0.00, model_z = 0.00, camera_y = 2.32, zoom = 4.17 },
 [5929346] = { model_x = 0.00, model_z = 0.00, camera_y = 3.20, zoom = 7.40 },
 [4871092] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 15.00 },
@@ -113,6 +115,7 @@ dv.modelPositions = {
 [1408526] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 15.00 },
 [1408528] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 15.00 },
 [1445014] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 6.00 },
+[1402225] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 6.00 },
 [1373509] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 15.00 }, 
 [3917374] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 6.00 },
 [3917382] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 6.00 },
@@ -259,6 +262,8 @@ dv.modelPositions = {
 [2992361] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 15.00 }, 
 [4286997] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 6.00 },
 [191966] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 6.00 },
+[191826] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 6.00 },
+[191825] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 6.00 },
 [192707] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 6.00 },
 [197671] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 6.00 },
 [197708] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 6.00 },
@@ -267,6 +272,67 @@ dv.modelPositions = {
 [244205] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 6.00 },
 [306120] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 6.00 },
 [3564033] = { model_x = 0.00, model_z = 0.00, camera_y = 3.00, zoom = 15.00 },
+--midnight professions
+[6701005] = { model_x = 0.00, model_z = 1.00, camera_y = 1.00, zoom = 6.00 },
+[6796712] = { model_x = 0.00, model_z = 0.00, camera_y = 1.00, zoom = 2.00 },
+[6700987] = { model_x = 0.00, model_z = 0.00, camera_y = 1.00, zoom = 2.00 },
+[6865595] = { model_x = 0.00, model_z = 0.00, camera_y = 1.00, zoom = 4.00 },
+[6023421] = { model_x = 0.00, model_z = 0.00, camera_y = 2.00, zoom = 15.00 },
+[6024532] = { model_x = 0.00, model_z = 0.00, camera_y = 1.00, zoom = 4.00 },
+[6033614] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6209623 ] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6033619 ] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6209622 ] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6700980 ] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },	
+[6427292] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6427291] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[7009238] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[7009238] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[7009238] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6024551] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6033624] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6861008] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[4928309] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[7033362] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[7009238] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6427295] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6980931] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6210884] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 }, 
+[6700990] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 }, 
+[7119312] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 }, 
+[6404236] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 }, 
+[5661242] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 }, 
+[6700989] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6074149] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6330347] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6050872] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6050877] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6935640] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[7476200] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 10.00 },
+[6103388] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[5915398] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6935637] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 4.00 },
+[6701016] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 5.00 },
+[6326918] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8.00 },	 
+[7050760] = { model_x = 0.00, model_z = 2.00, camera_y = 1.32, zoom = 4.00 },
+[6929052] = { model_x = 0.00, model_z = 2.00, camera_y = 1.32, zoom = 8.00 },
+[6715097] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 18.00 },
+[7152563] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 18.00 },
+[6033623] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 2.00 },
+[6700985] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 2.00 },	
+[6005302] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 15.00 },
+[4899958] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 15.00 },
+[6856605] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[5161738] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[5163362] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6310375] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 10.00 },
+[6854359] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 2.00 },
+[6050855] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 2.00 },
+[6700983] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6050843] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6050852] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 6.00 },
+[6209625] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 15.00 },
+[6701013] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 2.00 },
 --achievements
   [660974] = { model_x = 0.00, model_z = 4.80, camera_y = 10.20, zoom = 20.0 },  
   [1108752] = { model_x = 0.00, model_z = 0.00, camera_y = 4.40, zoom = 8.8 },
@@ -375,6 +441,8 @@ dv.modelPositions = {
   [1305549] = { model_x = 0.00, model_z = 0.60, camera_y = 3.88, zoom = 7.6 },
   [7233609] = { model_x = 0.00, model_z = -0.08, camera_y = 2.68, zoom = 4.0 },
   [7155606] = { model_x = 0.00, model_z = 0.00, camera_y = 4.20, zoom = 7.2 },
+  [1934697] = { model_x = 0.00, model_z = 1.68, camera_y = 3.98, zoom = 4.8 },
+  [3074885] = { model_x = 0.00, model_z = 0.04, camera_y = 2.04, zoom = 5.2 },
   [2341255] = { model_x = 0.00, model_z = 0.02, camera_y = 1.80, zoom = 4.0 },
   [2341251] = { model_x = 0.00, model_z = 0.04, camera_y = 1.80, zoom = 3.8 },
   [2351848] = { model_x = 0.00, model_z = 0.32, camera_y = 2.40, zoom = 6.8 },
@@ -424,7 +492,17 @@ dv.modelPositions = {
   [1095305] = { model_x = 0.00, model_z = 0.10, camera_y = 0.00, zoom = 2.6 },
   [4239029] = { model_x = 0.00, model_z = 0.44, camera_y = 4.82, zoom = 8.6 },  
   [7241258] = { model_x = 0.00, model_z = 0.04, camera_y = 1.84, zoom = 5.2 }, 
-  [6252866] = { model_x = 0.00, model_z = 0.04, camera_y = 1.84, zoom = 5.2 },     
+  [6252866] = { model_x = 0.00, model_z = 0.04, camera_y = 1.84, zoom = 5.2 }, 
+--random
+	[7338839] = { model_x = 0.00, model_z = 0.04, camera_y = 1.84, zoom = 15.2 }, 
+	[6391989] = { model_x = 0.00, model_z = 0.04, camera_y = 1.84, zoom = 7.2 }, 
+	[6163851] = { model_x = 0.00, model_z = 0.04, camera_y = 1.84, zoom = 40.2 }, 
+	[6718307] = { model_x = 0.00, model_z = 0.04, camera_y = 1.84, zoom = 9.2 }, 
+	[6050866] = { model_x = 0.00, model_z = 0.04, camera_y = 1.84, zoom = 7.2 }, 
+	[7241260] = { model_x = 0.00, model_z = 0.04, camera_y = 1.84, zoom = 7.2 }, 
+	[6125173] = { model_x = 0.00, model_z = 0.04, camera_y = 1.84, zoom = 7.2 }, 
+	[6851751] = { model_x = 0.00, model_z = 0.04, camera_y = 1.84, zoom = 7.2 }, 
+	[6700992] = { model_x = 0.00, model_z = 0.04, camera_y = 1.84, zoom = 7.2 },
   --quests
   [397900] = { model_x = 0.00, model_z = 0.16, camera_y = 2.40, zoom = 10.2 },
   [7508746] = { model_x = 0.00, model_z = 0.00, camera_y = 5.40, zoom = 14.8 }, 
@@ -443,6 +521,7 @@ dv.modelPositions = {
   [1361714] = { model_x = 0.00, model_z = 0.04, camera_y = 2.32, zoom = 4.2 },
   [1096777] = { model_x = 0.00, model_z = 2.86, camera_y = 9.28, zoom = 10.0 },
   [1091587] = { model_x = 0.00, model_z = 0.10, camera_y = 2.58, zoom = 4.4 },
+  [1253823] = { model_x = 0.00, model_z = 0.10, camera_y = 2.58, zoom = 4.4 },--thunder totem mailbox
   [1096883] = { model_x = 0.00, model_z = -0.12, camera_y = 2.58, zoom = 4.8 },
   [1255418] = { model_x = 0.00, model_z = -0.22, camera_y = 4.80, zoom = 18.0 },
   [1598111] = { model_x = 0.00, model_z = 0.26, camera_y = 1.04, zoom = 0.8 },
@@ -603,7 +682,77 @@ dv.modelPositions = {
   [7240009] = { model_x = 0.00, model_z = 0.54, camera_y = 1.96, zoom = 3.6 },
   [7216248] = { model_x = 0.00, model_z = 0.54, camera_y = 3.82, zoom = 5.8 },
   [7150661] = { model_x = 0.00, model_z = 0.04, camera_y = 1.52, zoom = 2.2 },
-  [7240011] = { model_x = 0.00, model_z = 0.00, camera_y = 1.00, zoom = 4.0 },  
+  [7240011] = { model_x = 0.00, model_z = 0.00, camera_y = 1.00, zoom = 4.0 }, 
+--Boss Drops
+[936398] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 4.0  }, --done
+[1379266] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8.0  }, --done
+[197168] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8.0  }, --done
+[1005505] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8.0  }, --done
+[4335906] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8.0  }, --done
+[6190527] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8.0  }, --done
+[6050875] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8.0  }, 
+[7296096] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 20.0  }, --done
+[7136760] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 2.0  }, 
+[7302402] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 12.0  }, --done
+[6210896] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 20.0  }, --done
+[6391990] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[7115753] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 15. }, --done
+[7370900] = { model_x = 0.00, model_z = 3.00, camera_y = 1.32, zoom = 20. }, --done
+[7550713] = { model_x = 0.00, model_z = 0.50, camera_y = 1.32, zoom = 2. }, --done
+[7556294] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 2. }, --done
+[7633283] = { model_x = 0.00, model_z = 0.50, camera_y = 1.32, zoom = 2. }, --done
+[7317243] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, 
+[6224353] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 25. }, 
+[7550710] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 2. }, 
+[7556292] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 2. }, 
+[7633282] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 2. }, 
+[6839738] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 15. }, --done
+[6153808] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, 
+[5746809] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 15. }, 
+[7550712] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 2. }, 
+[7556293] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 2. }, 
+[7633281] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 2. }, 
+[6195760] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 15. }, --done
+[6075573] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[6212435] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[6225683] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 30. }, --done
+[7136759] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 4. }, --done
+[6225689] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 15. }, --done
+[4732009] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[6252874] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[6050885] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 10. }, --done
+[6210900] = { model_x = 0.00, model_z = 1.00, camera_y = 1.32, zoom = 15. }, --done
+[328250] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 160. }, --done
+[534950] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[6905426] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 15. }, --done
+[878999] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 30. }, --done
+[1025872] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[1005503] = { model_x = 0.00, model_z = -1.00, camera_y = 1.32, zoom = 8. }, --done
+[971695] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[1313472] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 80. }, --done
+[1096755] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[1313217] = { model_x = 0.00, model_z = 2.00, camera_y = 1.32, zoom = 12. }, --done
+[1361708] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 12. }, --done
+[1405830] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 25. }, --done
+[877007] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 4. }, --done
+[2929684] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 24. }, 
+[1624683] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 24. }, 
+[1842467] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, 
+[2067166] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, 
+[1842492] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, 
+[197304] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, 
+[6980179] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 15. }, 
+[1959305] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, 
+[2745099] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 25. }, 
+[4420033] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[3883458] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[6431406] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 12. }, --done
+[5647269] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[5689822] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[5360239] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 20. }, --done
+[6924252] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+[5503818] = { model_x = 0.00, model_z = 0.00, camera_y = 1.32, zoom = 8. }, --done
+
 }
 
 dv.vendorGoodies = {
@@ -833,330 +982,54 @@ dv.vendorGoodies = {
 [255299] = {253439, 253437, 248658, 244118, 244780, 244169, 257692, 253495, 244782, 257691, 243088, 247502},
 [252916] = {253606, 253609, 253610, 253611, 253612, 253613, 253704, 253705, 244656},
 --12.0 Midnight Vendors Below
+--dennia
 [256828] = {244668, 245939, 246414, 248809, 252666, 252667, 252668, 252669, 263301},
-[252915] = { 253603, 253604, 253605, 253607, 253608, 253614, 253615, 253616, 253617, 253618, 253619, 253620,},
+--corlen
+[252915] = { 253602, 253603, 253604, 253605, 253607, 253608, 253614, 253615, 253616, 253617, 253618, 253619, 253620,},
+--rivergleam
 [242398] = {250770, 246779},
+--telemancer
 [242399] = {263994, 263995, 263996, 264007, 264008, 264170, 264175},  --Delve Vendor
-[251259] = {264243, 264245},  
+--motherkeeper
+[251259] = {264243, 264245, 263038},
+--morta gage  
 [252873] = {253174, 253175, 253176, 253177, 253178, 253179, 253542, 253543, 253544, 253598, 253700},
-[258328] = {264345}, 
-[240407] = {246402, 246408,}, 
-[258181] = {}, 
-[255114] = {264259},
-[259922] = {}, 
-[248328] = {}, 
-[242726] = {246692, 250772}, 
-[242724] = {263212, 263216},  
-[242725] = {263203},
-[240838] = {249559, 245941, 245985, 256040, 257421, 257422, 263205, 263206, 263223, 263228, 263229, 263232, 263234, 264264, 264265},  
-[242723] = {263224, 263225}, 
-[259864] = {}, 
-[240279] = {264333, 256934, 258549, 264350, 260514, 260516, 260515, 260202, 263318, 263320, 256924, 256926, 256927, 256933, 258290}, 
-[254944] = {},
+--Thraxadar
+[258328] = {264345, 247785, 264253}, 
+--naynar
+[240407] = {246402, 246408, 249768, 251980, 263039, 263195, 263194, 263019, 264268, 264267, 264269, 246959}, 
+  --construct Ali
+[258181] = {265681, 265682, 265683, 265684, 265685, 265686, 265687, 265688, 265689, 265690, 265691, 265692, 265694, 265696, 265697, 265698, 265699, 265700, 265701, 265702, 265703, 265704, 265705, 265706, 265707, 265708, 265794, 265795, 265796, 265797, 265798, 265799}, 
+--maku
+[255114] = {264259, 253443, 253467, 245535, 246407, 246415, 246416, 247234, 252045, 254319, 254878, 262614, 262906, 263020, 263037, 263041, 263196, 263315, 264178, 264259, 264262, 264266, 265792, 266259},
+--Hawli
 [258540] = {264172}, 
+--neriv 
+[242726] = {246692, 250772}, 
+--Ranger Allorn
+[242724] = {263212, 263216},
+--Armorer Goldcrest  
+[242725] = {263203},
+--caeris
+[240838] = {249559, 245941, 245985, 256040, 257421, 257422, 263205, 263206, 263223, 263228, 263229, 263232, 263234, 264264, 264265, 245290}, 
+--Apprentice Diell 
+[242723] = {263224, 263225}, 
+--magovu
+[240279] = {264333, 256934, 258549, 264350, 260514, 260516, 260515, 260202, 263318, 263320, 256924, 256926, 256927, 256933, 258290}, 
+--Chel the Chip
+[241928] = {256923, 264655, 264254, 264249},
+--sathren azuredawn
+[259864] = { 253485, 253488, 243106, 245282, 244538, 244783, 245992, 251909, 251911, 251912, 254773, 257367, 262610, 263211, 263231, 264248, 264660},
+--Tajaka Sawtusk
+[254944] = { 253469, 255648, 256925, 256928, 264255, 264257, 264334, 264335, 264479, 264480, 264481, 264715 },
+--Void Researcher Aemely
+[259922] = { 262351, 262472, 262606, 263240, 264340, 264351, 264493, 264508, 264656, 264657, 264659, 267082, 267209}, 
+--Void Researcher Anomander
+[248328] = { 248964, 262462, 262463, 262466, 262473, 262607, 262609, 263499, 264337, 264339, 264341, 264344, 264351, 264509},
 }
 
-dv.professions = {
-  {
-    name = "Junkyard Tinkering",
-    items = {
-      { id = 246596, model3D = 1841734, spell = 1243780, skill = "Junkyard Tinkering", skillNeeded = 1, reagents = {{id = 166846, amount = 100}} },
-      { id = 246595, model3D = 1841733, spell = 1243783, skill = "Junkyard Tinkering", skillNeeded = 1, reagents = {{id = 166846, amount = 150}} },
-      { id = 246485, model3D = 2851774, spell = 1243803, skill = "Junkyard Tinkering", skillNeeded = 1, reagents = {{id = 169610, amount = 3}, {id = 166970, amount = 9}} },
-      { id = 246606, model3D = 2967733, spell = 1243801, skill = "Junkyard Tinkering", skillNeeded = 1, reagents = {{id = 169610, amount = 2}, {id = 166970, amount = 3}, {id = 168832, amount = 1}} },
-      { id = 246482, model3D = 1841735, spell = 1243788, skill = "Junkyard Tinkering", skillNeeded = 1, reagents = {{id = 169610, amount = 1}, {id = 166970, amount = 1}} },
-      { id = 246597, model3D = 1842225, spell = 1243793, skill = "Junkyard Tinkering", skillNeeded = 1, reagents = {{id = 169610, amount = 2}} },
-    }
-  },
-  {
-    name = "Alchemy",
-    items = {
-      { id = 257100, model3D = 200767, spell = 1262829, skill = "Classic Alchemy", skillNeeded = 240, reagents = {{id = 245586, amount = 40}, {id = 12808, amount = 16}, {id = 12360, amount = 12}, {id = 13468, amount = 8}, {id = 3371, amount = 6}} },
-      { id = 257041, model3D = 243479, spell = 1261495, skill = "Classic Alchemy", skillNeeded = 240, reagents = {{id = 245586, amount = 10}, {id = 20520, amount = 2}, {id = 2325, amount = 2}, {id = 3371, amount = 1}} },
-      { id = 264709, model3D = 198443, spell = 1272715, skill = "Outland Alchemy", skillNeeded = 60, reagents = {{id = 242691, amount = 8}, {id = 3820, amount = 10}, {id = 21840, amount = 4}} },
-      { id = 264706, model3D = 192707, spell = 1272723, skill = "Outland Alchemy", skillNeeded = 60, reagents = {{id = 242691, amount = 16}, {id = 22861, amount = 4}, {id = 23573, amount = 3}, {id = 21884, amount = 4}} },
-      { id = 264705, model3D = 191966, spell = 1272712, skill = "Outland Alchemy", skillNeeded = 60, reagents = {{id = 242691, amount = 6}, {id = 34440, amount = 5}, {id = 23449, amount = 4}, {id = 3371, amount = 1}} },
-      { id = 258212, model3D = 243528, spell = 1263558, skill = "Northrend Alchemy", skillNeeded = 60, reagents = {{id = 251762, amount = 20}, {id = 36905, amount = 10}, {id = 35627, amount = 4}, {id = 36908, amount = 3}, {id = 3371, amount = 1}} },
-      { id = 258213, model3D = 243545, spell = 1263559, skill = "Northrend Alchemy", skillNeeded = 60, reagents = {{id = 251762, amount = 40}, {id = 40077, amount = 5}, {id = 33447, amount = 10}, {id = 36908, amount = 5}, {id = 35625, amount = 2}, {id = 43102, amount = 1}} },
-      { id = 245517, model3D = 304249, spell = 1261255, skill = "Cataclysm Alchemy", skillNeeded = 60, reagents = {{id = 251764, amount = 30}, {id = 54849, amount = 16}, {id = 52326, amount = 40}, {id = 56850, amount = 6}, {id = 69237, amount = 1}} },
-      { id = 257694, model3D = 304700, spell = 1269506, skill = "Cataclysm Alchemy", skillNeeded = 60, reagents = {{id = 251764, amount = 10}, {id = 52329, amount = 5}, {id = 52988, amount = 5}, {id = 52985, amount = 3}, {id = 3371, amount = 1}} },
-      { id = 257043, model3D = 528627, spell = 1261233, skill = "Pandaria Alchemy", skillNeeded = 60, reagents = {{id = 251763, amount = 6}, {id = 72096, amount = 6}, {id = 72237, amount = 8}, {id = 76061, amount = 2}} },
-      { id = 258214, model3D = 528655, spell = 1263548, skill = "Pandaria Alchemy", skillNeeded = 60, reagents = {{id = 251763, amount = 16}, {id = 72234, amount = 12}, {id = 76098, amount = 5}, {id = 72238, amount = 3}, {id = 3371, amount = 1}} },
-      { id = 257044, model3D = 984595, spell = 1262011, skill = "Draenor Alchemy", skillNeeded = 80, recipe = 257753, reagents = {{id = 251766, amount = 25}, {id = 127759, amount = 15}, {id = 109119, amount = 10}, {id = 108996, amount = 20}} },
-      { id = 244318, model3D = 987248, spell = 1260985, skill = "Draenor Alchemy", skillNeeded = 80, recipe = 256938, reagents = {{id = 251766, amount = 16}, {id = 113262, amount = 6}, {id = 117454, amount = 6}, {id = 108996, amount = 10}} },
-      { id = 257045, model3D = 1309272, spell = 1262152, skill = "Legion Alchemy", skillNeeded = 80, reagents = {{id = 251767, amount = 18}, {id = 124440, amount = 12}, {id = 124105, amount = 2}, {id = 127835, amount = 5}} },
-      { id = 256680, model3D = 1363069, spell = 1262154, skill = "Legion Alchemy", skillNeeded = 80, reagents = {{id = 251767, amount = 50}, {id = 124461, amount = 25}, {id = 124106, amount = 5}, {id = 127835, amount = 15}, {id = 127838, amount = 20}} },
-      { id = 257046, model3D = 2026782, spell = 1262005, skill = "Kul Tiran Alchemy", skillNeeded = 140, reagents = {{id = 251768, amount = 5}, {id = 3371, amount = 1}, {id = 152511, amount = 8}, {id = 152576, amount = 4}} },
-      { id = 257047, model3D = 2026876, spell = 1262151, skill = "Kul Tiran Alchemy", skillNeeded = 140, reagents = {{id = 251768, amount = 12}, {id = 3371, amount = 3}, {id = 152510, amount = 3}} },
-      { id = 257051, model3D = 3184576, spell = 1261972, skill = "Shadowlands Alchemy", skillNeeded = 140, reagents = {{id = 251772, amount = 9}, {id = 171289, amount = 4}, {id = 183953, amount = 6}, {id = 173202, amount = 2}} },
-      { id = 257050, model3D = 3158888, spell = 1261958, skill = "Shadowlands Alchemy", skillNeeded = 140, reagents = {{id = 251772, amount = 12}, {id = 171292, amount = 3}, {id = 177061, amount = 2}, {id = 173170, amount = 2}} },
-      { id = 257052, model3D = 4240488, spell = 1261882, skill = "Dragon Isles Alchemy", skillNeeded = 80, reagents = {{id = 251773, amount = 7}, {id = 194874, amount = 1}, {id = 191384, amount = 3}, {id = 191474, amount = 1}} },
-      { id = 248111, model3D = 4204641, spell = 1261885, skill = "Dragon Isles Alchemy", skillNeeded = 80, reagents = {{id = 251773, amount = 28}, {id = 190316, amount = 4}, {id = 190312, amount = 3}, {id = 191496, amount = 6}, {id = 192883, amount = 6}} },
-      { id = 257102, model3D = 5201694, spell = 1261878, skill = "Khaz Algar Alchemy", skillNeeded = 80, reagents = {{id = 248012, amount = 8}, {id = 221763, amount = 2}, {id = 211806, amount = 1}, {id = 212245, amount = 3}} },
-      { id = 252758, model3D = 5389585, spell = 1259673, skill = "Khaz Algar Alchemy", skillNeeded = 75, reagents = {{id = 248012, amount = 34}, {id = 221758, amount = 4}, {id = 226205, amount = 12}, {id = 213610, amount = 6}, {id = 212563, amount = 1}} },
-    }
-  },
-  {
-    name = "Blacksmithing",
-    items = {
-      { id = 246489, model3D = 7014377, spell = 1261499, skill = "Classic Blacksmithing", skillNeeded = 240, reagents = {{id = 245586, amount = 20}, {id = 11371, amount = 20}, {id = 12360, amount = 8}, {id = 12810, amount = 4}} },
-      { id = 246111, model3D = 6995868, spell = 1261497, skill = "Classic Blacksmithing", skillNeeded = 240, reagents = {{id = 245586, amount = 10}, {id = 11371, amount = 12}, {id = 17011, amount = 4}, {id = 14344, amount = 2}} },
-      { id = 257036, model3D = 192362, spell = 1261383, skill = "Outland Blacksmithing", skillNeeded = 60, reagents = {{id = 242691, amount = 25}, {id = 23573, amount = 4}, {id = 23449, amount = 6}, {id = 22452, amount = 4}} },
-      { id = 257039, model3D = 538413, spell = 1261359, skill = "Outland Blacksmithing", skillNeeded = 60, reagents = {{id = 242691, amount = 50}, {id = 23573, amount = 8}, {id = 23449, amount = 10}, {id = 21884, amount = 10}, {id = 25868, amount = 2}} },
-      { id = 257035, model3D = 192356, spell = 1261347, skill = "Outland Blacksmithing", skillNeeded = 60, reagents = {{id = 242691, amount = 20}, {id = 23449, amount = 8}, {id = 22452, amount = 4}, {id = 21845, amount = 2}} },
-      { id = 257040, model3D = 242964, spell = 1261327, skill = "Northrend Blacksmithing", skillNeeded = 60, reagents = {{id = 251762, amount = 40}, {id = 37663, amount = 8}, {id = 45087, amount = 6}, {id = 35624, amount = 4}} },
-      { id = 264676, model3D = 243143, spell = 1272662, skill = "Northrend Blacksmithing", skillNeeded = 60, reagents = {{id = 251762, amount = 30}, {id = 37663, amount = 6}, {id = 45087, amount = 4}, {id = 35622, amount = 2}} },
-      { id = 264710, model3D = 243135, spell = 1272614, skill = "Northrend Blacksmithing", skillNeeded = 60, reagents = {{id = 251762, amount = 8}, {id = 37663, amount = 4}, {id = 36860, amount = 3}} },
-      { id = 257042, model3D = 304141, spell = 1261256, skill = "Cataclysm Blacksmithing", skillNeeded = 60, reagents = {{id = 251764, amount = 8}, {id = 52186, amount = 12}, {id = 52327, amount = 6}} },
-      { id = 257409, model3D = 311627, spell = 1262308, skill = "Cataclysm Blacksmithing", skillNeeded = 60, reagents = {{id = 251764, amount = 35}, {id = 54849, amount = 20}, {id = 52193, amount = 8}, {id = 52078, amount = 4}} },
-      { id = 247752, model3D = 6431405, spell = 1261234, skill = "Pandaria Blacksmithing", skillNeeded = 60, reagents = {{id = 251763, amount = 40}, {id = 72095, amount = 35}, {id = 76061, amount = 6}} },
-      { id = 247661, model3D = 520142, spell = 1261235, skill = "Pandaria Blacksmithing", skillNeeded = 60, reagents = {{id = 251763, amount = 25}, {id = 72104, amount = 3}, {id = 80433, amount = 4}, {id = 3857, amount = 5}} },
-      { id = 245436, model3D = 1005512, spell = 1260988, skill = "Draenor Blacksmithing", skillNeeded = 80, recipe = 256940, reagents = {{id = 251766, amount = 40}, {id = 109118, amount = 30}, {id = 110609, amount = 15}, {id = 118472, amount = 5}} },
-      { id = 245600, model3D = 6905311, spell = 1260987, skill = "Draenor Blacksmithing", skillNeeded = 80, recipe = 256939, reagents = {{id = 251766, amount = 45}, {id = 109119, amount = 50}, {id = 113261, amount = 25}, {id = 120945, amount = 5}, {id = 109118, amount = 25}} },
-      { id = 247922, model3D = 1408526, spell = 1260693, skill = "Legion Blacksmithing", skillNeeded = 80, reagents = {{id = 251767, amount = 15}, {id = 124461, amount = 10}, {id = 124441, amount = 1}} },
-      { id = 247909, model3D = 1360361, spell = 1260695, skill = "Legion Blacksmithing", skillNeeded = 80, reagents = {{id = 251767, amount = 10}, {id = 124461, amount = 5}, {id = 124441, amount = 1}} },
-      { id = 245408, model3D = 6877807, spell = 1260698, skill = "Legion Blacksmithing", skillNeeded = 80, reagents = {{id = 251767, amount = 35}, {id = 124461, amount = 20}, {id = 133588, amount = 3}, {id = 124109, amount = 5}, {id = 133591, amount = 3}, {id = 133589, amount = 3}} },
-      { id = 252397, model3D = 1733921, spell = 1260691, skill = "Kul Tiran Blacksmithing", skillNeeded = 140, reagents = {{id = 251768, amount = 18}, {id = 152579, amount = 20}, {id = 154898, amount = 15}} },
-      { id = 252399, model3D = 1852119, spell = 1260692, skill = "Kul Tiran Blacksmithing", skillNeeded = 140, reagents = {{id = 251768, amount = 20}, {id = 152579, amount = 25}, {id = 160298, amount = 10}} },
-      { id = 257049, model3D = 3153975, spell = 1261980, skill = "Shadowlands Blacksmithing", skillNeeded = 80, reagents = {{id = 251772, amount = 8}, {id = 171832, amount = 3}, {id = 171828, amount = 5}, {id = 173109, amount = 1}, {id = 173171, amount = 1}} },
-      { id = 257048, model3D = 3022762, spell = 1261982, skill = "Shadowlands Blacksmithing", skillNeeded = 80, reagents = {{id = 251772, amount = 45}, {id = 172437, amount = 15}, {id = 171828, amount = 20}, {id = 173060, amount = 20}, {id = 173173, amount = 5}} },
-      { id = 256430, model3D = 4695276, spell = 1261892, skill = "Dragon Isles Blacksmithing", skillNeeded = 80, reagents = {{id = 251773, amount = 46}, {id = 204634, amount = 1}, {id = 193922, amount = 4}, {id = 190312, amount = 9}, {id = 191363, amount = 5}} },
-      { id = 256427, model3D = 3883456, spell = 1261896, skill = "Dragon Isles Blacksmithing", skillNeeded = 80, reagents = {{id = 251773, amount = 42}, {id = 189541, amount = 12}, {id = 192837, amount = 1}, {id = 192840, amount = 1}, {id = 192843, amount = 1}, {id = 192846, amount = 1}, {id = 192849, amount = 1}} },
-      { id = 245323, model3D = 5788112, spell = 1259681, skill = "Khaz Algar Blacksmithing", skillNeeded = 75, reagents = {{id = 248012, amount = 30}, {id = 222523, amount = 1}, {id = 221856, amount = 1}, {id = 222417, amount = 5}, {id = 222420, amount = 1}} },
-      { id = 245312, model3D = 5689818, spell = 1259675, skill = "Khaz Algar Blacksmithing", skillNeeded = 75, reagents = {{id = 248012, amount = 15}, {id = 221853, amount = 4}, {id = 222417, amount = 5}} },
-    }
-  },
-  {
-    name = "Cooking",
-    items = {
-      { id = 247220, model3D = 643880, spell = 1266563, skill = "Pandaria Cooking", skillNeeded = 60, reagents = {{id = 251763, amount = 18}, {id = 74662, amount = 1}, {id = 74853, amount = 1}, {id = 74839, amount = 10}, {id = 74845, amount = 10}, {id = 74843, amount = 50}, {id = 259894, amount = 10}} },
-      { id = 245428, model3D = 960868, spell = 1266560, skill = "Draenor Cooking", skillNeeded = 80, recipe = 260556, reagents = {{id = 251766, amount = 8}, {id = 109119, amount = 10}, {id = 111449, amount = 5}, {id = 115352, amount = 5}, {id = 259894, amount = 5}} },
-      { id = 245484, model3D = 1852909, spell = 1260337, skill = "Kul Tiran Cooking", skillNeeded = 140, reagents = {{id = 251768, amount = 8}, {id = 152579, amount = 4}, {id = 154886, amount = 5}, {id = 160711, amount = 2}, {id = 259894, amount = 5}} },
-      { id = 246705, model3D = 3870812, spell = 1260334, skill = "Shadowlands Cooking", skillNeeded = 60, reagents = {{id = 251772, amount = 8}, {id = 171829, amount = 4}, {id = 172049, amount = 5}, {id = 172055, amount = 6}, {id = 259894, amount = 5}} },
-      { id = 247225, model3D = 7109346, spell = 1260333, skill = "Dragon Isles Cooking", skillNeeded = 80, reagents = {{id = 251773, amount = 25}, {id = 197745, amount = 2}, {id = 197774, amount = 3}, {id = 197776, amount = 4}, {id = 259894, amount = 15}, {id = 190312, amount = 4}} },
-      { id = 247222, model3D = 7109343, spell = 1266555, skill = "Dragon Isles Cooking", skillNeeded = 80, reagents = {{id = 251773, amount = 28}, {id = 197764, amount = 5}, {id = 197788, amount = 4}, {id = 259894, amount = 15}, {id = 189143, amount = 10}} },
-      { id = 247224, model3D = 7109345, spell = 1260331, skill = "Dragon Isles Cooking", skillNeeded = 80, reagents = {{id = 251773, amount = 22}, {id = 200953, amount = 5}, {id = 197756, amount = 6}, {id = 259894, amount = 15}, {id = 190312, amount = 4}} },
-      { id = 239170, model3D = 5203802, spell = 1245993, skill = "Khaz Algar Cooking", skillNeeded = 80, recipe = 248013, reagents = {{id = 248012, amount = 15}, {id = 212508, amount = 2}, {id = 222737, amount = 25}, {id = 259894, amount = 10}, {id = 210930, amount = 15}, {id = 210933, amount = 5}, {id = 210936, amount = 5}} },
-      { id = 246708, model3D = 5203791, spell = 1245995, skill = "Khaz Algar Cooking", skillNeeded = 80, reagents = {{id = 248012, amount = 10}, {id = 222739, amount = 10}, {id = 259894, amount = 10}, {id = 210930, amount = 10}, {id = 210936, amount = 5}} },
-      { id = 246709, model3D = 5203794, spell = 1245994, skill = "Khaz Algar Cooking", skillNeeded = 80, reagents = {{id = 248012, amount = 5}, {id = 222737, amount = 10}, {id = 259894, amount = 5}, {id = 210930, amount = 8}} },
-      { id = 245326, model3D = 5650143, spell = 1266541, skill = "Khaz Algar Cooking", skillNeeded = 80, reagents = {{id = 248012, amount = 25}, {id = 221754, amount = 4}, {id = 223971, amount = 1}, {id = 222705, amount = 2}, {id = 222731, amount = 2}, {id = 259894, amount = 15}} },
-    }
-  },
-  {
-    name = "Enchanting",
-    items = {
-      { id = 253250, model3D = 195048, spell = 1261501, skill = "Classic Enchanting", skillNeeded = 240, reagents = {{id = 245586, amount = 20}, {id = 16203, amount = 12}, {id = 12365, amount = 12}, {id = 17010, amount = 5}} },
-      { id = 263027, model3D = 203845, spell = 1270459, skill = "Classic Enchanting", skillNeeded = 240, reagents = {{id = 245586, amount = 30}, {id = 12808, amount = 16}, {id = 14344, amount = 12}, {id = 16203, amount = 8}, {id = 20520, amount = 8}} },
-      { id = 257093, model3D = 538417, spell = 1262828, skill = "Outland Enchanting", skillNeeded = 60, reagents = {{id = 242691, amount = 40}, {id = 22450, amount = 6}, {id = 22449, amount = 6}, {id = 22446, amount = 8}, {id = 22445, amount = 20}} },
-      { id = 257037, model3D = 192427, spell = 1261331, skill = "Outland Enchanting", skillNeeded = 60, reagents = {{id = 242691, amount = 20}, {id = 22449, amount = 4}, {id = 22446, amount = 4}, {id = 22445, amount = 12}} },
-      { id = 257038, model3D = 192433, spell = 1261340, skill = "Outland Enchanting", skillNeeded = 60, reagents = {{id = 242691, amount = 20}, {id = 22449, amount = 4}, {id = 22446, amount = 4}, {id = 22445, amount = 12}} },
-      { id = 257101, model3D = 242720, spell = 1262825, skill = "Northrend Enchanting", skillNeeded = 60, reagents = {{id = 251762, amount = 20}, {id = 34057, amount = 3}, {id = 34055, amount = 3}, {id = 41163, amount = 4}, {id = 41510, amount = 6}} },
-      { id = 257094, model3D = 243044, spell = 1262824, skill = "Northrend Enchanting", skillNeeded = 60, reagents = {{id = 251762, amount = 12}, {id = 34057, amount = 2}, {id = 34055, amount = 6}, {id = 34054, amount = 8}} },
-      { id = 257095, model3D = 317822, spell = 1262318, skill = "Cataclysm Enchanting", skillNeeded = 60, reagents = {{id = 251764, amount = 20}, {id = 52722, amount = 8}, {id = 52328, amount = 20}, {id = 53039, amount = 2}, {id = 69237, amount = 1}} },
-      { id = 257404, model3D = 304698, spell = 1262331, skill = "Cataclysm Enchanting", skillNeeded = 60, reagents = {{id = 251764, amount = 8}, {id = 3371, amount = 1}, {id = 52555, amount = 6}, {id = 52325, amount = 3}} },
-      { id = 257096, model3D = 522294, spell = 1262306, skill = "Pandaria Enchanting", skillNeeded = 60, reagents = {{id = 251763, amount = 8}, {id = 74247, amount = 9}, {id = 72988, amount = 4}, {id = 76061, amount = 2}} },
-      { id = 257097, model3D = 591464, spell = 1262302, skill = "Pandaria Enchanting", skillNeeded = 60, reagents = {{id = 251763, amount = 30}, {id = 74248, amount = 15}, {id = 94289, amount = 4}, {id = 3857, amount = 5}} },
-      { id = 251655, model3D = 7280505, spell = 1261008, skill = "Draenor Enchanting", skillNeeded = 80, recipe = 256959, reagents = {{id = 251766, amount = 10}, {id = 111245, amount = 6}, {id = 109118, amount = 5}, {id = 111557, amount = 5}} },
-      { id = 245601, model3D = 6905328, spell = 1260990, skill = "Draenor Enchanting", skillNeeded = 80, recipe = 256941, reagents = {{id = 251766, amount = 30}, {id = 113588, amount = 12}, {id = 113261, amount = 8}, {id = 113263, amount = 4}} },
-      { id = 256681, model3D = 1363079, spell = 1262238, skill = "Legion Enchanting", skillNeeded = 80, reagents = {{id = 251767, amount = 48}, {id = 124461, amount = 25}, {id = 124441, amount = 25}, {id = 127835, amount = 10}, {id = 124124, amount = 3}} },
-      { id = 247923, model3D = 1408528, spell = 1260700, skill = "Legion Enchanting", skillNeeded = 80, reagents = {{id = 251767, amount = 34}, {id = 124442, amount = 16}, {id = 124461, amount = 10}, {id = 124124, amount = 2}} },
-      { id = 258560, model3D = 2438950, spell = 1263877, skill = "Kul Tiran Enchanting", skillNeeded = 140, reagents = {{id = 251768, amount = 6}, {id = 152876, amount = 4}, {id = 152541, amount = 2}, {id = 154165, amount = 1}} },
-      { id = 258559, model3D = 2057302, spell = 1263870, skill = "Kul Tiran Enchanting", skillNeeded = 140, reagents = {{id = 251768, amount = 35}, {id = 168185, amount = 30}, {id = 152877, amount = 2}, {id = 152875, amount = 15}, {id = 158186, amount = 10}} },
-      { id = 258237, model3D = 3036110, spell = 1263238, skill = "Shadowlands Enchanting", skillNeeded = 90, reagents = {{id = 251772, amount = 30}, {id = 172232, amount = 8}, {id = 172230, amount = 15}, {id = 177061, amount = 6}} },
-      { id = 257098, model3D = 3641039, spell = 1261998, skill = "Shadowlands Enchanting", skillNeeded = 90, reagents = {{id = 251772, amount = 6}, {id = 172230, amount = 4}, {id = 171832, amount = 3}} },
-      { id = 256171, model3D = 4326554, spell = 1261919, skill = "Dragon Isles Enchanting", skillNeeded = 80, reagents = {{id = 251773, amount = 16}, {id = 193922, amount = 2}, {id = 190327, amount = 1}, {id = 194784, amount = 4}, {id = 194124, amount = 6}} },
-      { id = 256170, model3D = 4216958, spell = 1261933, skill = "Dragon Isles Enchanting", skillNeeded = 80, reagents = {{id = 251773, amount = 50}, {id = 256171, amount = 1}, {id = 200113, amount = 5}, {id = 194784, amount = 9}, {id = 190312, amount = 10}} },
-      { id = 253171, model3D = 7262810, spell = 1259690, skill = "Khaz Algar Enchanting", skillNeeded = 80, reagents = {{id = 248012, amount = 40}, {id = 221754, amount = 6}, {id = 213610, amount = 5}, {id = 219952, amount = 8}, {id = 221859, amount = 6}} },
-      { id = 253039, model3D = 5149702, spell = 1259715, skill = "Khaz Algar Enchanting", skillNeeded = 80, reagents = {{id = 248012, amount = 10}, {id = 219949, amount = 4}, {id = 222417, amount = 2}, {id = 224108, amount = 2}} },
-    }
-  },
-  {
-    name = "Engineering",
-    items = {
-      { id = 246700, model3D = 197653, spell = 1261504, skill = "Classic Engineering", skillNeeded = 240, reagents = {{id = 245586, amount = 25}, {id = 16000, amount = 4}, {id = 16006, amount = 4}, {id = 7078, amount = 4}, {id = 14048, amount = 8}} },
-      { id = 246410, model3D = 197212, spell = 1261509, skill = "Classic Engineering", skillNeeded = 240, reagents = {{id = 245586, amount = 40}, {id = 11371, amount = 12}, {id = 16006, amount = 8}, {id = 7076, amount = 8}, {id = 15994, amount = 6}} },
-      { id = 258196, model3D = 192461, spell = 1263663, skill = "Outland Engineering", skillNeeded = 60, reagents = {{id = 242691, amount = 15}, {id = 23783, amount = 6}, {id = 23782, amount = 4}} },
-      { id = 258194, model3D = 192446, spell = 1263643, skill = "Outland Engineering", skillNeeded = 60, reagents = {{id = 242691, amount = 50}, {id = 32423, amount = 50}, {id = 23783, amount = 12}, {id = 23786, amount = 4}, {id = 23785, amount = 3}} },
-	  { id = 258193, spell = 1263654, skill = "Outland Engineering", skillNeeded = 60, reagents = {{id = 242691, amount = 25}, {id = 23787, amount = 6}, {id = 23786, amount = 2}} },
-      { id = 264708, model3D = 197708, spell = 1272688, skill = "Northrend Engineering", skillNeeded = 60, reagents = {{id = 251762, amount = 28}, {id = 44501, amount = 2}, {id = 39681, amount = 12}, {id = 39682, amount = 4}} },
-      { id = 264711, model3D = 244205, spell = 1272676, skill = "Northrend Engineering", skillNeeded = 60, reagents = {{id = 251762, amount = 46}, {id = 41163, amount = 20}, {id = 39683, amount = 8}, {id = 39682, amount = 4}, {id = 39681, amount = 2}} },
+--professions spot
 
-      { id = 264707, model3D = 197671, spell = 1272707, skill = "Northrend Engineering", skillNeeded = 60, reagents = {{id = 251762, amount = 20}, {id = 41163, amount = 20}, {id = 39681, amount = 2}} },
-      { id = 245602, model3D = 6930893, spell = 1261258, skill = "Cataclysm Engineering", skillNeeded = 60, reagents = {{id = 251764, amount = 40}, {id = 53039, amount = 4}, {id = 60224, amount = 8}, {id = 53010, amount = 6}} },
-      { id = 257689, model3D = 305999, spell = 1262340, skill = "Cataclysm Engineering", skillNeeded = 60, reagents = {{id = 251764, amount = 50}, {id = 54849, amount = 15}, {id = 60224, amount = 6}, {id = 52976, amount = 12}, {id = 67749, amount = 5}} },
-      { id = 247733, model3D = 526861, spell = 1261236, skill = "Pandaria Engineering", skillNeeded = 60, reagents = {{id = 251763, amount = 30}, {id = 72095, amount = 20}, {id = 77467, amount = 12}, {id = 76061, amount = 8}, {id = 3857, amount = 10}} },
-      { id = 258216, model3D = 666489, spell = 1263551, skill = "Pandaria Engineering", skillNeeded = 60, reagents = {{id = 251763, amount = 50}, {id = 72095, amount = 40}, {id = 77468, amount = 30}, {id = 77467, amount = 16}, {id = 87872, amount = 4}} },
-      { id = 251482, model3D = 928023, spell = 1261025, skill = "Draenor Engineering", skillNeeded = 80, recipe = 256962, reagents = {{id = 251766, amount = 20}, {id = 109118, amount = 20}, {id = 113588, amount = 3}, {id = 113264, amount = 12}} },
-      { id = 244314, model3D = 979341, spell = 1261027, skill = "Draenor Engineering", skillNeeded = 80, recipe = 256964, reagents = {{id = 251766, amount = 25}, {id = 109119, amount = 15}, {id = 109118, amount = 10}, {id = 114931, amount = 5}, {id = 39354, amount = 2}} },
-      { id = 258226, model3D = 1355598, spell = 1263319, skill = "Legion Engineering", skillNeeded = 80, reagents = {{id = 251767, amount = 22}, {id = 132514, amount = 1}, {id = 124461, amount = 15}} },
-      { id = 258225, model3D = 1355533, spell = 1263338, skill = "Legion Engineering", skillNeeded = 80, reagents = {{id = 251767, amount = 28}, {id = 124461, amount = 20}, {id = 136637, amount = 15}, {id = 136633, amount = 10}, {id = 130183, amount = 3}} },
-      { id = 246604, model3D = 2816738, spell = 1260349, skill = "Kul Tiran Engineering", skillNeeded = 140, reagents = {{id = 251768, amount = 42}, {id = 152579, amount = 30}, {id = 152512, amount = 35}, {id = 163569, amount = 20}, {id = 166970, amount = 5}} },
-      { id = 246486, model3D = 6699744, spell = 1260352, skill = "Kul Tiran Engineering", skillNeeded = 140, reagents = {{id = 251768, amount = 45}, {id = 163569, amount = 18}, {id = 160502, amount = 15}, {id = 152579, amount = 10}, {id = 152512, amount = 20}, {id = 166970, amount = 1}} },
-      { id = 246500, model3D = 2765483, spell = 1260425, skill = "Kul Tiran Engineering", skillNeeded = 140, reagents = {{id = 251768, amount = 16}, {id = 163569, amount = 6}, {id = 152579, amount = 8}, {id = 152512, amount = 8}, {id = 154123, amount = 1}} },
-      { id = 258240, model3D = 3154869, spell = 1263239, skill = "Shadowlands Engineering", skillNeeded = 80, reagents = {{id = 251772, amount = 18}, {id = 171829, amount = 6}, {id = 173110, amount = 2}, {id = 172935, amount = 4}, {id = 173173, amount = 2}} },
-      { id = 258252, model3D = 4005944, spell = 1263240, skill = "Shadowlands Engineering", skillNeeded = 80, reagents = {{id = 251772, amount = 42}, {id = 171441, amount = 1}, {id = 172934, amount = 8}, {id = 171428, amount = 15}, {id = 172936, amount = 6}, {id = 172935, amount = 4}} },
-      { id = 248113, model3D = 4222966, spell = 1259404, skill = "Dragon Isles Engineering", skillNeeded = 80, reagents = {{id = 251773, amount = 25}, {id = 192876, amount = 2}, {id = 198183, amount = 4}, {id = 198186, amount = 4}, {id = 198198, amount = 4}} },
-      { id = 258253, model3D = 4420607, spell = 1263237, skill = "Dragon Isles Engineering", skillNeeded = 80, reagents = {{id = 251773, amount = 50}, {id = 190324, amount = 4}, {id = 198487, amount = 20}, {id = 201406, amount = 2}, {id = 198183, amount = 8}, {id = 198192, amount = 7}, {id = 198198, amount = 9}} },
-      { id = 253252, model3D = 5464693, spell = 1259778, skill = "Khaz Algar Engineering", skillNeeded = 80, reagents = {{id = 248012, amount = 42}, {id = 221756, amount = 1}, {id = 212498, amount = 1}, {id = 221853, amount = 18}, {id = 221859, amount = 6}, {id = 221868, amount = 10}, {id = 222417, amount = 15}} },
-      { id = 246066, model3D = 6914980, spell = 1259724, skill = "Khaz Algar Engineering", skillNeeded = 80, reagents = {{id = 248012, amount = 12}, {id = 213399, amount = 6}, {id = 221856, amount = 6}, {id = 221865, amount = 1}} },
-    }
-  },
-  {
-    name = "Inscription",
-    items = {
-      { id = 246420, model3D = 197288, spell = 1261587, skill = "Classic Inscription", skillNeeded = 240, reagents = {{id = 245586, amount = 50}, {id = 10308, amount = 50}, {id = 12365, amount = 24}, {id = 12359, amount = 12}} },
-      { id = 246423, model3D = 197555, spell = 1261644, skill = "Classic Inscription", skillNeeded = 240, reagents = {{id = 245586, amount = 45}, {id = 6037, amount = 12}, {id = 43119, amount = 8}, {id = 12810, amount = 8}, {id = 20963, amount = 4}} },
-      { id = 258289, model3D = 200451, spell = 1269495, skill = "Classic Inscription", skillNeeded = 240, reagents = {{id = 245586, amount = 30}, {id = 7076, amount = 8}, {id = 43121, amount = 6}} },
-      { id = 245503, model3D = 189416, spell = 1261549, skill = "Classic Inscription", skillNeeded = 240, reagents = {{id = 245586, amount = 15}, {id = 12808, amount = 4}, {id = 7076, amount = 4}, {id = 43123, amount = 2}} },
-      { id = 245502, model3D = 189415, spell = 1261572, skill = "Classic Inscription", skillNeeded = 240, reagents = {{id = 245586, amount = 25}, {id = 12808, amount = 8}, {id = 7076, amount = 8}, {id = 43123, amount = 5}} },
-      { id = 258198, model3D = 192515, spell = 1263811, skill = "Outland Inscription", skillNeeded = 60, reagents = {{id = 242691, amount = 20}, {id = 23793, amount = 3}, {id = 23449, amount = 2}} },
-      { id = 258197, model3D = 192468, spell = 1263813, skill = "Outland Inscription", skillNeeded = 60, reagents = {{id = 242691, amount = 12}, {id = 22446, amount = 4}, {id = 43125, amount = 3}, {id = 39354, amount = 1}} },
-      { id = 258215, model3D = 538411, spell = 1263812, skill = "Outland Inscription", skillNeeded = 60, reagents = {{id = 242691, amount = 20}, {id = 23793, amount = 3}, {id = 22457, amount = 2}} },
-      { id = 258192, model3D = 191859, spell = 1263814, skill = "Outland Inscription", skillNeeded = 60, reagents = {{id = 242691, amount = 10}, {id = 43124, amount = 3}, {id = 21886, amount = 2}} },
-      { id = 258199, model3D = 193332, spell = 1263810, skill = "Outland Inscription", skillNeeded = 60, reagents = {{id = 242691, amount = 25}, {id = 33458, amount = 50}, {id = 43124, amount = 10}, {id = 22452, amount = 4}} },
-      { id = 258209, model3D = 243030, spell = 1263574, skill = "Northrend Inscription", skillNeeded = 60, reagents = {{id = 251762, amount = 6}, {id = 36931, amount = 2}, {id = 43127, amount = 3}} },
-      { id = 258204, model3D = 194471, spell = 1263575, skill = "Northrend Inscription", skillNeeded = 60, reagents = {{id = 251762, amount = 12}, {id = 36916, amount = 6}, {id = 43126, amount = 3}} },
-      { id = 258207, model3D = 242995, spell = 1263570, skill = "Northrend Inscription", skillNeeded = 60, reagents = {{id = 251762, amount = 45}, {id = 37663, amount = 12}, {id = 43127, amount = 6}, {id = 43126, amount = 6}, {id = 36931, amount = 4}} },
-      { id = 258210, model3D = 243054, spell = 1263564, skill = "Northrend Inscription", skillNeeded = 60, reagents = {{id = 251762, amount = 10}, {id = 41163, amount = 6}, {id = 43126, amount = 5}, {id = 39354, amount = 10}} },
-      { id = 258203, model3D = 194464, spell = 1263562, skill = "Northrend Inscription", skillNeeded = 60, reagents = {{id = 251762, amount = 18}, {id = 37663, amount = 4}, {id = 43127, amount = 10}} },
-      { id = 245621, model3D = 322293, spell = 1261259, skill = "Cataclysm Inscription", skillNeeded = 60, reagents = {{id = 251764, amount = 25}, {id = 61981, amount = 8}, {id = 52327, amount = 6}, {id = 56850, amount = 4}} },
-      { id = 245622, model3D = 322355, spell = 1261288, skill = "Cataclysm Inscription", skillNeeded = 60, reagents = {{id = 251764, amount = 10}, {id = 61978, amount = 4}, {id = 52186, amount = 2}} },
-      { id = 245623, model3D = 322635, spell = 1261278, skill = "Cataclysm Inscription", skillNeeded = 60, reagents = {{id = 251764, amount = 25}, {id = 61981, amount = 8}, {id = 52328, amount = 6}, {id = 56850, amount = 4}} },
-      { id = 257695, model3D = 305385, spell = 1269540, skill = "Cataclysm Inscription", skillNeeded = 60, reagents = {{id = 251764, amount = 35}, {id = 52186, amount = 12}, {id = 61978, amount = 10}, {id = 55053, amount = 1}} },
-      { id = 257696, model3D = 305396, spell = 1269534, skill = "Cataclysm Inscription", skillNeeded = 60, reagents = {{id = 251764, amount = 8}, {id = 61978, amount = 8}, {id = 54849, amount = 3}, {id = 39354, amount = 1}} },
-      { id = 247731, model3D = 525038, spell = 1261237, skill = "Pandaria Inscription", skillNeeded = 60, reagents = {{id = 251763, amount = 15}, {id = 79255, amount = 5}, {id = 82441, amount = 2}} },
-      { id = 247735, model3D = 7508792, spell = 1261240, skill = "Pandaria Inscription", skillNeeded = 60, reagents = {{id = 251763, amount = 20}, {id = 79254, amount = 6}, {id = 87872, amount = 5}} },
-      { id = 247669, model3D = 6854354, spell = 1261241, skill = "Pandaria Inscription", skillNeeded = 60, reagents = {{id = 251763, amount = 45}, {id = 79255, amount = 20}, {id = 76061, amount = 8}, {id = 72104, amount = 4}, {id = 39354, amount = 18}} },
-      { id = 245514, model3D = 538827, spell = 1261238, skill = "Pandaria Inscription", skillNeeded = 60, reagents = {{id = 251763, amount = 25}, {id = 79254, amount = 6}, {id = 76061, amount = 4}, {id = 87872, amount = 5}} },
-      { id = 245513, model3D = 538547, spell = 1261239, skill = "Pandaria Inscription", skillNeeded = 60, reagents = {{id = 251763, amount = 20}, {id = 79254, amount = 6}, {id = 76061, amount = 4}} },
-      { id = 245534, model3D = 6711645, spell = 1261032, skill = "Draenor Inscription", skillNeeded = 80, recipe = 257025, reagents = {{id = 251766, amount = 25}, {id = 109119, amount = 20}, {id = 118472, amount = 10}, {id = 113261, amount = 6}} },
-      { id = 245441, model3D = 969535, spell = 1269501, skill = "Draenor Inscription", skillNeeded = 80, recipe = 262810, reagents = {{id = 251766, amount = 10}, {id = 109119, amount = 10}, {id = 113263, amount = 4}} },
-      { id = 244319, model3D = 987255, spell = 1261045, skill = "Draenor Inscription", skillNeeded = 80, recipe = 257027, reagents = {{id = 251766, amount = 8}, {id = 109118, amount = 12}, {id = 114931, amount = 10}, {id = 113263, amount = 6}} },
-      { id = 244313, model3D = 969529, spell = 1269500, skill = "Draenor Inscription", skillNeeded = 80, recipe = 262809, reagents = {{id = 251766, amount = 15}, {id = 109119, amount = 15}, {id = 113263, amount = 8}, {id = 111557, amount = 10}} },
-      { id = 244317, model3D = 986851, spell = 1261066, skill = "Draenor Inscription", skillNeeded = 0, recipe = 257028, reagents = {{id = 251766, amount = 6}, {id = 109118, amount = 8}, {id = 114931, amount = 6}, {id = 113263, amount = 4}} },
-      { id = 258224, model3D = 1319120, spell = 1263344, skill = "Legion Inscription", skillNeeded = 80, reagents = {{id = 251767, amount = 22}, {id = 129032, amount = 15}, {id = 151565, amount = 10}, {id = 136693, amount = 1}} },
-      { id = 247916, model3D = 1361711, spell = 1260711, skill = "Legion Inscription", skillNeeded = 80, reagents = {{id = 251767, amount = 35}, {id = 129032, amount = 25}, {id = 127004, amount = 6}, {id = 124461, amount = 15}} },
-      { id = 245396, model3D = 6749303, spell = 1260737, skill = "Legion Inscription", skillNeeded = 80, reagents = {{id = 251767, amount = 30}, {id = 129034, amount = 25}, {id = 127004, amount = 6}, {id = 124461, amount = 15}, {id = 129032, amount = 10}} },
-      { id = 247925, model3D = 1445014, spell = 1260730, skill = "Legion Inscription", skillNeeded = 80, reagents = {{id = 251767, amount = 20}, {id = 129034, amount = 20}, {id = 124461, amount = 12}} },
-      { id = 247918, model3D = 1368700, spell = 1260719, skill = "Legion Inscription", skillNeeded = 80, reagents = {{id = 251767, amount = 28}, {id = 129034, amount = 20}, {id = 129032, amount = 10}, {id = 124461, amount = 5}, {id = 127004, amount = 3}, {id = 129100, amount = 5}} },
-      { id = 252389, model3D = 1602479, spell = 1260593, skill = "Kul Tiran Inscription", skillNeeded = 140, reagents = {{id = 251768, amount = 8}, {id = 158187, amount = 5}, {id = 160711, amount = 5}} },
-      { id = 245415, model3D = 6877806, spell = 1260564, skill = "Kul Tiran Inscription", skillNeeded = 140, reagents = {{id = 251768, amount = 15}, {id = 152512, amount = 18}, {id = 158188, amount = 8}} },
-      { id = 245416, model3D = 6877805, spell = 1260508, skill = "Kul Tiran Inscription", skillNeeded = 140, reagents = {{id = 251768, amount = 10}, {id = 152512, amount = 6}, {id = 158188, amount = 4}} },
-      { id = 245499, model3D = 1597475, spell = 1260577, skill = "Kul Tiran Inscription", skillNeeded = 140, reagents = {{id = 251768, amount = 35}, {id = 158187, amount = 20}, {id = 152512, amount = 24}} },
-      { id = 252035, model3D = 1602488, spell = 1260583, skill = "Kul Tiran Inscription", skillNeeded = 140, reagents = {{id = 251768, amount = 6}, {id = 160711, amount = 5}, {id = 152576, amount = 10}} },
-      { id = 252401, model3D = 1852949, spell = 1260596, skill = "Kul Tiran Inscription", skillNeeded = 140, reagents = {{id = 251768, amount = 8}, {id = 152576, amount = 8}, {id = 152512, amount = 8}, {id = 160711, amount = 1}} },
-      { id = 258245, model3D = 3507170, spell = 1263247, skill = "Shadowlands Inscription", skillNeeded = 80, reagents = {{id = 251772, amount = 16}, {id = 173202, amount = 5}, {id = 177061, amount = 5}} },
-      { id = 258235, model3D = 3033118, spell = 1263272, skill = "Shadowlands Inscription", skillNeeded = 80, reagents = {{id = 251772, amount = 28}, {id = 173059, amount = 15}, {id = 173110, amount = 2}} },
-      { id = 258247, model3D = 3607336, spell = 1263278, skill = "Shadowlands Inscription", skillNeeded = 80, reagents = {{id = 251772, amount = 20}, {id = 171832, amount = 5}, {id = 173058, amount = 10}} },
-      { id = 258242, model3D = 3158874, spell = 1263293, skill = "Shadowlands Inscription", skillNeeded = 80, reagents = {{id = 251772, amount = 50}, {id = 175970, amount = 25}, {id = 172230, amount = 15}, {id = 173170, amount = 8}, {id = 173202, amount = 4}, {id = 177061, amount = 4}} },
-      { id = 258239, model3D = 3036651, spell = 1263285, skill = "Shadowlands Inscription", skillNeeded = 80, reagents = {{id = 251772, amount = 10}, {id = 175970, amount = 5}, {id = 173126, amount = 1}, {id = 172092, amount = 8}, {id = 175886, amount = 10}, {id = 173172, amount = 2}} },
-      { id = 258250, model3D = 3836261, spell = 1263243, skill = "Shadowlands Inscription", skillNeeded = 80, reagents = {{id = 251772, amount = 35}, {id = 171829, amount = 10}, {id = 173059, amount = 16}, {id = 173110, amount = 1}} },
-      { id = 258244, model3D = 3246827, spell = 1263241, skill = "Shadowlands Inscription", skillNeeded = 80, reagents = {{id = 251772, amount = 24}, {id = 173204, amount = 8}, {id = 171828, amount = 8}, {id = 173059, amount = 8}} },
-      { id = 264679, model3D = 4286997, spell = 1272572, skill = "Dragon Isles Inscription", skillNeeded = 80, reagents = {{id = 251773, amount = 18}, {id = 192872, amount = 2}, {id = 190312, amount = 2}, {id = 194862, amount = 2}} },
-      { id = 248107, model3D = 3917382, spell = 1259451, skill = "Dragon Isles Inscription", skillNeeded = 80, reagents = {{id = 251773, amount = 10}, {id = 190395, amount = 8}, {id = 194751, amount = 4}} },
-      { id = 248106, model3D = 3917374, spell = 1259441, skill = "Dragon Isles Inscription", skillNeeded = 80, reagents = {{id = 251773, amount = 10}, {id = 190395, amount = 8}, {id = 194850, amount = 3}} },
-      { id = 248118, model3D = 4317323, spell = 1259422, skill = "Dragon Isles Inscription", skillNeeded = 80, reagents = {{id = 251773, amount = 15}, {id = 194784, amount = 15}, {id = 194751, amount = 3}, {id = 194850, amount = 4}, {id = 194856, amount = 5}} },
-      { id = 248119, model3D = 4317324, spell = 1259433, skill = "Dragon Isles Inscription", skillNeeded = 80, reagents = {{id = 251773, amount = 16}, {id = 194784, amount = 16}, {id = 194751, amount = 2}, {id = 194850, amount = 6}, {id = 194856, amount = 3}} },
-      { id = 248120, model3D = 4317325, spell = 1259429, skill = "Dragon Isles Inscription", skillNeeded = 80, reagents = {{id = 251773, amount = 16}, {id = 194784, amount = 16}, {id = 194751, amount = 7}, {id = 194856, amount = 5}} },
-      { id = 248108, model3D = 3917383, spell = 1259461, skill = "Dragon Isles Inscription", skillNeeded = 80, reagents = {{id = 251773, amount = 14}, {id = 190395, amount = 10}, {id = 194751, amount = 6}} },
-      { id = 253022, model3D = 4902723, spell = 1259796, skill = "Khaz Algar Inscription", skillNeeded = 80, reagents = {{id = 248012, amount = 50}, {id = 226204, amount = 30}, {id = 212508, amount = 2}, {id = 222555, amount = 4}, {id = 222615, amount = 9}} },
-      { id = 253167, model3D = 4906204, spell = 1259784, skill = "Khaz Algar Inscription", skillNeeded = 80, reagents = {{id = 248012, amount = 18}, {id = 222417, amount = 2}, {id = 222609, amount = 2}} },
-      { id = 253036, model3D = 4896176, spell = 1259818, skill = "Khaz Algar Inscription", skillNeeded = 80, reagents = {{id = 248012, amount = 35}, {id = 221754, amount = 3}, {id = 222555, amount = 6}, {id = 222558, amount = 3}} },
-      { id = 253169, model3D = 5128194, spell = 1259805, skill = "Khaz Algar Inscription", skillNeeded = 80, reagents = {{id = 248012, amount = 26}, {id = 222523, amount = 1}, {id = 212664, amount = 2}, {id = 222417, amount = 5}, {id = 222609, amount = 3}} },
-      { id = 253165, model3D = 4896180, spell = 1260044, skill = "Khaz Algar Inscription", skillNeeded = 80, reagents = {{id = 248012, amount = 10}, {id = 222417, amount = 1}, {id = 222609, amount = 1}} },
-      { id = 253164, model3D = 4896178, spell = 1260005, skill = "Khaz Algar Inscription", skillNeeded = 80, reagents = {{id = 248012, amount = 15}, {id = 222417, amount = 1}, {id = 222609, amount = 2}} },
-    }
-  },
-  {
-    name = "Jewelcrafting",
-    items = {
-      { id = 246413, model3D = 379433, spell = 1261667, skill = "Classic Jewelcrafting", skillNeeded = 240, reagents = {{id = 245586, amount = 40}, {id = 11371, amount = 16}, {id = 7910, amount = 20}, {id = 17011, amount = 6}} },
-      { id = 246488, model3D = 7014376, spell = 1261659, skill = "Classic Jewelcrafting", skillNeeded = 240, reagents = {{id = 245586, amount = 30}, {id = 6037, amount = 12}, {id = 20963, amount = 8}, {id = 12799, amount = 8}} },
-      { id = 262347, model3D = 538415, spell = 1269496, skill = "Outland Jewelcrafting", skillNeeded = 60, reagents = {{id = 242691, amount = 15}, {id = 23573, amount = 4}, {id = 25867, amount = 2}} },
-      { id = 258200, model3D = 193369, spell = 1263817, skill = "Outland Jewelcrafting", skillNeeded = 60, reagents = {{id = 242691, amount = 10}, {id = 31079, amount = 3}, {id = 23441, amount = 3}} },
-      { id = 258201, model3D = 193371, spell = 1263815, skill = "Outland Jewelcrafting", skillNeeded = 60, reagents = {{id = 242691, amount = 20}, {id = 31079, amount = 6}, {id = 32230, amount = 2}} },
-      { id = 258211, model3D = 243189, spell = 1263577, skill = "Northrend Jewelcrafting", skillNeeded = 60, reagents = {{id = 251762, amount = 22}, {id = 36916, amount = 8}, {id = 42225, amount = 4}} },
-      { id = 258208, model3D = 243016, spell = 1263605, skill = "Northrend Jewelcrafting", skillNeeded = 60, reagents = {{id = 251762, amount = 8}, {id = 36916, amount = 6}, {id = 41266, amount = 4}} },
-      { id = 249143, model3D = 7130714, spell = 1261305, skill = "Cataclysm Jewelcrafting", skillNeeded = 60, reagents = {{id = 251764, amount = 12}, {id = 54849, amount = 10}, {id = 52193, amount = 4}, {id = 53010, amount = 4}, {id = 52078, amount = 2}} },
-      { id = 257406, model3D = 311599, spell = 1262357, skill = "Cataclysm Jewelcrafting", skillNeeded = 60, reagents = {{id = 251764, amount = 8}, {id = 54849, amount = 6}, {id = 52193, amount = 4}, {id = 52078, amount = 2}} },
-      { id = 245509, model3D = 518523, spell = 1261243, skill = "Pandaria Jewelcrafting", skillNeeded = 60, reagents = {{id = 251763, amount = 15}, {id = 72096, amount = 10}, {id = 76061, amount = 2}} },
-      { id = 247728, model3D = 519133, spell = 1261244, skill = "Pandaria Jewelcrafting", skillNeeded = 60, reagents = {{id = 251763, amount = 10}, {id = 72096, amount = 6}, {id = 76061, amount = 2}} },
-      { id = 247736, model3D = 530128, spell = 1261242, skill = "Pandaria Jewelcrafting", skillNeeded = 60, reagents = {{id = 251763, amount = 50}, {id = 83092, amount = 1}, {id = 72095, amount = 30}, {id = 76061, amount = 6}, {id = 76734, amount = 2}} },
-      { id = 251495, model3D = 7273285, spell = 1261071, skill = "Draenor Jewelcrafting", skillNeeded = 80, recipe = 257030, reagents = {{id = 251766, amount = 25}, {id = 109118, amount = 20}, {id = 113262, amount = 12}, {id = 115811, amount = 1}} },
-      { id = 251550, model3D = 6436480, spell = 1261075, skill = "Draenor Jewelcrafting", skillNeeded = 80, recipe = 257031, reagents = {{id = 251766, amount = 8}, {id = 109118, amount = 10}, {id = 111557, amount = 4}, {id = 113261, amount = 2}, {id = 115805, amount = 1}} },
-      { id = 245557, model3D = 6924249, spell = 1260757, skill = "Legion Jewelcrafting", skillNeeded = 80, reagents = {{id = 251767, amount = 25}, {id = 127004, amount = 3}, {id = 124461, amount = 10}, {id = 129100, amount = 20}} },
-      { id = 258227, model3D = 1396746, spell = 1263351, skill = "Legion Jewelcrafting", skillNeeded = 80, reagents = {{id = 251767, amount = 12}, {id = 130176, amount = 4}, {id = 151718, amount = 2}, {id = 130181, amount = 2}, {id = 151720, amount = 1}, {id = 130182, amount = 1}, {id = 127004, amount = 1}} },
-      { id = 245496, model3D = 1929218, spell = 1260501, skill = "Kul Tiran Jewelcrafting", skillNeeded = 140, reagents = {{id = 251768, amount = 20}, {id = 154120, amount = 2}, {id = 158187, amount = 6}, {id = 152513, amount = 10}} },
-      { id = 245414, model3D = 6653375, spell = 1260492, skill = "Kul Tiran Jewelcrafting", skillNeeded = 140, reagents = {{id = 251768, amount = 40}, {id = 152512, amount = 30}, {id = 154123, amount = 3}, {id = 152513, amount = 5}} },
-      { id = 260699, model3D = 3038200, spell = 1269504, skill = "Shadowlands Jewelcrafting", skillNeeded = 80, reagents = {{id = 251772, amount = 30}, {id = 171828, amount = 25}, {id = 173172, amount = 8}, {id = 172232, amount = 2}} },
-      { id = 262663, model3D = 2991599, spell = 1269502, skill = "Shadowlands Jewelcrafting", skillNeeded = 80, reagents = {{id = 251772, amount = 18}, {id = 171829, amount = 6}, {id = 173173, amount = 4}, {id = 172230, amount = 4}} },
-      { id = 248109, model3D = 3952852, spell = 1259384, skill = "Dragon Isles Jewelcrafting", skillNeeded = 80, reagents = {{id = 251773, amount = 15}, {id = 192872, amount = 2}, {id = 190395, amount = 18}, {id = 192883, amount = 4}} },
-      { id = 248110, model3D = 3952853, spell = 1259386, skill = "Dragon Isles Jewelcrafting", skillNeeded = 80, reagents = {{id = 251773, amount = 10}, {id = 190395, amount = 8}, {id = 192883, amount = 4}} },
-      { id = 248654, model3D = 7141934, spell = 1259369, skill = "Dragon Isles Jewelcrafting", skillNeeded = 80, reagents = {{id = 251773, amount = 26}, {id = 190312, amount = 6}, {id = 192869, amount = 1}, {id = 192883, amount = 10}} },
-      { id = 245559, model3D = 6924251, spell = 1260096, skill = "Khaz Algar Jewelcrafting", skillNeeded = 80, reagents = {{id = 248012, amount = 16}, {id = 212498, amount = 4}, {id = 221754, amount = 1}, {id = 213756, amount = 5}} },
-      { id = 253253, model3D = 5636650, spell = 1260172, skill = "Khaz Algar Jewelcrafting", skillNeeded = 80, reagents = {{id = 248012, amount = 25}, {id = 212498, amount = 7}, {id = 213219, amount = 14}, {id = 213759, amount = 1}, {id = 222417, amount = 2}} },
-    }
-  },
-  {
-    name = "Leatherworking",
-    items = {
-      { id = 257725, model3D = 6711676, spell = 1263633, skill = "Classic Leatherworking", skillNeeded = 240, reagents = {{id = 245586, amount = 18}, {id = 15417, amount = 8}, {id = 2604, amount = 2}, {id = 4342, amount = 2}, {id = 14341, amount = 2}} },
-      { id = 242948, model3D = 4871092, spell = 1261672, skill = "Classic Leatherworking", skillNeeded = 240, reagents = {{id = 245586, amount = 15}, {id = 8170, amount = 12}, {id = 15407, amount = 2}, {id = 14341, amount = 2}} },
-      { id = 258191, model3D = 191839, spell = 1263818, skill = "Outland Leatherworking", skillNeeded = 60, reagents = {{id = 242691, amount = 20}, {id = 23793, amount = 6}, {id = 29539, amount = 4}, {id = 14341, amount = 3}} },
-      { id = 258190, model3D = 191781, spell = 1263819, skill = "Outland Leatherworking", skillNeeded = 60, reagents = {{id = 242691, amount = 12}, {id = 25708, amount = 8}, {id = 22452, amount = 2}, {id = 21886, amount = 2}} },
-      { id = 257693, model3D = 195749, spell = 1269499, skill = "Northrend Leatherworking", skillNeeded = 60, reagents = {{id = 251762, amount = 12}, {id = 38425, amount = 8}, {id = 35627, amount = 6}, {id = 44128, amount = 2}} },
-      { id = 258205, model3D = 200015, spell = 1263613, skill = "Northrend Leatherworking", skillNeeded = 60, reagents = {{id = 251762, amount = 18}, {id = 38425, amount = 14}, {id = 35623, amount = 4}, {id = 35624, amount = 2}} },
-      { id = 264712, model3D = 306120, spell = 1272580, skill = "Cataclysm Leatherworking", skillNeeded = 60, reagents = {{id = 251764, amount = 12}, {id = 52980, amount = 4}, {id = 54849, amount = 4}, {id = 38426, amount = 8}} },
-      { id = 257806, model3D = 360034, spell = 1269550, skill = "Cataclysm Leatherworking", skillNeeded = 60, reagents = {{id = 251764, amount = 40}, {id = 52979, amount = 20}, {id = 54849, amount = 15}, {id = 56516, amount = 10}, {id = 52190, amount = 1}} },
-      { id = 264677, model3D = 424389, spell = 1272588, skill = "Cataclysm Leatherworking", skillNeeded = 60, reagents = {{id = 251764, amount = 14}, {id = 56516, amount = 10}, {id = 38426, amount = 8}, {id = 52327, amount = 4}} },
-      { id = 247856, model3D = 531405, spell = 1261245, skill = "Pandaria Leatherworking", skillNeeded = 60, reagents = {{id = 251763, amount = 40}, {id = 72163, amount = 8}, {id = 79255, amount = 5}, {id = 76061, amount = 5}} },
-      { id = 247767, model3D = 579248, spell = 1261248, skill = "Pandaria Leatherworking", skillNeeded = 60, reagents = {{id = 251763, amount = 30}, {id = 72163, amount = 6}, {id = 79254, amount = 5}, {id = 76061, amount = 3}} },
-      { id = 244323, model3D = 1013304, spell = 1261122, skill = "Draenor Leatherworking", skillNeeded = 80, recipe = 257058, reagents = {{id = 251766, amount = 22}, {id = 110609, amount = 30}, {id = 109119, amount = 15}} },
-      { id = 245432, model3D = 1005469, spell = 1261081, skill = "Draenor Leatherworking", skillNeeded = 80, recipe = 257033, reagents = {{id = 251766, amount = 40}, {id = 110609, amount = 45}, {id = 109119, amount = 20}, {id = 111557, amount = 15}, {id = 120945, amount = 5}} },
-      { id = 245406, model3D = 6711672, spell = 1260762, skill = "Legion Leatherworking", skillNeeded = 80, reagents = {{id = 251767, amount = 20}, {id = 124113, amount = 20}, {id = 124438, amount = 5}} },
-      { id = 257400, model3D = 1253405, spell = 1262273, skill = "Legion Leatherworking", skillNeeded = 80, reagents = {{id = 251767, amount = 34}, {id = 124113, amount = 25}, {id = 124116, amount = 5}, {id = 124438, amount = 10}} },
-      { id = 245407, model3D = 6711673, spell = 1260765, skill = "Legion Leatherworking", skillNeeded = 80, reagents = {{id = 251767, amount = 15}, {id = 124113, amount = 10}, {id = 124438, amount = 5}} },
-      { id = 245412, model3D = 6653373, spell = 1260485, skill = "Kul Tiran Leatherworking", skillNeeded = 140, reagents = {{id = 251768, amount = 40}, {id = 154722, amount = 30}, {id = 152513, amount = 5}, {id = 154164, amount = 12}} },
-      { id = 258558, model3D = 1830320, spell = 1263859, skill = "Kul Tiran Leatherworking", skillNeeded = 140, reagents = {{id = 251768, amount = 22}, {id = 152541, amount = 20}, {id = 152579, amount = 15}, {id = 160059, amount = 4}} },
-      { id = 258248, model3D = 3619351, spell = 1263308, skill = "Shadowlands Leatherworking", skillNeeded = 80, reagents = {{id = 251772, amount = 30}, {id = 172089, amount = 14}, {id = 177279, amount = 5}, {id = 177062, amount = 5}} },
-      { id = 258238, model3D = 3036549, spell = 1263313, skill = "Shadowlands Leatherworking", skillNeeded = 80, reagents = {{id = 251772, amount = 18}, {id = 171830, amount = 6}, {id = 172089, amount = 12}, {id = 172092, amount = 12}} },
-      { id = 248657, model3D = 7141938, spell = 1259233, skill = "Dragon Isles Leatherworking", skillNeeded = 80, reagents = {{id = 251773, amount = 40}, {id = 193922, amount = 6}, {id = 190312, amount = 7}, {id = 193208, amount = 60}} },
-      { id = 248114, model3D = 4237314, spell = 1259195, skill = "Dragon Isles Leatherworking", skillNeeded = 80, reagents = {{id = 251773, amount = 45}, {id = 190312, amount = 10}, {id = 192869, amount = 5}, {id = 193216, amount = 10}, {id = 193229, amount = 2}} },
-      { id = 239214, model3D = 5929346, spell = 1270836, skill = "Khaz Algar Leatherworking", skillNeeded = 80, reagents = {{id = 248012, amount = 38}, {id = 224764, amount = 10}, {id = 212664, amount = 4}, {id = 219880, amount = 6}, {id = 221853, amount = 9}} },
-      { id = 243327, model3D = 5793046, spell = 1260328, skill = "Khaz Algar Leatherworking", skillNeeded = 80, reagents = {{id = 248012, amount = 30}, {id = 224764, amount = 10}, {id = 212670, amount = 1}, {id = 219889, amount = 2}} },
-    }
-  },
-  {
-    name = "Tailoring",
-    items = {
-      { id = 246685, model3D = 197968, spell = 1261695, skill = "Classic Tailoring", skillNeeded = 240, reagents = {{id = 245586, amount = 25}, {id = 14342, amount = 12}, {id = 4341, amount = 20}, {id = 14341, amount = 4}, {id = 13926, amount = 2}} },
-      { id = 243336, model3D = 6711675, spell = 1261688, skill = "Classic Tailoring", skillNeeded = 240, reagents = {{id = 245586, amount = 18}, {id = 14048, amount = 12}, {id = 2604, amount = 4}, {id = 14341, amount = 2}} },
-      { id = 258202, model3D = 193745, spell = 1263669, skill = "Outland Tailoring", skillNeeded = 60, reagents = {{id = 242691, amount = 18}, {id = 21842, amount = 4}, {id = 22457, amount = 3}, {id = 14341, amount = 3}} },
-      { id = 258195, model3D = 192460, spell = 1263692, skill = "Outland Tailoring", skillNeeded = 60, reagents = {{id = 242691, amount = 35}, {id = 24271, amount = 4}, {id = 21845, amount = 4}, {id = 24272, amount = 4}} },
-      { id = 258298, model3D = 242974, spell = 1263627, skill = "Northrend Tailoring", skillNeeded = 60, reagents = {{id = 251762, amount = 40}, {id = 41595, amount = 8}, {id = 41594, amount = 8}, {id = 2604, amount = 4}, {id = 6260, amount = 4}} },
-      { id = 258206, model3D = 242983, spell = 1263620, skill = "Northrend Tailoring", skillNeeded = 60, reagents = {{id = 251762, amount = 10}, {id = 41595, amount = 8}, {id = 6260, amount = 2}, {id = 2604, amount = 2}, {id = 36925, amount = 1}} },
-      { id = 257402, model3D = 314545, spell = 1262370, skill = "Cataclysm Tailoring", skillNeeded = 60, reagents = {{id = 251764, amount = 26}, {id = 54440, amount = 2}, {id = 54849, amount = 2}, {id = 38426, amount = 8}, {id = 61981, amount = 6}} },
-      { id = 245618, model3D = 305226, spell = 1261317, skill = "Cataclysm Tailoring", skillNeeded = 60, reagents = {{id = 251764, amount = 35}, {id = 53643, amount = 20}, {id = 54849, amount = 6}, {id = 54450, amount = 4}} },
-      { id = 247738, model3D = 575033, spell = 1261250, skill = "Pandaria Tailoring", skillNeeded = 60, reagents = {{id = 251763, amount = 25}, {id = 82441, amount = 15}, {id = 82444, amount = 2}} },
-      { id = 258302, model3D = 577662, spell = 1263553, skill = "Pandaria Tailoring", skillNeeded = 60, reagents = {{id = 251763, amount = 8}, {id = 82441, amount = 5}, {id = 74866, amount = 10}} },
-      { id = 245421, model3D = 979920, spell = 1261232, skill = "Draenor Tailoring", skillNeeded = 80, recipe = 257110, reagents = {{id = 251766, amount = 35}, {id = 111557, amount = 50}, {id = 114931, amount = 12}} },
-      { id = 258303, model3D = 903883, spell = 1263360, skill = "Draenor Tailoring", skillNeeded = 80, recipe = 258486, reagents = {{id = 251766, amount = 8}, {id = 111557, amount = 16}, {id = 114931, amount = 5}, {id = 113588, amount = 2}} },
-      { id = 251546, model3D = 902328, spell = 1261231, skill = "Draenor Tailoring", skillNeeded = 80, recipe = 257109, reagents = {{id = 251766, amount = 30}, {id = 111557, amount = 40}, {id = 114931, amount = 15}, {id = 109118, amount = 10}, {id = 120945, amount = 5}} },
-      { id = 247920, model3D = 1378307, spell = 1260774, skill = "Legion Tailoring", skillNeeded = 80, reagents = {{id = 251767, amount = 30}, {id = 124437, amount = 40}, {id = 129032, amount = 15}, {id = 127037, amount = 8}} },
-      { id = 258557, model3D = 1282676, spell = 1263858, skill = "Legion Tailoring", skillNeeded = 80, reagents = {{id = 251767, amount = 8}, {id = 124437, amount = 15}, {id = 129032, amount = 5}, {id = 130175, amount = 2}, {id = 127037, amount = 2}} },
-      { id = 248010, model3D = 1373509, spell = 1260769, skill = "Legion Tailoring", skillNeeded = 80, reagents = {{id = 251767, amount = 40}, {id = 127004, amount = 20}, {id = 124461, amount = 12}, {id = 127037, amount = 12}} },
-      { id = 243101, model3D = 1590845, spell = 1260458, skill = "Kul Tiran Tailoring", skillNeeded = 140, reagents = {{id = 251768, amount = 30}, {id = 152576, amount = 30}, {id = 159959, amount = 12}, {id = 158188, amount = 5}} },
-      { id = 245418, model3D = 6877804, spell = 1260475, skill = "Kul Tiran Tailoring", skillNeeded = 140, reagents = {{id = 251768, amount = 35}, {id = 158378, amount = 16}, {id = 152513, amount = 2}, {id = 159959, amount = 20}} },
-      { id = 258561, model3D = 3051055, spell = 1263853, skill = "Shadowlands Tailoring", skillNeeded = 80, reagents = {{id = 251772, amount = 14}, {id = 173202, amount = 12}, {id = 177062, amount = 5}} },
-      { id = 264713, model3D = 3564033, spell = 1272575, skill = "Shadowlands Tailoring", skillNeeded = 80, reagents = {{id = 251772, amount = 45}, {id = 172439, amount = 20}, {id = 177062, amount = 10}, {id = 177061, amount = 2}, {id = 173170, amount = 6}} },
-      { id = 264678, model3D = 2992361, spell = 1272578, skill = "Shadowlands Tailoring", skillNeeded = 80, reagents = {{id = 251772, amount = 16}, {id = 171828, amount = 12}, {id = 173202, amount = 25}, {id = 177062, amount = 5}, {id = 173173, amount = 1}} },
-      { id = 248121, model3D = 4497614, spell = 1259247, skill = "Dragon Isles Tailoring", skillNeeded = 80, reagents = {{id = 251773, amount = 35}, {id = 190395, amount = 16}, {id = 192095, amount = 12}, {id = 193926, amount = 20}, {id = 194751, amount = 5}} },
-      { id = 257053, model3D = 4495939, spell = 1261940, skill = "Dragon Isles Tailoring", skillNeeded = 80, reagents = {{id = 251773, amount = 28}, {id = 192872, amount = 3}, {id = 190395, amount = 3}, {id = 193935, amount = 1}, {id = 193938, amount = 1}, {id = 194011, amount = 2}} },
-      { id = 245305, model3D = 5793097, spell = 1260326, skill = "Khaz Algar Tailoring", skillNeeded = 75, reagents = {{id = 248012, amount = 20}, {id = 224764, amount = 20}, {id = 222804, amount = 6}, {id = 224828, amount = 2}} },
-      { id = 252755, model3D = 4902728, spell = 1260215, skill = "Khaz Algar Tailoring", skillNeeded = 80, reagents = {{id = 248012, amount = 30}, {id = 224764, amount = 12}, {id = 222615, amount = 4}, {id = 224824, amount = 6}} },
-    }
-  }
-}
 
 dv.decorItem = {
 --twilight ascension
@@ -1235,7 +1108,8 @@ dv.decorItem = {
   [246409] = {decorID = 2226},
   [245333] = {decorID = 1315},
   [245291] = {decorID = 1120},
-  [256331] = {decorID = 11131},  
+  [256331] = {decorID = 11131},
+  [258145] = {decorID = 11872},  
   [257405] = {decorID = 11495},
   [245617] = {decorID = 1826},
   [258301] = {decorID = 11944},
@@ -1496,6 +1370,7 @@ dv.decorItem = {
   [258222] = {decorID = 11908},
   [258223] = {decorID = 11909},
   [258221] = {decorID = 11907},
+  [264477] = {decorID = 15741},
   [258219] = {decorID = 11905},
   [250113] = {decorID = 5880},
   [250115] = {decorID = 5882},
@@ -1746,7 +1621,7 @@ dv.decorItem = {
   [258268] = {decorID = 11934},   
 --Midnight
 [242255] = {decorID = 1044},
-  [245334] = {decorID = 1123},
+[245334] = {decorID = 1123},
 [245336] = {decorID = 495},
 [245394] = {decorID = 535},
 [247221] = {decorID = 2592},
@@ -2014,8 +1889,40 @@ dv.decorItem = {
   [245583] = {decorID = 1776},
   [253493] = {decorID = 1163},
   [241617] = {decorID = 984},
-  [246691] = {decorID = 2458}, 
+  [246691] = {decorID = 2458},
+--neighborhood vendor Brother
+ [246686] = {decorID = 2453},
+ [252041] = {decorID = 8989},
+ [248403] = {decorID = 4425},
+ [246838] = {decorID = 2510}, 
+ [252039] = {decorID = 8987}, 
+ [252040] = {decorID = 8988}, 
+ [248406] = {decorID = 4428}, 
+ [251475] = {decorID = 8182}, 
+ [248405] = {decorID = 4427},
+ [251472] = {decorID = 8179},
+ [251474] = {decorID = 8181},
+ [251473] = {decorID = 8180}, 
+ [248407] = {decorID = 4429}, 
+ [246741] = {decorID = 2495},
+ [248402] = {decorID = 4424},  
+ --neighborhood vendor Harlow
+ [264923] = {decorID = 16235},
+[264918] = {decorID = 16230},
+[264924] = {decorID = 16236},
+[264915] = {decorID = 16227},
+[264925] = {decorID = 16237},
+[264922] = {decorID = 16234},
+[264921] = {decorID = 16233},
+[264917] = {decorID = 16229},
+[264919] = {decorID = 16231},
+[264916] = {decorID = 16228},
+[264920] = {decorID = 16232},
+[265032] = {decorID = 16315},
+[265541] = {decorID = 16962},
 --Midnight Launch
+--corlen
+[253602] = {decorID = 9479},
 [253603] = {decorID = 9480}, 
 [253604] = {decorID = 9481},
 [253605] = {decorID = 9482}, 
@@ -2028,8 +1935,10 @@ dv.decorItem = {
 [253618] = {decorID = 9495}, 
 [253619] = {decorID = 9496}, 
 [253620] = {decorID = 9497},
+--rivergleam
 [250770] = {decorID = 7780}, 
 [246779] = {decorID = 2503},
+--telemancer
 [263994] = {decorID = 15399}, 
 [263995] = {decorID = 15400},
 [263996] = {decorID = 15401},
@@ -2037,8 +1946,11 @@ dv.decorItem = {
 [264008] = {decorID = 15413},
 [264170] = {decorID = 15455},
 [264175] = {decorID = 15460},
+--motherkeeper
 [264243] = {decorID = 15478},
 [264245] = {decorID = 15480},
+[263038] = {decorID = 14824},
+--morta gage
 [253174] = {decorID = 9248},
 [253175] = {decorID = 9249},
 [253176] = {decorID = 9250},
@@ -2050,15 +1962,51 @@ dv.decorItem = {
 [253544] = {decorID = 9441},
 [253598] = {decorID = 9475},
 [253700] = {decorID = 9624},
+--Thraxadar
 [264345] = {decorID = 15585},
+[247785] = {decorID = 3922},
+[264253] = {decorID = 15488},
+--naynar
 [246402] = {decorID = 2219},
 [246408] = {decorID = 2225},
+[249768] = {decorID = 5651},
+[251980] = {decorID = 8916},
+[263039] = {decorID = 14825},
+[263195] = {decorID = 14967},
+[263194] = {decorID = 14965},
+[263019] = {decorID = 14808},
+[264268] = {decorID = 15503},
+[264267] = {decorID = 15502},
+[264269] = {decorID = 15504},
+[246959] = {decorID = 2588},
+--maku
+[253443] = {decorID = 1080},
+[253467] = {decorID = 1147},
+[245535] = {decorID = 1726},
+[246407] = {decorID = 2224},
+[246415] = {decorID = 2232},
+[246416] = {decorID = 2233},
+[247234] = {decorID = 2605},
+[252045] = {decorID = 8993},
+[254319] = {decorID = 10327},
+[254878] = {decorID = 10778},
+[262614] = {decorID = 14639},
+[262906] = {decorID = 14799},
+[263020] = {decorID = 14809},
+[263037] = {decorID = 14823},
+[263041] = {decorID = 14827},
+[263196] = {decorID = 14968},
+[263315] = {decorID = 15155},
+[264178] = {decorID = 15463},
 [264259] = {decorID = 15494},
+[264262] = {decorID = 15497},
+[264266] = {decorID = 15501},
+[265792] = {decorID = 17516},
+[266259] = {decorID = 17886},
+--neriv
 [246692] = {decorID = 2459}, 
 [250772] = {decorID = 7782},
-[263212] = {decorID = 14978},
-[263216] = {decorID = 14979},
-[263203] = {decorID = 14970},
+--caeris
 [249559] = {decorID = 5564}, 
 [245941] = {decorID = 1896},
 [245985] = {decorID = 1901},
@@ -2074,8 +2022,8 @@ dv.decorItem = {
 [263234] = {decorID = 15065},
 [264264] = {decorID = 15499},
 [264265] = {decorID = 15500},
-[263224] = {decorID = 14995},
-[263225] = {decorID = 15013},
+[245290] = {decorID = 1198},
+--magavu
 [264333] = {decorID = 15571},
 [256934] = {decorID = 11334},
 [258549] = {decorID = 12154},
@@ -2091,42 +2039,138 @@ dv.decorItem = {
 [256927] = {decorID = 11327},
 [256933] = {decorID = 11333},
 [258290] = {decorID = 11936},
+--Hawli
 [264172] = {decorID = 15457},
-[264923] = {decorID = 16235},
-[264918] = {decorID = 16230},
-[264924] = {decorID = 16236},
-[264915] = {decorID = 16227},
-[264925] = {decorID = 16237},
-[264922] = {decorID = 16234},
-[264921] = {decorID = 16233},
-[264917] = {decorID = 16229},
-[264919] = {decorID = 16231},
-[264916] = {decorID = 16228},
-[264920] = {decorID = 16232},
-[265032] = {decorID = 16315},
-[265541] = {decorID = 16962},
-
-
-
-
-
-
-  
+--Chel the Chip
+[256923] = {decorID = 11323},
+[264655] = {decorID = 15851},
+[264254] = {decorID = 15489},
+[264249] = {decorID = 15484},
+--Apprentice Diell
+[263224] = {decorID = 14995},
+[263225] = {decorID = 15013},
+----Ranger Allorn
+[263212] = {decorID = 14978},
+[263216] = {decorID = 14979},
+--Armorer Goldcrest
+[263203] = {decorID = 14970},
+--construct Ali
+[265681] = {decorID = 17439}, 
+[265682] = {decorID = 17440},
+[265683] = {decorID = 17441},
+[265684] = {decorID = 17442},
+[265685] = {decorID = 17443},
+[265686] = {decorID = 17444},
+[265687] = {decorID = 17446},
+[265688] = {decorID = 17447},
+[265689] = {decorID = 17449},
+[265690] = {decorID = 17450},
+[265691] = {decorID = 17452},
+[265692] = {decorID = 17453},
+[265694] = {decorID = 17454},
+[265696] = {decorID = 17455},
+[265697] = {decorID = 17456},
+[265698] = {decorID = 17457},
+[265699] = {decorID = 17458},
+[265700] = {decorID = 17459},
+[265701] = {decorID = 17460},
+[265702] = {decorID = 17462},
+[265703] = {decorID = 17464},
+[265704] = {decorID = 17465},
+[265705] = {decorID = 17467},
+[265706] = {decorID = 17469},
+[265707] = {decorID = 17472},
+[265708] = {decorID = 17474},
+[265794] = {decorID = 17518},
+[265795] = {decorID = 17519},
+[265796] = {decorID = 17520},
+[265797] = {decorID = 17521},
+[265798] = {decorID = 17522},
+[265799] = {decorID = 17523},
+  --sathren azuredawn
+[253485] = {decorID = 1159},
+[253488] = {decorID = 1160},
+[243106] = {decorID = 1173},
+[245282] = {decorID = 1195},
+[244538] = {decorID = 1442},
+[244783] = {decorID = 1489},
+[245992] = {decorID = 1908},
+[251909] = {decorID = 8872},
+[251911] = {decorID = 8874},
+[251912] = {decorID = 8875},
+[254773] = {decorID = 10542},
+[257367] = {decorID = 11470},
+[262610] = {decorID = 14635},
+[263211] = {decorID = 14977},
+[263231] = {decorID = 15062},
+[264248] = {decorID = 15483},
+[264660] = {decorID = 15895},
+--Tajaka Sawtusk  
+[253469] = {decorID = 1148},
+[255648] = {decorID = 10858},
+[256925] = {decorID = 11325},
+[256928] = {decorID = 11328},
+[264255] = {decorID = 15490},
+[264257] = {decorID = 15492},
+[264334] = {decorID = 15572},
+[264335] = {decorID = 15573},
+[264479] = {decorID = 15743},
+[264480] = {decorID = 15744},
+[264481] = {decorID = 15745},
+[264715] = {decorID = 16092},
+--Void Researcher Aemely
+[262351] = {decorID = 14554},
+[262472] = {decorID = 14602},
+[262606] = {decorID = 14631},
+[263240] = {decorID = 15071},
+[264340] = {decorID = 15579},
+[264351] = {decorID = 15597},
+[264493] = {decorID = 15757},
+[264508] = {decorID = 15768},
+[264656] = {decorID = 15890},
+[264657] = {decorID = 15891},
+[264659] = {decorID = 15894},
+[267082] = {decorID = 18617},
+[267209] = {decorID = 18800},
+--Void Researcher Anomander
+[248964] = {decorID = 5132},
+[262462] = {decorID = 14592},
+[262463] = {decorID = 14593},
+[262466] = {decorID = 14596},
+[262473] = {decorID = 14603},
+[262607] = {decorID = 14632},
+[262609] = {decorID = 14634},
+[263499] = {decorID = 15260},
+[264337] = {decorID = 15575},
+[264339] = {decorID = 15578},
+[264341] = {decorID = 15581},
+[264344] = {decorID = 15584},
+[264351] = {decorID = 15597},
+[264509] = {decorID = 15769},
 --Professions
-  [258193] = {decorID = 11881},
+--Junkyard Tinkering
+[246596] = {decorID = 2428},
+  [246595] = {decorID = 2427},
+  [246485] = {decorID = 2328},
+  [246606] = {decorID = 2438},
+  [246482] = {decorID = 2325},
+  [246597] = {decorID = 2429},
+  --Alchemy
   [257100] = {decorID = 11438},
   [257041] = {decorID = 11376},
+  [264900] = {decorID = 16220},
+  [264899] = {decorID = 16219},
   [264709] = {decorID = 16086},
   [264706] = {decorID = 16083},
   [264705] = {decorID = 16082},
-  [258212] = {decorID = 11900},
   [258213] = {decorID = 11901},
+  [258212] = {decorID = 11900},
   [245517] = {decorID = 855},
   [257694] = {decorID = 11723},
   [257043] = {decorID = 11378},
   [258214] = {decorID = 11902},
-  [257044] = {decorID = 11379},
   [244318] = {decorID = 1410},
+  [257044] = {decorID = 11379},
   [257045] = {decorID = 11380},
   [256680] = {decorID = 11281},
   [257046] = {decorID = 11381},
@@ -2137,6 +2181,13 @@ dv.decorItem = {
   [248111] = {decorID = 4167},
   [257102] = {decorID = 11440},
   [252758] = {decorID = 9170},
+  [262355] = {decorID = 14558}, 
+[262356] = {decorID = 14559}, 
+[262354] = {decorID = 14557}, 
+[253506] = {decorID = 1247}, 
+[257420] = {decorID = 11501},
+[256356] = {decorID = 11138},
+  --Blacksmithing
   [246489] = {decorID = 2332},
   [246111] = {decorID = 2001},
   [257036] = {decorID = 11371},
@@ -2162,6 +2213,12 @@ dv.decorItem = {
   [256427] = {decorID = 11162},
   [245323] = {decorID = 1270},
   [245312] = {decorID = 1260},
+  [262451] = {decorID = 14581}, 
+[262457] = {decorID = 14587}, 
+[262452] = {decorID = 14582}, 
+[262456] = {decorID = 14586}, 
+[262460] = {decorID = 14590}, 
+  --Cooking
   [247220] = {decorID = 2591},
   [245428] = {decorID = 749},
   [245484] = {decorID = 755},
@@ -2173,6 +2230,7 @@ dv.decorItem = {
   [246708] = {decorID = 2471},
   [246709] = {decorID = 2472},
   [245326] = {decorID = 765},
+  --Enchanting
   [253250] = {decorID = 9266},
   [263027] = {decorID = 14816},
   [257093] = {decorID = 11431},
@@ -2196,23 +2254,36 @@ dv.decorItem = {
   [256170] = {decorID = 10964},
   [253171] = {decorID = 9245},
   [253039] = {decorID = 9187},
-  [246700] = {decorID = 2465},
+  [262459] = {decorID = 14589}, 
+[262458] = {decorID = 14588}, 
+[268038] = {decorID = 19229}, 
+[268039] = {decorID = 19231}, 
+[268041] = {decorID = 19234}, 
+[262450] = {decorID = 14580}, 
+[262455] = {decorID = 14585}, 
+[262468] = {decorID = 14598}, 
+[262590] = {decorID = 14616}, 
+[246693] = {decorID = 2460}, 
+[262470] = {decorID = 14600},
+  --Engineering
   [246410] = {decorID = 2227},
-  [258196] = {decorID = 11884},
+  [246700] = {decorID = 2465},
   [258194] = {decorID = 11882},
-  [264708] = {decorID = 16085},
-  [264711] = {decorID = 16088},
+  [258193] = {decorID = 11881},
+  [258196] = {decorID = 11884},
   [264707] = {decorID = 16084},
+  [264711] = {decorID = 16088},
+  [264708] = {decorID = 16085},
   [245602] = {decorID = 1793},
   [257689] = {decorID = 11718},
   [247733] = {decorID = 3873},
   [258216] = {decorID = 11904},
-  [251482] = {decorID = 8191},
   [244314] = {decorID = 1406},
-  [258226] = {decorID = 11912},
+  [251482] = {decorID = 8191},
   [258225] = {decorID = 11911},
-  [246604] = {decorID = 2436},
+  [258226] = {decorID = 11912},
   [246486] = {decorID = 2329},
+  [246604] = {decorID = 2436},
   [246500] = {decorID = 2340},
   [258240] = {decorID = 11921},
   [258252] = {decorID = 11928},
@@ -2220,67 +2291,90 @@ dv.decorItem = {
   [258253] = {decorID = 11929},
   [253252] = {decorID = 9268},
   [246066] = {decorID = 1984},
-  [246420] = {decorID = 2237},
+  [246460] = {decorID = 2301}, 
+[262617] = {decorID = 14642}, 
+[263049] = {decorID = 14835}, 
+[262465] = {decorID = 14595}, 
+[262618] = {decorID = 14643}, 
+[262602] = {decorID = 14627}, 
+[262789] = {decorID = 14730}, 
+  --Inscription
   [246423] = {decorID = 2240},
   [258289] = {decorID = 11935},
-  [245503] = {decorID = 922},
+  [246420] = {decorID = 2237},
   [245502] = {decorID = 854},
+  [245503] = {decorID = 922},
+  [258192] = {decorID = 11880},
+  [258215] = {decorID = 11903},
   [258198] = {decorID = 11886},
   [258197] = {decorID = 11885},
-  [258215] = {decorID = 11903},
-  [258192] = {decorID = 11880},
   [258199] = {decorID = 11887},
-  [258209] = {decorID = 11897},
   [258204] = {decorID = 11892},
   [258207] = {decorID = 11895},
   [258210] = {decorID = 11898},
+  [258209] = {decorID = 11897},
   [258203] = {decorID = 11891},
   [245621] = {decorID = 1830},
   [245622] = {decorID = 1831},
   [245623] = {decorID = 1832},
   [257695] = {decorID = 11724},
   [257696] = {decorID = 11725},
-  [247731] = {decorID = 3871},
-  [247735] = {decorID = 3875},
-  [247669] = {decorID = 3839},
-  [245514] = {decorID = 1187},
   [245513] = {decorID = 1169},
-  [245534] = {decorID = 1725},
+  [245514] = {decorID = 1187},
+  [247731] = {decorID = 3871},
+  [247669] = {decorID = 3839},
+  [247735] = {decorID = 3875},
   [245441] = {decorID = 1351},
-  [244319] = {decorID = 1411},
   [244313] = {decorID = 1405},
   [244317] = {decorID = 1409},
+  [245534] = {decorID = 1725},
+  [244319] = {decorID = 1411},
+  [245459] = {decorID = 1308},
+  [247925] = {decorID = 4039},
+  [245396] = {decorID = 1219},
   [258224] = {decorID = 11910},
   [247916] = {decorID = 4030},
-  [245396] = {decorID = 1219},
-  [247925] = {decorID = 4039},
   [247918] = {decorID = 4032},
-  [252389] = {decorID = 9038},
-  [245415] = {decorID = 1313},
-  [245416] = {decorID = 1312},
   [245499] = {decorID = 1217},
   [252035] = {decorID = 8983},
+  [252389] = {decorID = 9038},
   [252401] = {decorID = 9050},
-  [258245] = {decorID = 11924},
-  [258235] = {decorID = 11917},
-  [258247] = {decorID = 11925},
-  [258242] = {decorID = 11922},
+  [245415] = {decorID = 1313},
+  [245416] = {decorID = 1312},
   [258239] = {decorID = 11920},
-  [258250] = {decorID = 11927},
   [258244] = {decorID = 11923},
-  [264679] = {decorID = 16015},
-  [248107] = {decorID = 4163},
-  [248106] = {decorID = 4162},
+  [258250] = {decorID = 11927},
+  [258235] = {decorID = 11917},
+  [258242] = {decorID = 11922},
+  [258245] = {decorID = 11924},
+  [258247] = {decorID = 11925},
   [248118] = {decorID = 4174},
   [248119] = {decorID = 4175},
   [248120] = {decorID = 4176},
+  [248106] = {decorID = 4162},
+  [248107] = {decorID = 4163},
+  [264679] = {decorID = 16015},
   [248108] = {decorID = 4164},
-  [253022] = {decorID = 9180},
-  [253167] = {decorID = 9241},
-  [253036] = {decorID = 9184},
-  [253169] = {decorID = 9243},
   [253165] = {decorID = 9239},
   [253164] = {decorID = 9238},
+  [253036] = {decorID = 9184},
+  [253167] = {decorID = 9241},
+  [253022] = {decorID = 9180},
+  [262464] = {decorID = 14594}, 
+[262597] = {decorID = 14622}, 
+[253508] = {decorID = 1328}, 
+[262594] = {decorID = 14620}, 
+[262595] = {decorID = 14621}, 
+[262616] = {decorID = 14641}, 
+[263034] = {decorID = 14820}, 
+[262598] = {decorID = 14623}, 
+[262790] = {decorID = 14731}, 
+[258203] = {decorID = 11891}, 
+[262615] = {decorID = 14640}, 
+[262612] = {decorID = 14637}, 
+[262601] = {decorID = 14626},
+  --Jewelcrafting
+  [253169] = {decorID = 9243},
   [246413] = {decorID = 2230},
   [246488] = {decorID = 2331},
   [262347] = {decorID = 14553},
@@ -2306,6 +2400,13 @@ dv.decorItem = {
   [248654] = {decorID = 4480},
   [245559] = {decorID = 1748},
   [253253] = {decorID = 9269},
+  [262471] = {decorID = 14601}, 
+[262469] = {decorID = 14599}, 
+[262613] = {decorID = 14638}, 
+[248965] = {decorID = 5133}, 
+[262454] = {decorID = 14584}, 
+[262461] = {decorID = 14591}, 
+  --Leatherworking
   [257725] = {decorID = 11755},
   [242948] = {decorID = 1119},
   [258191] = {decorID = 11879},
@@ -2330,6 +2431,14 @@ dv.decorItem = {
   [248114] = {decorID = 4170},
   [239214] = {decorID = 829},
   [243327] = {decorID = 1273},
+  [262449] = {decorID = 14579}, 
+[265791] = {decorID = 17515}, 
+[253457] = {decorID = 1142}, 
+[264244] = {decorID = 15479}, 
+[262589] = {decorID = 14615}, 
+[262600] = {decorID = 14625}, 
+[243090] = {decorID = 1157},
+  --Tailoring
   [246685] = {decorID = 2452},
   [243336] = {decorID = 1282},
   [258202] = {decorID = 11890},
@@ -2354,13 +2463,13 @@ dv.decorItem = {
   [248121] = {decorID = 4177},
   [257053] = {decorID = 11388},
   [245305] = {decorID = 1275},
-  [252755] = {decorID = 9167}, 
-  [246596] = {decorID = 2428},
-  [246595] = {decorID = 2427},
-  [246485] = {decorID = 2328},
-  [246606] = {decorID = 2438},
-  [246482] = {decorID = 2325},
-  [246597] = {decorID = 2429},
+  [252755] = {decorID = 9167},
+  [262593] = {decorID = 14619}, 
+[262352] = {decorID = 14555}, 
+[262591] = {decorID = 14617}, 
+[262592] = {decorID = 14618}, 
+[262599] = {decorID = 14624}, 
+[262611] = {decorID = 14636}, 
 --Dungeons and Raids
   [257724] = {decorID = 11754},
   [251329] = {decorID = 8176},
@@ -2422,1305 +2531,207 @@ dv.decorItem = {
   [266886] = {decorID = 18397},
   [267645] = {decorID = 19197},
   [264717] = {decorID = 16094},  
- 
 }
 
-dv.npcs = {
-  {
-    name = "Grim Guzzler Non Instanced Version",
-	expansion = "Race Locked",
-      vendors = {
-	  { zone = "Dark Iron Dwarf Only", id = 144129, model3D = 8652, title = "Plugger Spazzring", x = 49.77, y = 32.22, mapID = 1186 , faction = "neutral" },
-    }
-  }, 
-  {
-    name = "Dun Morogh",
-	expansion = "Race Locked",
-      vendors = {
-      { zone = "Kharanos-Must be Gnome or Dwarf", id = 1247, model3D = 3434, title = "Innkeeper Belm", x = 54.4, y = 50.8, mapID = 27 , faction = "alliance"  },
-    }
-  },
-    {
-    name = "Thaldraszus - Valdrakken",
-	expansion = "Race Locked",
-      vendors = {
-		{ zone = "Valdrakken - Dracthyr Only", id = 196637, model3D = 109197, title = "Tethalash", x = 25.52, y = 33.65, mapID = 2112, faction = "neutral" },
-    }
-  },
-  {
-    name = "Brawl'gar Arena",
-	expansion = "Classic",
-    vendors = {
-      { zone = "Brawl'gar Arena", id = 68364, model3D = 46757, title = "Paul North", x = 52.0, y = 27.8, mapID = 503 , faction = "horde" },
-    }
-  },
-  {
-    name = "Hillsbrad Foothill",
-	expansion = "Classic",
-    vendors = {
-      { zone = "Pvp Vendor", id = 13217, model3D = 13319, title = "Thanthaldis Snowgleam", x = 44.8, y = 46.4, mapID = 25 , faction = "neutral" },
-    }
-  },
-  {
-    name = "Blasted Lands",
-	expansion = "Classic",
-      vendors = {
-      { zone = "Surwich",  id = 44337, model3D = 33806, title = "Maurice Essman", x = 45.8, y = 88.6, mapID = 17 , faction = "alliance"  },
-    }
-  },
-  {
-    name = "Burning Steppes",
-	expansion = "Classic",
-      vendors = {
-      { zone = "Chiselgrip", faction = "neutral" , id = 115805, model3D = 73953, title = "Hoddruc Bladebender", x = 46.8, y = 44.6, mapID = 36 },
-    }
-  },
- --[[ {
-    name = "Darnassus",
-	expansion = "Classic",
-      vendors = {
-      { zone = "PRE-DESTRUCTION", id = 50307, model3D = 37015, title = "Lord Candren", x = 37.2, y = 47.6, mapID = 89 , faction = "alliance" },
-    }
-  },]]
-  {
-    name = "Bizmo's Brawlpub",
-	expansion = "Classic",
-      vendors = {
-      { zone = "Bizmo's Brawlpub", id = 68363, model3D = 46755, title = "Quackenbush", x = 51.0, y = 30.0, mapID = 499 , faction = "alliance"  },
-    }
-  },
-  {
-    name = "Duskwood",
-	expansion = "Classic",
-      vendors = {
-      { zone = "Raven Hill", id = 44114, model3D = 33678, title = "Wilkinson", x = 20.27, y = 58.35, mapID = 47 , faction = "alliance" },
-    }
-  },
-  {
-    name = "Dustwallow Marsh",
-	expansion = "Classic",
-      vendors = {
-      { zone = "Mudsprocket", faction = "neutral" , id = 23995, model3D = 31082, title = "Axle", x = 41.9, y = 73.9, mapID = 70  },
-    }
-  },
-  {
-    name = "Eastern PlagueLands",
-	expansion = "Classic",
-      vendors = {
-        { zone = "Lights Hope Chapel", id = 45417, model3D = 34450, title = "Fiona", x = 73.8, y = 52.2, mapID = 23, faction = "neutral" },
-    }
-  },
-  {
-    name = "Loch Modan",
-	expansion = "Classic",
-      vendors = {
-      { zone = "Thelsamar", id = 1465, model3D = 1820, title = "Drac Roughcut", x = 35.6, y = 49.0, mapID = 48 , faction = "alliance" },
-    }
-  },
-  {
-    name = "Orgrimmar",
-	expansion = "Classic",
-      vendors = {
-      { zone = "Hall of Legends", faction = "horde" , id = 254606, model3D = 138276, title = "Joruh", x = 38.8, y = 71.93, mapID = 85 },
-      { zone = "Orgrimmar", id = 50488, model3D = 37020, title = "Stone Guard Nargol", x = 50.2, y = 58.4, mapID = 85 , faction = "horde" },
-      { zone = "The Drag", faction = "horde" , id = 256119, model3D = 139508, title = "Lonalo", x = 58.4, y = 50.6, mapID = 85 },
-	  { zone = "Near Trading Post", faction = "horde" , id = 261262, model3D = 34566, title = "Gabbi", x = 48.4, y = 81.0, mapID = 85 },
-    }
-  },
-  {
-    name = "Searing Gorge",
-	expansion = "Classic",
-      vendors = {
-      { zone = "Thorium Point", id = 14624, model3D = 14652, title = "Master Smith Burninate", x = 38.6, y = 28.7, mapID = 32, faction = "neutral" },
-    }
-  },
-  {
-    name = "Silverpine Forest",
-	expansion = "Classic",
-      vendors = {
-      { zone = "The Sepulcher", id = 2140, model3D = 3542, title = "Edwin Harly", x = 44.06, y = 39.68, mapID = 21 , faction = "horde" },
-    }
-  },
-  {
-    name = "Gilneas Post Takeover",
-	expansion = "Cataclysm",
-      vendors = {
-      { zone = "Stormglen Village", id = 211065, model3D = 30289, title = "Marie Allen", x = 60.4, y = 92.4, mapID = 217 , faction = "alliance"  },
-      { zone = "Gilneas City", id = 50307, model3D = 37015, title = "Lord Candren", x = 56.94, y = 55.91, mapID = 217 , faction = "alliance" },
-      { zone = "Gilneas City", id = 216888, model3D = 30289, title = "Samantha Buckley", x = 65.2, y = 47.2, mapID = 217, faction = "alliance"  },
-    }
-  },
-  {
-    name = "Stormwind",
-	expansion = "Classic",
-      vendors = {
-      { zone = "Stormwind", id = 49877, model3D = 36758, title = "Captain Lancy Revshon", x = 67.79, y = 73.05, mapID = 84 , faction = "alliance" },
-      { zone = "Mage Quarter", faction = "alliance" ,id = 256071, model3D = 139467, title = "Solelo", x = 49.0, y = 80.0, mapID = 84 },
-      { zone = "Old Town", id = 254603, model3D = 138274, title = "Riica", x = 77.8, y = 65.8, mapID = 84 , faction = "alliance" },
-	  { zone = "Near Trading Post", id = 261231, model3D = 17507, title = "Tuuran", x = 48.6, y = 68.8, mapID = 84 , faction = "alliance"},
-    }
-  },
-  {
-    name = "Stranglethorn Vale",
-	expansion = "Classic",
-      vendors = {
-      { zone = "Nesingwary Expedition", title = "Jacquilina Dramet", faction = "neutral" , id = 2483, model3D = 4394, x = 43.8, y = 23.2, mapID = 50 },
-    }
-  },
-  {
-    name = "Thunder Bluff",
-	expansion = "Classic",
-      vendors = {
-      { zone = "Thunder Bluff", id = 50483, model3D = 37022, title = "Brave Tuho", x = 46.2, y = 50.6, mapID = 88 , faction = "horde" },
-    }
-  },
-  {
-    name = "Undercity",
-	expansion = "Classic",
-      vendors = {
-      { zone = "PRE-DESTRUCTION", id = 50304, model3D = 37023, title = "Captain Donald Adams", x = 63.2, y = 49.0, mapID = 90 , faction = "horde"  },
-    }
-  },
-  {
-    name = "Wetlands",
-	expansion = "Classic",
-      vendors = {
-      { zone = "Menethil Harbor", id = 3178, model3D = 3468, title = "Stuart Fleming", x = 6.27, y = 57.45, mapID = 56 , faction = "alliance" },
-    }
-  },
-  {
-    name = "Ironforge",
-	expansion = "Classic",
-      vendors = {
-      { zone = "The Commons", id = 253235, model3D = 137770, title = "Dedric Sleetshaper", x = 24.72, y = 43.93, mapID = 87, faction = "alliance" },
-      { zone = "Ironforge", id = 50309, model3D = 37017, title = "Captain Stonehelm", x = 55.6, y = 48.2, mapID = 87 , faction = "alliance"  },
-      { zone = "The Library", faction = "alliance" ,  id = 253232, model3D = 137768, title = "Inge Brightview", x = 75.8, y = 9.4, mapID = 87 },
-    }
-  }, 
-  {
-    name = "Ghostlands",
-	expansion = "Burning Crusade",
-      vendors = {
-      { zone = "Tranquillien - Pre Midnight", id = 16528, model3D = 16242, title = "Provisioner Vredigar", x = 47.6, y = 32.4, mapID = 95 , faction = "horde" },
-    }
-  },
-  {
-    name = "Scholazar Basin",
-	expansion = "Wrath of the Lich King",
-      vendors = {
-      { zone = "Nesingwary Base Camp", id = 28038, model3D = 25056, title = "Purser Boulian", x = 26.8, y = 59.2, mapID = 119, faction = "neutral" },
-    }
-  },
-  {
-    name = "Grizzly Hills",
-	expansion = "Wrath of the Lich King",
-      vendors = {
-      { zone = "Amberpine Lodge", id = 27391, model3D = 24604, title = "Woodsman Drake", x = 32.4, y = 59.8, mapID = 116, faction = "alliance" },
-    }
-  },
-  {
-  name = "Borean Tundra",
-  expansion = "Wrath of the Lich King",
-      vendors = {
-      { zone = "Winterfin Retreat", id = 25206, model3D = 4920, title = "Ahlurglgr", faction = "neutral" , mapID = 114, x = 43.03, y = 13.78 },
-      }	
-  },
-  {
-    name = "Twilight Highlands",
-	expansion = "Cataclysm",
-      vendors = {
-      { zone = "Thundermar", id = 253227, model3D = 137766, title = "Breana Bitterbrand", x = 49.6, y = 29.6, mapID = 241, faction = "alliance" },
-      { zone = "Thundermar", id = 49386, model3D = 36453, title = "Craw MacGraw", x = 48.6, y = 30.6, mapID = 241, faction = "alliance" },             
-    }
-  },
-  {
-    name = "Jade Forest",
-	expansion = "Mists of Pandaria",
-      vendors = {
-        { zone = "Arboretum", faction = "neutral", id = 58414, model3D = 40146, title = "San Redscale", x = 56.8, y = 44.4, mapID = 371 },
-		{ zone = "Lootable Once", faction = "neutral", id = 253602, model3D = 95785, title = "Frederick the Fabulous", x = 57.72, y = 15.68, mapID = 371 },
-    }
-  },
-  {
-    name = "Kun-Lai Summit",
-	expansion = "Mists of Pandaria",
-      vendors = {
-        { zone = "One Keg", faction = "neutral", id = 59698, model3D = 45821, title = "Brother Furtrim", x = 57.24, y = 60.96, mapID = 379 },
-    }
-  },
-  {
-    name = "Valley of the Four Winds",
-	expansion = "Mists of Pandaria",
-      vendors = {
-        { zone = "Halfhill", faction = "neutral", id = 58706, model3D = 41769, title = "Gina Mudclaw", x = 53.2, y = 51.8, mapID = 376 },
-    }
-  },
-  {
-    name = "Vale of Eternal Blossoms - Shrine of 2 Moons",
-	expansion = "Mists of Pandaria",
-      vendors = {
-        { zone = "Shrine of 2 Moons", faction = "horde", id = 64001, model3D = 43420, title = "Sage Lotusbloom", x = 62.8, y = 23.2, mapID = 390 },
-    }
-  },
-  {
-    name = "Vale of Eternal Blossoms - Shrine of 7 Stars",
-	expansion = "Mists of Pandaria",
-      vendors = {
-        { zone = "Shrine of 7 Stars", id = 64032, model3D = 44182, title = "Sage Whiteheart", x = 85.2, y = 61.6, mapID = 1530, faction = "alliance" },
-    }
-  },
-  {
-    name = "Vale of Eternal Blossoms",
-	expansion = "Mists of Pandaria",
-      vendors = {
-        { zone = "Seat of Knowledge", faction = "neutral", id = 64605, model3D = 44814, title = "Tan Shin Tiao", x = 82.23, y = 29.33, mapID = 390 },
-        { zone = "Seat of Knowledge", faction = "neutral", id = 62088, model3D = 42350, title = "Lali the Assistant", x = 82.8, y = 30.8, mapID = 390 },
-    }
-  },
-  {
-    name = "Frostwall",
-	expansion = "Warlords of Draenor",
-      vendors = {
-        { zone = "Barracks", id = 79812, model3D = 56555, title = "Moz'def", x = 48.0, y = 66.0, mapID = 525 , faction = "horde"  },
-		{ zone = "Horde Garrison", id = 76872, model3D = 53501, title = "Supplymaster Eri", x = 48.0, y = 66.0, mapID = 525 , faction = "horde" },
-		{ zone = "Horde Garrison Tier 3", id = 79774, model3D = 56527, title = "Sergeant Grimjaw", x = 43.8, y = 47.4, mapID = 590 , faction = "horde" },
-		{ zone = "Trading Post Level 2", id = 87015, model3D = 56923, title = "Kil'rip", x = 48.0, y = 66.0, mapID = 525 , faction = "horde"  },
-		{ zone = "Horde Garrison", id = 87312, model3D = 27957, title = "Vora Strongarm", x = 48.0, y = 66.0, mapID = 525 , faction = "horde"  },
-		{ zone = "Trading Post", id = 86776, model3D = 56923, title = "Ribchewer", faction = "horde" },		
-		--{ zone = "Random trader in Trading Post", id = 86778, title = "Pyxni Pennypocket", faction = "horde" },		
-		-- { zone = "Random trader in Trading Post", id = 86683, title = "Tai'tasi", faction = "horde" },
-		-- { zone = "Trading Post Level 2", id = 86779, model3D = 56410, title = "Krixel Pinchwhistle", x = 31.0, y = 15.0, mapID = 525 , faction = "horde"  },
-		-- { zone = " Trading Post", id = 86777, title = "Elder Surehide", faction = "horde" },
-    }
-  },
-  {
-    name = "Lunarfall",
-	expansion = "Warlords of Draenor",
-      vendors = {
-        { zone = "Alliance Garrison Tier 3", id = 78564, model3D = 61187, title = "Sergeant Crowler", x = 38.5, y = 31.4, mapID = 582 , faction = "alliance" },
-        { zone = "Trading Post Tier 3", id = 85427, model3D = 61418, title = "Maaria", x = 31.0, y = 15.0, mapID = 539 , faction = "alliance" },
-		{ zone = "Alliance Garrison", id = 88220, model3D = 60816, title = "Peter", x = 31.0, y = 15.0, mapID = 539 , faction = "alliance"  },
-		-- { zone = "Alliance Garrison", id = 86779, model3D = 56410, title = "Krixel Pinchwhistle", x = 31.0, y = 15.0, mapID = 539 , faction = "alliance"  },
-    }
-  },
-  {
-    name = "Shadowmoon Valley",
-	expansion = "Warlords of Draenor",
-      vendors = {
-        { zone = "Embaari Village", id = 81133, model3D = 56229, title = "Artificer Kallaes", x = 46.2, y = 39.3, mapID = 539 , faction = "alliance" },
-    }
-  },
-  {
-    name = "Spires of Arak",
-	expansion = "Warlords of Draenor",
-      vendors = {
-		{ zone = "Veil Terokk", id = 87775, model3D = 61065, title = "Ruuan the Seer", x = 46.6, y = 45.0, mapID = 542, faction = "neutral"  },
-    }
-  },
-  {
-    name = "Stormshield",
-	expansion = "Warlords of Draenor",
-      vendors = {
-        { zone = "Stormshield", id = 85950, model3D = 59234, title = "Trader Caerel", x = 41.4, y = 59.8, mapID = 622, faction = "alliance" },
-        { zone = "The Town Hall", id = 85932, model3D = 59224, title = "Vindicator Nuurem", x = 46.4, y = 74.6, mapID = 622, faction = "alliance" },
-		 { zone = "The Town Hall", id = 85946, model3D = 59471, title = "Shadow-Sage Brakoss", faction = "alliance", mapID = 622, x = 46.49, y = 75.03 },
-		 { zone = "Warspear Hold", id = 86037, model3D = 61112, title = "Ravenspeaker Skeega", faction = "horde", mapID = 624, x = 53.30, y = 59.96 },
-    }
-  },
-  {
-    name = "Talador",
-	expansion = "Warlords of Draenor",
-      vendors = {
-        { zone = "Terokkar Refuge", id = 256946, model3D = 139888, title = "Duskcaller Erthix", x = 70.4, y = 57.6, mapID = 535, faction = "neutral" },
-    }
-  },
-  {
-    name = "Argus",
-	expansion = "Legion",
-      vendors = {
-        { zone = "The Vindicaar", id = 127151, model3D = 79278, title = "Toraan the Revered", x = 68.22, y = 56.91, mapID = 940, faction = "neutral" },
-    }
-  },
-  {
-    name = "Azsuna",
-	expansion = "Legion",
-      vendors = {
-        { zone = "Leyhollow Cave", id = 89939, model3D = 28080, title = "Berazus", x = 47.8, y = 23.6, mapID = 630, faction = "neutral" },
-    }
-  },
-  {
-    name = "Dalaran",
-	expansion = "Legion",
-      vendors = {
-        { zone = "Photonic Playground", id = 112716, model3D = 56737, title = "Rasil Fireborne", x = 43.4, y = 49.4, mapID = 627, faction = "neutral" },		
-		{ zone = "Sunreaver Sanctuary - Filthy Animal", id = 252043, model3D = 137328, title = "Halenthos Brightstride", x = 67.46, y = 33.89, mapID = 627, faction = "horde" },
-		{ zone = "The Underbelly", id = 105333, model3D = 69095, title = "Val'zuun", x = 67.36, y = 63.22, mapID = 628, faction ="neutral"   },
-    }
-  },
-  {
-    name = "Highmountain",
-	expansion = "Legion",
-      vendors = {
-		{ zone = "Thunder Totem", id = 106902, model3D = 72888, title = "Ransa Greyfeather", x = 38.06, y = 46.05, mapID = 750, faction = "neutral" },
-        { zone = "Thunder Totem - Bottom Half", id = 108017, model3D = 70380, title = "Torv Dubstomp", faction = "neutral", mapID = 652, x = 54.80, y = 78.08 },
-	    { zone = "Shipwreck Cove", id = 108537, model3D = 70605, title = "Crafty Palu", x = 41.62, y = 10.44, mapID = 650, faction = "neutral"   },
-    }
-  },
-  {
-    name = "Suramar",
-	expansion = "Legion",
-      vendors = {
-        { zone = "Shal'Aran", id = 115736, model3D = 67345, title = "First Arcanist Thalyssra", x = 36.49, y = 45.83, mapID = 680, faction = "neutral" },
-        { zone = "The Grand Promenade", id = 93971, model3D = 70030, title = "Leyweaver Inondra", x = 40.32, y = 69.73, mapID = 680, faction = "neutral"  },
-		{ zone = "Concourse of Destiny", id = 252969, model3D = 137688, title = "Jocenna", x = 49.63, y = 62.83, mapID = 680, faction = "neutral" },
-		{ zone = "Shimmershade Garden", id = 255101, model3D = 138645, title = "Mynde", x = 45.58, y = 69.15, mapID = 680, faction = "neutral" },
-		{ zone = "Irongrove Retreat", id = 253434, model3D = 137851, title = "Sileas Duskvine", x = 79.92, y = 73.89, mapID = 641, faction = "neutral" },
-        { zone = "suramar", id = 248594, model3D = 73413, title = "Sundries Merchant", x = 50.9, y = 77.78, mapID = 680, faction = "neutral" },
-    }
-  },
-  {
-    name = "Val'sharah",
-	expansion = "Legion",
-      vendors = {
-        { zone = "Lorlathil", id = 253387, model3D = 137846, title = "Selfira Ambergrove", x = 54.26, y = 72.36, mapID = 641, faction = "neutral" },
-        { zone = "Lorlathil", id = 106901, model3D = 74537, title = "Sylvia Hartshorn", x = 54.7, y = 73.25, mapID = 641, faction = "neutral" },
-        { zone = "Bradenbrook", id = 252498, model3D = 137440, title = "Corbin Branbell", x = 42.09, y = 59.38, mapID = 641, faction = "neutral" },
-        { zone = "Field of Dreamers (patrols)", id = 112634, model3D = 72149, title = "Hilseth Travelstride", x = 57.14, y = 71.91, mapID = 641, faction = "neutral" },
-        { zone = "Lightsong", id = 109306, model3D = 70971, title = "Myria Glenbrook", x = 60.2, y = 84.86, mapID = 641, faction = "neutral" },
-		{ zone = "Val'sharah", id = 256826, model3D = 139842, title = "Mrgrgrl", x = 68.72, y = 95.1, mapID = 641, faction = "neutral" },
-    }
-  },
-  {
-    name = "Class Halls",
-	expansion = "Legion",
-      vendors = {
-      { zone = "Demon Hunter", id = 112407, model3D = 61734, title = "Falara Nightsong", x = 61.0, y = 56.73, mapID = 720, faction = "neutral" },
-      { zone = "Paladin", id = 100196, model3D = 28836, title = "Eadric the Pure", x = 75.64, y = 49.09, mapID = 23, faction = "neutral" },
-      { zone = "Hunter", id = 103693, model3D = 68326, title = "Outfitter Reynolds", x = 44.56, y = 48.88, mapID = 739, faction = "neutral" },
-      { zone = "Druid", id = 112323, model3D = 72032, title = "Amurra Thistledew", x = 40.02, y = 17.72, mapID = 747, faction = "neutral" },
-      { zone = "Rogue", id = 105986, model3D = 31159, title = "Kelsey Steelspark", x = 26.92, y = 36.83, mapID = 626, faction = "neutral" },
-      { zone = "Monk", id = 112338, model3D = 72042, title = "Caydori Brightstar", x = 50.4, y = 59.0, mapID = 709, faction = "neutral" },
-      { zone = "Death Knight", id = 93550, model3D = 15958, title =  "Quartermaster Ozorg", x = 43.9, y = 37.17, mapID = 647, faction = "neutral" },
-      { zone = "Warlock", id = 112434, model3D = 72070, title = "Gigi Gigavoid", x = 58.76, y = 32.69, mapID = 717 , faction = "neutral" },
-      { zone = "Mage", id = 112440, model3D = 72075, title = "Jackson Watkins", x = 44.75, y = 57.87, mapID = 735 , faction = "neutral" },
-      { zone = "Shaman", id = 112318, model3D = 72029, title = "Flamesmith Lanying", x = 30.32, y = 60.69, mapID = 726, faction = "neutral" },
-      { zone = "Warrior", id = 112392, model3D = 72055, title = "Quartermaster Durnolf", x = 55.49, y = 25.91, mapID = 695, faction = "neutral" },
-      { zone = "Priest", id = 112401, model3D = 72056, title = "Meridelle Lightspark", x = 38.62, y = 23.77, mapID = 702, faction = "neutral" },
-    }
-  },
-  {
-    name = "Silithus",
-	expansion = "Battle for Azeroth",
-      vendors = {
-      { zone = "Chamber of Heart", id = 152194, model3D = 91066, title = "MOTHER", x = 48.3, y = 72.1, mapID = 1473, faction = "neutral" },
-    }
-  },
-  {
-    name = "Stormsong Valley",
-	expansion = "Battle for Azeroth",
-      vendors = {
-      { zone = "Brennadom", id = 252313, model3D = 137393, title = "Caspian", x = 59.6, y = 69.6, mapID = 942 , faction = "alliance" },
-    }
-  },
-  {
-    name = "Mechagon",
-	expansion = "Battle for Azeroth",
-      vendors = {     
-	  { zone = "Mechagon", id = 150716, model3D = 92583, title = "Stolen Royal Vendorbot", x = 73.7, y = 36.91, mapID = 1462, faction = "neutral" },
-    }
-  },
-  {
-    name = "Tiragarde Sound",
-	expansion = "Battle for Azeroth",
-      vendors = {
-      { zone = "Harbormaster's Office", id = 135808, model3D = 84415, title = "Provisioner Fray", x = 67.6, y = 21.8, mapID = 1161 , faction = "alliance" },
-      { zone = "Tradewinds Market", id = 252345, model3D = 137409, title = "Pearl Barlow", x = 70.74, y = 15.66, mapID = 1161, faction = "alliance" },
-      { zone = "Boralus Harbor", id = 142115, model3D = 34450, title = "Fiona", x = 67.6, y = 40.8, mapID = 1161, faction = "alliance" },
-	  { zone = "Hook Point", id = 246721, model3D = 130151, title = "Janey Forrest", x = 56.29, y = 45.82, mapID = 1161, faction = "alliance" },
-	  { zone = "Norwington Estate", id = 252316, model3D = 137394, title = "Delphine", x = 53.4, y = 31.2, mapID = 895, faction = "neutral" },
-    }
-  },
-  {
-    name = "Nazmir",
-	expansion = "Battle for Azeroth",
-      vendors = {
-      { zone = "Zu'jan Ruins", id = 135459, model3D = 84261, title = "Provisioner Lija", x = 39.11, y = 79.47, mapID = 863 , faction = "horde" },
-    }
-  },
-  {
-    name = "Zuldazar",
-	expansion = "Battle for Azeroth",
-      vendors = {
-      { zone = "Port of Zandalar", id = 148924, model3D = 90164, title = "Provisioner Mukra", x = 51.22, y = 95.08, mapID = 1165 , faction = "horde" },
-      { zone = "Port of Zandalar", id = 148923, model3D = 90162, title = "Captain Zen'taga", x = 44.6, y = 94.4, mapID = 1165 , faction = "horde" },
-      { zone = "Zuldazar Docks", id = 251921, model3D = 137265, title = "Arcanist Peroleth", x = 58.0, y = 62.6, mapID = 862 , faction = "horde" },
-      { zone = "Zuldazar - The Great Seal", id = 252326, model3D = 137395, title = "T'lama", x = 36.94, y = 59.17, mapID = 1164 , faction = "horde" },
-    }
-  },
-  {
-    name = "Covenants",
-	expansion = "Shadowlands",
-      vendors = {
-        { zone = "Revendreth - Sinfall - Venthyr Only", id = 174710, model3D = 99162, title = "Chachi the Artiste", x = 54.0, y = 24.8, mapID = 1699, faction = "neutral" },
-    }
-  },
-  {
-    name = "The Maw",
-	expansion = "Shadowlands",
-      vendors = {
-        { zone = "Ve'nari's Refuge", id = 162804, model3D = 95004, title = "Ve'nari", x = 46.8, y = 41.6, mapID = 1543, faction = "neutral" },
-    }
-  },
-  {
-    name = "The Forbidden Reach",
-	expansion = "Dragonflight",
-      vendors = {
-		{ zone = "Morqut Village", id = 253086, model3D = 137722, title = "Jolinth", x = 35.2, y = 57.0, mapID = 2151, faction = "neutral" },
-    }
-  },
-  {
-    name = "Thaldraszus - Valdrakken",
-	expansion = "Dragonflight",
-      vendors = {
-        { zone = "The Seat of Aspects - Lower", id = 193015, model3D = 108045, title = "Unatos", x = 58.2, y = 35.6, mapID = 2112, faction = "neutral" },
-        { zone = "The Parting Glass", id = 253067, model3D = 137718, title = "Silvrath", x = 71.53, y = 49.62, mapID = 2112, faction = "neutral" },
-		{ zone = "Valdrakken Treasury Hoard", id = 199605, model3D = 110855, title = "Evantkis", x = 58.4, y = 57.4, mapID = 2112, faction = "neutral" },
-		{ zone = "The Obsidian Enclave", id = 193659, model3D = 108249, title = "Provisioner Thom", x = 36.8, y = 50.6, mapID = 2112, faction = "neutral" },
-		{ zone = "Valdrakken - evoker only maybe", id = 196637, model3D = 109197, title = "Tethalash", x = 25.52, y = 33.65, mapID = 2112, faction = "neutral" },
-		{ zone = "Azerothian Archives", id = 209192, model3D = 113800, title = "Provisioner Aristta", x = 61.4, y = 31.4, mapID = 2025, faction = "neutral" },
-		{ zone = "Eon's Fringe", id = 209220, model3D = 112638, title = "Ironus Coldsteel", x = 52.2, y = 80.8, mapID = 2025, faction = "neutral" },
-    }
-  },
-  {
-    name = "The Waking Shores",
-	expansion = "Dragonflight",
-      vendors = {
-		{ zone = "Dragonscale Basecamp", id = 189226, model3D = 106843, title = "Cataloger Jakes", x = 47.0, y = 82.6, mapID = 2022, faction = "neutral" },
-		{ zone = "Dragonscale Basecamp", id = 188265, model3D = 106418, title = "Rae'ana", x = 47.8, y = 82.2, mapID = 2022, faction = "neutral" },
-		{ zone = "Ruby Lifeshrine", id = 191025, model3D = 102721, title = "Lifecaller Tzadrak", x = 62.0, y = 73.8, mapID = 2022, faction = "neutral" },	
-    }
-  },
-  {
-    name = "Dragonflight Dreamsurge",
-	expansion = "Dragonflight",
-       vendors = {     
-         { zone = "Dreamsurge Location",  id = 210608, model3D = 33840, title = "Celestine of the Harvest", faction = "neutral" },
-    }
-  },
-  {
-    name = "Amirdrassil",
-	expansion = "Dragonflight",
-      vendors = {
-		{ zone = "Bel'ameth", id = 216286, model3D = 113048, title = "Moon Priestess Lasara", x = 46.6, y = 70.6, mapID = 2239 , faction = "alliance" },
-        { zone = "Bel'ameth", id = 216284, model3D = 113507, title = "Mythrin'dir", x = 54.0, y = 60.8, mapID = 2239 , faction = "alliance" },
-        { zone = "Bel'ameth", id = 216285, model3D = 113508, title = "Ellandrieth", x = 48.4, y = 53.6, mapID = 2239 , faction = "alliance" },
-    }
-  },
-  {
-    name = "Isle of Dorn",
-	expansion = "The War Within",
-      vendors = {
-        { zone = "Dornogal - Foundation Hall", id = 223728, model3D = 120830, title = "Auditor Balwurz", x = 39.2, y = 24.4, mapID = 2339, faction = "neutral" },
-        { zone = "Dornogal - The Forgegrounds", id = 219318, model3D = 117779, title = "Jorid", x = 57.0, y = 60.6, mapID = 2339, faction = "neutral" },
-        { zone = "Dornogal - The Forgegrounds", id = 252910, model3D = 137662, title = "Garnett", x = 54.68, y = 57.24, mapID = 2339, faction = "neutral" },
-		{ zone = "Dornogal", id = 252312, model3D = 137392, title = "Second Chair Pawdo", x = 52.84, y = 68.0, mapID = 2339, faction = "neutral" },
-		{ zone = "Dornogal", id = 219217, model3D = 120603, title = "Velerd", x = 55.2, y = 76.4, mapID = 2339, faction = "neutral" },
-        { zone = "Freywold Village", id = 252901, model3D = 137660, title = "Cinnabar", x = 42.0, y = 73.0, mapID = 2248, faction = "neutral" },
-        { zone = "Isle of Dorn", id = 226205, model3D = 120579, title = "Cendvin", x = 74.4, y = 45.2, mapID = 2248, faction = "neutral" },
-    }
-  },
-  {
-    name = "The Ringing Deeps",
-	expansion = "The War Within",
-      vendors = {
-        { zone = "Gundargaz", id = 221390, model3D = 118619, title = "Waxmonger Squick", x = 43.2, y = 32.8, mapID = 2214, faction = "neutral" },
-        { zone = "Gundargaz", id = 252887, model3D = 137648, title = "Chert", x = 43.4, y = 33.0, mapID = 2214, faction = "neutral" },
-		{ zone = "Gundargaz", id = 256783, model3D = 139804, title = "Gabbun", faction = "neutral", mapID = 2214, x = 43.32, y = 33.03 },
-    }
-  },
-  {
-    name = "Hallowfall",
-	expansion = "The War Within",
-      vendors = {
-        { zone = "Mereldar", id = 217642, model3D = 118635, title = "Nalina Ironsong", x = 42.8, y = 55.83, mapID = 2215, faction = "neutral" },
-        { zone = "Hallowfall", id = 240852, model3D = 128126, title = "Lars Bronsmaelt", x = 28.28, y = 56.18, mapID = 2215, faction = "neutral" },
-    }
-  },
-  {
-    name = "Undermine",
-	expansion = "The War Within",
-      vendors = {
-        { zone = "The Incontinental Hotel", id = 251911, model3D = 137264, title = "Stacks Topskimmer", x = 43.19, y = 50.47, mapID = 2346, faction = "neutral" },
-		{ zone = "The Incontinental Hotel", id = 231409, model3D = 126125, title = "Smaks Topskimmer", x = 43.8, y = 50.8, mapID = 2346, faction = "neutral" },
-        { zone = "The Scrapshop", id = 231406, model3D = 126189, title = "Rocco Razzboom", x = 39.16, y = 22.2, mapID = 2346, faction = "neutral" },
-        { zone = "Port Authority", id = 231405, model3D = 126190, title = "Boatswain Hardee", x = 63.43, y = 16.8, mapID = 2346, faction = "neutral" },
-        { zone = "The Vatworks", id = 231408, model3D = 126191, title = "Lab Assistant Laszly", x = 27.18, y = 72.54, mapID = 2346, faction = "neutral" },
-        { zone = "Venture Plaza", id = 231407, model3D = 125885, title = "Shredz the Scrapper", x = 53.34, y = 72.69, mapID = 2346, faction = "neutral" },
-        { zone = "Hovel Hill", id = 231396, model3D = 125504, title = "Sitch Lowdown", x = 30.78, y = 38.93, mapID = 2346, faction = "neutral" },
-        { zone = "Undermine", id = 226994, model3D = 127681, title = "Blair Bass", x = 34.0, y = 70.8, mapID = 2346, faction = "neutral" },
-		{ zone = "Undermine", id = 239333, model3D = 127373, title = "Street Food Vendor", x = 26.2, y = 42.8, mapID = 2346, faction = "neutral" },      
-		{ zone = "Liberation of Undermine", id = 235621, model3D = 127136, title = "Ando the Gat", x = 43.29, y = 51.89, mapID = 2406, faction = "neutral" },
-    }
-  },
-  {
-    name = "K'aresh",
-	expansion = "The War Within",
-      vendors = {
-        { zone = "Tazavesh, the Veiled Market", faction = "neutral", id = 235314, model3D = 130299, title = "Ta'sam", x = 43.2, y = 34.8, mapID = 2472 },
-		{ zone = "Tazavesh, the Veiled Market", faction = "neutral", id = 235252, model3D = 124755, title = "Om'sirik", x = 40.33, y = 29.36, mapID = 2472 },
-    }
-  },
-  {
-    name = "Azj-Kahet",
-	expansion = "The War Within",
-      vendors = {
-		{ zone = "City of Threads",  faction = "neutral", id = 218202, model3D = 114528, title = "Thripps", x = 50.0, y = 31.6, mapID = 2213 },
-    }
-  },
-  {
-    name = "Twlight Highlands",
-	expansion = "Twilight Ascencision",
-      vendors = {
-        { zone = "Near Crushblow", faction = "neutral", id = 249196, model3D = 136463, title = "Materialist Ophinell", x = 49.6, y = 81.2, mapID = 241 },
-    }
-  },
-  {
-    name = "Founders Point",
-	expansion = "The Neighborhoods",
-      vendors = {		
-	    { zone = "Founders Point", id = 255228, model3D = 138698, title = "\"Len\" Splinthoof", x = 62.4, y = 80.0, mapID = 2352 , faction = "alliance" },
-        { zone = "Founders Point", id = 255222, model3D = 138691, title = "\"High Tides\" Ren", x = 62.4, y = 80.2, mapID = 2352 , faction = "alliance" },
-        { zone = "Founders Point", id = 255230, model3D = 138699, title = "\"Yen\" Malone", x = 62.23, y = 80.3, mapID = 2352 , faction = "alliance" },
-        { zone = "Founders Point", id = 255203, model3D = 138684, title = "Xiao Dan", x = 51.95, y = 38.31, mapID = 2352 , faction = "alliance" },
-        { zone = "Founders Point", id = 255221, model3D = 138690, title = "Trevor Grenner", x = 53.47, y = 40.93, mapID = 2352 , faction = "alliance" },
-        { zone = "Founders Point", id = 256750, model3D = 139782, title = "Klasa", x = 58.3, y = 61.68, mapID = 2352, faction = "alliance" },
-        { zone = "Founders Point", id = 255213, model3D = 138687, title = "Faarden the Builder", x = 52.0, y = 38.4, mapID = 2352 , faction = "alliance"},
-        { zone = "Founders Point", id = 255216, model3D = 138688, title = "Balen Starfinder", x = 52.2, y = 38.0, mapID = 2352 , faction = "alliance" },
-        { zone = "Founders Point", id = 255218, model3D = 138689, title = "Argan Hammerfist", x = 52.2, y = 37.8, mapID = 2352 , faction = "alliance" },
-    }
-  },
-  {
-    name = "Razorwind Shores",
-	expansion = "The Neighborhoods",
-      vendors = {
-        { zone = "Razorwind Shores", id = 255325, model3D = 138691, title = "\"High Tides\" Ren", faction = "horde", mapID = 2351, x = 039.90, y = 72.78 },
-		{ zone = "Razorwind Shores", id = 255319, model3D = 138699, title = "\"Yen\" Malone", x = 40.3, y = 73.0, mapID = 2351 , faction = "horde"  },
-        { zone = "Razorwind Shores", id = 255326, model3D = 138698, title = "\"Len\" Splinthoof", x = 39.91, y = 73.3, mapID = 2351 , faction = "horde"  },
-        { zone = "Razorwind Shores", id = 255297, model3D = 138751, title = "Shon'ja", x = 54.13, y = 59.05, mapID = 2351 , faction = "horde"  },
-        { zone = "Razorwind Shores", id = 240465, model3D = 127583, title = "Lonomia", x = 68.29, y = 75.5, mapID = 2351 , faction = "horde"  },
-        { zone = "Razorwind Shores", id = 255301, model3D = 138755, title = "Botanist Boh'an", x = 53,60, y = 57.54, mapID = 2351 , faction = "horde"  },
-        { zone = "Razorwind Shores", id = 255278, model3D = 138741, title = "Gronthul", x = 54.12, y = 59.11, mapID = 2351 , faction = "horde"  },
-        { zone = "Razorwind Shores", id = 255298, model3D = 138752, title = "Jehzar Starfall", x = 53.56, y = 58.49, mapID = 2351 , faction = "horde"  },
-        { zone = "Razorwind Shores", id = 255299, model3D = 138753, title = "Lefton Farrer", x = 53.48, y = 58.53, mapID = 2351 , faction = "horde"  },
-    }
-  },
-  {
-    name = "Housing Endeavor Vendors(community events)",
-	expansion = "The Neighborhoods",
-      vendors = {
-	    { zone = "Depends on Neighborhood", id = 252916, model3D = 137667, title = "Hesta Forlath", faction = "neutral" },
-        { zone = "Depends on Neighborhood", id = 257897, model3D = 106374, title = "Harlowe Marl", faction = "neutral" },       
-		{ zone = "Depends on Neighborhood", id = 252605, model3D = 140447, title = "Aeeshna", faction = "neutral" }, 
-        { zone = "Depends on Neighborhood", id = 249684, model3D = 40842, title = "Brother Dovetail", faction = "neutral" }, 
-        { zone = "Depends on Neighborhood", id = 250820, model3D = 136498, title = "Hordranin", faction = "neutral" }, 
-        { zone = "Depends on Neighborhood", id = 248525, model3D = 92584, title = "Pascal-K1N6", faction = "neutral" }, 
-        { zone = "Depends on Neighborhood", id = 253596, model3D = 136070, title = "The Last Architect", faction = "neutral" }, 
-    }
-  },
-   {
-    name = "Silvermoon City",
-	expansion = "Midnight Launch",
-      vendors = {
-		{ zone = "The Bazaar", id = 252915, model3D = 137524, title = "Corlen Hordralin", faction = "neutral", mapID = 2393, x = 44.16, y = 62.72 },
-        { zone = "The Bazaar", id = 252916, model3D = 137667, title = "Hesta Forlath", faction = "neutral", mapID = 2393, x = 44.16, y = 62.72 },
-        { zone = "The Bazaar", id = 242398, model3D = 105169, title = "Naleidea Rivergleam", faction = "neutral", mapID = 2393, x = 52.67, y = 77.96 },
-        { zone = "Murder Row", id = 256828, model3D = 139843, title = "Dennia Silvertongue", faction = "neutral", mapID = 2393, x = 51.16, y = 56.47 },
-        { zone = "Astalor's Sanctum", id = 258181, model3D = 140647, title = "Construct Ali'a", faction = "neutral", mapID = 2393, x = 55.81, y = 66.04 },
-        { zone = "The Bazaar", id = 242399, model3D = 107574, title = "Telemancer Astrandis", faction = "neutral", mapID = 2393, x = 52.44, y = 78.87 },
-    }
-  },
-  {
-    name = "Harandar",
-	expansion = "Midnight Launch",
-      vendors = {
-        { zone = "The Den", id = 255114, model3D = 138651, title = "Maku", faction = "neutral", mapID = 2413, x = 53.12, y = 50.93 },
-        { zone = "The Den", id = 240407, model3D = 137949, title = "Naynar", faction = "neutral", mapID = 2413, x = 50.95, y = 50.74 },
-		{ zone = "The Den", id = 258540, model3D = 140815, title = "Hawli", faction = "neutral", mapID = 2413, x = 52.60, y = 50.60 },
-    }
-  },
-  {
-    name = "Arcantina",
-	expansion = "Midnight Launch",
-      vendors = {
-        { zone = "Arcantina", id = 252873, model3D = 130151, title = "Morta Gage", faction = "neutral", mapID = 2541, x = 42.00, y = 50.00 },
-    }
-  },
-  {
-    name = "Slayers Rise",
-	expansion = "Midnight Launch",
-      vendors = {
-        { zone = "Masters Perch", id = 258328, model3D = 140891, title = "Thraxadar", faction = "neutral", mapID = 2444, x = 39.40, y = 81.0 },
-    }
-  },
-  {
-    name = "Eversong Woods",
-	expansion = "Midnight Launch",
-      vendors = {
-		{ zone = "Eversong Woods", id = 242726, model3D = 137811, title = "Neriv", faction = "neutral", mapID = 2395, x = 43.49, y = 47.64 },
-        { zone = "Eversong Woods", id = 242724, model3D = 137806, title = "Ranger Allorn", faction = "neutral", mapID = 2395, x = 43.46, y = 47.55 },
-        { zone = "Eversong Woods", id = 242725, model3D = 137809, title = "Armorer Goldcrest", faction = "neutral", mapID = 2395, x = 43.53, y = 47.5 },
-        { zone = "Eversong Woods", id = 240838, model3D = 137812, title = "Caeris Fairdawn", faction = "neutral", mapID = 2395, x = 43.47, y = 47.44 },
-        { zone = "Eversong Woods", id = 242723, model3D = 137808, title = "Apprentice Diell", faction = "neutral", mapID = 2395, x = 43.53, y = 47.5 },
-    }
-  }, 
-  {
-    name = "Zul'Aman",
-	expansion = "Midnight Launch",
-      vendors = {
-		{ zone = "Amani'Zar Village", id = 240279, model3D = 141039, title = "Magovu", faction = "neutral", mapID = 2437, x = 46.0, y = 65.9 }
-    }
-  } 
-}
 
-dv.achievements = {
-  {
-    name = "Quests",
-    achievements = {
-      { id = 940, type = "achievement", model3D = 6924248, title = "Nesingwary Elk Trophy", faction = "neutral" },
-	  { id = 5442, type = "achievement", model3D = 660974, title = "Goldshire Food Cart", faction = "neutral" },
-	  { id = 938, type = "achievement", model3D = 6924247, title = "Nesingwary Shoveltusk Trophy", faction = "neutral" },
-	  { id = 17773, type = "achievement", model3D = 3883455, title = "Pentagonal Stone Table", faction = "neutral" },
-	  { id = 12582, type = "achievement", model3D = 6905476, title = "Old Salt's Fireplace", faction = "alliance"  },
-	  { id = 19507, type = "achievement", model3D = 3886996, title = "Valdrakken Sconce", faction = "neutral" },
-	  { id = 13284, type = "achievement", model3D = 2481224, title = "Large Forsaken War Tent", faction = "horde"  },	  
-	  { id = 12614, type = "achievement", model3D = 2432865, title = "Golden Loa's Altar", faction = "horde"  },
-	  { id = 13039, type = "achievement", model3D = 1922339, title = "Idol of Pa'ku, Master of Winds", faction = "horde"  },
-	  { id = 13038, type = "achievement", model3D = 1597477, title = "Bookcase of Gonk", faction = "horde"  },
-	  { id = 12509, type = "achievement", model3D = 2620664, title = "Lordaeron Rectangular Rug", faction = "horde"  },
-	  { id = 19719, type = "achievement", model3D = 304638, title = "Gilnean Celebration Keg", faction = "neutral" },
-	  { id = 20595, type = "achievement", model3D = 5389584, title = "Boulder Springs Recliner", faction = "neutral" },
-      { id = 40894, type = "achievement", model3D = 5788117, title = "Rocket-Powered Fountain", faction = "neutral" },	  
-      { id = 13049, type = "achievement", model3D = 7301003, title = "Tiragarde Treasure Chest", faction = "alliance"  },
-	  { id = 12997, type = "achievement", model3D = 7301012, title = "Proudmoore Green Drape", faction = "alliance" },	  
-	  { id = 12479, type = "achievement", model3D = 668138, title = "Grand Mask of Bwonsamdi, Loa of Graves", faction = "horde"  },
-      { id = 10698, type = "achievement", model3D = 1108752, title = "Shala'nir Feather Bed", faction = "neutral" },
-      { id = 11340, type = "achievement", model3D = 1361683, title = "Deluxe Suramar Sleeper", faction = "neutral" },      
-      { id = 11124, type = "achievement", model3D = 1399648, title = "\"Night on the Jeweled Estate\" Painting", faction = "neutral" },
-      { id = 10398, type = "achievement", texture = "7421600", title = "Skyhorn Arrow Kite", faction = "neutral" },	 
-    }
-  },
-  {
-    name = "Exploration",
-    achievements = {
-	  { id = 13473, type = "achievement", model3D = 2745098, title = "Redundant Reclamation Rig", faction = "neutral" },
-	  { id = 13018, type = "achievement", model3D = 6877810, title = "Zandalari Wall Shelf", faction = "neutral" },
-	  { id = 17529, type = "achievement", model3D = 7141936, title = "Dragon's Hoard Chest", faction = "neutral" },
-	  { id = 13477, type = "achievement", model3D = 1842466, title = "Screw-Sealed Stembarrel", faction = "neutral" },
-	  { id = 13475, type = "achievement", model3D = 2068146, title = "Gnomish Cog Stack", faction = "neutral" },
-	  { id = 40504, type = "achievement", model3D = 4904552, title = "Rambleshire Resting Platform", faction = "neutral" },
-	  { id = 41186, type = "achievement", model3D = 5464689, title = "Tome of Earthen Directives", faction = "neutral" },
-	  { id = 40542, type = "achievement", model3D = 5007024, title = "Kaheti Scribe's Records", faction = "neutral" },
-      { id = 11257, type = "achievement", model3D = 1402222, title = "Skyhorn Storage Chest", faction = "neutral" },
-      { id = 11258, type = "achievement", model3D = 1349622, title = "Kaldorei Treasure Trove", faction = "neutral" },
-	  { id = 40859, type = "achievement", model3D = 4906427, title = "Dornogal Brazier", faction = "neutral" },	  
-    }
-  },
-    {
-    name = "Feats of Strength",
-    achievements = {
-	  { id = 62387, type = "achievement", model3D = 7476464, title = "The Dark Portal", faction = "neutral" },  
-    }
-  },
-  {
-    name = "Expansion Features",
-    achievements = {
-	  { id = 40953, type = "achievement", texture = "7423186", title = "MOTHER's Titanic Brazier", faction = "neutral" },
-	  { id = 12867, type = "achievement", model3D = 2341255, title = "Lordaeron Banded Barrel", faction = "horde"  },
-      { id = 12869, type = "achievement", model3D = 2341251, title = "Lordaeron Banded Crate", faction = "horde"  },
-      { id = 12870, type = "achievement", model3D = 2351848, title = "Lordaeron Spiked Weapon Rack", faction = "horde"  },
-	  { id = 19458, type = "achievement", model3D = 7134811, title = "The Great Hoard", faction = "neutral" },
-	  { id = 20501, type = "achievement", model3D = 7134869, title = "Portal to Damnation", faction = "neutral" },
-      { id = 8316, type = "achievement", model3D = 7385422, title = "Shadowforge Stone Chair", faction = "neutral" },	  
-	  { id = 61467, type = "achievement", model3D = 6717972, title = "Tome of Silvermoon Intrigue", faction = "neutral" },
-      { id = 42187, type = "achievement", model3D = 5916218, title = "Scroll of K'aresh's Fall", faction = "neutral" },
-      { id = 42188, type = "achievement", model3D = 5916220, title = "Tome of the Survivor", faction = "neutral" },
-      { id = 42189, type = "achievement", model3D = 1354768, title = "Tale of the Penultimate Lich King", faction = "neutral" },
-	  { id = 61451, type = "achievement", model3D = 5160932, title = "Drained Dark Heart of Galakrond", faction = "neutral" },
-      { id = 60983, type = "achievement", model3D = 7233616, title = "Cenarion Arch", faction = "neutral" },
-      { id = 60991, type = "achievement", model3D = 7506478, title = "Dreadscar Battle Planning Map", faction = "neutral" },
-      { id = 60990, type = "achievement", model3D = 7262794, title = "Earthen Ring Scouting Map", faction = "neutral" },
-      { id = 60981, type = "achievement", model3D = 1338446, title = "Ebon Blade Planning Map", faction = "neutral" },
-      { id = 60982, type = "achievement", model3D = 1321783, title = "Fel Hammer Scouting Map", faction = "neutral" },
-      { id = 60986, type = "achievement", model3D = 1323662, title = "Five Dawns Planning Table", faction = "neutral" },
-      { id = 60988, type = "achievement", model3D = 1339273, title = "Netherlight Command Map", faction = "neutral" },
-      { id = 60987, type = "achievement", model3D = 1270418, title = "Silver Hand Weapon Rack", faction = "neutral" },
-      { id = 60992, type = "achievement", model3D = 1450335, title = "Skyhold War Table", faction = "neutral" },
-      { id = 60985, type = "achievement", model3D = 1315074, title = "Tirisgarde War Map", faction = "neutral" },
-      { id = 60989, type = "achievement", model3D = 1305549, title = "Uncrowned Planning Table", faction = "neutral" },
-      { id = 60984, type = "achievement", model3D = 7233609, title = "Unseen Path Archer's Gallery", faction = "neutral" },
-      { id = 60966, type = "achievement", model3D = 965217, title = "Conjured Archive of the Tirisgarde", faction = "neutral" },
-      { id = 60967, type = "achievement", model3D = 1324675, title = "Replica Chronicle of Ages", faction = "neutral" },
-      { id = 60968, type = "achievement", model3D = 1267045, title = "Replica Libram of Ancient Kings", faction = "neutral" },
-      { id = 60962, type = "achievement", model3D = 7474233, title = "Replica Libram of the Dead", faction = "neutral" },
-      { id = 60973, type = "achievement", model3D = 1325991, title = "Replica Saga of the Valarjar", faction = "neutral" },
-      { id = 60965, type = "achievement", model3D = 7233610, title = "Replica Tales of the Hunt", faction = "neutral" },
-      { id = 60972, type = "achievement", model3D = 1125315, title = "Replica Tome of Blighted Implements", faction = "neutral" },
-      { id = 60963, type = "achievement", model3D = 6892689, title = "Replica Tome of Fel Secrets", faction = "neutral" },
-      { id = 60964, type = "achievement", model3D = 1324674, title = "Replica Tome of the Ancients", faction = "neutral" },
-      { id = 60969, type = "achievement", model3D = 7240007, title = "Replica Word of the Conclave", faction = "neutral" },
-      { id = 60971, type = "achievement", model3D = 1323611, title = "Replica Words of Wind and Earth", faction = "neutral" },	  
-      { id = 60970, type = "achievement", model3D = 1338498, title = "Stolen Copy of the Blood Ledger", faction = "neutral" },
-      { id = 42291, type = "achievement", model3D = 1311397, title = "Conjured Altar of the Guardian", faction = "neutral" },
-      { id = 42296, type = "achievement", model3D = 1279203, title = "Elemental Altar of the Maelstrom", faction = "neutral" },
-      { id = 42287, type = "achievement", model3D = 6892693, title = "Replica Acherus Soul Forge", faction = "neutral" },
-      { id = 42293, type = "achievement", model3D = 1247929, title = "Replica Altar of Ancient Kings", faction = "neutral" },
-      { id = 42294, type = "achievement", model3D = 7240006, title = "Replica Altar of Light and Shadow", faction = "neutral" },
-      { id = 42290, type = "achievement", model3D = 1276980, title = "Replica Altar of the Eternal Hunt", faction = "neutral" },
-      { id = 42295, type = "achievement", model3D = 1337146, title = "Replica Crucible of the Uncrowned", faction = "neutral" },
-      { id = 42288, type = "achievement", model3D = 1260635, title = "Replica Cursed Forge of the Nathrezim", faction = "neutral" },
-      { id = 42297, type = "achievement", model3D = 1277582, title = "Replica Felblood Altar", faction = "neutral" },
-      { id = 42298, type = "achievement", model3D = 1300920, title = "Replica Forge of Odyn", faction = "neutral" },
-      { id = 42292, type = "achievement", model3D = 7483166, title = "Replica Forge of the Roaring Mountain", faction = "neutral" },
-      { id = 42289, type = "achievement", model3D = 7233615, title = "Seed of Ages Cutting", faction = "neutral" },
-      { id = 42272, type = "achievement", model3D = 1108732, title = "Brazier of Elune", faction = "neutral" },
-      { id = 42281, type = "achievement", model3D = 6877678, title = "Dreadscar Dais", faction = "neutral" },      
-      { id = 42270, type = "achievement", model3D = 1355367, title = "Ebon Blade Weapon Rack", faction = "neutral" },
-      { id = 42271, type = "achievement", model3D = 1301086, title = "Illidari Glaiverest", faction = "neutral" },
-      { id = 42280, type = "achievement", model3D = 366699, title = "Maelstrom Lava Lamp", faction = "neutral" },
-      { id = 42275, type = "achievement", model3D = 6877675, title = "Monastery Gong", faction = "neutral" },	  
-      { id = 42276, type = "achievement", model3D = 1267052, title = "Sanctum of Light Candelabra", faction = "neutral" },
-      { id = 42277, type = "achievement", model3D = 7240008, title = "Scroll of the Conclave", faction = "neutral" },
-      { id = 42274, type = "achievement", model3D = 964976, title = "Tirisgarde Book Tempest", faction = "neutral" },	  
-      { id = 42273, type = "achievement", model3D = 1315073, title = "Trueshot Skeletal Dragon Trophy", faction = "neutral" },
-      { id = 42279, type = "achievement", model3D = 1345395, title = "Uncrowned Market Stall", faction = "neutral" },
-      { id = 42282, type = "achievement", model3D = 7155606, title = "Valarjar Shield Wall", faction = "neutral" },	
-	  { id = 42627, type = "achievement", model3D = 1338587, title = "Eredar Lord's Fel Torch", faction = "neutral" },
-	  { id = 42692, type = "achievement", model3D = 1310272, title = "Legion's Holo-Communicator", faction = "neutral" },
-	  { id = 42674, type = "achievement", model3D = 7150660, title = "Altar of the Corrupted Flames", faction = "neutral" },
-	  { id = 42318, type = "achievement", model3D = 7150661, title = "Tome of the Corrupt", faction = "neutral" },
-	  { id = 42675, type = "achievement", model3D = 7240011, title = "Vertical Felsteel Chain", faction = "neutral" },
-	  { id = 42619, type = "achievement", model3D = 7240009, title = "Legion's Fel Brazier", faction = "neutral" },
-	  { id = 61054, type = "achievement", model3D = 1308148, title = "Legion Torture Rack", faction = "neutral" },
-	  { id = 42547, type = "achievement", model3D = 7240010, title = "Hanging Felsteel Cage", faction = "neutral" },	  	
-      { id = 42321, type = "achievement", model3D = 7216249, title = "Corruption Pit", faction = "neutral" },
-	  { id = 61060, type = "achievement", model3D = 7216248, title = "Legion's Fel Torch", faction = "neutral" },
-      { id = 42655, type = "achievement", model3D = 1349995, title = "Demonic Storage Chest", faction = "neutral" },     
-      { id = 42628, type = "achievement", model3D = 1307161, title = "Large Legion Candle", faction = "neutral" },           
-      { id = 61218, type = "achievement", model3D = 1119129, title = "Sentinel's Moonwing Gaze", faction = "neutral" },           
-      { id = 42689, type = "achievement", model3D = 7216247, title = "Fel Fountain", faction = "neutral" },                             
-	  { id = 42658, type = "achievement", model3D = 1102771, title = "Vrykul Lord's Throne", faction = "neutral" },  	  
-    }
-  },
-  {
-    name = "Dungeons and Raids",
-    achievements = {
-	  { id = 10996, type = "achievement", model3D = 1319084, title = "Tauren Jeweler's Roller", faction = "neutral" },
-      { id = 13723, type = "achievement", model3D = 999909, title = "Gnomish T.O.O.L.B.O.X.", faction = "neutral" },
-	  { id = 4405, type = "achievement", model3D = 6927099, title = "Head of the Broodmother", faction = "neutral" },	  
-	  { id = 41119, type = "achievement", model3D = 5933736, title = "Gallagio L.U.C.K. Spinner", faction = "neutral" },
-     { id = 11699, type = "achievement", model3D = 1095305, title = "Murloc's Wind Chimes", faction = "neutral" },	  
-    }
-  },
-  {
-    name = "Player vs Player",
-    achievements = {
-      { id = 61683, type = "achievement", model3D = 200305, title = "Berserker's Empowerment", faction = "neutral" },
-      { id = 61685, type = "achievement", model3D = 1586378, title = "Chaotic Empowerment", faction = "neutral" },
-      { id = 61684, type = "achievement", model3D = 660744, title = "Guardian's Empowerment", faction = "neutral" },
-      { id = 61687, type = "achievement", model3D = 200308, title = "Healer's Empowerment", faction = "neutral" },
-      { id = 61686, type = "achievement", model3D = 1588459, title = "Mysterious Empowerment", faction = "neutral" },
-      { id = 61688, type = "achievement", model3D = 200309, title = "Runner's Empowerment", faction = "neutral" },
-      { id = 221, type = "achievement", model3D = 200273, title = "Fortified Alliance Banner", faction = "neutral" },
-      { id = 222, type = "achievement", model3D = 200281, title = "Fortified Horde Banner", faction = "neutral" },
-      { id = 158, type = "achievement", model3D = 200268, title = "Alliance Battlefield Banner", faction = "neutral" },
-      { id = 1153, type = "achievement", model3D = 200276, title = "Horde Battlefield Banner", faction = "neutral" },
-      { id = 5245, type = "achievement", model3D = 304027, title = "Smoke Lamppost", faction = "neutral" },
-      { id = 40210, type = "achievement", model3D = 5278833, title = "Earthen Contender's Target", faction = "neutral" },
-      { id = 40612, type = "achievement", model3D = 5770750, title = "Deephaul Crystal", faction = "neutral" },
-      { id = 212, type = "achievement", model3D = 200283, title = "Uncontested Battlefield Banner", faction = "neutral" },
-      { id = 213, type = "achievement", model3D = 200301, title = "Netherstorm Battlefield Flag", faction = "neutral" },
-      { id = 229, type = "achievement", model3D = 2353835, title = "Horde Dueling Flag", faction = "neutral" },
-      { id = 231, type = "achievement", model3D = 2353834, title = "Alliance Dueling Flag", faction = "neutral" },
-      { id = 1157, type = "achievement", model3D = 199687, title = "Challenger's Dueling Flag", faction = "neutral" },
-      { id = 6981, type = "achievement", texture = "7423255", title = "Kotmogu Orb of Power, Kotmogu Pedestal", faction = "neutral" },
-      { id = 5223, type = "achievement", model3D = 414219, title = "Iron Dragonmaw Gate", faction = "neutral" },
-      { id = 167, type = "achievement", model3D = 2490319, title = "Warsong Outriders Flag", faction = "neutral" },
-      { id = 200, type = "achievement", model3D = 2490318, title = "Silverwing Sentinels Flag", faction = "neutral" },
-    }
-  },
-  {
-    name = "Professions",
-    achievements = {
-      { id = 4859, type = "achievement", model3D = 1018949, title = "Dark Iron Brazier", faction = "neutral" },
-      { id = 19408, type = "achievement", model3D = 4896167, title = "Fallside Storage Tent", faction = "neutral" },
-	  { id = 12733, type = "achievement", model3D = 1696757, title = "Dazar'alor Forge", faction = "horde"  },
-      { id = 12746, type = "achievement", model3D = 6877808, title = "Zuldazar Cook's Griddle", faction = "horde"  },
-      { id = 9415, type = "achievement", model3D = 965917, title = "Glorious Pendant of Rukhmar", faction = "neutral"  },  
-    }
-  },
-   {
-    name = "Coming at Launch",
-    achievements = {	
-	  { id = 61574, type = "achievement", model3D = 6252866, title = "On'ohia's Call", faction = "neutral"},		  
-	  { id = 42791, type = "achievement", model3D = 6049355, title = "Midnight Miner's Shop Sign", faction = "neutral"  },      
-	  { id = 42788, type = "achievement", model3D = 6049331, title = "Midnight Alchemist's Shop Sign", faction = "neutral"  },
-	  { id = 42792, type = "achievement", model3D = 6049335, title = "Midnight Blacksmith's Shop Sign", faction = "neutral"  },
-	  { id = 42795, type = "achievement", model3D = 6049336, title = "Midnight Cook's Shop Sign", faction = "neutral"  },
-	  { id = 42787, type = "achievement", model3D = 6049337, title = "Midnight Enchanter's Shop Sign", faction = "neutral"  },
-	  { id = 42798, type = "achievement", model3D = 6049339, title = "Midnight Engineer's Shop Sign", faction = "neutral"  },
-	  { id = 42797, type = "achievement", model3D = 6049340, title = "Midnight Fisher's Shop Sign", faction = "neutral"  },
-	  { id = 42793, type = "achievement", model3D = 6049344, title = "Midnight Herbalist's Shop Sign", faction = "neutral"  },
-	  { id = 42796, type = "achievement", model3D = 6049345, title = "Midnight Scribe's Shop Sign", faction = "neutral"  },
-	  { id = 42789, type = "achievement", model3D = 6049346, title = "Midnight Jewelcrafter's Shop Sign", faction = "neutral"  },
-	  { id = 42786, type = "achievement", model3D = 6049354, title = "Midnight Leatherworker's Shop Sign", faction = "neutral"  },
-	  { id = 42790, type = "achievement", model3D = 6049356, title = "Midnight Skinner's Shop Sign", faction = "neutral"  },
-	  { id = 42794, type = "achievement", model3D = 6049357, title = "Midnight Tailor's Shop Sign", faction = "neutral"  },
-	{ id = 62185, type = "achievement", model3D = 4239029, title = "Silvermoon Painter's Cushion", faction = "neutral" },	  
-	{ id = 62167, type = "achievement", model3D = 7430522, title = "Preyseeker's Magister Effigy", faction = "neutral" },
-	{ id = 62168, type = "achievement", model3D = 7430523, title = "Preyseeker's Tinker Effigy", faction = "neutral" },	  
-	{ id = 62173, type = "achievement", model3D = 7430525, title = "Preyseeker's Ethereal Effigy", faction = "neutral" },	  
-	{ id = 62174, type = "achievement", model3D = 7430526, title = "Preyseeker's Breaker Effigy", faction = "neutral" },	  
-	{ id = 62175, type = "achievement", model3D = 7430527, title = "Preyseeker's Amani Effigy", faction = "neutral" },	  
-	{ id = 62177, type = "achievement", model3D = 7430529, title = "Preyseeker's Rutaani Effigy", faction = "neutral" },	  
-	{ id = 62178, type = "achievement", model3D = 7430530, title = "Preyseeker's Vindicator Effigy", faction = "neutral" },	  
-	{ id = 62179, type = "achievement", model3D = 7430531, title = "Preyseeker's Consul Effigy", faction = "neutral" },	  
-	{ id = 62180, type = "achievement", model3D = 7430532, title = "Preyseeker's Executor Effigy", faction = "neutral" },	  
-	{ id = 62181, type = "achievement", model3D = 7430533, title = "Preyseeker's Knight-Errant Effigy", faction = "neutral" },	  
-	{ id = 62182, type = "achievement", model3D = 7430534, title = "Preyseeker's Wretched Effigy", faction = "neutral" },	  
-	{ id = 62183, type = "achievement", model3D = 7430535, title = "Preyseeker's Thornspeaker Effigy", faction = "neutral" },	  
-	{ id = 62184, type = "achievement", model3D = 7430536, title = "Preyseeker's Twilight Effigy", faction = "neutral" },	  
-	{ id = 62169, type = "achievement", model3D = 7430524, title = "Preyseeker's Ren'dorei Effigy", faction = "neutral" },
-	{ id = 62176, type = "achievement", model3D = 7430528, title = "Preyseeker's Farstrider Effigy", faction = "neutral" },	  
-	{ id = 62144, type = "achievement", model3D = 7450031, title = "Preyseeker's Magister Bust", faction = "neutral" },
-	{ id = 62153, type = "achievement", model3D = 7450032, title = "Preyseeker's Tinker Bust", faction = "neutral" },	  
-	{ id = 62155, type = "achievement", model3D = 7450034, title = "Preyseeker's Ethereal Bust", faction = "neutral" },	  
-	{ id = 62156, type = "achievement", model3D = 7450035, title = "Preyseeker's Breaker Bust", faction = "neutral" },	  
-	{ id = 62157, type = "achievement", model3D = 7450036, title = "Preyseeker's Amani Bust", faction = "neutral" },	  
-	{ id = 62159, type = "achievement", model3D = 7450038, title = "Preyseeker's Rutaani Bust", faction = "neutral" },	  
-	{ id = 62160, type = "achievement", model3D = 7450039, title = "Preyseeker's Vindicator Bust", faction = "neutral" },	  
-	{ id = 62161, type = "achievement", model3D = 7450040, title = "Preyseeker's Consul Bust", faction = "neutral" },	  
-	{ id = 62162, type = "achievement", model3D = 7450041, title = "Preyseeker's Executor Bust", faction = "neutral" },	  
-	{ id = 62163, type = "achievement", model3D = 7450042, title = "Preyseeker's Knight-Errant Bust", faction = "neutral" },	  
-	{ id = 62164, type = "achievement", model3D = 7450043, title = "Preyseeker's Wretched Bust", faction = "neutral" },	  
-	{ id = 62165, type = "achievement", model3D = 7450044, title = "Preyseeker's Thornspeaker Bust", faction = "neutral" },	  
-	{ id = 62166, type = "achievement", model3D = 7450045, title = "Preyseeker's Twilight Bust", faction = "neutral" },	  
-	{ id = 62154, type = "achievement", model3D = 7450033, title = "Preyseeker's Ren'dorei Bust", faction = "neutral" },
-	{ id = 62158, type = "achievement", model3D = 7450037, title = "Preyseeker's Farstrider Bust", faction = "neutral" },
-    { id = 42117, type = "achievement", model3D = 7241258, title = "The Fallen Protectors Painting", faction = "neutral"},	  
-    }
-  }, 
-}
+--vendors spot
 
-dv.quests = {
-  {
-    name = "Race Locked",
-    quests = {
-     { id = 76213, type = "quest", rewardDecor = 248401, model3D = 4756262, title = "Ornamental Kaldorei Glaive", faction = "alliance", note = "Night Elf Only"  },	
-  	 { id = 26397, type = "quest", rewardDecor = 243335, model3D = 6711674, title = "Tauren Bluff Rug", faction = "horde", note = "Regular Tauren Only"  }, 
-	 { id = 72515, type = "quest", rewardDecor = 249549, model3D = 4528488, title = "Draconic Crafter's Table", faction = "neutral", note = "Evoker Only" },
-    }
-  },
-  {
-    name = "Classic",
-    quests = {	  
-	  { id = 54, type = "quest", rewardDecor = 248798, model3D = 950755, title = "Northshire Barrel", faction = "alliance" },
-      { id = 60, type = "quest", rewardDecor = 248938, model3D = 960094, title = "Hooded Iron Lantern", faction = "alliance" },
-      { id = 114, type = "quest", rewardDecor = 253527, model3D = 936454, title = "Goldshire Wardrobe", faction = "alliance" },
-      { id = 543, type = "quest", rewardDecor = 248662, model3D = 950140, title = "Jewelcrafter's Tent", faction = "alliance" },
-      { id = 7604, type = "quest", rewardDecor = 256673, model3D = 953668, title = "Stormwind Forge", faction = "alliance" },
-	  
-	  
-    }
-  },
-  {
-    name = "Wrath of the Lich King",
-    quests = {
-	  { id = 11559, type = "quest", rewardDecor = 258220, --[[model3D = 1091581,]] vendorDisplayID = 4920, title = "Ahlurglgr", faction = "neutral", note = "unlocks vendor to buy item" },
-	  { id = 11566, type = "quest", rewardDecor = 258220, model3D = 1091581, title = "Murloc Driftwood Hut", faction = "neutral", note = "actual reward quest" },
-      { id = 12227, type = "quest", rewardDecor = 248622, model3D = 1048173, title = "Wooden Outhouse", faction = "alliance" },
-    }
-  },
-  {
-    name = "Cataclysm",
-    quests = {
-      { id = 25720, type = "quest", rewardDecor = 244777, model3D = 304416, title = "Surwich Peddler's Wagon", faction = "neutral" },	  
-      { id = 14402, type = "quest", rewardDecor = 245620, model3D = 321660, title = "Little Wolf's Loo", faction = "alliance"},
-      { id = 24675, type = "quest", rewardDecor = 245518, model3D = 305584, title = "Worgen's Chicken Coop", faction = "alliance"},
-      { id = 26229, type = "quest", rewardDecor = 248797, model3D = 936393, title = "City Wanderer's Candleholder", faction = "alliance"},
-      { id = 26270, type = "quest", rewardDecor = 248618, model3D = 949210, title = "Westfall Woven Basket", faction = "alliance"},
-      { id = 26297, type = "quest", rewardDecor = 248801, model3D = 4618938, title = "Stormwind Weapon Rack", faction = "alliance"},
-      { id = 26390, type = "quest", rewardDecor = 248621, model3D = 1004965, title = "Stormwind Arched Trellis", faction = "alliance"},      
-      { id = 26754, type = "quest", rewardDecor = 256905, model3D = 322634, title = "Small Gilnean Table", faction = "alliance"},
-      { id = 26760, type = "quest", rewardDecor = 245624, model3D = 464019, title = "Waning Wood Fence", faction = "alliance"},
-      { id = 26868, type = "quest", rewardDecor = 246422, model3D = 197430, title = "Thelsamar Hanging Lantern", faction = "alliance"},
-      { id = 27098, type = "quest", rewardDecor = 245504, model3D = 397900, title = "Lordaeron Fence", faction = "horde" },
-      { id = 27550, type = "quest", rewardDecor = 257412, model3D = 304495, title = "Stoppered Gilnean Barrel", faction = "horde" },
-      { id = 28035, type = "quest", rewardDecor = 245333, model3D = 6877809, title = "Shadowforge Wooden Box", faction = "neutral" },
-      { id = 28064, type = "quest", rewardDecor = 246409, model3D = 197155, title = "Shadowforge Grinding Wheel", faction = "neutral" },
-      { id = 28183, type = "quest", rewardDecor = 256331, model3D = 7385423, title = "Shadowforge Lamppost", faction = "neutral" },
-      { id = 28244, type = "quest", rewardDecor = 246427, model3D = 391448, title = "Dilapidated Wildhammer Well", faction = "alliance"},
-      { id = 28337, type = "quest", rewardDecor = 256903, model3D = 304626, title = "Gilnean Banded Crate", faction = "alliance"},
-      { id = 28655, type = "quest", rewardDecor = 246428, model3D = 392127, title = "Overgrown Wildhammer Fountain", faction = "alliance"},	  
-    }
-  },
-  {
-    name = "Mists of Pandaria",
-    quests = {
-	  { id = 30526, type = "quest", rewardDecor = 248663, model3D = 955690, title = "Wooden Doghouse", faction = "neutral"  },
-	  { id = 30000, type = "quest", rewardDecor = 264362, model3D = 576300, title = "Golden Pandaren Privacy Screen", faction = "neutral"  },
-      { id = 30612, type = "quest", rewardDecor = 264349, model3D = 7508746, title = "Kun-Lai Lacquered Rickshaw", faction = "neutral"  },
-      { id = 31230, type = "quest", rewardDecor = 247729, model3D = 519135, title = "Pandaren Stone Lamppost", faction = "neutral"  },
-      { id = 32816, type = "quest", rewardDecor = 247858, model3D = 531955, title = "Shaohao Ceremonial Bell", faction = "neutral"  },
-	  {id = 92581, type = "quest", vendorDisplayID = 95785, title = "Frederick the Fabulous", faction = "neutral", note = "unlocks secret vendor to loot item" },
-    }
-  },
-  {
-    name = "Warlords of Draenor",
-    quests = {
-	{ id = 33256, type = "quest", rewardDecor = 251654, model3D = 7273284, title = "Large Karabor Fountain", faction = "alliance"},
-       { id = 33470, type = "quest", rewardDecor = 244320, model3D = 996200, title = "Youngling's Courser Toys", faction = "horde" },
-      { id = 33527, type = "quest", rewardDecor = 245438, model3D = 971699, title = "Frostwolf Bookcase", faction = "horde" },
-		{ id = 33582, type = "quest", rewardDecor = 258742, model3D = 968424, title = "Scroll of the Adherent", faction = "neutral" },
-		{ id = 34099, type = "quest", rewardDecor = 251640, model3D = 942422, title = "Draenic Forge", faction = "alliance"},
-		{ id = 34192, type = "quest", rewardDecor = 248660, model3D = 943720,  title = "Stormwind Workbench", faction = "alliance"},
-		{ id = 34586, type = "quest", rewardDecor = 248799, model3D = 950767,  title = "Wooden Storage Crate", faction = "alliance"},
-		{ id = 34792, type = "quest", rewardDecor = 251548, model3D = 916279,  title = "Draenic Fence", faction = "alliance"},
-		{ id = 35176, type = "quest", rewardDecor = 248810, model3D = 7151868, title = "Rough Wooden Chair", faction = "alliance"},
-		{ id = 35196, type = "quest", rewardDecor = 251478, model3D = 875150, title = "Square Draenic Table", faction = "alliance"},
-		{ id = 35396, type = "quest", rewardDecor = 245425, model3D = 917996, title = "Hanging Draenethyst Light", faction = "alliance"},
-		{ id = 35671, type = "quest", rewardDecor = 258741, model3D = 968336, title = "Writings of Reshad the Outcast", faction = "neutral" },
-		{ id = 35685, type = "quest", rewardDecor = 251653, model3D = 7273283, title = "Draenethyst Lamppost", faction = "alliance"},
-		{ id = 35704, type = "quest", rewardDecor = 258745, model3D = 7277023, title = "High Arakkoan Library Shelf", faction = "neutral" },
-		{ id = 35896, type = "quest", rewardDecor = 258749, model3D = 1113349, title = "Uncorrupted Eye of Terokk", faction = "neutral" },
-		{ id = 36169, type = "quest", rewardDecor = 251477, model3D = 875146, title = "Draenic Wooden Table", faction = "alliance"},
-		{ id = 36202, type = "quest", rewardDecor = 248335, model3D = 953802, title = "Stormwind Wooden Stool", faction = "alliance"},
-		{ id = 36404, type = "quest", rewardDecor = 248334, model3D = 7571145, title = "Stormwind Wooden Bench", faction = "alliance"},
-		{ id = 36592, type = "quest", rewardDecor = 248661, model3D = 949629,  title = "Northshire Scribe's Desk", faction = "alliance"},
-		{ id = 36614, type = "quest", rewardDecor = 244315, model3D = 979433, title = "Orcish Warlord's Planning Table", faction = "horde" },
-		{ id = 36615, type = "quest", rewardDecor = 248800, model3D = 969975, title = "Architect's Drafting Table", faction = "alliance"},
-      { id = 36685, type = "quest", rewardDecor = 251547, model3D = 915354, title = "Draenei Farmer's Trellis", faction = "alliance"},
-		{ id = 37322, type = "quest", rewardDecor = 251549, model3D = 944218, title = "Emblem of the Naaru's Blessing", faction = "alliance"},
-      { id = 38201, type = "quest", rewardDecor = 241043, model3D = 875378, title = "Elodor Barrel", faction = "alliance"},	
-	  { id = 35273, type = "quest", rewardDecor = 258748, model3D = 7277026, title = "\"Rising Glory of Rukhmar\" Statue", faction = "neutral" },
-    }
-  },
-  {
-    name = "Legion",
-    quests = {
-      { id = 42489, type = "quest", rewardDecor = 248009, model3D = 1309274, title = "Suramar Window", faction = "neutral" },
-	  { id = 41915, type = "quest", rewardDecor = 247917, model3D = 1361714, title = "Covered Small Suramar Table", faction = "neutral" },	  
-      { id = 37470, type = "quest", rewardDecor = 246864, model3D = 4298560, title = "Tome of the Lost Dragon", faction = "neutral" },
-      { id = 38147, type = "quest", rewardDecor = 245702, model3D = 1128060, title = "Kaldorei Wall Shelf", faction = "neutral"},
-      { id = 38663, type = "quest", rewardDecor = 245700, model3D = 7508794, title = "Kaldorei Cushioned Seat", faction = "neutral" },
-      { id = 38882, type = "quest", rewardDecor = 245411, model3D = 6431407, title = "Dark Ship's Lantern", faction = "horde" },
-      { id = 39117, type = "quest", rewardDecor = 245615, model3D = 6930894, title = "Bradensbrook Smoke Lantern", faction = "neutral" },
-      { id = 39305, type = "quest", rewardDecor = 257723, model3D = 1255422, title = "Skyhorn Eagle Kite", faction = "neutral" },
-      { id = 39387, type = "quest", rewardDecor = 257401, model3D = 1255331, title = "Skyhorn Banner", faction = "neutral" },
-      { id = 39426, type = "quest", rewardDecor = 257722, model3D = 1255418, title = "Hanging Arrow Kite", faction = "neutral" },
-      { id = 39496, type = "quest", rewardDecor = 245409, model3D = 6877680, title = "Dried Whitewash Corn", faction = "neutral" },
-      { id = 39579, type = "quest", rewardDecor = 245456, model3D = 1253406, title = "Warbrave's Brazier", faction = "neutral" },
-      { id = 39614, type = "quest", rewardDecor = 245457, model3D = 1323065, title = "Riverbend Netting", faction = "neutral" },
-      { id = 39772, type = "quest", rewardDecor = 260698, model3D = 1255019, title = "Kobold Trassure Pile", faction = "neutral" },
-      { id = 39780, type = "quest", rewardDecor = 245461, model3D = 1305130, title = "Tauren Vertical Windmill", faction = "neutral" },
-      { id = 39801, type = "quest", rewardDecor = 253251, model3D = 1598111, title = "Blightfire Candle", faction = "horde"},
-      { id = 39992, type = "quest", rewardDecor = 257397, model3D = 1345313, title = "Tauren Storyteller's Frame", faction = "neutral" },
-      { id = 40230, type = "quest", rewardDecor = 258221, model3D = 1091587, title = "Driftwood Junk Pile", faction = "neutral" },
-      { id = 40321, type = "quest", rewardDecor = 245701, model3D = 1096883, title = "Elven Round Table", faction = "neutral" },
-      { id = 40573, type = "quest", rewardDecor = 245698, model3D = 1096764, title = "Kaldorei Stone Fence", faction = "neutral" },
-      { id = 40890, type = "quest", rewardDecor = 245739, model3D = 1096777, title = "Crescent Moon Lamppost", faction = "neutral" },
-      { id = 41143, type = "quest", rewardDecor = 258222, model3D = 1091599, title = "Shellscale Standard", faction = "neutral" },
-      { id = 42590, type = "quest", rewardDecor = 245453, model3D = 1322950, title = "Whitewash River Basket", faction = "neutral" },
-      { id = 42622, type = "quest", rewardDecor = 245405, model3D = 6711671, title = "Large Highmountain Drum", faction = "neutral" },
-      { id = 42751, type = "quest", rewardDecor = 245258, model3D = 1096759, title = "Val'sharah Bookcase", faction = "neutral" },
-      { id = 43318, type = "quest", rewardDecor = 247911, model3D = 1361686, title = "Shal'dorei Seat", faction = "neutral" },
-      { id = 44004, type = "quest", rewardDecor = 251480, model3D = 902396, title = "Draenic Wooden Wall Shelf", faction = "neutral" },
-      { id = 44052, type = "quest", rewardDecor = 247914, model3D = 1361709, title = "Covered Ornate Suramar Table", faction = "neutral" },
-      { id = 44756, type = "quest", rewardDecor = 247842, model3D = 1352412, title = "Nightborne Merchant's Stall", faction = "neutral" },
-      { id = 44955, type = "quest", rewardDecor = 245558, model3D = 6924250, title = "Elaborate Suramar Window", faction = "neutral" },
-      { id = 46107, type = "quest", rewardDecor = 245616, model3D = 6930897, title = "Bradensbrook Thorned Well", faction = "neutral" },
-      { id = 47691, type = "quest", rewardDecor = 245422, model3D = 979926, title = "Draenic Bookcase", faction = "neutral" },	  
-    }
-  },
-  {
-    name = "Battle for Azeroth",
-    quests = {	  
-      { id = 46931, type = "quest", rewardDecor = 239606, model3D = 2620663, title = "Forsaken Round Rug", faction = "horde" },
-      { id = 47188, type = "quest", rewardDecor = 245488, model3D = 1590851, title = "Zandalari Rickshaw", faction = "horde" },
-      { id = 47250, type = "quest", rewardDecor = 245489, model3D = 1597479, title = "Zuldazar Stool", faction = "horde" },
-      { id = 47432, type = "quest", rewardDecor = 245486, model3D = 1597478, title = "Tired Troll's Bench", faction = "neutral" },
-      { id = 47489, type = "quest", rewardDecor = 252406, model3D = 2023436, title = "Green Boralus Market Tent", faction = "alliance"},
-      { id = 47741, type = "quest", rewardDecor = 245493, model3D = 1888157, title = "Idol of Rezan, Loa of Kings", faction = "horde" },
-      { id = 47874, type = "quest", rewardDecor = 245417, model3D = 6877803, title = "Akunda the Tapestry", faction = "horde" },
-      { id = 48089, type = "quest", rewardDecor = 252392, model3D = 1602483, title = "Admiral's Chandelier", faction = "alliance"},
-      { id = 48554, type = "quest", rewardDecor = 245263, model3D = 1707340, title = "Zocalo Drinks", faction = "horde" },
-      { id = 50611, type = "quest", rewardDecor = 252655, model3D = 7301013, title = "Copper Tidesage's Sconce", faction = "alliance"},
-      { id = 50783, type = "quest", rewardDecor = 245984, model3D = 6988296, title = "Sagehold Window", faction = "alliance"},
-      { id = 50808, type = "quest", rewardDecor = 245491, model3D = 1661034, title = "Bwonsamdi's Golden Gong", faction = "horde" },
-      { id = 50963, type = "quest", rewardDecor = 245485, model3D = 2098556, title = "Golden Zandalari Bed", faction = "horde" },
-      { id = 50972, type = "quest", rewardDecor = 252386, model3D = 1602427, title = "Admiralty's Upholstered Chair", faction = "alliance"},
-      { id = 51401, type = "quest", rewardDecor = 252395, model3D = 1709395, title = "Brennadam Coop", faction = "alliance"},
-      { id = 51601, type = "quest", rewardDecor = 245466, model3D = 2341260, title = "Forsaken Spiked Chair", faction = "horde" },
-      { id = 51984, type = "quest", rewardDecor = 245465, model3D = 2341259, title = "Tirisfal Wooden Chair", faction = "horde" },
-      { id = 51985, type = "quest", rewardDecor = 245475, model3D = 2445708, title = "Forsaken Long Table", faction = "horde" },
-      { id = 51986, type = "quest", rewardDecor = 245473, model3D = 2341256, title = "Forsaken Studded Table", faction = "horde" },
-      { id = 52122, type = "quest", rewardDecor = 245469, model3D = 2353882, title = "Lordaeron Lantern", faction = "horde" },
-      { id = 52978, type = "quest", rewardDecor = 245470, model3D = 2470997, title = "Lordaeron Hanging Lantern", faction = "horde" },
-      { id = 53566, type = "quest", rewardDecor = 245427, model3D = 1019061, title = "Dark Iron Expedition Tent", faction = "alliance", note = "Dark Iron Dwarf Only"},
-      { id = 53720, type = "quest", rewardDecor = 252403, model3D = 1852975, title = "Admiral's Bed", faction = "alliance"},
-      { id = 53887, type = "quest", rewardDecor = 252400, model3D = 1852941, title = "Tiragarde Emblem", faction = "alliance"},
-      { id = 54992, type = "quest", rewardDecor = 246701, model3D = 1842929, title = "Gnomish Sprocket Table", faction = "neutral" },
-      { id = 55045, type = "quest", rewardDecor = 252754, model3D = 1887706, title = "Seaworthy Boralus Bell", faction = "alliance"},
-      { id = 55736, type = "quest", rewardDecor = 246703, model3D = 1842930, title = "Double-Sprocket Table", faction = "neutral" },
-    }
-  },
-  {
-    name = "Shadowlands",
-    quests = {
-      { id = 59583, type = "quest", rewardDecor = 248336, model3D = 953804, title = "Stormwind Wooden Table", faction = "alliance"  },
-    }
-  },
-  {
-    name = "Dragonflight",
-    quests = {
-      { id = 78864, type = "quest", rewardDecor = 251022, model3D = 4756256, title = "Bel'ameth Traveler's Pack", faction = "neutral" },
-      { id = 67047, type = "quest", rewardDecor = 246706, model3D = 4201172, title = "Elegant Dracthyr's Tea Cup", faction = "neutral" },
-      { id = 77283, type = "quest", rewardDecor = 257352, model3D = 4690349, title = "Large Brazier of Elune", faction = "neutral" },
-      { id = 66001, type = "quest", rewardDecor = 246863, model3D = 4298559, title = "Open Tome of the Dragon's Dedication", faction = "neutral" },
-      { id = 70745, type = "quest", rewardDecor = 256429, model3D = 3952854, title = "Valdrakken Lamppost", faction = "neutral" },
-      { id = 72935, type = "quest", rewardDecor = 248651, model3D = 7141928, title = "Draconic Memorial Stone", faction = "neutral" },
-      { id = 70880, type = "quest", rewardDecor = 248655, model3D = 7141935, title = "Elegant Dracthyr's Tea Set", faction = "neutral" },
-      { id = 71097, type = "quest", rewardDecor = 248653, model3D = 7141933, title = "Valdrakken Stone Stool", faction = "neutral" },
-      { id = 67063, type = "quest", rewardDecor = 247223, model3D = 7109344, title = "Roast Riverbeast Platter", faction = "neutral" },
-      { id = 76597, type = "quest", rewardDecor = 250912, model3D = 6892651, title = "Draconic Crafter's Forge", faction = "neutral" },
-    }
-  },
-  {
-    name = "The War Within",
-    quests = {
-      { id = 79565, type = "quest", rewardDecor = 258267, model3D = 5169960, title = "Candle-Festooned Wooden Awning", faction = "neutral" },
-      { id = 87297, type = "quest", rewardDecor = 243321, model3D = 5700691, title = "Cartel Head's Schmancy Desk", faction = "neutral" },
-      { id = 82144, type = "quest", rewardDecor = 253040, model3D = 5248936, title = "Coreway Sentinel Lamppost", faction = "neutral" },
-      { id = 86408, type = "quest", rewardDecor = 245306, model3D = 5793099, title = "Cozy Four-Pipe Bed", faction = "neutral" },
-      { id = 78761, type = "quest", rewardDecor = 253020, model3D = 4860701, title = "Earthen Etched Throne", faction = "neutral" },
-      { id = 87008, type = "quest", rewardDecor = 245308, model3D = 5793083, title = "\"Elegant\" Lawn Flamingo", faction = "neutral" },
-      { id = 82895, type = "quest", rewardDecor = 253034, model3D = 4860713, title = "Fallside Lantern", faction = "neutral" },
-      { id = 78999, type = "quest", rewardDecor = 253021, model3D = 4896177, title = "Freywold Bench", faction = "neutral" },
-      { id = 78759, type = "quest", rewardDecor = 253166, model3D = 4906199, title = "Freywold Fountain", faction = "neutral" },
-      { id = 79703, type = "quest", rewardDecor = 253035, model3D = 4896174, title = "Freywold Seat", faction = "neutral" },
-      { id = 78642, type = "quest", rewardDecor = 258264, model3D = 5169939, title = "Kobold Candle Trio", faction = "neutral" },
-      { id = 79510, type = "quest", rewardDecor = 258262, model3D = 5169937, title = "Kobold Digger's Chair", faction = "neutral" },
-      { id = 80516, type = "quest", rewardDecor = 258265, model3D = 5169958, title = "Kobold Wagon", faction = "neutral" },
-      { id = 83176, type = "quest", rewardDecor = 245310, model3D = 5793102, title = "Reinforced Goblin Umbrella", faction = "neutral" },
-      { id = 85780, type = "quest", rewardDecor = 245303, model3D = 5900860, title = "Rocket-Unpowered Rocket", faction = "neutral" },
-      { id = 84675, type = "quest", rewardDecor = 260700, model3D = 5689810, title = "Gob-chanical Trash Heap", faction = "neutral" },
-      { id = 79530, type = "quest", rewardDecor = 252756, model3D = 5335168, title = "Stonelight Countertop", faction = "neutral" },
-      { id = 85711, type = "quest", rewardDecor = 245325, model3D = 5689844, title = "Undermine Market Stall", faction = "neutral" },
-      { id = 83160, type = "quest", rewardDecor = 253172, model3D = 7262833, title = "Gundargaz Grand Keg", faction = "neutral" },	  
-      { id = 92577, type = "quest", rewardDecor = 245259, model3D = 1096761, title = "Small Val'sharah Bookcase", faction = "neutral"  },
-      { id = 92578, type = "quest", rewardDecor = 248116, model3D = 4290181, title = "Valdrakken Chandelier", faction = "neutral"  },
-      { id = 92580, type = "quest", rewardDecor = 246487, model3D = 6699745, title = "Gnomish Tesla Coil", faction = "neutral"  },
-      { id = 92581, type = "quest", rewardDecor = 247915, model3D = 1361710, title = "Square Suramar Table", faction = "neutral"  }, 
-	  { id = 92572, type = "quest", rewardDecor = 253173, model3D = 7262874, title = "Meadery Storage Barrel", faction = "neutral" },	  
-    }
-  },
---[[{
-	name = "Midnight",
-	quests = {
+--achievements
 
-	}
-  },]]
-}
+--quests spot
+
 
 dv.bossdrops = {
   {
     name = "Eastern Kingdoms",
 	expansion = "Classic",
     items = {
-      { id = 248332, bossencounter = 95, mapID = 292 },
-      { id = 244655, bossencounter = 100, mapID = 315 },
-      { id = 246429, bossencounter = 387, mapID = 243 },
-      { id = 245435, bossencounter = 1234, mapID = 618 },
-      { id = 246865, bossencounter = 1838, mapID = 822 },
+      { id = 248332, bossencounter = 95, model3D = 936398, mapID = 292 },--good
+      { id = 244655, bossencounter = 100, model3D = 1379266, mapID = 315 },--good
+      { id = 246429, bossencounter = 387, model3D = 197168, mapID = 243 },--good
+      { id = 245435, bossencounter = 1234, model3D = 1005505, mapID = 618 },--good
+      { id = 246865, bossencounter = 1838, model3D = 4335906, mapID = 822 },--good
     }
   },
   {
     name = "Windrunner Spire",
 	expansion = "Midnight",
     items = {
-      { id = 256683, bossencounter = 2658, mapID = 2499 },
+      { id = 256683, bossencounter = 2658, model3D = 6190527, mapID = 2499 },--good
     }
   },
   {
     name = "Magisters Terrace",
 	expansion = "Midnight",
     items = {
-      { id = 263230, bossencounter = 2662, mapID = 2520 },
+      { id = 263230, bossencounter = 2662, model3D = 6050875, mapID = 2520 },--good
     }
   },
   {
     name = "Murder Row",
 	expansion = "Midnight",
     items = {
-      { id = 263238, bossencounter = 2682, mapID = 2434 },
+      { id = 263238, bossencounter = 2682, model3D = 7296096, mapID = 2434 },--good
     }
   },
   {
     name = "VoidSpire",
 	expansion = "Midnight",
     items = {
-      { id = 264497, bossencounter = 2733, mapID = 2529 },
-      { id = 264498, bossencounter = 2734, mapID = 2529 },
-      { id = 264491, bossencounter = 2735, mapID = 2529 },
-      { id = 264494, bossencounter = 2736, mapID = 2529 },
-      { id = 262957, bossencounter = 2737, mapID = 2529 },
-      { id = 264500, bossencounter = 2738, mapID = 2530 },
-      { id = 265951, bossencounter = 2738, mapID = 2530 },
-      { id = 266887, bossencounter = 2738, mapID = 2530 },
-      { id = 268049, bossencounter = 2738, mapID = 2530 },
+      { id = 264497, bossencounter = 2733, model3D = 7136760, mapID = 2529 },--good
+      { id = 264498, bossencounter = 2734, model3D = 7302402, mapID = 2529 },--good
+      { id = 264491, bossencounter = 2735, model3D = 6210896, mapID = 2529 },--good
+      { id = 264494, bossencounter = 2736, model3D = 6391990, mapID = 2529 },--good
+      { id = 262957, bossencounter = 2737, model3D = 7115753, mapID = 2529 },--good
+      --{ id = 264500, bossencounter = 2738, model3D = 7370900, mapID = 2530 },--good
+      { id = 265951, bossencounter = 2738, model3D = 7550713, mapID = 2530 },--good
+      { id = 266887, bossencounter = 2738, model3D = 7556294, mapID = 2530 },--good
+      { id = 268049, bossencounter = 2738, model3D = 7633283, mapID = 2530 },--good
     }
   },
   {
     name = "March on Quel'Danas",
 	expansion = "Midnight",
     items = {
-      { id = 264187, bossencounter = 2739, mapID = 2533 },
-      { id = 264492, bossencounter = 2740, mapID = 2534 },
-      { id = 265949, bossencounter = 2740, mapID = 2534 },
-      { id = 266885, bossencounter = 2740, mapID = 2534 },
-      { id = 267646, bossencounter = 2740, mapID = 2534 },
+      { id = 264187, bossencounter = 2739, model3D = 7317243, mapID = 2533 },
+      { id = 264492, bossencounter = 2740, model3D = 6224353, mapID = 2534 },
+      { id = 265949, bossencounter = 2740, model3D = 7550710, mapID = 2534 },
+      { id = 266885, bossencounter = 2740, model3D = 7556292, mapID = 2534 },
+      { id = 267646, bossencounter = 2740, model3D = 7633282, mapID = 2534 },
     }
   },
   {
     name = "The Blinding  Vale",
 	expansion = "Midnight",
     items = {
-      { id = 253451, bossencounter = 2772, mapID = 2500 },
+      { id = 253451, bossencounter = 2772, model3D = 6839738, mapID = 2500 }, --good
     }
   },
   {
     name = "Den of Nalorakk",
 	expansion = "Midnight",
     items = {
-      { id = 264332, bossencounter = 2778, mapID = 2513 },
+      { id = 264332, bossencounter = 2778, model3D = 6153808, mapID = 2513 },--good
     }
   },
   {
     name = "The Dreamrift",
 	expansion = "Midnight",
     items = {
-      { id = 264246, bossencounter = 2795, mapID = 2532 },
-      { id = 265950, bossencounter = 2795, mapID = 2532 },
-      { id = 266886, bossencounter = 2795, mapID = 2532 },
-      { id = 267645, bossencounter = 2795, mapID = 2532 },
+      { id = 264246, bossencounter = 2795, model3D = 5746809, mapID = 2532 },
+      { id = 265950, bossencounter = 2795, model3D = 7550712, mapID = 2532 },
+      { id = 266886, bossencounter = 2795, model3D = 7556293, mapID = 2532 },
+      { id = 267645, bossencounter = 2795, model3D = 7633281, mapID = 2532 },
     }
   },
   {
     name = "Maisara Caverns",
 	expansion = "Midnight",
     items = {
-      { id = 264717, bossencounter = 2812, mapID = 2501 },
+      { id = 264717, bossencounter = 2812, model3D = 6195760, mapID = 2501 }, --good
     }
   },
   {
     name = "Delves",
 	expansion = "Midnight",
     items = {
-      { id = 264330, bossevent = "Midnight Delves", mapID = 2537 },
-      { id = 267009, bossevent = "Midnight Delves", mapID = 2537 },
-      { id = 264258, bossevent = "Midnight Delves", mapID = 2537 },
-      { id = 264342, bossevent = "Midnight Delves", mapID = 2537 },
-      { id = 251967, bossevent = "Midnight Delves", mapID = 2537 },
-      { id = 263036, bossevent = "Midnight Delves", mapID = 2537 },
-      { id = 263042, bossevent = "Midnight Delves", mapID = 2537 },
-      { id = 263233, bossevent = "Midnight Delves", mapID = 2537 },
+      { id = 264330, bossevent = "Midnight Delves", model3D = 6075573, mapID = 2537 },--good
+      { id = 267009, bossevent = "Midnight Delves", model3D = 6212435, mapID = 2537 },--good
+      { id = 264258, bossevent = "Midnight Delves", model3D = 6225683, mapID = 2537 },--good
+      { id = 264342, bossevent = "Midnight Delves", model3D = 7136759, mapID = 2537 },--good
+      { id = 251967, bossevent = "Midnight Delves", model3D = 6225689, mapID = 2537 },--good
+      { id = 263036, bossevent = "Midnight Delves", model3D = 4732009, mapID = 2537 },--good
+      { id = 263042, bossevent = "Midnight Delves", model3D = 6252874, mapID = 2537 },--good
+      { id = 263233, bossevent = "Midnight Delves", model3D = 6050885, mapID = 2537 },--good
     }
   },
     {
     name = "Nexus-Point Xenas",
 	expansion = "Midnight",
     items = {
-      { id = 264338, bossencounter = 2815, mapID = 2556 },
+      { id = 264338, bossencounter = 2815, model3D = 6210900, mapID = 2556 }, --good
     }
   },
   {
     name = "Northrend",
 	expansion = "Wrath of the Lich King",
     items = {
-      { id = 267007, bossencounter = 610, mapID = 184 },
+      { id = 267007, bossencounter = 610, model3D = 328250, mapID = 184 },--good
     }
   },
   {
     name = "Pandaria",
 	expansion = "Mists of Pandaria",
     items = {
-      { id = 246846, bossencounter = 335, mapID = 429 },
-      { id = 253242, bossencounter = 869, mapID = 567 },
+      { id = 246846, bossencounter = 335, model3D = 534950, mapID = 429 },--good
+      { id = 253242, bossencounter = 869, model3D = 6905426, mapID = 567 }, --good
     }
   },
   {
     name = "Draenor",
 	expansion = "Warlords of Draenor",
     items = {
-      { id = 251329, bossevent = "Missive: Assault on Socrethar's Rise", mapID = 539, faction = "alliance" },
-      { id = 251331, bossencounter = 1225, mapID = 593 },
-      { id = 245434, bossencounter = 1238, mapID = 595 },
-	  { id = 258744, bossencounter = 968, mapID = 602 },
+      { id = 251329, bossevent = "Missive: Assault on Socrethar's Rise", model3D = 878999, mapID = 539, faction = "alliance" },--good
+      { id = 251331, bossencounter = 1225, model3D = 1025872, mapID = 593 },--good
+      { id = 245434, bossencounter = 1238, model3D = 1005503, mapID = 595 },--good
+	  { id = 258744, bossencounter = 968, model3D = 971695, mapID = 602 },--good
     }
   },
   {
     name = "Broken Isles",
 	expansion = "Legion",
     items = {
-      { id = 257724, bossevent = "Highmountain Paragon Chest", mapID = 650 },
-      { id = 238857, bossencounter = 1657, mapID = 733 },
-      { id = 245451, bossencounter = 1687, mapID = 731 },
-      { id = 247913, bossencounter = 1720, mapID = 763 },
-      { id = 256682, bossencounter = 1751, mapID = 766 },
-      { id = 241044, bossencounter = 1982, mapID = 903 },
+      { id = 257724, bossevent = "Highmountain Paragon Chest", model3D = 1313472, mapID = 650 },--good
+      { id = 238857, bossencounter = 1657, model3D = 1096755, mapID = 733 },--good
+      { id = 245451, bossencounter = 1687, model3D = 1313217, mapID = 731 },--good
+      { id = 247913, bossencounter = 1720, model3D = 1361708, mapID = 763 },--good
+      { id = 256682, bossencounter = 1751, model3D = 1405830, mapID = 766 },--good
+      { id = 241044, bossencounter = 1982, model3D = 877007, mapID = 903 },--good
     }
   },
   {
     name = "Kul Tiras",
 	expansion = "Battle for Azeroth",
     items = {
-      { id = 257928, bossevent = "Strange Recycling Requisition (Mechagon)", mapID = 1462 },
-      { id = 246481, bossevent = "Self-Assembling Homeware Kit (Mechagon)", mapID = 1462 },
-      { id = 246599, bossevent = "Self-Assembling Homeware Kit (Mechagon)", mapID = 1462 },
-      { id = 246602, bossevent = "Self-Assembling Homeware Kit (Mechagon)", mapID = 1462 },
-      { id = 246600, bossevent = "Self-Assembling Homeware Kit (Mechagon)", mapID = 1462 },
-      { id = 246421, bossencounter = 2095, mapID = 936 },
-      { id = 245681, bossencounter = 2156, mapID = 1040 },
-      { id = 267008, bossencounter = 2328, mapID = 1345 },
-      { id = 255672, bossencounter = 2331, mapID = 1497 },
+      { id = 257928, bossevent = "Strange Recycling Requisition (Mechagon)", model3D = 2929684, mapID = 1462 },
+      { id = 246481, bossevent = "Self-Assembling Homeware Kit (Mechagon)", model3D = 1624683, mapID = 1462 },
+      { id = 246599, bossevent = "Self-Assembling Homeware Kit (Mechagon)", model3D = 1842467, mapID = 1462 },--good
+      { id = 246602, bossevent = "Self-Assembling Homeware Kit (Mechagon)", model3D = 2067166, mapID = 1462 },--good
+      { id = 246600, bossevent = "Self-Assembling Homeware Kit (Mechagon)", model3D = 1842492, mapID = 1462 },--good
+      { id = 246421, bossencounter = 2095, model3D = 197304, mapID = 936 },
+      { id = 245681, bossencounter = 2156, model3D = 6980179, mapID = 1040 },
+      { id = 267008, bossencounter = 2328, model3D = 1959305, mapID = 1345 },--good
+      { id = 255672, bossencounter = 2331, model3D = 2745099, mapID = 1497 },
     }
   },
   {
     name = "Dragon Isles",
 	expansion = "Dragonflight",
     items = {
-      { id = 256354, bossencounter = 2501, mapID = 2080 },
-      { id = 256428, bossencounter = 2503, mapID = 2094 },
-      { id = 260359, bossencounter = 2514, mapID = 2099 },
+      { id = 256354, bossencounter = 2501, model3D = 4420033, mapID = 2080 },--good
+      { id = 256428, bossencounter = 2503, model3D = 3883458, mapID = 2094 },--good
+      { id = 260359, bossencounter = 2514, model3D = 6431406, mapID = 2099 },--good
     }
   },
   {
     name = "Khaz Algar",
 	expansion = "The War Within",
     items = {
-      { id = 245294, bossevent = "Theater Troupe", mapID = 2248 },
-      { id = 245320, bossevent = "Shipping and Handling Job Streak (Undermine)", mapID = 2346 },
-      { id = 245938, bossencounter = 2573, mapID = 2309 },
-      { id = 245560, bossencounter = 2589, mapID = 2335 },
-	  { id = 258268, bossencounter = 2561, mapID = 2303 },
+      { id = 245294, bossevent = "Theater Troupe", model3D = 5647269, mapID = 2248 },--good
+      { id = 245320, bossevent = "Shipping and Handling Job Streak (Undermine)", model3D = 5689822, mapID = 2346 },--good
+      { id = 245938, bossencounter = 2573, model3D = 5360239, mapID = 2309 },--good
+      { id = 245560, bossencounter = 2589, model3D = 6924252, mapID = 2335 },--good
+	  { id = 258268, bossencounter = 2561, model3D = 5503818, mapID = 2303 },--good
     }
   }
 }
+
 
 dv.events = {
     {
         name = "Limited-Time Events",
         items = {
-            {
+            --[[{
                 id = "twitch_drop",
                 title = "Twitch Drop Event",
                 description = "Watch Twitch to earn this cutie",
@@ -3729,7 +2740,7 @@ dv.events = {
                 rewards = {
                     { decorID = 15151 },
                 },
-            },
+            },]]
             {
                 id = "twilight_ascension",
                 title = "Twilight Ascension",

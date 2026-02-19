@@ -1,4 +1,4 @@
--- Auto-generated Professions Data
+﻿-- Auto-generated Professions Data
 -- Contains craftable housing decor items
 -- Generated: 2026-01-17
 
@@ -85,7 +85,7 @@ local professions = {
             profession = "Cooking",
             vendor = "Auditor Balwurz",
             spellID = 1245993,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -106,7 +106,23 @@ local professions = {
                     itemName = "Perfect Preservatives",
                     count = 10,
                 },
+                {
+                    itemID = 210930,
+                    itemName = "Bismuth",
+                    count = 15,
+                },
+                {
+                    itemID = 210933,
+                    itemName = "Aqirite",
+                    count = 5,
+                },
+                {
+                    itemID = 210936,
+                    itemName = "Ironclaw Ore",
+                    count = 5,
+                },
             },
+
         },
         {
             decorID = 765,
@@ -116,7 +132,7 @@ local professions = {
             profession = "Cooking",
             vendor = "Profession Trainer",
             spellID = 1266541,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -126,11 +142,6 @@ local professions = {
                     itemID = 221754,
                     itemName = "Ringing Deeps Ingot",
                     count = 4,
-                },
-                {
-                    itemID = 223971,
-                    itemName = "Azj-Kahet Special",
-                    count = 1,
                 },
                 {
                     itemID = 222705,
@@ -148,6 +159,7 @@ local professions = {
                     count = 15,
                 },
             },
+
         },
         {
             decorID = 829,
@@ -157,7 +169,7 @@ local professions = {
             profession = "Leatherworking",
             vendor = "Profession Trainer",
             spellID = 1270836,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -168,7 +180,23 @@ local professions = {
                     itemName = "Mosswool Thread",
                     count = 10,
                 },
+                {
+                    itemID = 212664,
+                    itemName = "Stormcharged Leather",
+                    count = 4,
+                },
+                {
+                    itemID = 219880,
+                    itemName = "Carapace-Backed Hide",
+                    count = 6,
+                },
+                {
+                    itemID = 221853,
+                    itemName = "Handful of Bismuth Bolts",
+                    count = 9,
+                },
             },
+
         },
         {
             decorID = 854,
@@ -209,7 +237,7 @@ local professions = {
             profession = "Alchemy",
             vendor = "Profession Trainer",
             spellID = 1261255,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251764,
                     itemName = "Ashwood Lumber",
@@ -230,12 +258,8 @@ local professions = {
                     itemName = "Deepstone Oil",
                     count = 6,
                 },
-                {
-                    itemID = 69237,
-                    itemName = "Living Ember",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 922,
@@ -333,17 +357,7 @@ local professions = {
             profession = "Leatherworking",
             vendor = "Profession Trainer",
             spellID = 1246938,
-            reagents = {
-                {
-                    itemID = 238529,
-                    itemName = "Majestic Hide",
-                    count = 1,
-                },
-                {
-                    itemID = 238528,
-                    itemName = "Majestic Claw",
-                    count = 1,
-                },
+                        reagents = {
                 {
                     itemID = 238523,
                     itemName = "Carving Canine",
@@ -355,6 +369,7 @@ local professions = {
                     count = 24,
                 },
             },
+
         },
         {
             decorID = 1157,
@@ -364,17 +379,7 @@ local professions = {
             profession = "Leatherworking",
             vendor = "Lyrendal",
             spellID = 1246942,
-            reagents = {
-                {
-                    itemID = 238529,
-                    itemName = "Majestic Hide",
-                    count = 1,
-                },
-                {
-                    itemID = 238528,
-                    itemName = "Majestic Claw",
-                    count = 1,
-                },
+                        reagents = {
                 {
                     itemID = 251665,
                     itemName = "Silverleaf Thread",
@@ -396,6 +401,7 @@ local professions = {
                     count = 20,
                 },
             },
+
         },
         {
             decorID = 1161,
@@ -722,28 +728,29 @@ local professions = {
             profession = "Alchemy",
             vendor = "Naynar",
             spellID = 1233133,
-            reagents = {
+                        reagents = {
+                {
+                    itemID = 192493,
+                    itemName = "Mote of Primal Energy",
+                    count = 6,
+                },
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 32,
                 },
                 {
-                    itemID = 236950,
-                    itemName = "Mote of Primal Energy",
-                    count = 6,
-                },
-                {
-                    itemID = 210633,
-                    itemName = "Wondrous Synergist",
-                    count = 4,
-                },
-                {
-                    itemID = 210630,
+                    itemID = 241281,
                     itemName = "Composite Flora",
                     count = 4,
                 },
+                {
+                    itemID = 241283,
+                    itemName = "Wondrous Synergist",
+                    count = 4,
+                },
             },
+
         },
         {
             decorID = 1260,
@@ -753,23 +760,24 @@ local professions = {
             profession = "Blacksmithing",
             vendor = "Profession Trainer",
             spellID = 1259675,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
                     count = 15,
                 },
                 {
-                    itemID = 211235,
-                    itemName = "Core Alloy",
-                    count = 5,
-                },
-                {
-                    itemID = 211236,
+                    itemID = 221853,
                     itemName = "Handful of Bismuth Bolts",
                     count = 4,
                 },
+                {
+                    itemID = 222417,
+                    itemName = "Core Alloy",
+                    count = 5,
+                },
             },
+
         },
         {
             decorID = 1270,
@@ -779,18 +787,19 @@ local professions = {
             profession = "Blacksmithing",
             vendor = "Profession Trainer",
             spellID = 1259681,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
                     count = 30,
                 },
                 {
-                    itemID = 222523,
-                    itemName = "Coreforged Skeleton Key",
-                    count = 1,
+                    itemID = 222417,
+                    itemName = "Core Alloy",
+                    count = 5,
                 },
             },
+
         },
         {
             decorID = 1273,
@@ -800,7 +809,7 @@ local professions = {
             profession = "Leatherworking",
             vendor = "Profession Trainer",
             spellID = 1260328,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -811,7 +820,13 @@ local professions = {
                     itemName = "Mosswool Thread",
                     count = 10,
                 },
+                {
+                    itemID = 219889,
+                    itemName = "Sporecoated Hide",
+                    count = 2,
+                },
             },
+
         },
         {
             decorID = 1275,
@@ -821,7 +836,7 @@ local professions = {
             profession = "Tailoring",
             vendor = "Profession Trainer",
             spellID = 1260326,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -832,7 +847,18 @@ local professions = {
                     itemName = "Mosswool Thread",
                     count = 20,
                 },
+                {
+                    itemID = 222804,
+                    itemName = "Weavercloth Bolt",
+                    count = 6,
+                },
+                {
+                    itemID = 224828,
+                    itemName = "Weavercloth",
+                    count = 2,
+                },
             },
+
         },
         {
             decorID = 1282,
@@ -1094,23 +1120,24 @@ local professions = {
             profession = "Inscription",
             vendor = "Naynar",
             spellID = 1248630,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 18,
                 },
                 {
-                    itemID = 224608,
-                    itemName = "Soul Cipher",
-                    count = 7,
-                },
-                {
-                    itemID = 224605,
+                    itemID = 245764,
                     itemName = "Codified Azeroot",
                     count = 3,
                 },
+                {
+                    itemID = 245766,
+                    itemName = "Soul Cipher",
+                    count = 7,
+                },
             },
+
         },
         {
             decorID = 1351,
@@ -1394,7 +1421,7 @@ local professions = {
             profession = "Jewelcrafting",
             vendor = "Profession Trainer",
             spellID = 1260096,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -1406,11 +1433,12 @@ local professions = {
                     count = 4,
                 },
                 {
-                    itemID = 221754,
-                    itemName = "Ringing Deeps Ingot",
-                    count = 1,
+                    itemID = 213756,
+                    itemName = "Marbled Stone",
+                    count = 5,
                 },
             },
+
         },
         {
             decorID = 1791,
@@ -1637,7 +1665,7 @@ local professions = {
             profession = "Engineering",
             vendor = "Profession Trainer",
             spellID = 1259724,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -1648,7 +1676,13 @@ local professions = {
                     itemName = "Glittering Glass",
                     count = 6,
                 },
+                {
+                    itemID = 221856,
+                    itemName = "Whimsical Wiring",
+                    count = 6,
+                },
             },
+
         },
         {
             decorID = 2001,
@@ -1822,33 +1856,34 @@ local professions = {
             skillRequired = 0,
             profession = "Engineering",
             spellID = 1248612,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 30,
                 },
                 {
-                    itemID = 228110,
+                    itemID = 243574,
                     itemName = "Song Gear",
                     count = 10,
                 },
                 {
-                    itemID = 228109,
+                    itemID = 243576,
                     itemName = "Soul Sprocket",
                     count = 10,
                 },
                 {
-                    itemID = 228105,
+                    itemID = 243578,
                     itemName = "Aetherlume",
                     count = 5,
                 },
                 {
-                    itemID = 228112,
+                    itemID = 243581,
                     itemName = "Evercore",
                     count = 5,
                 },
             },
+
         },
         {
             decorID = 2329,
@@ -1858,7 +1893,7 @@ local professions = {
             profession = "Engineering",
             vendor = "Profession Trainer",
             spellID = 1260352,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251768,
                     itemName = "Darkpine Lumber",
@@ -1884,12 +1919,8 @@ local professions = {
                     itemName = "Monelite Ore",
                     count = 20,
                 },
-                {
-                    itemID = 166970,
-                    itemName = "Energy Cell",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 2331,
@@ -1961,7 +1992,7 @@ local professions = {
             profession = "Engineering",
             vendor = "Profession Trainer",
             spellID = 1260425,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251768,
                     itemName = "Darkpine Lumber",
@@ -1982,17 +2013,13 @@ local professions = {
                     itemName = "Monelite Ore",
                     count = 8,
                 },
-                {
-                    itemID = 154123,
-                    itemName = "Amberblaze",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 2436,
             itemID = 246604,
-            itemName = "Deactivated Atomic Recalibrator ",
+            itemName = "Deactivated Atomic Recalibrator",
             skillRequired = 0,
             profession = "Engineering",
             vendor = "Profession Trainer",
@@ -2069,28 +2096,29 @@ local professions = {
             profession = "Enchanting",
             vendor = "Neriv",
             spellID = 1246909,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 18,
                 },
                 {
-                    itemID = 211271,
-                    itemName = "Radiant Shard",
-                    count = 10,
-                },
-                {
-                    itemID = 228115,
+                    itemID = 242787,
                     itemName = "Crystalline Glass",
                     count = 5,
                 },
                 {
-                    itemID = 228118,
+                    itemID = 243602,
+                    itemName = "Radiant Shard",
+                    count = 10,
+                },
+                {
+                    itemID = 243605,
                     itemName = "Dawn Crystal",
                     count = 5,
                 },
             },
+
         },
         {
             decorID = 2465,
@@ -2171,7 +2199,7 @@ local professions = {
             profession = "Cooking",
             vendor = "Profession Trainer",
             spellID = 1245995,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -2187,7 +2215,18 @@ local professions = {
                     itemName = "Perfect Preservatives",
                     count = 10,
                 },
+                {
+                    itemID = 210930,
+                    itemName = "Bismuth",
+                    count = 10,
+                },
+                {
+                    itemID = 210936,
+                    itemName = "Ironclaw Ore",
+                    count = 5,
+                },
             },
+
         },
         {
             decorID = 2472,
@@ -2197,7 +2236,7 @@ local professions = {
             profession = "Cooking",
             vendor = "Profession Trainer",
             spellID = 1245994,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -2213,7 +2252,13 @@ local professions = {
                     itemName = "Perfect Preservatives",
                     count = 5,
                 },
+                {
+                    itemID = 210930,
+                    itemName = "Bismuth",
+                    count = 8,
+                },
             },
+
         },
         {
             decorID = 2591,
@@ -2222,21 +2267,11 @@ local professions = {
             skillRequired = 0,
             profession = "Cooking",
             spellID = 1266563,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251763,
                     itemName = "Bamboo Lumber",
                     count = 18,
-                },
-                {
-                    itemID = 74662,
-                    itemName = "Rice Flour",
-                    count = 1,
-                },
-                {
-                    itemID = 74853,
-                    itemName = "100 Year Soy Sauce",
-                    count = 1,
                 },
                 {
                     itemID = 74839,
@@ -2259,6 +2294,7 @@ local professions = {
                     count = 10,
                 },
             },
+
         },
         {
             decorID = 2593,
@@ -2268,7 +2304,7 @@ local professions = {
             profession = "Cooking",
             vendor = "Profession Trainer",
             spellID = 1266555,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
@@ -2289,7 +2325,13 @@ local professions = {
                     itemName = "Perfect Preservatives",
                     count = 15,
                 },
+                {
+                    itemID = 189143,
+                    itemName = "Draconium Ore",
+                    count = 10,
+                },
             },
+
         },
         {
             decorID = 2595,
@@ -2299,7 +2341,7 @@ local professions = {
             profession = "Cooking",
             vendor = "Profession Trainer",
             spellID = 1260331,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
@@ -2320,7 +2362,13 @@ local professions = {
                     itemName = "Perfect Preservatives",
                     count = 15,
                 },
+                {
+                    itemID = 190312,
+                    itemName = "Khaz'gorite Ore",
+                    count = 4,
+                },
             },
+
         },
         {
             decorID = 2596,
@@ -2330,7 +2378,7 @@ local professions = {
             profession = "Cooking",
             vendor = "Profession Trainer",
             spellID = 1260333,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
@@ -2356,7 +2404,13 @@ local professions = {
                     itemName = "Perfect Preservatives",
                     count = 15,
                 },
+                {
+                    itemID = 190312,
+                    itemName = "Khaz'gorite Ore",
+                    count = 4,
+                },
             },
+
         },
         {
             decorID = 3831,
@@ -2545,16 +2599,11 @@ local professions = {
             skillRequired = 0,
             profession = "Jewelcrafting",
             spellID = 1261242,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251763,
                     itemName = "Bamboo Lumber",
                     count = 50,
-                },
-                {
-                    itemID = 83092,
-                    itemName = "Orb of Mystery",
-                    count = 1,
                 },
                 {
                     itemID = 72095,
@@ -2572,6 +2621,7 @@ local professions = {
                     count = 2,
                 },
             },
+
         },
         {
             decorID = 3878,
@@ -2692,7 +2742,7 @@ local professions = {
             profession = "Blacksmithing",
             vendor = "Profession Trainer",
             spellID = 1260695,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251767,
                     itemName = "Fel-Touched Lumber",
@@ -2703,12 +2753,8 @@ local professions = {
                     itemName = "Demonsteel Bar",
                     count = 5,
                 },
-                {
-                    itemID = 124441,
-                    itemName = "Leylight Shard",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 4030,
@@ -2819,7 +2865,7 @@ local professions = {
             profession = "Blacksmithing",
             vendor = "Profession Trainer",
             spellID = 1260693,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251767,
                     itemName = "Fel-Touched Lumber",
@@ -2830,12 +2876,8 @@ local professions = {
                     itemName = "Demonsteel Bar",
                     count = 10,
                 },
-                {
-                    itemID = 124441,
-                    itemName = "Leylight Shard",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 4037,
@@ -2931,18 +2973,24 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1259441,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
                     count = 10,
                 },
                 {
-                    itemID = 194821,
-                    itemName = "Cosmic Ink",
-                    count = 2,
+                    itemID = 190395,
+                    itemName = "Serevite Ore",
+                    count = 8,
+                },
+                {
+                    itemID = 194850,
+                    itemName = "Flourishing Ink",
+                    count = 3,
                 },
             },
+
         },
         {
             decorID = 4163,
@@ -2952,18 +3000,24 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1259451,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
                     count = 10,
                 },
                 {
-                    itemID = 194821,
-                    itemName = "Cosmic Ink",
-                    count = 2,
+                    itemID = 190395,
+                    itemName = "Serevite Ore",
+                    count = 8,
+                },
+                {
+                    itemID = 194751,
+                    itemName = "Blazing Ink",
+                    count = 4,
                 },
             },
+
         },
         {
             decorID = 4164,
@@ -2973,18 +3027,24 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1259461,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
                     count = 14,
                 },
                 {
-                    itemID = 194821,
-                    itemName = "Cosmic Ink",
-                    count = 3,
+                    itemID = 190395,
+                    itemName = "Serevite Ore",
+                    count = 10,
+                },
+                {
+                    itemID = 194751,
+                    itemName = "Blazing Ink",
+                    count = 6,
                 },
             },
+
         },
         {
             decorID = 4165,
@@ -2994,7 +3054,7 @@ local professions = {
             profession = "Jewelcrafting",
             vendor = "Profession Trainer",
             spellID = 1259384,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
@@ -3005,7 +3065,18 @@ local professions = {
                     itemName = "Fractured Glass",
                     count = 2,
                 },
+                {
+                    itemID = 190395,
+                    itemName = "Serevite Ore",
+                    count = 18,
+                },
+                {
+                    itemID = 192883,
+                    itemName = "Glossy Stone",
+                    count = 4,
+                },
             },
+
         },
         {
             decorID = 4166,
@@ -3015,18 +3086,24 @@ local professions = {
             profession = "Jewelcrafting",
             vendor = "Profession Trainer",
             spellID = 1259386,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
                     count = 10,
                 },
                 {
-                    itemID = 194830,
-                    itemName = "Fractured Glass",
-                    count = 1,
+                    itemID = 190395,
+                    itemName = "Serevite Ore",
+                    count = 8,
+                },
+                {
+                    itemID = 192883,
+                    itemName = "Glossy Stone",
+                    count = 4,
                 },
             },
+
         },
         {
             decorID = 4167,
@@ -3036,7 +3113,7 @@ local professions = {
             profession = "Alchemy",
             vendor = "Profession Trainer",
             spellID = 1261885,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
@@ -3047,7 +3124,23 @@ local professions = {
                     itemName = "Awakened Earth",
                     count = 4,
                 },
+                {
+                    itemID = 190312,
+                    itemName = "Khaz'gorite Ore",
+                    count = 3,
+                },
+                {
+                    itemID = 191496,
+                    itemName = "Omnium Draconis",
+                    count = 6,
+                },
+                {
+                    itemID = 192883,
+                    itemName = "Glossy Stone",
+                    count = 6,
+                },
             },
+
         },
         {
             decorID = 4169,
@@ -3057,23 +3150,34 @@ local professions = {
             profession = "Engineering",
             vendor = "Profession Trainer",
             spellID = 1259404,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
                     count = 25,
                 },
                 {
-                    itemID = 194830,
-                    itemName = "Fractured Glass",
+                    itemID = 192876,
+                    itemName = "Frameless Lens",
                     count = 2,
                 },
                 {
-                    itemID = 198301,
-                    itemName = "Greased Up Gears",
-                    count = 1,
+                    itemID = 198183,
+                    itemName = "Handful of Serevite Bolts",
+                    count = 4,
+                },
+                {
+                    itemID = 198186,
+                    itemName = "Shock-Spring Coil",
+                    count = 4,
+                },
+                {
+                    itemID = 198198,
+                    itemName = "Reinforced Machine Chassis",
+                    count = 4,
                 },
             },
+
         },
         {
             decorID = 4170,
@@ -3083,18 +3187,34 @@ local professions = {
             profession = "Leatherworking",
             vendor = "Profession Trainer",
             spellID = 1259195,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
                     count = 45,
                 },
                 {
-                    itemID = 190300,
-                    itemName = "Pristine Vorquin Hide",
+                    itemID = 190312,
+                    itemName = "Khaz'gorite Ore",
                     count = 10,
                 },
+                {
+                    itemID = 192869,
+                    itemName = "Illimited Diamond",
+                    count = 5,
+                },
+                {
+                    itemID = 193216,
+                    itemName = "Dense Hide",
+                    count = 10,
+                },
+                {
+                    itemID = 193229,
+                    itemName = "Mireslush Hide",
+                    count = 2,
+                },
             },
+
         },
         {
             decorID = 4174,
@@ -3104,7 +3224,7 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1259422,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
@@ -3115,7 +3235,23 @@ local professions = {
                     itemName = "Glittering Parchment",
                     count = 15,
                 },
+                {
+                    itemID = 194751,
+                    itemName = "Blazing Ink",
+                    count = 3,
+                },
+                {
+                    itemID = 194850,
+                    itemName = "Flourishing Ink",
+                    count = 4,
+                },
+                {
+                    itemID = 194856,
+                    itemName = "Serene Ink",
+                    count = 5,
+                },
             },
+
         },
         {
             decorID = 4175,
@@ -3125,7 +3261,7 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1259433,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
@@ -3136,7 +3272,23 @@ local professions = {
                     itemName = "Glittering Parchment",
                     count = 16,
                 },
+                {
+                    itemID = 194751,
+                    itemName = "Blazing Ink",
+                    count = 2,
+                },
+                {
+                    itemID = 194850,
+                    itemName = "Flourishing Ink",
+                    count = 6,
+                },
+                {
+                    itemID = 194856,
+                    itemName = "Serene Ink",
+                    count = 3,
+                },
             },
+
         },
         {
             decorID = 4176,
@@ -3146,7 +3298,7 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1259429,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
@@ -3157,7 +3309,18 @@ local professions = {
                     itemName = "Glittering Parchment",
                     count = 16,
                 },
+                {
+                    itemID = 194751,
+                    itemName = "Blazing Ink",
+                    count = 7,
+                },
+                {
+                    itemID = 194856,
+                    itemName = "Serene Ink",
+                    count = 5,
+                },
             },
+
         },
         {
             decorID = 4177,
@@ -3167,18 +3330,34 @@ local professions = {
             profession = "Tailoring",
             vendor = "Profession Trainer",
             spellID = 1259247,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
                     count = 35,
                 },
                 {
-                    itemID = 190308,
-                    itemName = "Wildercloth Roll",
-                    count = 8,
+                    itemID = 190395,
+                    itemName = "Serevite Ore",
+                    count = 16,
+                },
+                {
+                    itemID = 192095,
+                    itemName = "Spool of Wilderthread",
+                    count = 12,
+                },
+                {
+                    itemID = 193926,
+                    itemName = "Wildercloth Bolt",
+                    count = 20,
+                },
+                {
+                    itemID = 194751,
+                    itemName = "Blazing Ink",
+                    count = 5,
                 },
             },
+
         },
         {
             decorID = 4480,
@@ -3188,23 +3367,24 @@ local professions = {
             profession = "Jewelcrafting",
             vendor = "Profession Trainer",
             spellID = 1259369,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
                     count = 26,
                 },
                 {
-                    itemID = 211280,
-                    itemName = "Silken Gemdust",
-                    count = 4,
+                    itemID = 190312,
+                    itemName = "Khaz'gorite Ore",
+                    count = 6,
                 },
                 {
-                    itemID = 211281,
-                    itemName = "Ambivalent Amber",
-                    count = 2,
+                    itemID = 192883,
+                    itemName = "Glossy Stone",
+                    count = 10,
                 },
             },
+
         },
         {
             decorID = 4483,
@@ -3214,7 +3394,7 @@ local professions = {
             profession = "Leatherworking",
             vendor = "Profession Trainer",
             spellID = 1259233,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
@@ -3225,7 +3405,18 @@ local professions = {
                     itemName = "Wildercloth",
                     count = 6,
                 },
+                {
+                    itemID = 190312,
+                    itemName = "Khaz'gorite Ore",
+                    count = 7,
+                },
+                {
+                    itemID = 193208,
+                    itemName = "Resilient Leather",
+                    count = 60,
+                },
             },
+
         },
         {
             decorID = 5133,
@@ -3234,23 +3425,24 @@ local professions = {
             skillRequired = 0,
             profession = "Jewelcrafting",
             spellID = 1246892,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 50,
                 },
                 {
-                    itemID = 211280,
-                    itemName = "Silken Gemdust",
-                    count = 10,
+                    itemID = 242620,
+                    itemName = "Glimmering Gemdust",
+                    count = 15,
                 },
                 {
-                    itemID = 190382,
-                    itemName = "Blazing Greendiamond",
-                    count = 5,
+                    itemID = 242788,
+                    itemName = "Duskshrouded Stone",
+                    count = 25,
                 },
             },
+
         },
         {
             decorID = 5342,
@@ -3327,7 +3519,7 @@ local professions = {
             profession = "Jewelcrafting",
             vendor = "Artificer Harlaan",
             spellID = 1261071,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251766,
                     itemName = "Shadowmoon Lumber",
@@ -3343,12 +3535,8 @@ local professions = {
                     itemName = "Sorcerous Water",
                     count = 12,
                 },
-                {
-                    itemID = 115811,
-                    itemName = "Greater Haste Taladite",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 8237,
@@ -3394,7 +3582,7 @@ local professions = {
             profession = "Jewelcrafting",
             vendor = "Artificer Harlaan",
             spellID = 1261075,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251766,
                     itemName = "Shadowmoon Lumber",
@@ -3415,12 +3603,8 @@ local professions = {
                     itemName = "Sorcerous Fire",
                     count = 2,
                 },
-                {
-                    itemID = 115805,
-                    itemName = "Mastery Taladite",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 8787,
@@ -3565,7 +3749,7 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1260596,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251768,
                     itemName = "Darkpine Lumber",
@@ -3581,12 +3765,8 @@ local professions = {
                     itemName = "Monelite Ore",
                     count = 8,
                 },
-                {
-                    itemID = 160711,
-                    itemName = "Aromatic Fish Oil",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 9167,
@@ -3596,7 +3776,7 @@ local professions = {
             profession = "Tailoring",
             vendor = "Profession Trainer",
             spellID = 1260215,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -3607,7 +3787,18 @@ local professions = {
                     itemName = "Mosswool Thread",
                     count = 12,
                 },
+                {
+                    itemID = 222615,
+                    itemName = "Apricate Ink",
+                    count = 4,
+                },
+                {
+                    itemID = 224824,
+                    itemName = "Duskweave",
+                    count = 6,
+                },
             },
+
         },
         {
             decorID = 9170,
@@ -3648,7 +3839,7 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1259796,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -3664,7 +3855,18 @@ local professions = {
                     itemName = "Stunning Sapphire",
                     count = 2,
                 },
+                {
+                    itemID = 222555,
+                    itemName = "Codified Greenwood",
+                    count = 4,
+                },
+                {
+                    itemID = 222615,
+                    itemName = "Apricate Ink",
+                    count = 9,
+                },
             },
+
         },
         {
             decorID = 9184,
@@ -3674,7 +3876,7 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1259818,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -3685,7 +3887,18 @@ local professions = {
                     itemName = "Ringing Deeps Ingot",
                     count = 3,
                 },
+                {
+                    itemID = 222555,
+                    itemName = "Codified Greenwood",
+                    count = 6,
+                },
+                {
+                    itemID = 222558,
+                    itemName = "Boundless Cipher",
+                    count = 3,
+                },
             },
+
         },
         {
             decorID = 9187,
@@ -3695,18 +3908,29 @@ local professions = {
             profession = "Enchanting",
             vendor = "Profession Trainer",
             spellID = 1259715,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
                     count = 10,
                 },
                 {
-                    itemID = 211272,
-                    itemName = "Storm Dust",
+                    itemID = 219949,
+                    itemName = "Gleaming Shard",
                     count = 4,
                 },
+                {
+                    itemID = 222417,
+                    itemName = "Core Alloy",
+                    count = 2,
+                },
+                {
+                    itemID = 224108,
+                    itemName = "Oil of Beledar's Grace",
+                    count = 2,
+                },
             },
+
         },
         {
             decorID = 9238,
@@ -3716,18 +3940,19 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1260005,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
                     count = 15,
                 },
                 {
-                    itemID = 224601,
-                    itemName = "Luminous Ink",
-                    count = 4,
+                    itemID = 222609,
+                    itemName = "Shadow Ink",
+                    count = 2,
                 },
             },
+
         },
         {
             decorID = 9239,
@@ -3737,18 +3962,14 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1260044,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
                     count = 10,
                 },
-                {
-                    itemID = 224601,
-                    itemName = "Luminous Ink",
-                    count = 2,
-                },
             },
+
         },
         {
             decorID = 9241,
@@ -3758,18 +3979,24 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1259784,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
                     count = 18,
                 },
                 {
-                    itemID = 224601,
-                    itemName = "Luminous Ink",
-                    count = 4,
+                    itemID = 222417,
+                    itemName = "Core Alloy",
+                    count = 2,
+                },
+                {
+                    itemID = 222609,
+                    itemName = "Shadow Ink",
+                    count = 2,
                 },
             },
+
         },
         {
             decorID = 9243,
@@ -3779,18 +4006,29 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1259805,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
                     count = 26,
                 },
                 {
-                    itemID = 222523,
-                    itemName = "Coreforged Skeleton Key",
-                    count = 1,
+                    itemID = 212664,
+                    itemName = "Stormcharged Leather",
+                    count = 2,
+                },
+                {
+                    itemID = 222417,
+                    itemName = "Core Alloy",
+                    count = 5,
+                },
+                {
+                    itemID = 222609,
+                    itemName = "Shadow Ink",
+                    count = 3,
                 },
             },
+
         },
         {
             decorID = 9245,
@@ -3800,7 +4038,7 @@ local professions = {
             profession = "Enchanting",
             vendor = "Profession Trainer",
             spellID = 1259690,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -3816,7 +4054,18 @@ local professions = {
                     itemName = "Crystalline Powder",
                     count = 5,
                 },
+                {
+                    itemID = 219952,
+                    itemName = "Refulgent Crystal",
+                    count = 8,
+                },
+                {
+                    itemID = 221859,
+                    itemName = "Gyrating Gear",
+                    count = 6,
+                },
             },
+
         },
         {
             decorID = 9266,
@@ -3857,23 +4106,34 @@ local professions = {
             profession = "Engineering",
             vendor = "Profession Trainer",
             spellID = 1259778,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
                     count = 42,
                 },
                 {
-                    itemID = 221756,
-                    itemName = "Vial of Kaheti Oils",
-                    count = 1,
+                    itemID = 221853,
+                    itemName = "Handful of Bismuth Bolts",
+                    count = 18,
                 },
                 {
-                    itemID = 212498,
-                    itemName = "Ambivalent Amber",
-                    count = 1,
+                    itemID = 221859,
+                    itemName = "Gyrating Gear",
+                    count = 6,
+                },
+                {
+                    itemID = 221868,
+                    itemName = "Entropy Enhancer",
+                    count = 10,
+                },
+                {
+                    itemID = 222417,
+                    itemName = "Core Alloy",
+                    count = 15,
                 },
             },
+
         },
         {
             decorID = 9269,
@@ -3883,7 +4143,7 @@ local professions = {
             profession = "Jewelcrafting",
             vendor = "Profession Trainer",
             spellID = 1260172,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -3895,11 +4155,17 @@ local professions = {
                     count = 7,
                 },
                 {
-                    itemID = 211280,
-                    itemName = "Silken Gemdust",
-                    count = 5,
+                    itemID = 213219,
+                    itemName = "Crushed Gemstones",
+                    count = 14,
+                },
+                {
+                    itemID = 222417,
+                    itemName = "Core Alloy",
+                    count = 2,
                 },
             },
+
         },
         {
             decorID = 10964,
@@ -3909,16 +4175,11 @@ local professions = {
             profession = "Enchanting",
             vendor = "Profession Trainer",
             spellID = 1261933,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
                     count = 50,
-                },
-                {
-                    itemID = 256171,
-                    itemName = "Five Flights' Grimoire",
-                    count = 1,
                 },
                 {
                     itemID = 200113,
@@ -3930,7 +4191,13 @@ local professions = {
                     itemName = "Glittering Parchment",
                     count = 9,
                 },
+                {
+                    itemID = 190312,
+                    itemName = "Khaz'gorite Ore",
+                    count = 10,
+                },
             },
+
         },
         {
             decorID = 10965,
@@ -3940,7 +4207,7 @@ local professions = {
             profession = "Enchanting",
             vendor = "Profession Trainer",
             spellID = 1261919,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
@@ -3950,11 +4217,6 @@ local professions = {
                     itemID = 193922,
                     itemName = "Wildercloth",
                     count = 2,
-                },
-                {
-                    itemID = 190327,
-                    itemName = "Awakened Air",
-                    count = 1,
                 },
                 {
                     itemID = 194784,
@@ -3967,6 +4229,7 @@ local professions = {
                     count = 6,
                 },
             },
+
         },
         {
             decorID = 11138,
@@ -3976,7 +4239,7 @@ local professions = {
             profession = "Alchemy",
             vendor = "Lyrendal",
             spellID = 1233135,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 236949,
                     itemName = "Mote of Light",
@@ -3987,7 +4250,18 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 12,
                 },
+                {
+                    itemID = 241281,
+                    itemName = "Composite Flora",
+                    count = 4,
+                },
+                {
+                    itemID = 241283,
+                    itemName = "Wondrous Synergist",
+                    count = 4,
+                },
             },
+
         },
         {
             decorID = 11162,
@@ -3997,23 +4271,19 @@ local professions = {
             profession = "Blacksmithing",
             vendor = "Profession Trainer",
             spellID = 1261896,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
                     count = 42,
                 },
                 {
-                    itemID = 190526,
+                    itemID = 189541,
                     itemName = "Primal Molten Alloy",
-                    count = 5,
-                },
-                {
-                    itemID = 190316,
-                    itemName = "Awakened Fire",
-                    count = 2,
+                    count = 12,
                 },
             },
+
         },
         {
             decorID = 11165,
@@ -4023,23 +4293,29 @@ local professions = {
             profession = "Blacksmithing",
             vendor = "Profession Trainer",
             spellID = 1261892,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
                     count = 46,
                 },
                 {
-                    itemID = 204634,
-                    itemName = "Rot Resistant Cauldron",
-                    count = 1,
-                },
-                {
                     itemID = 193922,
                     itemName = "Wildercloth",
                     count = 4,
                 },
+                {
+                    itemID = 190312,
+                    itemName = "Khaz'gorite Ore",
+                    count = 9,
+                },
+                {
+                    itemID = 191363,
+                    itemName = "Potion of Frozen Focus",
+                    count = 5,
+                },
             },
+
         },
         {
             decorID = 11281,
@@ -4311,7 +4587,7 @@ local professions = {
             profession = "Alchemy",
             vendor = "Profession Trainer",
             spellID = 1261495,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 245586,
                     itemName = "Ironwood Lumber",
@@ -4327,12 +4603,8 @@ local professions = {
                     itemName = "Black Dye",
                     count = 2,
                 },
-                {
-                    itemID = 3371,
-                    itemName = "Crystal Vial",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11377,
@@ -4461,16 +4733,11 @@ local professions = {
             profession = "Alchemy",
             vendor = "Profession Trainer",
             spellID = 1262005,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251768,
                     itemName = "Darkpine Lumber",
                     count = 5,
-                },
-                {
-                    itemID = 3371,
-                    itemName = "Crystal Vial",
-                    count = 1,
                 },
                 {
                     itemID = 152511,
@@ -4483,6 +4750,7 @@ local professions = {
                     count = 4,
                 },
             },
+
         },
         {
             decorID = 11382,
@@ -4552,7 +4820,7 @@ local professions = {
             skillRequired = 0,
             profession = "Blacksmithing",
             spellID = 1261980,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251772,
                     itemName = "Arden Lumber",
@@ -4568,17 +4836,8 @@ local professions = {
                     itemName = "Laestrite Ore",
                     count = 5,
                 },
-                {
-                    itemID = 173109,
-                    itemName = "Angerseye",
-                    count = 1,
-                },
-                {
-                    itemID = 173171,
-                    itemName = "Essence of Torment",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11385,
@@ -4648,18 +4907,19 @@ local professions = {
             profession = "Alchemy",
             vendor = "Profession Trainer",
             spellID = 1261882,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
                     count = 7,
                 },
                 {
-                    itemID = 194874,
-                    itemName = "Scribe's Fastened Quill",
-                    count = 1,
+                    itemID = 191384,
+                    itemName = "Aerated Mana Potion",
+                    count = 3,
                 },
             },
+
         },
         {
             decorID = 11388,
@@ -4669,7 +4929,7 @@ local professions = {
             profession = "Tailoring",
             vendor = "Profession Trainer",
             spellID = 1261940,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
@@ -4680,7 +4940,18 @@ local professions = {
                     itemName = "Fractured Glass",
                     count = 3,
                 },
+                {
+                    itemID = 190395,
+                    itemName = "Serevite Ore",
+                    count = 3,
+                },
+                {
+                    itemID = 194011,
+                    itemName = "Frozen Spellthread",
+                    count = 2,
+                },
             },
+
         },
         {
             decorID = 11431,
@@ -4757,7 +5028,7 @@ local professions = {
             profession = "Enchanting",
             vendor = "Profession Trainer",
             spellID = 1262318,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251764,
                     itemName = "Ashwood Lumber",
@@ -4778,12 +5049,8 @@ local professions = {
                     itemName = "Hardened Elementium Bar",
                     count = 2,
                 },
-                {
-                    itemID = 69237,
-                    itemName = "Living Ember",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11434,
@@ -4950,7 +5217,7 @@ local professions = {
             profession = "Alchemy",
             vendor = "Profession Trainer",
             spellID = 1261878,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 248012,
                     itemName = "Dornic Fir Lumber",
@@ -4961,7 +5228,13 @@ local professions = {
                     itemName = "Viridian Charmcap",
                     count = 2,
                 },
+                {
+                    itemID = 212245,
+                    itemName = "Slumbering Soul Serum",
+                    count = 3,
+                },
             },
+
         },
         {
             decorID = 11490,
@@ -5003,7 +5276,7 @@ local professions = {
             reagents = {
                 {
                     itemID = 256963,
-                    itemName = "Thalassian Lumber",
+                    itemName = "\"Unity of Thorns\" Tapestry",
                     count = 12,
                 },
                 {
@@ -5021,16 +5294,11 @@ local professions = {
             profession = "Enchanting",
             vendor = "Profession Trainer",
             spellID = 1262331,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251764,
                     itemName = "Ashwood Lumber",
                     count = 8,
-                },
-                {
-                    itemID = 3371,
-                    itemName = "Crystal Vial",
-                    count = 1,
                 },
                 {
                     itemID = 52555,
@@ -5043,6 +5311,7 @@ local professions = {
                     count = 3,
                 },
             },
+
         },
         {
             decorID = 11496,
@@ -5113,14 +5382,14 @@ local professions = {
             skillRequired = 0,
             profession = "Alchemy",
             spellID = 1233138,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 236951,
                     itemName = "Mote of Wild Magic",
                     count = 6,
                 },
                 {
-                    itemID = 236950,
+                    itemID = 192493,
                     itemName = "Mote of Primal Energy",
                     count = 6,
                 },
@@ -5129,7 +5398,18 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 40,
                 },
+                {
+                    itemID = 241281,
+                    itemName = "Composite Flora",
+                    count = 4,
+                },
+                {
+                    itemID = 241283,
+                    itemName = "Wondrous Synergist",
+                    count = 4,
+                },
             },
+
         },
         {
             decorID = 11718,
@@ -5206,7 +5486,7 @@ local professions = {
             profession = "Alchemy",
             vendor = "Profession Trainer",
             spellID = 1269506,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251764,
                     itemName = "Ashwood Lumber",
@@ -5227,12 +5507,8 @@ local professions = {
                     itemName = "Azshara's Veil",
                     count = 3,
                 },
-                {
-                    itemID = 3371,
-                    itemName = "Crystal Vial",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11724,
@@ -5242,7 +5518,7 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1269540,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251764,
                     itemName = "Ashwood Lumber",
@@ -5258,12 +5534,8 @@ local professions = {
                     itemName = "Blackfallow Ink",
                     count = 10,
                 },
-                {
-                    itemID = 55053,
-                    itemName = "Obsidium Skeleton Key",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11725,
@@ -5273,7 +5545,7 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1269534,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251764,
                     itemName = "Ashwood Lumber",
@@ -5289,12 +5561,8 @@ local professions = {
                     itemName = "Obsidium Bar",
                     count = 3,
                 },
-                {
-                    itemID = 39354,
-                    itemName = "Light Parchment",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11755,
@@ -5340,7 +5608,7 @@ local professions = {
             profession = "Leatherworking",
             vendor = "Profession Trainer",
             spellID = 1269550,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251764,
                     itemName = "Ashwood Lumber",
@@ -5361,12 +5629,8 @@ local professions = {
                     itemName = "Heavy Savage Leather",
                     count = 10,
                 },
-                {
-                    itemID = 52190,
-                    itemName = "Inferno Ruby",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11878,
@@ -5583,7 +5847,7 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1263813,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 242691,
                     itemName = "Olemba Lumber",
@@ -5599,12 +5863,8 @@ local professions = {
                     itemName = "Darkflame Ink",
                     count = 3,
                 },
-                {
-                    itemID = 39354,
-                    itemName = "Light Parchment",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11886,
@@ -5837,7 +6097,7 @@ local professions = {
             profession = "Tailoring",
             vendor = "Profession Trainer",
             spellID = 1263620,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251762,
                     itemName = "Coldwind Lumber",
@@ -5858,12 +6118,8 @@ local professions = {
                     itemName = "Red Dye",
                     count = 2,
                 },
-                {
-                    itemID = 36925,
-                    itemName = "Majestic Zircon",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11895,
@@ -6018,7 +6274,7 @@ local professions = {
             profession = "Alchemy",
             vendor = "Profession Trainer",
             spellID = 1263558,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251762,
                     itemName = "Coldwind Lumber",
@@ -6039,12 +6295,8 @@ local professions = {
                     itemName = "Frost Lotus",
                     count = 3,
                 },
-                {
-                    itemID = 3371,
-                    itemName = "Crystal Vial",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11901,
@@ -6054,7 +6306,7 @@ local professions = {
             profession = "Alchemy",
             vendor = "Profession Trainer",
             spellID = 1263559,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251762,
                     itemName = "Coldwind Lumber",
@@ -6080,12 +6332,8 @@ local professions = {
                     itemName = "Eternal Life",
                     count = 2,
                 },
-                {
-                    itemID = 43102,
-                    itemName = "Frozen Orb",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11902,
@@ -6095,7 +6343,7 @@ local professions = {
             profession = "Alchemy",
             vendor = "Profession Trainer",
             spellID = 1263548,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251763,
                     itemName = "Bamboo Lumber",
@@ -6116,12 +6364,8 @@ local professions = {
                     itemName = "Golden Lotus",
                     count = 3,
                 },
-                {
-                    itemID = 3371,
-                    itemName = "Crystal Vial",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11903,
@@ -6192,7 +6436,7 @@ local professions = {
             skillRequired = 0,
             profession = "Inscription",
             spellID = 1263344,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251767,
                     itemName = "Fel-Touched Lumber",
@@ -6208,12 +6452,8 @@ local professions = {
                     itemName = "Astral Glory",
                     count = 10,
                 },
-                {
-                    itemID = 136693,
-                    itemName = "Straszan Mark",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11911,
@@ -6259,16 +6499,11 @@ local professions = {
             profession = "Engineering",
             vendor = "Profession Trainer",
             spellID = 1263319,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251767,
                     itemName = "Fel-Touched Lumber",
                     count = 22,
-                },
-                {
-                    itemID = 132514,
-                    itemName = "Auto-Hammer",
-                    count = 1,
                 },
                 {
                     itemID = 124461,
@@ -6276,6 +6511,7 @@ local professions = {
                     count = 15,
                 },
             },
+
         },
         {
             decorID = 11913,
@@ -6285,7 +6521,7 @@ local professions = {
             profession = "Jewelcrafting",
             vendor = "Profession Trainer",
             spellID = 1263351,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251767,
                     itemName = "Fel-Touched Lumber",
@@ -6306,22 +6542,8 @@ local professions = {
                     itemName = "Pandemonite",
                     count = 2,
                 },
-                {
-                    itemID = 151720,
-                    itemName = "Chemirine",
-                    count = 1,
-                },
-                {
-                    itemID = 130182,
-                    itemName = "Maelstrom Sapphire",
-                    count = 1,
-                },
-                {
-                    itemID = 127004,
-                    itemName = "Imbued Silkweave",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11917,
@@ -6416,7 +6638,7 @@ local professions = {
             skillRequired = 0,
             profession = "Inscription",
             spellID = 1263285,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251772,
                     itemName = "Arden Lumber",
@@ -6426,11 +6648,6 @@ local professions = {
                     itemID = 175970,
                     itemName = "Tranquil Ink",
                     count = 5,
-                },
-                {
-                    itemID = 173126,
-                    itemName = "Straddling Jewel Doublet",
-                    count = 1,
                 },
                 {
                     itemID = 172092,
@@ -6448,6 +6665,7 @@ local professions = {
                     count = 2,
                 },
             },
+
         },
         {
             decorID = 11921,
@@ -6642,7 +6860,7 @@ local professions = {
             skillRequired = 0,
             profession = "Inscription",
             spellID = 1263243,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251772,
                     itemName = "Arden Lumber",
@@ -6658,12 +6876,8 @@ local professions = {
                     itemName = "Luminous Ink",
                     count = 16,
                 },
-                {
-                    itemID = 173110,
-                    itemName = "Umbryl",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 11928,
@@ -6672,16 +6886,11 @@ local professions = {
             skillRequired = 0,
             profession = "Engineering",
             spellID = 1263240,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251772,
                     itemName = "Arden Lumber",
                     count = 42,
-                },
-                {
-                    itemID = 171441,
-                    itemName = "Laestrite Skeleton Key",
-                    count = 1,
                 },
                 {
                     itemID = 172934,
@@ -6704,6 +6913,7 @@ local professions = {
                     count = 4,
                 },
             },
+
         },
         {
             decorID = 11929,
@@ -6713,7 +6923,7 @@ local professions = {
             profession = "Engineering",
             vendor = "Profession Trainer",
             spellID = 1263237,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
@@ -6734,7 +6944,23 @@ local professions = {
                     itemName = "Glowing Titan Orb",
                     count = 2,
                 },
+                {
+                    itemID = 198183,
+                    itemName = "Handful of Serevite Bolts",
+                    count = 8,
+                },
+                {
+                    itemID = 198192,
+                    itemName = "Greased-Up Gears",
+                    count = 7,
+                },
+                {
+                    itemID = 198198,
+                    itemName = "Reinforced Machine Chassis",
+                    count = 9,
+                },
             },
+
         },
         {
             decorID = 11935,
@@ -6965,7 +7191,7 @@ local professions = {
             profession = "Enchanting",
             vendor = "Profession Trainer",
             spellID = 1263877,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251768,
                     itemName = "Darkpine Lumber",
@@ -6981,12 +7207,8 @@ local professions = {
                     itemName = "Coarse Leather",
                     count = 2,
                 },
-                {
-                    itemID = 154165,
-                    itemName = "Calcified Bone",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 12165,
@@ -7077,7 +7299,7 @@ local professions = {
             profession = "Tailoring",
             vendor = "Void Researcher Anomander",
             spellID = 1229001,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251665,
                     itemName = "Silverleaf Thread",
@@ -7088,7 +7310,18 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 18,
                 },
+                {
+                    itemID = 239198,
+                    itemName = "Arcanoweave Bolt",
+                    count = 8,
+                },
+                {
+                    itemID = 239201,
+                    itemName = "Sunfire Silk Bolt",
+                    count = 8,
+                },
             },
+
         },
         {
             decorID = 14557,
@@ -7097,7 +7330,7 @@ local professions = {
             skillRequired = 0,
             profession = "Alchemy",
             spellID = 1233136,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 236952,
                     itemName = "Mote of Pure Void",
@@ -7108,7 +7341,18 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 8,
                 },
+                {
+                    itemID = 241281,
+                    itemName = "Composite Flora",
+                    count = 4,
+                },
+                {
+                    itemID = 241283,
+                    itemName = "Wondrous Synergist",
+                    count = 4,
+                },
             },
+
         },
         {
             decorID = 14558,
@@ -7117,7 +7361,7 @@ local professions = {
             skillRequired = 0,
             profession = "Alchemy",
             spellID = 1233132,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 236952,
                     itemName = "Mote of Pure Void",
@@ -7128,7 +7372,18 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 26,
                 },
+                {
+                    itemID = 241281,
+                    itemName = "Composite Flora",
+                    count = 4,
+                },
+                {
+                    itemID = 241283,
+                    itemName = "Wondrous Synergist",
+                    count = 4,
+                },
             },
+
         },
         {
             decorID = 14559,
@@ -7138,9 +7393,9 @@ local professions = {
             profession = "Alchemy",
             vendor = "Lyrendal",
             spellID = 1233137,
-            reagents = {
+                        reagents = {
                 {
-                    itemID = 236950,
+                    itemID = 192493,
                     itemName = "Mote of Primal Energy",
                     count = 6,
                 },
@@ -7149,7 +7404,18 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 8,
                 },
+                {
+                    itemID = 241281,
+                    itemName = "Composite Flora",
+                    count = 4,
+                },
+                {
+                    itemID = 241283,
+                    itemName = "Wondrous Synergist",
+                    count = 4,
+                },
             },
+
         },
         {
             decorID = 14579,
@@ -7159,7 +7425,7 @@ local professions = {
             profession = "Leatherworking",
             vendor = "Profession Trainer",
             spellID = 1246937,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 238529,
                     itemName = "Majestic Hide",
@@ -7180,7 +7446,13 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 24,
                 },
+                {
+                    itemID = 244631,
+                    itemName = "Scalewoven Hide",
+                    count = 2,
+                },
             },
+
         },
         {
             decorID = 14580,
@@ -7190,7 +7462,7 @@ local professions = {
             profession = "Enchanting",
             vendor = "Profession Trainer",
             spellID = 1246904,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251665,
                     itemName = "Silverleaf Thread",
@@ -7201,7 +7473,23 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 22,
                 },
+                {
+                    itemID = 243599,
+                    itemName = "Eversinging Dust",
+                    count = 30,
+                },
+                {
+                    itemID = 243602,
+                    itemName = "Radiant Shard",
+                    count = 5,
+                },
+                {
+                    itemID = 243605,
+                    itemName = "Dawn Crystal",
+                    count = 5,
+                },
             },
+
         },
         {
             decorID = 14581,
@@ -7210,23 +7498,29 @@ local professions = {
             skillRequired = 0,
             profession = "Blacksmithing",
             spellID = 1276108,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 26,
                 },
                 {
-                    itemID = 211240,
-                    itemName = "Sanctified Alloy",
-                    count = 6,
+                    itemID = 222417,
+                    itemName = "Core Alloy",
+                    count = 18,
                 },
                 {
-                    itemID = 211241,
-                    itemName = "Arathor's Spear",
-                    count = 2,
+                    itemID = 238202,
+                    itemName = "Gloaming Alloy",
+                    count = 5,
+                },
+                {
+                    itemID = 238204,
+                    itemName = "Sterling Alloy",
+                    count = 5,
                 },
             },
+
         },
         {
             decorID = 14582,
@@ -7235,18 +7529,29 @@ local professions = {
             skillRequired = 0,
             profession = "Blacksmithing",
             spellID = 1276112,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 12,
                 },
                 {
-                    itemID = 211234,
-                    itemName = "Ironclaw Alloy",
+                    itemID = 222417,
+                    itemName = "Core Alloy",
+                    count = 8,
+                },
+                {
+                    itemID = 238202,
+                    itemName = "Gloaming Alloy",
+                    count = 2,
+                },
+                {
+                    itemID = 238204,
+                    itemName = "Sterling Alloy",
                     count = 2,
                 },
             },
+
         },
         {
             decorID = 14584,
@@ -7255,23 +7560,24 @@ local professions = {
             skillRequired = 0,
             profession = "Jewelcrafting",
             spellID = 1246894,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 18,
                 },
                 {
-                    itemID = 194830,
-                    itemName = "Fractured Glass",
-                    count = 4,
+                    itemID = 242620,
+                    itemName = "Glimmering Gemdust",
+                    count = 20,
                 },
                 {
-                    itemID = 211281,
-                    itemName = "Ambivalent Amber",
-                    count = 2,
+                    itemID = 242787,
+                    itemName = "Crystalline Glass",
+                    count = 50,
                 },
             },
+
         },
         {
             decorID = 14585,
@@ -7281,7 +7587,7 @@ local professions = {
             profession = "Enchanting",
             vendor = "Profession Trainer",
             spellID = 1246905,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 236951,
                     itemName = "Mote of Wild Magic",
@@ -7297,7 +7603,28 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 14,
                 },
+                {
+                    itemID = 242788,
+                    itemName = "Duskshrouded Stone",
+                    count = 5,
+                },
+                {
+                    itemID = 243599,
+                    itemName = "Eversinging Dust",
+                    count = 30,
+                },
+                {
+                    itemID = 243602,
+                    itemName = "Radiant Shard",
+                    count = 10,
+                },
+                {
+                    itemID = 243605,
+                    itemName = "Dawn Crystal",
+                    count = 3,
+                },
             },
+
         },
         {
             decorID = 14586,
@@ -7306,18 +7633,29 @@ local professions = {
             skillRequired = 0,
             profession = "Blacksmithing",
             spellID = 1276109,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 18,
                 },
                 {
-                    itemID = 211234,
-                    itemName = "Ironclaw Alloy",
+                    itemID = 222417,
+                    itemName = "Core Alloy",
+                    count = 12,
+                },
+                {
+                    itemID = 238202,
+                    itemName = "Gloaming Alloy",
+                    count = 3,
+                },
+                {
+                    itemID = 238204,
+                    itemName = "Sterling Alloy",
                     count = 3,
                 },
             },
+
         },
         {
             decorID = 14587,
@@ -7326,18 +7664,29 @@ local professions = {
             skillRequired = 0,
             profession = "Blacksmithing",
             spellID = 1276110,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 18,
                 },
                 {
-                    itemID = 211234,
-                    itemName = "Ironclaw Alloy",
+                    itemID = 222417,
+                    itemName = "Core Alloy",
+                    count = 12,
+                },
+                {
+                    itemID = 238202,
+                    itemName = "Gloaming Alloy",
+                    count = 3,
+                },
+                {
+                    itemID = 238204,
+                    itemName = "Sterling Alloy",
                     count = 3,
                 },
             },
+
         },
         {
             decorID = 14588,
@@ -7347,7 +7696,7 @@ local professions = {
             profession = "Enchanting",
             vendor = "World Vendors",
             spellID = 1246902,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 243060,
                     itemName = "Luminant Flux",
@@ -7358,7 +7707,23 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 14,
                 },
+                {
+                    itemID = 238204,
+                    itemName = "Sterling Alloy",
+                    count = 10,
+                },
+                {
+                    itemID = 243602,
+                    itemName = "Radiant Shard",
+                    count = 15,
+                },
+                {
+                    itemID = 243605,
+                    itemName = "Dawn Crystal",
+                    count = 5,
+                },
             },
+
         },
         {
             decorID = 14589,
@@ -7368,7 +7733,7 @@ local professions = {
             profession = "Enchanting",
             vendor = "World Vendors",
             spellID = 1246906,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 243060,
                     itemName = "Luminant Flux",
@@ -7379,7 +7744,23 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 14,
                 },
+                {
+                    itemID = 238204,
+                    itemName = "Sterling Alloy",
+                    count = 10,
+                },
+                {
+                    itemID = 243602,
+                    itemName = "Radiant Shard",
+                    count = 15,
+                },
+                {
+                    itemID = 243605,
+                    itemName = "Dawn Crystal",
+                    count = 5,
+                },
             },
+
         },
         {
             decorID = 14590,
@@ -7388,18 +7769,29 @@ local professions = {
             skillRequired = 0,
             profession = "Blacksmithing",
             spellID = 1276111,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 26,
                 },
                 {
-                    itemID = 191338,
-                    itemName = "Shadowflame Tempered Alloy",
-                    count = 6,
+                    itemID = 222417,
+                    itemName = "Core Alloy",
+                    count = 18,
+                },
+                {
+                    itemID = 238202,
+                    itemName = "Gloaming Alloy",
+                    count = 5,
+                },
+                {
+                    itemID = 238204,
+                    itemName = "Sterling Alloy",
+                    count = 5,
                 },
             },
+
         },
         {
             decorID = 14591,
@@ -7409,23 +7801,24 @@ local professions = {
             profession = "Jewelcrafting",
             vendor = "Profession Trainer",
             spellID = 1246889,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 26,
                 },
                 {
-                    itemID = 194830,
-                    itemName = "Fractured Glass",
-                    count = 6,
+                    itemID = 242620,
+                    itemName = "Glimmering Gemdust",
+                    count = 5,
                 },
                 {
-                    itemID = 190412,
-                    itemName = "Void Sapphire",
-                    count = 2,
+                    itemID = 242788,
+                    itemName = "Duskshrouded Stone",
+                    count = 15,
                 },
             },
+
         },
         {
             decorID = 14594,
@@ -7435,23 +7828,24 @@ local professions = {
             profession = "Inscription",
             vendor = "Void Researcher Anomander",
             spellID = 1248621,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 22,
                 },
                 {
-                    itemID = 194821,
-                    itemName = "Cosmic Ink",
+                    itemID = 245764,
+                    itemName = "Codified Azeroot",
                     count = 4,
                 },
                 {
-                    itemID = 229012,
-                    itemName = "Mote of Pure Void",
-                    count = 1,
+                    itemID = 245766,
+                    itemName = "Soul Cipher",
+                    count = 8,
                 },
             },
+
         },
         {
             decorID = 14595,
@@ -7460,23 +7854,34 @@ local professions = {
             skillRequired = 0,
             profession = "Engineering",
             spellID = 1248613,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 32,
                 },
                 {
-                    itemID = 194830,
-                    itemName = "Fractured Glass",
-                    count = 4,
+                    itemID = 243574,
+                    itemName = "Song Gear",
+                    count = 10,
                 },
                 {
-                    itemID = 211236,
-                    itemName = "Handful of Bismuth Bolts",
-                    count = 4,
+                    itemID = 243576,
+                    itemName = "Soul Sprocket",
+                    count = 10,
+                },
+                {
+                    itemID = 243578,
+                    itemName = "Aetherlume",
+                    count = 5,
+                },
+                {
+                    itemID = 243581,
+                    itemName = "Evercore",
+                    count = 5,
                 },
             },
+
         },
         {
             decorID = 14598,
@@ -7485,7 +7890,7 @@ local professions = {
             skillRequired = 0,
             profession = "Enchanting",
             spellID = 1246903,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 236952,
                     itemName = "Mote of Pure Void",
@@ -7501,7 +7906,23 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 18,
                 },
+                {
+                    itemID = 242788,
+                    itemName = "Duskshrouded Stone",
+                    count = 5,
+                },
+                {
+                    itemID = 243602,
+                    itemName = "Radiant Shard",
+                    count = 15,
+                },
+                {
+                    itemID = 243605,
+                    itemName = "Dawn Crystal",
+                    count = 5,
+                },
             },
+
         },
         {
             decorID = 14599,
@@ -7511,7 +7932,7 @@ local professions = {
             profession = "Jewelcrafting",
             vendor = "Profession Trainer",
             spellID = 1246895,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251665,
                     itemName = "Silverleaf Thread",
@@ -7522,7 +7943,18 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 36,
                 },
+                {
+                    itemID = 242620,
+                    itemName = "Glimmering Gemdust",
+                    count = 20,
+                },
+                {
+                    itemID = 242788,
+                    itemName = "Duskshrouded Stone",
+                    count = 20,
+                },
             },
+
         },
         {
             decorID = 14600,
@@ -7532,7 +7964,7 @@ local professions = {
             profession = "Enchanting",
             vendor = "Caeris Fairdawn",
             spellID = 1246907,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 236949,
                     itemName = "Mote of Light",
@@ -7548,7 +7980,23 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 20,
                 },
+                {
+                    itemID = 243599,
+                    itemName = "Eversinging Dust",
+                    count = 20,
+                },
+                {
+                    itemID = 243602,
+                    itemName = "Radiant Shard",
+                    count = 10,
+                },
+                {
+                    itemID = 243605,
+                    itemName = "Dawn Crystal",
+                    count = 3,
+                },
             },
+
         },
         {
             decorID = 14601,
@@ -7558,7 +8006,7 @@ local professions = {
             profession = "Jewelcrafting",
             vendor = "Caeris Fairdawn",
             spellID = 1246891,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251665,
                     itemName = "Silverleaf Thread",
@@ -7569,7 +8017,13 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 24,
                 },
+                {
+                    itemID = 242620,
+                    itemName = "Glimmering Gemdust",
+                    count = 15,
+                },
             },
+
         },
         {
             decorID = 14615,
@@ -7609,9 +8063,9 @@ local professions = {
             skillRequired = 0,
             profession = "Enchanting",
             spellID = 1246908,
-            reagents = {
+                        reagents = {
                 {
-                    itemID = 236950,
+                    itemID = 192493,
                     itemName = "Mote of Primal Energy",
                     count = 10,
                 },
@@ -7620,7 +8074,23 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 32,
                 },
+                {
+                    itemID = 236774,
+                    itemName = "Azeroot",
+                    count = 10,
+                },
+                {
+                    itemID = 243602,
+                    itemName = "Radiant Shard",
+                    count = 15,
+                },
+                {
+                    itemID = 243605,
+                    itemName = "Dawn Crystal",
+                    count = 5,
+                },
             },
+
         },
         {
             decorID = 14617,
@@ -7629,7 +8099,7 @@ local professions = {
             skillRequired = 0,
             profession = "Tailoring",
             spellID = 1229002,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251665,
                     itemName = "Silverleaf Thread",
@@ -7640,7 +8110,18 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 12,
                 },
+                {
+                    itemID = 239198,
+                    itemName = "Arcanoweave Bolt",
+                    count = 8,
+                },
+                {
+                    itemID = 239201,
+                    itemName = "Sunfire Silk Bolt",
+                    count = 8,
+                },
             },
+
         },
         {
             decorID = 14618,
@@ -7650,7 +8131,7 @@ local professions = {
             profession = "Tailoring",
             vendor = "Deynna",
             spellID = 1229003,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251665,
                     itemName = "Silverleaf Thread",
@@ -7661,7 +8142,18 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 46,
                 },
+                {
+                    itemID = 239198,
+                    itemName = "Arcanoweave Bolt",
+                    count = 8,
+                },
+                {
+                    itemID = 239201,
+                    itemName = "Sunfire Silk Bolt",
+                    count = 8,
+                },
             },
+
         },
         {
             decorID = 14619,
@@ -7671,7 +8163,7 @@ local professions = {
             profession = "Tailoring",
             vendor = "Deynna",
             spellID = 1246919,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251665,
                     itemName = "Silverleaf Thread",
@@ -7682,7 +8174,18 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 8,
                 },
+                {
+                    itemID = 239198,
+                    itemName = "Arcanoweave Bolt",
+                    count = 8,
+                },
+                {
+                    itemID = 239201,
+                    itemName = "Sunfire Silk Bolt",
+                    count = 8,
+                },
             },
+
         },
         {
             decorID = 14620,
@@ -7692,18 +8195,24 @@ local professions = {
             profession = "Inscription",
             vendor = "Lelorian",
             spellID = 1248622,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 24,
                 },
                 {
-                    itemID = 224601,
-                    itemName = "Luminous Ink",
+                    itemID = 245764,
+                    itemName = "Codified Azeroot",
                     count = 4,
                 },
+                {
+                    itemID = 245766,
+                    itemName = "Soul Cipher",
+                    count = 9,
+                },
             },
+
         },
         {
             decorID = 14621,
@@ -7712,18 +8221,24 @@ local professions = {
             skillRequired = 0,
             profession = "Inscription",
             spellID = 1248627,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 24,
                 },
                 {
-                    itemID = 224601,
-                    itemName = "Luminous Ink",
+                    itemID = 245764,
+                    itemName = "Codified Azeroot",
                     count = 4,
                 },
+                {
+                    itemID = 245766,
+                    itemName = "Soul Cipher",
+                    count = 9,
+                },
             },
+
         },
         {
             decorID = 14622,
@@ -7733,18 +8248,19 @@ local professions = {
             profession = "Inscription",
             vendor = "Lelorian",
             spellID = 1248625,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 6,
                 },
                 {
-                    itemID = 224601,
-                    itemName = "Luminous Ink",
-                    count = 1,
+                    itemID = 245766,
+                    itemName = "Soul Cipher",
+                    count = 2,
                 },
             },
+
         },
         {
             decorID = 14623,
@@ -7754,18 +8270,19 @@ local professions = {
             profession = "Inscription",
             vendor = "Lelorian",
             spellID = 1248624,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 6,
                 },
                 {
-                    itemID = 224601,
-                    itemName = "Luminous Ink",
-                    count = 1,
+                    itemID = 245766,
+                    itemName = "Soul Cipher",
+                    count = 2,
                 },
             },
+
         },
         {
             decorID = 14624,
@@ -7774,7 +8291,7 @@ local professions = {
             skillRequired = 0,
             profession = "Tailoring",
             spellID = 1229000,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251665,
                     itemName = "Silverleaf Thread",
@@ -7785,7 +8302,18 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 24,
                 },
+                {
+                    itemID = 239198,
+                    itemName = "Arcanoweave Bolt",
+                    count = 8,
+                },
+                {
+                    itemID = 239201,
+                    itemName = "Sunfire Silk Bolt",
+                    count = 8,
+                },
             },
+
         },
         {
             decorID = 14625,
@@ -7795,12 +8323,7 @@ local professions = {
             profession = "Leatherworking",
             vendor = "Lyrendal",
             spellID = 1246941,
-            reagents = {
-                {
-                    itemID = 238529,
-                    itemName = "Majestic Hide",
-                    count = 1,
-                },
+                        reagents = {
                 {
                     itemID = 251665,
                     itemName = "Silverleaf Thread",
@@ -7817,6 +8340,7 @@ local professions = {
                     count = 18,
                 },
             },
+
         },
         {
             decorID = 14626,
@@ -7826,18 +8350,24 @@ local professions = {
             profession = "Inscription",
             vendor = "Construct V'anore",
             spellID = 1248628,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 18,
                 },
                 {
-                    itemID = 224601,
-                    itemName = "Luminous Ink",
-                    count = 4,
+                    itemID = 245764,
+                    itemName = "Codified Azeroot",
+                    count = 3,
+                },
+                {
+                    itemID = 245766,
+                    itemName = "Soul Cipher",
+                    count = 7,
                 },
             },
+
         },
         {
             decorID = 14627,
@@ -7846,18 +8376,34 @@ local professions = {
             skillRequired = 0,
             profession = "Engineering",
             spellID = 1248616,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 28,
                 },
                 {
-                    itemID = 191341,
-                    itemName = "Void-Purged Power Cell",
-                    count = 1,
+                    itemID = 243574,
+                    itemName = "Song Gear",
+                    count = 10,
+                },
+                {
+                    itemID = 243576,
+                    itemName = "Soul Sprocket",
+                    count = 10,
+                },
+                {
+                    itemID = 243578,
+                    itemName = "Aetherlume",
+                    count = 5,
+                },
+                {
+                    itemID = 243581,
+                    itemName = "Evercore",
+                    count = 5,
                 },
             },
+
         },
         {
             decorID = 14636,
@@ -7866,7 +8412,7 @@ local professions = {
             skillRequired = 0,
             profession = "Tailoring",
             spellID = 1246929,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251665,
                     itemName = "Silverleaf Thread",
@@ -7877,7 +8423,18 @@ local professions = {
                     itemName = "Thalassian Lumber",
                     count = 16,
                 },
+                {
+                    itemID = 239198,
+                    itemName = "Arcanoweave Bolt",
+                    count = 8,
+                },
+                {
+                    itemID = 239201,
+                    itemName = "Sunfire Silk Bolt",
+                    count = 8,
+                },
             },
+
         },
         {
             decorID = 14637,
@@ -7887,18 +8444,24 @@ local professions = {
             profession = "Inscription",
             vendor = "Construct V'anore",
             spellID = 1248619,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 26,
                 },
                 {
-                    itemID = 224601,
-                    itemName = "Luminous Ink",
-                    count = 4,
+                    itemID = 245764,
+                    itemName = "Codified Azeroot",
+                    count = 5,
+                },
+                {
+                    itemID = 245766,
+                    itemName = "Soul Cipher",
+                    count = 10,
                 },
             },
+
         },
         {
             decorID = 14638,
@@ -7907,18 +8470,24 @@ local professions = {
             skillRequired = 0,
             profession = "Jewelcrafting",
             spellID = 1246893,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 48,
                 },
                 {
-                    itemID = 211280,
-                    itemName = "Silken Gemdust",
-                    count = 12,
+                    itemID = 242620,
+                    itemName = "Glimmering Gemdust",
+                    count = 5,
+                },
+                {
+                    itemID = 242788,
+                    itemName = "Duskshrouded Stone",
+                    count = 25,
                 },
             },
+
         },
         {
             decorID = 14640,
@@ -7927,18 +8496,14 @@ local professions = {
             skillRequired = 0,
             profession = "Inscription",
             spellID = 1248626,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 4,
                 },
-                {
-                    itemID = 194827,
-                    itemName = "Scribe's Fastened Quill",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 14641,
@@ -7948,18 +8513,24 @@ local professions = {
             profession = "Inscription",
             vendor = "Lelorian",
             spellID = 1248623,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 18,
                 },
                 {
-                    itemID = 194827,
-                    itemName = "Scribe's Fastened Quill",
-                    count = 1,
+                    itemID = 245764,
+                    itemName = "Codified Azeroot",
+                    count = 3,
+                },
+                {
+                    itemID = 245766,
+                    itemName = "Soul Cipher",
+                    count = 7,
                 },
             },
+
         },
         {
             decorID = 14642,
@@ -7968,18 +8539,34 @@ local professions = {
             skillRequired = 0,
             profession = "Engineering",
             spellID = 1248615,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 24,
                 },
                 {
-                    itemID = 211236,
-                    itemName = "Handful of Bismuth Bolts",
+                    itemID = 243574,
+                    itemName = "Song Gear",
+                    count = 10,
+                },
+                {
+                    itemID = 243576,
+                    itemName = "Soul Sprocket",
+                    count = 10,
+                },
+                {
+                    itemID = 243578,
+                    itemName = "Aetherlume",
+                    count = 5,
+                },
+                {
+                    itemID = 243581,
+                    itemName = "Evercore",
                     count = 5,
                 },
             },
+
         },
         {
             decorID = 14643,
@@ -7988,23 +8575,34 @@ local professions = {
             skillRequired = 0,
             profession = "Engineering",
             spellID = 1248610,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 22,
                 },
                 {
-                    itemID = 194830,
-                    itemName = "Fractured Glass",
-                    count = 2,
+                    itemID = 243574,
+                    itemName = "Song Gear",
+                    count = 10,
                 },
                 {
-                    itemID = 191341,
-                    itemName = "Void-Purged Power Cell",
-                    count = 1,
+                    itemID = 243576,
+                    itemName = "Soul Sprocket",
+                    count = 10,
+                },
+                {
+                    itemID = 243578,
+                    itemName = "Aetherlume",
+                    count = 5,
+                },
+                {
+                    itemID = 243581,
+                    itemName = "Evercore",
+                    count = 5,
                 },
             },
+
         },
         {
             decorID = 14676,
@@ -8043,18 +8641,34 @@ local professions = {
             skillRequired = 0,
             profession = "Engineering",
             spellID = 1248614,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 18,
                 },
                 {
-                    itemID = 211236,
-                    itemName = "Handful of Bismuth Bolts",
-                    count = 3,
+                    itemID = 243574,
+                    itemName = "Song Gear",
+                    count = 10,
+                },
+                {
+                    itemID = 243576,
+                    itemName = "Soul Sprocket",
+                    count = 10,
+                },
+                {
+                    itemID = 243578,
+                    itemName = "Aetherlume",
+                    count = 5,
+                },
+                {
+                    itemID = 243581,
+                    itemName = "Evercore",
+                    count = 5,
                 },
             },
+
         },
         {
             decorID = 14731,
@@ -8064,18 +8678,24 @@ local professions = {
             profession = "Inscription",
             vendor = "Construct V'anore",
             spellID = 1248620,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 22,
                 },
                 {
-                    itemID = 224601,
-                    itemName = "Luminous Ink",
+                    itemID = 245764,
+                    itemName = "Codified Azeroot",
                     count = 4,
                 },
+                {
+                    itemID = 245766,
+                    itemName = "Soul Cipher",
+                    count = 8,
+                },
             },
+
         },
         {
             decorID = 14816,
@@ -8121,23 +8741,24 @@ local professions = {
             profession = "Inscription",
             vendor = "Naynar",
             spellID = 1248631,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 50,
                 },
                 {
-                    itemID = 224601,
-                    itemName = "Luminous Ink",
-                    count = 15,
+                    itemID = 245764,
+                    itemName = "Codified Azeroot",
+                    count = 10,
                 },
                 {
-                    itemID = 194825,
-                    itemName = "Glittering Parchment",
-                    count = 5,
+                    itemID = 245766,
+                    itemName = "Soul Cipher",
+                    count = 20,
                 },
             },
+
         },
         {
             decorID = 14835,
@@ -8146,18 +8767,34 @@ local professions = {
             skillRequired = 0,
             profession = "Engineering",
             spellID = 1248611,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
                     count = 26,
                 },
                 {
-                    itemID = 211285,
-                    itemName = "Glow-in-the-Dark Paste",
-                    count = 4,
+                    itemID = 243574,
+                    itemName = "Song Gear",
+                    count = 10,
+                },
+                {
+                    itemID = 243576,
+                    itemName = "Soul Sprocket",
+                    count = 10,
+                },
+                {
+                    itemID = 243578,
+                    itemName = "Aetherlume",
+                    count = 5,
+                },
+                {
+                    itemID = 243581,
+                    itemName = "Evercore",
+                    count = 5,
                 },
             },
+
         },
         {
             decorID = 15479,
@@ -8166,12 +8803,7 @@ local professions = {
             skillRequired = 0,
             profession = "Leatherworking",
             spellID = 1246943,
-            reagents = {
-                {
-                    itemID = 238529,
-                    itemName = "Majestic Hide",
-                    count = 1,
-                },
+                        reagents = {
                 {
                     itemID = 251665,
                     itemName = "Silverleaf Thread",
@@ -8188,6 +8820,7 @@ local professions = {
                     count = 16,
                 },
             },
+
         },
         {
             decorID = 16012,
@@ -8258,7 +8891,7 @@ local professions = {
             skillRequired = 0,
             profession = "Tailoring",
             spellID = 1272578,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251772,
                     itemName = "Arden Lumber",
@@ -8279,12 +8912,8 @@ local professions = {
                     itemName = "Penumbra Thread",
                     count = 5,
                 },
-                {
-                    itemID = 173173,
-                    itemName = "Essence of Valor",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 16015,
@@ -8294,7 +8923,7 @@ local professions = {
             profession = "Inscription",
             vendor = "Profession Trainer",
             spellID = 1272572,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 251773,
                     itemName = "Dragonpine Lumber",
@@ -8305,7 +8934,18 @@ local professions = {
                     itemName = "Fractured Glass",
                     count = 2,
                 },
+                {
+                    itemID = 190312,
+                    itemName = "Khaz'gorite Ore",
+                    count = 2,
+                },
+                {
+                    itemID = 194862,
+                    itemName = "Runed Writhebark",
+                    count = 2,
+                },
             },
+
         },
         {
             decorID = 16082,
@@ -8315,7 +8955,7 @@ local professions = {
             profession = "Alchemy",
             vendor = "Profession Trainer",
             spellID = 1272712,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 242691,
                     itemName = "Olemba Lumber",
@@ -8331,12 +8971,8 @@ local professions = {
                     itemName = "Khorium Bar",
                     count = 4,
                 },
-                {
-                    itemID = 3371,
-                    itemName = "Crystal Vial",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 16083,
@@ -8588,7 +9224,7 @@ local professions = {
             profession = "Alchemy",
             vendor = "Profession Trainer",
             spellID = 1273070,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 242691,
                     itemName = "Olemba Lumber",
@@ -8609,12 +9245,8 @@ local professions = {
                     itemName = "Netherbloom",
                     count = 6,
                 },
-                {
-                    itemID = 3371,
-                    itemName = "Crystal Vial",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 16220,
@@ -8624,7 +9256,7 @@ local professions = {
             profession = "Alchemy",
             vendor = "Profession Trainer",
             spellID = 1273064,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 242691,
                     itemName = "Olemba Lumber",
@@ -8640,12 +9272,8 @@ local professions = {
                     itemName = "Felweed",
                     count = 3,
                 },
-                {
-                    itemID = 3371,
-                    itemName = "Crystal Vial",
-                    count = 1,
-                },
             },
+
         },
         {
             decorID = 17515,
@@ -8654,16 +9282,11 @@ local professions = {
             skillRequired = 0,
             profession = "Leatherworking",
             spellID = 1246939,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 238529,
                     itemName = "Majestic Hide",
                     count = 2,
-                },
-                {
-                    itemID = 238530,
-                    itemName = "Majestic Fin",
-                    count = 1,
                 },
                 {
                     itemID = 236950,
@@ -8686,6 +9309,7 @@ local professions = {
                     count = 46,
                 },
             },
+
         },
         {
             decorID = 19229,
@@ -8695,7 +9319,7 @@ local professions = {
             profession = "Enchanting",
             vendor = "Caeris Fairdawn",
             spellID = 1281342,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
@@ -8711,7 +9335,28 @@ local professions = {
                     itemName = "Lexicologist's Vellum",
                     count = 50,
                 },
+                {
+                    itemID = 243599,
+                    itemName = "Eversinging Dust",
+                    count = 50,
+                },
+                {
+                    itemID = 243602,
+                    itemName = "Radiant Shard",
+                    count = 10,
+                },
+                {
+                    itemID = 243605,
+                    itemName = "Dawn Crystal",
+                    count = 3,
+                },
+                {
+                    itemID = 245805,
+                    itemName = "Sienna Ink",
+                    count = 2,
+                },
             },
+
         },
         {
             decorID = 19231,
@@ -8721,7 +9366,7 @@ local professions = {
             profession = "Enchanting",
             vendor = "Magovu",
             spellID = 1281348,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
@@ -8737,7 +9382,28 @@ local professions = {
                     itemName = "Lexicologist's Vellum",
                     count = 50,
                 },
+                {
+                    itemID = 243599,
+                    itemName = "Eversinging Dust",
+                    count = 50,
+                },
+                {
+                    itemID = 243602,
+                    itemName = "Radiant Shard",
+                    count = 10,
+                },
+                {
+                    itemID = 243605,
+                    itemName = "Dawn Crystal",
+                    count = 3,
+                },
+                {
+                    itemID = 245805,
+                    itemName = "Sienna Ink",
+                    count = 2,
+                },
             },
+
         },
         {
             decorID = 19234,
@@ -8747,7 +9413,7 @@ local professions = {
             profession = "Enchanting",
             vendor = "Void Researcher Anomander",
             spellID = 1281349,
-            reagents = {
+                        reagents = {
                 {
                     itemID = 256963,
                     itemName = "Thalassian Lumber",
@@ -8763,12 +9429,33 @@ local professions = {
                     itemName = "Lexicologist's Vellum",
                     count = 50,
                 },
+                {
+                    itemID = 243599,
+                    itemName = "Eversinging Dust",
+                    count = 50,
+                },
+                {
+                    itemID = 243602,
+                    itemName = "Radiant Shard",
+                    count = 10,
+                },
+                {
+                    itemID = 243605,
+                    itemName = "Dawn Crystal",
+                    count = 3,
+                },
+                {
+                    itemID = 245801,
+                    itemName = "Munsell Ink",
+                    count = 2,
+                },
             },
+
         },
         {
             decorID = 2325,
             itemID = 246482,
-            itemName = "Junkyard Tinkering (Item 246482)",
+            itemName = "Mechanical Gnomish Lamppost",
             skillRequired = 1,
             profession = "Miscellaneous",
             skill = "Junkyard Tinkering",
@@ -8781,7 +9468,7 @@ local professions = {
         {
             decorID = 2328,
             itemID = 246485,
-            itemName = "Junkyard Tinkering (Item 246485)",
+            itemName = "Mechagnome Sustenance Distributor",
             skillRequired = 1,
             profession = "Miscellaneous",
             skill = "Junkyard Tinkering",
@@ -8794,7 +9481,7 @@ local professions = {
         {
             decorID = 2427,
             itemID = 246595,
-            itemName = "Junkyard Tinkering (Item 246595)",
+            itemName = "Gnomish Fencepost",
             skillRequired = 1,
             profession = "Miscellaneous",
             skill = "Junkyard Tinkering",
@@ -8807,7 +9494,7 @@ local professions = {
         {
             decorID = 2428,
             itemID = 246596,
-            itemName = "Junkyard Tinkering (Item 246596)",
+            itemName = "Gnomish Fence",
             skillRequired = 1,
             profession = "Miscellaneous",
             skill = "Junkyard Tinkering",
@@ -8820,7 +9507,7 @@ local professions = {
         {
             decorID = 2429,
             itemID = 246597,
-            itemName = "Junkyard Tinkering (Item 246597)",
+            itemName = "Perpetual Motion Crate",
             skillRequired = 1,
             profession = "Miscellaneous",
             skill = "Junkyard Tinkering",
@@ -8833,7 +9520,7 @@ local professions = {
         {
             decorID = 2438,
             itemID = 246606,
-            itemName = "Junkyard Tinkering (Item 246606)",
+            itemName = "Mechagon Armory Rack",
             skillRequired = 1,
             profession = "Miscellaneous",
             skill = "Junkyard Tinkering",

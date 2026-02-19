@@ -9,6 +9,20 @@ local CreateFrame = _G.CreateFrame
 local C_Timer = _G.C_Timer
 local hooksecurefunc = _G.hooksecurefunc
 
+
+local DecorCounts = NS.Systems and NS.Systems.DecorCounts
+
+local function ShouldClear(ev)
+  return ev == "HOUSING_COLLECTION_UPDATED"
+    or ev == "HOUSING_DECOR_ITEM_LEARNED"
+    or ev == "BAG_UPDATE_DELAYED"
+    or ev == "QUEST_TURNED_IN"
+    or ev == "ACHIEVEMENT_EARNED"
+    or ev == "HOUSE_DECOR_ADDED_TO_CHEST"
+    or ev == "HOUSING_STORAGE_UPDATED"
+    or ev == "HOUSING_STORAGE_ENTRY_UPDATED"
+end
+
 local function SafeCall(mod, method)
   if mod and type(mod[method]) == "function" then
     local ok = pcall(mod[method], mod)
@@ -62,11 +76,13 @@ local function HookMerchantUpdates()
 
   if _G.MerchantNextPageButton and _G.MerchantNextPageButton.HookScript then
     _G.MerchantNextPageButton:HookScript("OnClick", function()
+      if ShouldClear(event) and DecorCounts and DecorCounts.ClearCache then pcall(DecorCounts.ClearCache, DecorCounts) end
       QueueRefresh()
     end)
   end
   if _G.MerchantPrevPageButton and _G.MerchantPrevPageButton.HookScript then
     _G.MerchantPrevPageButton:HookScript("OnClick", function()
+      if ShouldClear(event) and DecorCounts and DecorCounts.ClearCache then pcall(DecorCounts.ClearCache, DecorCounts) end
       QueueRefresh()
     end)
   end
@@ -82,14 +98,26 @@ function VendorChecks:Enable()
     local f = CreateFrame("Frame")
     self._frame = f
 
-    f:RegisterEvent("PLAYER_LOGIN")
-    f:RegisterEvent("MERCHANT_SHOW")
-    f:RegisterEvent("MERCHANT_UPDATE")
-    f:RegisterEvent("MERCHANT_CLOSED")
+    local function SafeRegister(ev)
+  local ok = pcall(f.RegisterEvent, f, ev)
+  return ok
+end
 
-    f:RegisterEvent("HOUSE_DECOR_ADDED_TO_CHEST")
-    f:RegisterEvent("HOUSING_STORAGE_UPDATED")
-    f:RegisterEvent("HOUSING_STORAGE_ENTRY_UPDATED")
+SafeRegister("PLAYER_LOGIN")
+SafeRegister("MERCHANT_SHOW")
+SafeRegister("MERCHANT_UPDATE")
+SafeRegister("MERCHANT_CLOSED")
+
+SafeRegister("HOUSE_DECOR_ADDED_TO_CHEST")
+SafeRegister("HOUSING_STORAGE_UPDATED")
+SafeRegister("HOUSING_STORAGE_ENTRY_UPDATED")
+
+SafeRegister("HOUSING_COLLECTION_UPDATED")
+SafeRegister("HOUSING_DECOR_ITEM_LEARNED")
+
+SafeRegister("BAG_UPDATE_DELAYED")
+SafeRegister("QUEST_TURNED_IN")
+SafeRegister("ACHIEVEMENT_EARNED")
 
     f:SetScript("OnEvent", function(_, event)
       if event == "PLAYER_LOGIN" then
@@ -103,6 +131,7 @@ function VendorChecks:Enable()
         return
       end
 
+      if ShouldClear(event) and DecorCounts and DecorCounts.ClearCache then pcall(DecorCounts.ClearCache, DecorCounts) end
       QueueRefresh()
     end)
   end

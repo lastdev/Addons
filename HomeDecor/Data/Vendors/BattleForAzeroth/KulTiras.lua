@@ -37,7 +37,20 @@ NS.Data.Vendors["BattleForAzeroth"]["KulTiras"] = {
       {decorID=9051, source={type="vendor", itemID=252402, currency="450", currencytype=1560}, requirements={rep="true"}},
     }
   },
-
+  
+  {
+    source={
+      id=142115,
+      type="vendor",
+      faction="Alliance",
+      zone="Boralus Harbor",
+      worldmap="1161:6760:4080"
+    },
+    items={
+      {decorID=4813, source={type="vendor", itemID=248796, currency="3000", currencytype="gold"}, requirements={achievement={id=5442}}},
+    }
+  },
+  
   {
     source={
       id=144129,

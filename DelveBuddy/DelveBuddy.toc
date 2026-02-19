@@ -4,7 +4,7 @@
 ## IconTexture: Interface\Addons\DelveBuddy\media\DelveIcon.tga
 ## Notes: Tracks weekly Delve progress across characters
 ## Author: Malevolens
-## Version: 2.0.6
+## Version: 2.0.7
 ## SavedVariables: DelveBuddyDB
 
 libs\Ace3\AceAddon-3.0\AceAddon-3.0.xml

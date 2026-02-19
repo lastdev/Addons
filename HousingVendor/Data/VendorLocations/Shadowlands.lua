@@ -122,11 +122,27 @@ local vendors = {
     coords = {x = 61.4, y = 64.2, mapID = 2472},
   },
 
+  [15] = {
+    expansion = "Shadowlands",
+    location = "Undermine",
+    vendorName = "Stacks Topskimmer",
+    npcID = 251911,
+    faction = 0,
+    coords = {x = 43.2, y = 50.6, mapID = 2346},
+  },
+  [16] = {
+    expansion = "Shadowlands",
+    location = "The Great Seal",
+    vendorName = "T'lama",
+    npcID = 252326,
+    faction = 0,
+    coords = {x = 0.0, y = 0.0, mapID = 0},
+  },
 }
 
 local itemEntries = {
   -- Ve'nari block
-  { vendorId = 1, itemID = "248125", itemName = "Portal to Damnation", goldCost = 0, currencies = {{ currencyID = 1767, amount = 10000 },}, itemCosts = {}, factionName = "Ve'nari", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 1, itemID = "248125", itemName = "Portal to Damnation", goldCost = 0, currencies = {{ currencyID = 1767, amount = 10000 },}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Chachi the Artiste block
   { vendorId = 2, itemID = "245501", itemName = "Venthyr Tome of Unforgiven Sins", goldCost = 0, currencies = {{ currencyID = 1813, amount = 1500 },}, itemCosts = {}, factionName = "The Venthyr", reputationLevel = "", renownLevel = 65 },
@@ -141,7 +157,7 @@ local itemEntries = {
   { vendorId = 8, itemID = "247854", itemName = "Night Fae Dream-Catcher", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Night Fae", reputationLevel = "", renownLevel = 0 },
 
   -- Host Ta'rela block
-  { vendorId = 9, itemID = "245263", itemName = "Oribos Spirits Tray", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 16, itemID = "245263", itemName = "Zocalo Drinks", goldCost = 0, currencies = {{ currencyID = 1560, amount = 150 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Adjutant Nikos block
   { vendorId = 10, itemID = "248106", itemName = "Kyrian Aspirant's Bench", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Kyrian", reputationLevel = "", renownLevel = 0 },
@@ -155,7 +171,7 @@ local itemEntries = {
   { vendorId = 13, itemID = "248102", itemName = "Venthyr's Target Dummy", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Taam block
-  { vendorId = 14, itemID = "243321", itemName = "Cartel Head's Schmancy Desk", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 15, itemID = "243321", itemName = "Cartel Head's Schmancy Desk", goldCost = 0, currencies = {{ currencyID = 2815, amount = 800 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 14, itemID = "258322", itemName = "Shadowguard Energy Siphon", goldCost = 5000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 14, itemID = "262907", itemName = "Tazaveshi Hookah", goldCost = 5000000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 14, itemID = "263043", itemName = "Consortium Energy Barrel", goldCost = 1500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },

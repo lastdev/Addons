@@ -75,10 +75,24 @@ end
 
 do
   local f = _G.CreateFrame("Frame")
-  f:RegisterEvent("MERCHANT_CLOSED")
-  f:RegisterEvent("HOUSING_STORAGE_UPDATED")
-  f:RegisterEvent("HOUSING_STORAGE_ENTRY_UPDATED")
-  f:RegisterEvent("HOUSE_DECOR_ADDED_TO_CHEST")
+
+  local function SafeRegister(ev)
+    local ok = pcall(f.RegisterEvent, f, ev)
+    return ok
+  end
+
+  SafeRegister("MERCHANT_CLOSED")
+  SafeRegister("HOUSING_STORAGE_UPDATED")
+  SafeRegister("HOUSING_STORAGE_ENTRY_UPDATED")
+  SafeRegister("HOUSE_DECOR_ADDED_TO_CHEST")
+
+  SafeRegister("HOUSING_COLLECTION_UPDATED")
+  SafeRegister("HOUSING_DECOR_ITEM_LEARNED")
+
+  SafeRegister("BAG_UPDATE_DELAYED")
+  SafeRegister("QUEST_TURNED_IN")
+  SafeRegister("ACHIEVEMENT_EARNED")
+
   f:SetScript("OnEvent", function()
     DecorCounts:ClearCache()
   end)

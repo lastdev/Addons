@@ -1,8 +1,8 @@
-## Interface: 120000
+## Interface: 120001
 
 ## Title: Home Bound
 ## Author: Bettiold
-## Version: 1.28
+## Version: 1.30
 ## Notes: Your ultimate companion for collecting housing rewards
 ## IconTexture: 7252953
 ## SavedVariables: hb_settings, dbHB

@@ -6,6 +6,8 @@ do
 ------------------------------------------------------------
 L["A /reload may be required to take effect."] = "Pode ser necessário um /reload para que tenha efeito."
 L["CVar, saved within Plater profile and restored when loading the profile."] = "CVar, salva dentro do perfil do Plater e restaurada ao carregar o perfil."
+--[[Translation missing --]]
+L["DISABLE_TESTING_AURAS"] = ""
 L["EXPORT"] = "Exportar"
 L["EXPORT_CAST_COLORS"] = "Compartilhar Cores"
 L["EXPORT_CAST_SOUNDS"] = "Compartilhar Sons"
@@ -349,6 +351,12 @@ L[ [=[Show nameplate for friendly npcs.
 |cFFFFFF00 Important |r: This option is dependent on the client`s nameplate state (on/off).
 
 |cFFFFFF00 Important |r: when disabled but enabled on the client through (%s), the healthbar isn't visible but the nameplate is still clickable.]=] ] = "Mostrar placa de nome para NPCs amigáveis. |cFFFFFF00 Importante |r: Esta opção depende do estado da placa de nome do cliente (ligada/desligada). |cFFFFFF00 Importante |r: quando desativada mas ativada no cliente através de (%s), a barra de vida não fica visível, mas a placa de nome ainda é clicável."
+--[[Translation missing --]]
+L[ [=[Show nameplate for friendly npcs.
+
+|cFFFFFF00 Important |r: This option is dependent on the client`s nameplate state (on/off).
+
+|cFFFFFF00 Important |r: when disabled but enabled on the client through (%s), the healthbar isn't visible but the nameplate is still clickable.]=] ] = ""
 L["TARGET_CVAR_ALWAYSONSCREEN"] = "Alvo Sempre na Tela|cFFFF7700*|r"
 L["TARGET_CVAR_ALWAYSONSCREEN_DESC"] = "Quando habilitado, a placa de identificação do seu alvo é sempre exibida, mesmo que o inimigo não esteja na tela. |cFFFF7700[*]|r |cFFa0a0a0CVar, salvo no perfil do Plater e restaurado quando o perfil é carregado."
 L["TARGET_CVAR_LOCKTOSCREEN"] = "Bloqueio de Tela (Lado Superior)|cFFFF7700*|r"

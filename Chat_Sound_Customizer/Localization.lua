@@ -735,112 +735,59 @@ L["Zone Channels"] = "Zone Channels"
 end
 
 if GetLocale() == "ruRU" then
-	--[[Translation missing --]]
-L["${button} to show the Config UI"] = "${button} to show the Config UI"
---[[Translation missing --]]
-L["${button} to temporarily mute CSC"] = "${button} to temporarily mute CSC"
---[[Translation missing --]]
-L["${button} to unmute CSC"] = "${button} to unmute CSC"
---[[Translation missing --]]
-L["Add channel"] = "Add channel"
---[[Translation missing --]]
-L["Add player"] = ""
---[[Translation missing --]]
-L["Add to ignore list"] = "Add to ignore list"
---[[Translation missing --]]
-L["Channel"] = "Channel"
---[[Translation missing --]]
-L["Chat"] = "Chat"
---[[Translation missing --]]
-L["CHAT_MSG_BN_WHISPER"] = "BN Whisper"
---[[Translation missing --]]
-L["CHAT_MSG_COMMUNITIES_CHANNEL"] = "Communities"
---[[Translation missing --]]
-L["CHAT_MSG_EMOTE"] = "Emote"
---[[Translation missing --]]
-L["CHAT_MSG_GUILD"] = "Guild"
---[[Translation missing --]]
-L["CHAT_MSG_INSTANCE_CHAT"] = "Instance"
---[[Translation missing --]]
-L["CHAT_MSG_INSTANCE_CHAT_LEADER"] = "Instance Leader"
---[[Translation missing --]]
-L["CHAT_MSG_OFFICER"] = "Guild Officer"
---[[Translation missing --]]
-L["CHAT_MSG_PARTY"] = "Party"
---[[Translation missing --]]
-L["CHAT_MSG_PARTY_LEADER"] = "Party Leader"
---[[Translation missing --]]
-L["CHAT_MSG_RAID"] = "Raid"
---[[Translation missing --]]
-L["CHAT_MSG_RAID_LEADER"] = "Raid Leader"
---[[Translation missing --]]
-L["CHAT_MSG_SAY"] = "Say"
---[[Translation missing --]]
-L["CHAT_MSG_WHISPER"] = "Whisper"
---[[Translation missing --]]
-L["CHAT_MSG_YELL"] = "Yell"
---[[Translation missing --]]
-L["Chats"] = "Chats"
---[[Translation missing --]]
-L["Config UI"] = "Config UI"
---[[Translation missing --]]
-L["Create group"] = ""
---[[Translation missing --]]
-L["Custom Channel"] = "Custom Channel"
---[[Translation missing --]]
-L["Customized"] = ""
---[[Translation missing --]]
-L["General"] = "General"
---[[Translation missing --]]
-L["Group"] = ""
---[[Translation missing --]]
-L["Guide"] = "Guide"
---[[Translation missing --]]
-L["Ignore List"] = "Ignore List"
---[[Translation missing --]]
-L["Left-click"] = "Left-click"
---[[Translation missing --]]
-L["Local Defense"] = "Local Defense"
---[[Translation missing --]]
-L["Multi Selection"] = "Multi Selection"
---[[Translation missing --]]
-L["Newcomer"] = "Newcomer"
---[[Translation missing --]]
-L["Notification interval (ms)"] = "Notification interval (ms)"
---[[Translation missing --]]
-L["Open config UI"] = "Open config UI"
---[[Translation missing --]]
-L["Remove channel"] = "Remove channel"
---[[Translation missing --]]
-L["Remove from ignore list"] = "Remove from ignore list"
---[[Translation missing --]]
-L["Remove group"] = ""
---[[Translation missing --]]
-L["Remove player"] = ""
---[[Translation missing --]]
-L["Right-click"] = "Right-click"
---[[Translation missing --]]
-L["Select a sound"] = "Select a sound"
---[[Translation missing --]]
-L["Show minimap button"] = "Show minimap button"
---[[Translation missing --]]
-L["Sound for receiving messages"] = "Sound for receiving messages"
---[[Translation missing --]]
-L["Sound for sending messages"] = "Sound for sending messages"
---[[Translation missing --]]
-L["Temporarily Mute"] = "Temporarily Mute"
---[[Translation missing --]]
-L["Temporarily mute the addon, it will go back to normal after reload"] = "Temporarily mute the addon, it will go back to normal after reload"
---[[Translation missing --]]
-L["This is the minimum interval in milliseconds for a sound to be played again. Each chat is individual."] = "This is the minimum interval in milliseconds for a sound to be played again. Each chat is individual."
---[[Translation missing --]]
-L["This sound will play when you are a GUIDE and a NEWCOMER says something in the Newcomer Chat"] = "This sound will play when you are a GUIDE and a NEWCOMER says something in the Newcomer Chat"
---[[Translation missing --]]
-L["This sound will play when you are a NEWCOMER and a GUIDE says something in the Newcomer Chat"] = "This sound will play when you are a NEWCOMER and a GUIDE says something in the Newcomer Chat"
---[[Translation missing --]]
-L["Trade"] = "Trade"
---[[Translation missing --]]
-L["Zone Channels"] = "Zone Channels"
+	L["${button} to show the Config UI"] = "${button} — открыть интерфейс настроек"
+L["${button} to temporarily mute CSC"] = "${button} — временно отключить CSC"
+L["${button} to unmute CSC"] = "${button} — включить CSC обратно"
+L["Add channel"] = "Добавить канал"
+L["Add player"] = "Добавить игрока"
+L["Add to ignore list"] = "Добавить в список игнорирования"
+L["Channel"] = "Канал"
+L["Chat"] = "Чат"
+L["CHAT_MSG_BN_WHISPER"] = "Шёпот Battle.net"
+L["CHAT_MSG_COMMUNITIES_CHANNEL"] = "Сообщества"
+L["CHAT_MSG_EMOTE"] = "Эмоция"
+L["CHAT_MSG_GUILD"] = "Гильдия"
+L["CHAT_MSG_INSTANCE_CHAT"] = "Подземелье"
+L["CHAT_MSG_INSTANCE_CHAT_LEADER"] = "Лидер подземелья"
+L["CHAT_MSG_OFFICER"] = "Офицер гильдии"
+L["CHAT_MSG_PARTY"] = "Группа"
+L["CHAT_MSG_PARTY_LEADER"] = "Лидер группы"
+L["CHAT_MSG_RAID"] = "Рейд"
+L["CHAT_MSG_RAID_LEADER"] = "Лидер рейда"
+L["CHAT_MSG_SAY"] = "Сказать"
+L["CHAT_MSG_WHISPER"] = "Шёпот"
+L["CHAT_MSG_YELL"] = "Крик"
+L["Chats"] = "Чаты"
+L["Config UI"] = "Интерфейс настроек"
+L["Create group"] = "Создать группу"
+L["Custom Channel"] = "Пользовательский канал"
+L["Customized"] = "Настроено"
+L["General"] = "Общие"
+L["Group"] = "Группа"
+L["Guide"] = "Ментор"
+L["Ignore List"] = "Список игнорирования"
+L["Left-click"] = "ЛКМ"
+L["Local Defense"] = "Местная оборона"
+L["Multi Selection"] = "Множественный выбор"
+L["Newcomer"] = "Новичок"
+L["Notification interval (ms)"] = "Интервал уведомлений (мс)"
+L["Open config UI"] = "Открыть интерфейс настроек"
+L["Remove channel"] = "Удалить канал"
+L["Remove from ignore list"] = "Убрать из списка игнорирования"
+L["Remove group"] = "Удалить группу"
+L["Remove player"] = "Удалить игрока"
+L["Right-click"] = "ПКМ"
+L["Select a sound"] = "Выбрать звук"
+L["Show minimap button"] = "Показать кнопку у миникарты"
+L["Sound for receiving messages"] = "Звук при получении сообщения"
+L["Sound for sending messages"] = "Звук при отправке сообщения"
+L["Temporarily Mute"] = "Временно отключить"
+L["Temporarily mute the addon, it will go back to normal after reload"] = "Временно отключить аддон, он вернётся в нормальное состояние после перезагрузки"
+L["This is the minimum interval in milliseconds for a sound to be played again. Each chat is individual."] = "Это минимальный интервал в миллисекундах, после которого звук может быть проигран снова. Каждый чат индивидуален."
+L["This sound will play when you are a GUIDE and a NEWCOMER says something in the Newcomer Chat"] = "Этот звук проиграется, когда вы МЕНТОР и НОВИЧОК говорит что-то в чате новичков"
+L["This sound will play when you are a NEWCOMER and a GUIDE says something in the Newcomer Chat"] = "Этот звук проиграется, когда вы НОВИЧОК и МЕНТОР говорит что-то в чате новичков"
+L["Trade"] = "Торговля"
+L["Zone Channels"] = "Зоновые каналы"
 
 	return
 end

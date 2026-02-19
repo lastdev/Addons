@@ -1,4 +1,4 @@
-﻿-- Locale loader
+-- Locale loader
 -- This file loads after all locale files and selects the correct language based on GetLocale()
 
 local ADDON_NAME, ns = ...

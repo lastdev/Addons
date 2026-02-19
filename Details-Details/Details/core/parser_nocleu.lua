@@ -117,6 +117,12 @@ local onEvent = function(event, instance, ...)
     end
 end
 
+--calling on challenge mode start, wipe details data
+
+---Details222.BParser.ResetServerDM
+
+
+
 local swapListener = Details:CreateEventListener()
 swapListener:RegisterEvent("DETAILS_INSTANCE_CHANGEATTRIBUTE", onEvent)
 swapListener:RegisterEvent("DETAILS_INSTANCE_CHANGESEGMENT", onEvent)
@@ -461,6 +467,8 @@ function bParser.UpdateDamageMeterSwap()
         end
         damageMeter:Hide()
 
+        do return end
+
         swappedFrame:SetScript("OnUpdate", nil)
 
         damageMeter:ForEachSessionWindow(function(thisWindow)
@@ -493,8 +501,6 @@ end
 
 function DetailsActionButtonTemplate_OnLoad(self)
     self:RegisterForClicks("AnyUp")
-
-
 end
 
 do return end

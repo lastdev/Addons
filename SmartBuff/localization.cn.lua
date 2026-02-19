@@ -264,9 +264,12 @@ SMARTBUFF_DEMONTYPE = "小鬼";
 -- 职业
 SMARTBUFF_CLASSES = {"德鲁伊", "猎人", "法师", "圣骑士", "牧师", "潜行者", "萨满祭司", "术士", "战士", "死亡骑士", "武僧", "恶魔猎手", "唤魔者", "猎人宠物", "术士宠物", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
 
--- 模板和地图
-SMARTBUFF_TEMPLATES = {"单人", "小队", "随机团队", "团队", "史诗钥石", "惊悚幻象", "地心探险", "战场", "竞技场", "虚空尖塔", "梦境裂隙", "进军奎尔丹纳斯", "奈幽贝扎宫", "安德麦恩解放", "自定义 1", "自定义 2", "自定义 3", "自定义 4", "自定义 5"};
-SMARTBUFF_INSTANCES = {"虚空尖塔", "梦境裂隙", "进军奎尔丹纳斯", "奈幽贝扎宫", "安德麦恩解放"};
+-- 模板和地图: split into generics, instances, custom. Assembled into SMARTBUFF_TEMPLATES at load (SmartBuff.lua).
+-- GENERICS: Enum.SmartBuffGroup (SmartBuff.lua) matches this order. Do not reorder or add/remove without updating both.
+SMARTBUFF_TEMPLATES_GENERICS = {"单人", "小队", "随机团队", "团队", "史诗钥石", "惊悚幻象", "地心探险", "战场", "竞技场"};
+-- INSTANCES: Must match GetInstanceInfo() name exactly. Only raids are currently supported; 5-man instance switching is not supported.
+SMARTBUFF_TEMPLATES_INSTANCES = {"虚空尖塔", "梦境裂隙", "进军奎尔丹纳斯", "奈幽贝尔宫殿", "安德麦恩解放"};
+SMARTBUFF_TEMPLATES_CUSTOM = {"自定义 1", "自定义 2", "自定义 3", "自定义 4", "自定义 5"};
 
 -- 骑乘
 SMARTBUFF_MOUNT = "速度提高(%d+)%%.";
@@ -320,7 +323,7 @@ SMARTBUFF_OFT_BUFFTARGET     = "目标 BUFF";
 SMARTBUFF_OFT_BUFFPVP        = "PVP BUFF";
 SMARTBUFF_OFT_AUTOSWITCHTMPINST = "自动更换方案";
 SMARTBUFF_OFT_CHECKCHARGES   = "检查次数";
-SMARTBUFF_OFT_RBT            = "重置计时器";
+SMARTBUFF_OFT_RBT            = "R: 计时器";
 SMARTBUFF_OFT_BUFFINCITIES   = "在主城内BUFF";
 SMARTBUFF_OFT_UISYNC         = "UI同步";
 SMARTBUFF_OFT_ADVGRPBUFFCHECK = "队伍BUFF检查";
@@ -333,7 +336,10 @@ SMARTBUFF_OFT_HIDESABUTTON   = "隐藏动作按钮";
 SMARTBUFF_OFT_INCOMBAT       = "战斗中触发";
 SMARTBUFF_OFT_SMARTDEBUFF    = "SmartDebuff";
 SMARTBUFF_OFT_PURGE_DATA     = "您确定要重置所有 SmartBuff 数据吗？\n此操作将强制重新加载 UI！";
-SMARTBUFF_OFT_RESETBUFFS     = "Reset Buffs";
+SMARTBUFF_OFT_RESETALL       = "R: 全部";
+SMARTBUFF_OFT_RESETLIST      = "R: 清单";
+SMARTBUFF_OFT_RESETBUFFS     = "R: 增益";
+SMARTBUFF_OFT_NEWS           = "News";
 SMARTBUFF_OFT_PURGE_BUFFS    = "New Version, reset ALL SmartBuff buff data?\nThis will reset all buff profiles!";
 SMARTBUFF_OFT_REQ_RELOAD     = "新版本需要重新加载 GUI\n准备就绪后单击继续。";
 SMARTBUFF_OFT_YES            = "是的";
@@ -342,6 +348,13 @@ SMARTBUFF_OFT_OKAY           = "继续"
 
 -- 设置信息提示
 SMARTBUFF_OFTT               = "启用智能施法";
+SMARTBUFF_OFTT_RBT           = "重置 BT：仅清除增益计时器（无保存数据）。";
+SMARTBUFF_OFTT_RESETALL      = "重置全部：清除所有（配置档+选项）。需重载 UI。";
+SMARTBUFF_OFTT_RESETBUFFS    = "重置增益：将增益与配置档重设为默认值。";
+SMARTBUFF_OFTT_RESETLIST     = "重置清单：仅重设增益顺序。";
+SMARTBUFF_OFTT_DONE          = "关闭选项。";
+SMARTBUFF_OFTT_NEWS          = "查看版本说明和更新日志。";
+SMARTBUFF_OFTT_HELPLATE_RESET = "重置按钮（悬停查看详情）";
 SMARTBUFF_OFTT_AUTO          = "启用BUFF信息提示";
 SMARTBUFF_OFTT_AUTOTIMER     = "BUFF监视时间的间隔";
 SMARTBUFF_OFTT_AUTOCOMBAT    = "战斗时仍保持监视。\n除非在选项窗口中启用主「战斗中」选项（非本项），否则战斗中所有提醒逻辑均不执行。";
@@ -393,7 +406,7 @@ SMARTBUFF_BST_REMINDER       = "通报";
 SMARTBUFF_BST_MANALIMIT      = "最低值";
 
 -- BUFF设置提示信息内容
-SMARTBUFF_BSTT_SELFONLY      = "仅BUFF自己，不给其他队友BUFF。"; 
+SMARTBUFF_BSTT_SELFONLY      = "仅BUFF自己，不给其他队友BUFF。";
 SMARTBUFF_BSTT_SELFNOT       = "BUFF所有其他选择的职业，但是不BUFF自己。";
 SMARTBUFF_BSTT_COMBATIN      = "在战斗状态时仍保持自动触发技能。\n除非在选项窗口中启用主「战斗中」选项，否则战斗中所有逻辑均不执行。";
 SMARTBUFF_BSTT_COMBATOUT     = "在非战斗状态时保持自动触发技能";
@@ -432,6 +445,7 @@ SMARTBUFF_MSG_LEFT           = "以后消失！";
 SMARTBUFF_MSG_CLASS          = "职业";
 SMARTBUFF_MSG_CHARGES        = "次数";
 SMARTBUFF_MSG_SOUNDS         = "飞溅声音选择: "
+SMARTBUFF_MSG_PVP_PREP_ONLY  = "由于API限制，增益仅在准备阶段有效，比赛开始后将停用。";
 
 -- Support
 SMARTBUFF_MINIMAP_TT         = "左键：选项菜单\n右键：开/关\nAlt+左键：SmartDebuff\n按Shift拖拽：移动按钮";

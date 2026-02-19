@@ -1,4 +1,4 @@
-local _, NS = ...
+local ADDON, NS = ...
 NS.UI = NS.UI or {}
 
 local Tracker = NS.UI.Tracker or {}
@@ -8,7 +8,8 @@ local Render = NS.UI.TrackerRender or {}
 NS.UI.TrackerRender = Render
 Tracker.Render = Render
 
-local Rows = NS.UI.TrackerRows
+local Rows = NS.UI.TrackerRows or {}
+NS.UI.TrackerRows = Rows
 local U = NS.UI.TrackerUtil
 local IA = NS.UI.ItemInteractions
 local Map = NS.Systems and NS.Systems.MapTracker
@@ -16,12 +17,12 @@ local DecorCounts = NS.Systems and NS.Systems.DecorCounts
 local Collection = NS.Systems and NS.Systems.Collection
 local HousingBootstrap = NS.Systems and NS.Systems.HousingBootstrap
 local Viewer = NS.UI and NS.UI.Viewer
-local C_Timer = _G.C_Timer
+local C_Timer = C_Timer
 
-local CreateFrame = _G.CreateFrame
-local UIParent = _G.UIParent
-local GetTime = _G.GetTime
-local pcall = _G.pcall
+local CreateFrame = CreateFrame
+local UIParent = UIParent
+local GetTime = GetTime
+local pcall = pcall
 
 local NPCNames = NS.Systems and NS.Systems.NPCNames
 
@@ -117,9 +118,9 @@ local function FetchZoneVendors()
 
   if type(vendors) == "table" and #vendors == 0 then
     local flat
-    for _, set in pairs(vendors) do
+    for key, set in pairs(vendors) do
       if type(set) == "table" then
-        for _, v in ipairs(set) do
+        for idx, v in ipairs(set) do
           flat = flat or {}
           flat[#flat + 1] = v
         end
@@ -154,13 +155,35 @@ local function ItemFaction(it)
   end
 end
 
+local function IsFavorited(it)
+  local db = NS.db and NS.db.profile
+  if not db or not db.favorites then 
+    return false 
+  end
+  
+  local itemID = tonumber((it.source and it.source.itemID) or it.itemID or it.id)
+  if not itemID then 
+    return false 
+  end
+  
+  return db.favorites[itemID] == true
+end
+
+local function ShouldShowFavoritesHighlight()
+  local db = NS.db and NS.db.profile
+  if not db or not db.tracker then return true end
+  return db.tracker.showFavoritesOnZoneEnter ~= false
+end
+
 function Render:Attach(_, ctx)
   local frame = ctx.frame
   local trackCB = ctx.trackCB
   local overall = ctx.overallRow
   local content = ctx.content
 
-  Rows:InitPools(frame, content)
+  if Rows and Rows.InitPools then
+    Rows:InitPools(frame, content)
+  end
 
   if NPCNames and NPCNames.RegisterListener and not frame._npcNamesListenerInstalled then
     frame._npcNamesListenerInstalled = true
@@ -236,6 +259,12 @@ function Render:Attach(_, ctx)
     local tracking = trackCB:GetChecked() and true or false
     local zoneName, zoneMapID = tracking and GetZone() or ((GetRealZoneText and GetRealZoneText()) or ""), nil
 
+    local zoneChanged = false
+    if zoneName and zoneName ~= "" and zoneName ~= frame._lastZoneName then
+      zoneChanged = true
+      frame._zoneJustChanged = true
+    end
+    
     frame._lastZoneName, frame._lastZoneMapID = zoneName, zoneMapID
     overall.zone:SetText(zoneName or "")
 
@@ -264,14 +293,44 @@ function Render:Attach(_, ctx)
 
     local visible = frame._scratchVisible
     local y = 0
+    
+    local showFavoritesHighlight = ShouldShowFavoritesHighlight() and (frame._zoneJustChanged == true)
+    local hasFavoritesInZone = false
+    
+    if showFavoritesHighlight then
+        for vi, v in ipairs(vendors) do
+            local items = (type(v) == "table" and type(v.items) == "table") and v.items or nil
+            if items then
+                local vKey = VendorKey(v)
+                local hasVendorFavorites = false
+                
+                for ii, it in ipairs(items) do
+                    if IsValid(it) then
+                        if IsFavorited(it) then
+                            local did = it.decorID or it.id or tostring(it)
+                            local collected = IsCollected and IsCollected(it) or false
+                            if not collected then
+                                hasVendorFavorites = true
+                                break
+                            end
+                        end
+                    end
+                end
+                
+                if hasVendorFavorites then
+                    frame._openVendors[vKey] = true
+                end
+            end
+        end
+    end
 
-    for _, v in ipairs(vendors) do
+    for vi, v in ipairs(vendors) do
       local items = (type(v) == "table" and type(v.items) == "table") and v.items or nil
       if items then
         wipe(visible)
         local cV, tV = 0, 0
 
-        for _, it in ipairs(items) do
+        for ii, it in ipairs(items) do
           if IsValid(it) then
             local did = it.decorID or it.id or tostring(it)
             local collected = collectedCache[did]
@@ -289,7 +348,7 @@ function Render:Attach(_, ctx)
           end
         end
 
-        if tV > 0 then
+        if tV > 0 and not (frame._hideCompletedVendors and cV == tV) then
           local vKey = VendorKey(v)
           local open = (frame._openVendors[vKey] == true)
 
@@ -335,10 +394,63 @@ function Render:Attach(_, ctx)
               local it = visible[i]
               local did = it.decorID or it.id or tostring(it)
               local collected = collectedCache[did]
+              local isFavorite = IsFavorited(it)
+              
+              if isFavorite and not collected then
+                hasFavoritesInZone = true
+              end
 
               local ir = Rows:Acquire(frame, "item")
               ir:SetPoint("TOPLEFT", 0, -y)
               ir:SetPoint("TOPRIGHT", 0, -y)
+
+              if isFavorite and showFavoritesHighlight and not collected then
+                if not ir._favoriteGlow then
+                  ir._favoriteGlow = ir:CreateTexture(nil, "BACKGROUND", nil, -1)
+                  ir._favoriteGlow:SetAllPoints()
+                  ir._favoriteGlow:SetColorTexture(1, 0.843, 0, 0.2)
+                end
+                ir._favoriteGlow:Show()
+                
+                if not ir._favoriteGlowAnim then
+                  ir._favoriteGlowAnim = ir._favoriteGlow:CreateAnimationGroup()
+                  local fadeOut = ir._favoriteGlowAnim:CreateAnimation("Alpha")
+                  fadeOut:SetFromAlpha(0.2)
+                  fadeOut:SetToAlpha(0.05)
+                  fadeOut:SetDuration(0.8)
+                  fadeOut:SetOrder(1)
+                  local fadeIn = ir._favoriteGlowAnim:CreateAnimation("Alpha")
+                  fadeIn:SetFromAlpha(0.05)
+                  fadeIn:SetToAlpha(0.2)
+                  fadeIn:SetDuration(0.8)
+                  fadeIn:SetOrder(2)
+                  ir._favoriteGlowAnim:SetLooping("REPEAT")
+                end
+                ir._favoriteGlowAnim:Play()
+                
+                if not ir._favoriteHoverScript then
+                  ir._favoriteHoverScript = true
+                  ir:SetScript("OnEnter", function(self)
+                    if ir._favoriteGlowAnim then
+                      ir._favoriteGlowAnim:Stop()
+                    end
+                    if Rows and Rows.StopPulse then
+                      Rows:StopPulse(ir.title)
+                      Rows:StopPulse(ir._favoriteStar)
+                    end
+                    if self._originalOnEnter then
+                      self._originalOnEnter(self)
+                    end
+                  end)
+                end
+              else
+                if ir._favoriteGlow then
+                  ir._favoriteGlow:Hide()
+                end
+                if ir._favoriteGlowAnim then
+                  ir._favoriteGlowAnim:Stop()
+                end
+              end
 
               local title = it.title
               if (not title or title == "") and GetDecorName and it.decorID then
@@ -347,6 +459,68 @@ function Render:Attach(_, ctx)
               if not title or title == "" then
                 title = "Decor " .. tostring(it.decorID or "")
               end
+              
+              if isFavorite and not collected then
+                if not ir._favoriteStar then
+                  ir._favoriteStar = ir:CreateTexture(nil, "OVERLAY")
+                  ir._favoriteStar:SetSize(10, 10)
+                  ir._favoriteStar:SetPoint("RIGHT", ir.title, "LEFT", -3, 0)
+                  if ir._favoriteStar.SetAtlas then
+                    ir._favoriteStar:SetAtlas("auctionhouse-icon-favorite")
+                  end
+                end
+                ir._favoriteStar:Show()
+                
+                ir.title:ClearAllPoints()
+                ir.title:SetPoint("TOPLEFT", ir.media, "TOPRIGHT", 24, -10)
+                ir.title:SetPoint("RIGHT", ir, "RIGHT", -12, 0)
+                
+                if ir.reqAQ then
+                  ir.reqAQ:ClearAllPoints()
+                  ir.reqAQ:SetPoint("TOPLEFT", ir.media, "TOPRIGHT", 10, -24)
+                  ir.reqAQ:SetPoint("RIGHT", ir, "RIGHT", -12, 0)
+                end
+                
+                if ir.reqRep then
+                  ir.reqRep:ClearAllPoints()
+                  ir.reqRep:SetPoint("TOPLEFT", ir.reqAQ, "BOTTOMLEFT", 0, -2)
+                  ir.reqRep:SetPoint("RIGHT", ir, "RIGHT", -12, 0)
+                end
+                
+                if showFavoritesHighlight then
+                  if Rows and Rows.PulseText then
+                    Rows:PulseText(ir._favoriteStar)
+                  end
+                else
+                  if Rows and Rows.StopPulse then
+                    Rows:StopPulse(ir._favoriteStar)
+                  end
+                end
+              else
+                if ir._favoriteStar then
+                  ir._favoriteStar:Hide()
+                end
+                if Rows and Rows.StopPulse then
+                  Rows:StopPulse(ir.title)
+                end
+                
+                ir.title:ClearAllPoints()
+                ir.title:SetPoint("TOPLEFT", ir.media, "TOPRIGHT", 10, -10)
+                ir.title:SetPoint("RIGHT", ir, "RIGHT", -12, 0)
+                
+                if ir.reqAQ then
+                  ir.reqAQ:ClearAllPoints()
+                  ir.reqAQ:SetPoint("TOPLEFT", ir.title, "BOTTOMLEFT", 0, -2)
+                  ir.reqAQ:SetPoint("RIGHT", ir, "RIGHT", -12, 0)
+                end
+                
+                if ir.reqRep then
+                  ir.reqRep:ClearAllPoints()
+                  ir.reqRep:SetPoint("TOPLEFT", ir.reqAQ, "BOTTOMLEFT", 0, -2)
+                  ir.reqRep:SetPoint("RIGHT", ir, "RIGHT", -12, 0)
+                end
+              end
+              
               ir.title:SetText(title)
 
               if ir.icon then
@@ -420,6 +594,23 @@ function Render:Attach(_, ctx)
       overall.bar:Show()
     elseif overall.bar then
       overall.bar:Hide()
+    end
+    
+    if hasFavoritesInZone and showFavoritesHighlight then
+      overall.zone:SetText(zoneName or "")
+      
+      if C_Timer and C_Timer.After then
+        C_Timer.After(3, function()
+          if frame then
+            frame._zoneJustChanged = false
+            if frame.RequestRefresh then
+              frame:RequestRefresh("favorites_timeout")
+            end
+          end
+        end)
+      end
+    else
+      overall.zone:SetText(zoneName or "")
     end
 
     content:SetHeight(max(1, y))

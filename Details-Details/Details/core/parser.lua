@@ -5594,6 +5594,9 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 	end
 
 	function Details.parser_functions:PLAYER_ENTERING_WORLD ()
+		--refresh title bar for shared media textures
+		Details:InstanceCall(Details.RefreshTitleBar)
+
 		return Details.parser_functions:ZONE_CHANGED_NEW_AREA()
 	end
 
@@ -5789,7 +5792,10 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		return true
 	end
 
-	function Details.parser_functions:UNIT_PET(unitId)
+	function Details.parser_functions:UNIT_PET(unitId) --unitId is a secret
+		if detailsFramework.IsAddonApocalypseWow() then
+			return
+		end
 		petContainer.UNIT_PET(unitId)
 		Details:SchedulePetUpdate(1)
 	end
@@ -5835,7 +5841,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			end
 		end)
 
-		if (detailsFramework.ExpansionHasEvoker()) then
+		if (detailsFramework.ExpansionHasEvoker() and not detailsFramework.IsAddonApocalypseWow()) then
 			if (IsInRaid()) then
 				--check if there is only one bombardment evoker in the group
 				local evokerCount = 0
@@ -6176,7 +6182,8 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		if (Details.debug) then
 		end
 
-		Details222.MythicPlus.LogStep("CHALLENGE_MODE_START, starting 10 seconds timer.")
+		Details222.BParser.ResetServerDM()
+
 		detailsFramework.Schedules.NewTimer (10, function()
 			Details222.MythicPlus.LogStep("CHALLENGE_MODE_START timer ended, starting the dungeon.")
 			startMythicPlusRun()
@@ -6187,7 +6194,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			Details222.MythicPlus.CHALLENGE_MODE_START_AT = GetTime()
 			Details222.MythicPlus.WorldStateTimerStartAt = nil
 			Details222.MythicPlus.WorldStateTimerEndAt = nil
-			Details222.MythicPlus.LogStep("Event: CHALLENGE_MODE_START")
 
 			local activeKeystoneLevel, activeAffixIDs, wasActiveKeystoneCharged = C_ChallengeMode.GetActiveKeystoneInfo and C_ChallengeMode.GetActiveKeystoneInfo()
 			Details222.MythicPlus.Level = activeKeystoneLevel or 2
@@ -6195,6 +6201,8 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			Details.challengeModeMapId = C_ChallengeMode.GetActiveChallengeMapID()
 
 			Details222.MythicPlus.debug_auras = {}
+
+			Details222.MythicPlus.LogStep("Event: CHALLENGE_MODE_START, starting 10 seconds timer | Level: " .. Details222.MythicPlus.Level)
 		end
 	end
 
@@ -6692,7 +6700,9 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		--load up data from savedvariables for the character
 		Details222.LoadSavedVariables.CharacterData()
 
-		Details222.BParser.SetSessionCache(Details.damage_meter_sessions)
+		if detailsFramework.IsAddonApocalypseWow() then
+			Details222.BParser.SetSessionCache(Details.damage_meter_sessions)
+		end
 
 		--load up data from saved variables for the account (shared among all the players' characters; this is not the Blizzard account, lol).
 		Details222.LoadSavedVariables.SharedData()
@@ -6725,7 +6735,9 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 	local playerLogin = CreateFrame("frame")
 	playerLogin:RegisterEvent("PLAYER_LOGIN")
 	playerLogin:SetScript("OnEvent", function()
-		Details222.StartUp.StartMeUp()
+		C_Timer.After(0, function()
+			Details222.StartUp.StartMeUp()
+		end)
 		crowdControlSpells = Details.CrowdControlSpellIdsCache
 	end)
 

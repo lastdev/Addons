@@ -19,7 +19,7 @@ local ICON_SZ = 34
 local CHECK_ATLAS = "common-icon-checkmark"
 local CHECK_FALLBACK = "Interface\\RaidFrame\\ReadyCheck-Ready"
 
-local wipe = _G.wipe or function(t) for k in pairs(t) do t[k] = nil end end
+local wipe = wipe or function(t) for k in pairs(t) do t[k] = nil end end
 
 local function MakeArrow(parent)
   local t = parent:CreateTexture(nil, "OVERLAY")
@@ -46,13 +46,13 @@ function Rows:PulseText(fs)
   ag = fs:CreateAnimationGroup()
   local a1 = ag:CreateAnimation("Alpha")
   a1:SetFromAlpha(1)
-  a1:SetToAlpha(0.35)
-  a1:SetDuration(0.6)
+  a1:SetToAlpha(0.5)
+  a1:SetDuration(0.4)
   a1:SetOrder(1)
   local a2 = ag:CreateAnimation("Alpha")
-  a2:SetFromAlpha(0.35)
+  a2:SetFromAlpha(0.5)
   a2:SetToAlpha(1)
-  a2:SetDuration(0.6)
+  a2:SetDuration(0.4)
   a2:SetOrder(2)
   ag:SetLooping("REPEAT")
   ag:Play()

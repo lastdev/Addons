@@ -208,10 +208,66 @@ local vendors = {
     coords = {x = 58.2, y = 35.6, mapID = 2112},
   },
 
+  [27] = {
+    expansion = "Dragonflight",
+    location = "The Waking Shores",
+    vendorName = "Cataloger Jakes",
+    npcID = 189226,
+    faction = 0,
+    coords = {x = 47.0, y = 82.6, mapID = 2022},
+  },
+  [28] = {
+    expansion = "Dragonflight",
+    location = "",
+    vendorName = "Balen Starfinder",
+    npcID = 255216,
+    faction = 0,
+    coords = {x = 0.0, y = 0.0, mapID = 0},
+  },
+  [29] = {
+    expansion = "Dragonflight",
+    location = "Razorwind Shores",
+    vendorName = "\"Yen\" Malone",
+    npcID = 255319,
+    faction = 0,
+    coords = {x = 39.8, y = 73.2, mapID = 2351},
+  },
+  [30] = {
+    expansion = "Dragonflight",
+    location = "",
+    vendorName = "Telemancer Astrandis",
+    npcID = 242399,
+    faction = 0,
+    coords = {x = 0.0, y = 0.0, mapID = 0},
+  },
+  [31] = {
+    expansion = "Dragonflight",
+    location = "",
+    vendorName = "Construct Ali'a",
+    npcID = 258181,
+    faction = 0,
+    coords = {x = 0.0, y = 0.0, mapID = 0},
+  },
+  [32] = {
+    expansion = "Dragonflight",
+    location = "Founder's Point",
+    vendorName = "\"Yen\" Malone",
+    npcID = 255230,
+    faction = 0,
+    coords = {x = 62.2, y = 80.2, mapID = 2352},
+  },
+  [33] = {
+    expansion = "Dragonflight",
+    location = "",
+    vendorName = "Void Researcher Aemely",
+    npcID = 259922,
+    faction = 0,
+    coords = {x = 0.0, y = 0.0, mapID = 0},
+  },
 }
 
 local itemEntries = {
-  { vendorId = 14, itemID = "264170", itemName = "Ancient Kaldorei Coffer", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 30, itemID = "264170", itemName = "Ancient Kaldorei Coffer", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 2, itemID = "249545", itemName = "Preserver's Censer", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 7, itemID = "248105", itemName = "Valdrakken Sconce", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   -- Caretaker Azkra block
@@ -228,8 +284,8 @@ local itemEntries = {
   { vendorId = 2, itemID = "246863", itemName = "Open Tome of the Dragon's Dedication", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Ellandrieth block
-  { vendorId = 3, itemID = "243242", itemName = "Circular Elven Floor Rug", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 3, itemID = "243243", itemName = "Rectangular Elven Floor Rug", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 28, itemID = "243242", itemName = "Circular Elven Floor Rug", goldCost = 750000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 28, itemID = "243243", itemName = "Rectangular Elven Floor Rug", goldCost = 500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 3, itemID = "245462", itemName = "Elven Temple Brazier", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 3, itemID = "245575", itemName = "Bel'ameth Interior Wall", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 3, itemID = "245576", itemName = "Bel'ameth Round Interior Pillar", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -237,55 +293,55 @@ local itemEntries = {
   { vendorId = 3, itemID = "245578", itemName = "Bel'ameth Interior Doorway", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 3, itemID = "245579", itemName = "Bel'ameth Interior Narrow Wall", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 3, itemID = "246110", itemName = "Filigree Moon Sconce", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 3, itemID = "248401", itemName = "Ornamental Kaldorei Glaive", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 3, itemID = "248401", itemName = "Ornamental Kaldorei Glaive", goldCost = 0, currencies = {{ currencyID = 2003, amount = 500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 3, itemID = "251022", itemName = "Bel'ameth Traveler's Pack", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 3, itemID = "264008", itemName = "Root-Wrapped Reliquary", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 30, itemID = "264008", itemName = "Root-Wrapped Reliquary", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Suntreader D'lyana block
   { vendorId = 4, itemID = "263203", itemName = "Rack of Silvermoon Arms", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 4, itemID = "263212", itemName = "Farstrider's Comfy Cushion", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 4, itemID = "263224", itemName = "Gentle Floating Planter", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 4, itemID = "263225", itemName = "Sunlit Glass Mirror", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 4, itemID = "238975", itemName = "Reliquary Telescope", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 4, itemID = "245283", itemName = "Blood Elven Candelabra", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 4, itemID = "245285", itemName = "Reliquary Storage Crate", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 4, itemID = "245286", itemName = "Rectangular Sin'dorei Rug", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 4, itemID = "245287", itemName = "Long Sin'dorei Rug", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 4, itemID = "245288", itemName = "Circular Sin'dorei Rug", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 27, itemID = "238975", itemName = "Reliquary Telescope", goldCost = 0, currencies = {{ currencyID = 2003, amount = 750 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 24 },
+  { vendorId = 27, itemID = "245283", itemName = "Blood Elven Candelabra", goldCost = 0, currencies = {{ currencyID = 2003, amount = 400 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 16 },
+  { vendorId = 27, itemID = "245285", itemName = "Reliquary Storage Crate", goldCost = 0, currencies = {{ currencyID = 2003, amount = 100 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 16 },
+  { vendorId = 27, itemID = "245286", itemName = "Rectangular Sin'dorei Rug", goldCost = 0, currencies = {{ currencyID = 2003, amount = 250 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 10 },
+  { vendorId = 27, itemID = "245287", itemName = "Long Sin'dorei Rug", goldCost = 0, currencies = {{ currencyID = 2003, amount = 250 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 10 },
+  { vendorId = 27, itemID = "245288", itemName = "Circular Sin'dorei Rug", goldCost = 0, currencies = {{ currencyID = 2003, amount = 250 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 10 },
 
   -- Dazzel block (Horde vendor per master table)
-  { vendorId = 5, itemID = "264175", itemName = "Amani Strongbox", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 30, itemID = "264175", itemName = "Amani Strongbox", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 5, itemID = "264176", itemName = "Amani Loa Idol", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 5, itemID = "264177", itemName = "Amani Rug", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 5, itemID = "264178", itemName = "Amani Bust", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 5, itemID = "264333", itemName = "Amani Incense Burner", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 5, itemID = "264350", itemName = "Carved Idol of Akil'zon, Loa of Victory", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 5, itemID = "265685", itemName = "Preyseeker's Amani Effigy", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 31, itemID = "265685", itemName = "Preyseeker's Amani Effigy", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 5, itemID = "265688", itemName = "Preyseeker's Consul Effigy", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 5, itemID = "265700", itemName = "Preyseeker's Amani Bust", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 31, itemID = "265700", itemName = "Preyseeker's Amani Bust", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 5, itemID = "265703", itemName = "Preyseeker's Consul Bust", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Ironus Coldsteel block
-  { vendorId = 6, itemID = "248652", itemName = "Dragon's Grand Mirror", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 9, itemID = "248652", itemName = "Dragon's Grand Mirror", goldCost = 0, currencies = {{ currencyID = 2003, amount = 250 }}, itemCosts = {}, factionName = "Valdrakken Accord", reputationLevel = "", renownLevel = 20 },
 
   -- Provisioner Aristta block
 
   -- Jolinth block
-  { vendorId = 8, itemID = "256168", itemName = "Draconic Sconce", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 8, itemID = "256169", itemName = "Valdrakken Oven", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 26, itemID = "256168", itemName = "Draconic Sconce", goldCost = 750000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 9, itemID = "256169", itemName = "Valdrakken Oven", goldCost = 0, currencies = {{ currencyID = 2003, amount = 500 }}, itemCosts = {}, factionName = "Valdrakken Accord", reputationLevel = "", renownLevel = 3 },
   { vendorId = 8, itemID = "248111", itemName = "Valdrakken Bookshelf", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Silvrath block
-  { vendorId = 9, itemID = "246706", itemName = "Elegant Dracthyr's Tea Cup", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 9, itemID = "246706", itemName = "Elegant Dracthyr's Tea Cup", goldCost = 0, currencies = {{ currencyID = 2003, amount = 100 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 9, itemID = "248104", itemName = "Pentagonal Stone Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 9, itemID = "248651", itemName = "Draconic Memorial Stone", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 9, itemID = "248653", itemName = "Valdrakken Stone Stool", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 9, itemID = "248655", itemName = "Elegant Dracthyr's Tea Set", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 9, itemID = "248124", itemName = "The Great Hoard", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 9, itemID = "248651", itemName = "Draconic Memorial Stone", goldCost = 0, currencies = {{ currencyID = 2003, amount = 600 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 9, itemID = "248653", itemName = "Valdrakken Stone Stool", goldCost = 0, currencies = {{ currencyID = 2003, amount = 50 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 9, itemID = "248655", itemName = "Elegant Dracthyr's Tea Set", goldCost = 0, currencies = {{ currencyID = 2003, amount = 200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 10, itemID = "248124", itemName = "The Great Hoard", goldCost = 0, currencies = {{ currencyID = 2003, amount = 7500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 9, itemID = "262616", itemName = "Lively Songwriter's Quill", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 9, itemID = "267082", itemName = "Ornate Cosmic Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 9, itemID = "248103", itemName = "Draconic Stone Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 9, itemID = "248112", itemName = "Valdrakken Garden Fountain", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 33, itemID = "267082", itemName = "Ornate Cosmic Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 9, itemID = "248103", itemName = "Draconic Stone Table", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Valdrakken Accord", reputationLevel = "", renownLevel = 14 },
+  { vendorId = 9, itemID = "248112", itemName = "Valdrakken Garden Fountain", goldCost = 0, currencies = {{ currencyID = 2003, amount = 400 }}, itemCosts = {}, factionName = "Valdrakken Accord", reputationLevel = "", renownLevel = 6 },
 
   -- Evantkis block
   { vendorId = 10, itemID = "249547", itemName = "Evoker's Elegant Rug", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -294,7 +350,7 @@ local itemEntries = {
   { vendorId = 10, itemID = "249824", itemName = "Devastator's Brazier", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Lurah block
-  { vendorId = 11, itemID = "258659", itemName = "Founder's Point Autumn Apple Tree", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 29, itemID = "258659", itemName = "Founder's Point Autumn Apple Tree", goldCost = 1500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 11, itemID = "258660", itemName = "Founder's Point Small Garden Cluster", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 11, itemID = "258661", itemName = "Founder's Point Medium Garden Cluster", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 11, itemID = "266240", itemName = "Founder's Point Large Garden Cluster", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -313,9 +369,9 @@ local itemEntries = {
   { vendorId = 11, itemID = "266253", itemName = "Granite Cobblestone Path Wide T-Junction", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 11, itemID = "266254", itemName = "Granite Cobblestone Path Wide Cross", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   { vendorId = 11, itemID = "266255", itemName = "Granite Cobblestone Path Wide End", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 11, itemID = "266443", itemName = "Granite Cobblestone Long Path", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 11, itemID = "266444", itemName = "Granite Cobblestone Path", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 11, itemID = "267209", itemName = "Open Void Elf Bedroll", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 32, itemID = "266443", itemName = "Granite Cobblestone Long Path", goldCost = 500000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 32, itemID = "266444", itemName = "Granite Cobblestone Path", goldCost = 750000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 33, itemID = "267209", itemName = "Open Void Elf Bedroll", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Aura block
   { vendorId = 12, itemID = "266440", itemName = "Earthen Floor", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -330,8 +386,8 @@ local itemEntries = {
   { vendorId = 13, itemID = "266455", itemName = "Stone Garden Gazebo", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Sir Finley Mrrgglton block
-  { vendorId = 14, itemID = "263994", itemName = "Fungal Chest", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 14, itemID = "263995", itemName = "Delver's Bountiful Coffer", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 30, itemID = "263994", itemName = "Fungal Chest", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 30, itemID = "263995", itemName = "Delver's Bountiful Coffer", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Kaelan block
   { vendorId = 15, itemID = "266580", itemName = "Harronir Root Bed", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
@@ -349,18 +405,18 @@ local itemEntries = {
   { vendorId = 16, itemID = "257352", itemName = "Large Brazier of Elune", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Cataloger Jakes block
-  { vendorId = 17, itemID = "248117", itemName = "Studious Dracthyr's Tomes", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 17, itemID = "250912", itemName = "Draconic Crafter's Forge", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 7, itemID = "248117", itemName = "Studious Dracthyr's Tomes", goldCost = 0, currencies = {{ currencyID = 2657, amount = 4000 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 20, itemID = "250912", itemName = "Draconic Crafter's Forge", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Provisioner Thom block (Horde vendor for Draconic Crafter's Forge)
 
   -- Mythrin'dir block
-  { vendorId = 18, itemID = "256429", itemName = "Valdrakken Lamppost", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 9, itemID = "256429", itemName = "Valdrakken Lamppost", goldCost = 0, currencies = {{ currencyID = 2003, amount = 200 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
-  -- Moon Priestess Lasara blockitemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  -- Moon Priestess Lasara block
 
   -- Provisioner Thom block
-  { vendorId = 20, itemID = "248656", itemName = "Dragon's Hoard Chest", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 8, itemID = "248656", itemName = "Dragon's Hoard Chest", goldCost = 0, currencies = {{ currencyID = 2118, amount = 1500 }}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
   -- Murik block
   { vendorId = 21, itemID = "253529", itemName = "Iskaaran Smith's Anvil", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Iskaara Tuskarr", reputationLevel = "", renownLevel = 15 },
@@ -380,12 +436,12 @@ local itemEntries = {
   { vendorId = 22, itemID = "256922", itemName = "Valdrakken Tapestry", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
   -- Tethalos block
   { vendorId = 23, itemID = "249546", itemName = "Dracthyr Weapon Rack", goldCost = 0, currencies = {{ currencyID = 2003, amount = 500 }}, itemCosts = {}, factionName = "Obsidian Warders", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "250694", itemName = "Draconic Metalshaper's Anvil", goldCost = 0, currencies = {{ currencyID = 2003, amount = 1200 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "250697", itemName = "Draconic Auctioneer Lectern", goldCost = 0, currencies = {{ currencyID = 2003, amount = 1500 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "250698", itemName = "Obsidian Warder Pennant", goldCost = 0, currencies = {{ currencyID = 2003, amount = 300 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "250699", itemName = "Dark Talon Pennant", goldCost = 0, currencies = {{ currencyID = 2003, amount = 300 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "250701", itemName = "Draconic Trader's Cart", goldCost = 0, currencies = {{ currencyID = 2003, amount = 2000 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
-  { vendorId = 23, itemID = "250702", itemName = "Artisan's Measuring Scales", goldCost = 0, currencies = {{ currencyID = 2003, amount = 400 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 23, itemID = "250694", itemName = "Draconic Metalshaper's Anvil", goldCost = 0, currencies = {{ currencyID = 3363, amount = 15 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 23, itemID = "250697", itemName = "Draconic Auctioneer Lectern", goldCost = 0, currencies = {{ currencyID = 3363, amount = 10 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 23, itemID = "250698", itemName = "Obsidian Warder Pennant", goldCost = 0, currencies = {{ currencyID = 3363, amount = 10 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 23, itemID = "250699", itemName = "Dark Talon Pennant", goldCost = 0, currencies = {{ currencyID = 3363, amount = 10 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 23, itemID = "250701", itemName = "Draconic Trader's Cart", goldCost = 0, currencies = {{ currencyID = 3363, amount = 20 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 23, itemID = "250702", itemName = "Artisan's Measuring Scales", goldCost = 0, currencies = {{ currencyID = 3363, amount = 5 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
   { vendorId = 23, itemID = "253240", itemName = "Reliquary Tent", goldCost = 0, currencies = {{ currencyID = 2003, amount = 1800 }}, itemCosts = {}, factionName = "Reliquary", reputationLevel = "", renownLevel = 0 },
 
   -- Storyteller Iskraal block
@@ -393,11 +449,11 @@ local itemEntries = {
   { vendorId = 24, itemID = "253528", itemName = "Iskaaran Open-Air Tent", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "Iskaaran Tuskarr", reputationLevel = "", renownLevel = 20 },
 
   -- Soridormi block
-  { vendorId = 25, itemID = "250695", itemName = "Replica Grathardormu's Hammer", goldCost = 0, currencies = {{ currencyID = 2594, amount = 2000 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 25, itemID = "250695", itemName = "Replica Grathardormu's Hammer", goldCost = 0, currencies = {{ currencyID = 3363, amount = 10 }}, itemCosts = {}, factionName = "Dragonscale Expedition", reputationLevel = "", renownLevel = 0 },
 
   -- Unatos block
   -- Items 248103, 248652, 248112, 256169 are renown-gated and in ReputationFactions.lua
-  { vendorId = 26, itemID = "256168", itemName = "Unknown Item 256168", goldCost = 0, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
+  { vendorId = 26, itemID = "256168", itemName = "Draconic Sconce", goldCost = 750000, currencies = {}, itemCosts = {}, factionName = "", reputationLevel = "", renownLevel = 0 },
 
 }
 local items = {}

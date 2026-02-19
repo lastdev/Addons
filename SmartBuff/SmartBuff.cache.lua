@@ -10,6 +10,7 @@ local function defaultBuffListCache()
   return {
     version = nil,
     lastUpdate = 0,
+    lastTemplate = nil,  -- template name when enabledBuffs was saved; only restore when building same template
     expectedCounts = { SCROLL = 0, FOOD = 0, POTION = 0, SELF = 0, GROUP = 0, ITEM = 0, TOTAL = 0 },
     enabledBuffs = {}
   };
@@ -222,7 +223,8 @@ function SMARTBUFF_SaveBuffRelationsCache()
 end
 
 -- Save cache to SavedVariables (buff list counts, enabled snapshot, toy count)
-function SMARTBUFF_SaveCache(counts, enabledBuffsSnapshot, toyCount)
+-- lastTemplate: template name for enabledBuffs; InitBuffSettings only restores when building same template
+function SMARTBUFF_SaveCache(counts, enabledBuffsSnapshot, toyCount, lastTemplate)
   local cache = SmartBuffBuffListCache;
   if (not cache) then
     SMARTBUFF_LoadCache();
@@ -231,6 +233,9 @@ function SMARTBUFF_SaveCache(counts, enabledBuffsSnapshot, toyCount)
 
   cache.version = SMARTBUFF_VERSION;
   cache.lastUpdate = GetTime();
+  if (lastTemplate ~= nil) then
+    cache.lastTemplate = lastTemplate;
+  end
 
   if (counts) then
     cache.expectedCounts.SCROLL = counts.SCROLL or 0;

@@ -221,9 +221,12 @@ function OutstandingItemsUI:ShowPopup(zoneName, outstanding, currentMapID)
 
     local currentFontSize = self._currentFontSize or 12
 
-    local contentWidth = frame._contentWidth or (frame.content and frame.content.GetWidth and frame.content:GetWidth()) or 320
-    if type(contentWidth) ~= "number" or contentWidth <= 0 then
-        contentWidth = 320
+    -- Recalculate content width from current frame size (supports resize)
+    local frameWidth = (frame.GetWidth and frame:GetWidth()) or 250
+    local contentWidth = math.max(1, frameWidth - 50)
+    frame._contentWidth = contentWidth
+    if frame.content then
+        frame.content:SetWidth(contentWidth)
     end
     local itemRowX = 15
     local itemRowWidth = math.max(120, contentWidth - itemRowX)
@@ -234,9 +237,10 @@ function OutstandingItemsUI:ShowPopup(zoneName, outstanding, currentMapID)
     local vendorTextWidthNoCoords = math.max(120, contentWidth - vendorTextXNoCoords - 5)
 
     frame._lastOutstanding = outstanding
-    
+    frame._currentMapID = currentMapID
+     
     frame.zoneName:SetText(zoneName)
-    
+     
     frame._currentZone = zoneName
     
     -- Properly cleanup children to prevent memory leak
@@ -926,6 +930,13 @@ function OutstandingItemsUI:ShowPopup(zoneName, outstanding, currentMapID)
     end
     
     frame.content:SetHeight(math.abs(yOffset) + 20)
+
+    if self.ApplyPopupResizeLayout then
+        self:ApplyPopupResizeLayout(frame)
+    end
+    if self.ApplyPopupFontScale then
+        self:ApplyPopupFontScale(frame)
+    end
 
     self:ApplyPopupTheme(frame)
     frame:Show()

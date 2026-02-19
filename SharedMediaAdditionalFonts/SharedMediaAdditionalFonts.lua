@@ -31,6 +31,7 @@ LSM:Register("font", "Baar Sophia", [[Interface\Addons\SharedMediaAdditionalFont
 LSM:Register("font", "Blazed", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\Blazed.ttf]])
 LSM:Register("font", "Boris Black Bloxx", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\BorisBlackBloxx.ttf]])
 LSM:Register("font", "Boris Black Bloxx Dirty", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\BorisBlackBloxxDirty.ttf]])
+LSM:Register("font", "Cabin", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\Cabin-Regular.ttf]])
 LSM:Register("font", "Celestia Redux", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\CelestiaMediumRedux1.55.ttf]])
 LSM:Register("font", "Century Gothic", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\centurygothic.ttf]], western + ruRU)
 LSM:Register("font", "Collegiate", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\COLLEGIA.ttf]])

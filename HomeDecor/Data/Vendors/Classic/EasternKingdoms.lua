@@ -206,19 +206,6 @@ NS.Data.Vendors["Classic"]["EasternKingdoms"] = {
 
   {
     source={
-      id=142115,
-      type="vendor",
-      faction="Alliance",
-      zone="Boralus Harbor",
-      worldmap="23:7380:5220"
-    },
-    items={
-      {decorID=4813, source={type="vendor", itemID=248796, currency="3000", currencytype="gold"}, requirements={achievement={id=5442}}},
-    }
-  },
-
-  {
-    source={
       id=211065,
       type="vendor",
       faction="Alliance",

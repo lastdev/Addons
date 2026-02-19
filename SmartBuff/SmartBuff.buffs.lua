@@ -1,4 +1,4 @@
-local _;
+﻿local _;
 local S = SMARTBUFF_GLOBALS;
 
 -- ---------------------------------------------------------------------------
@@ -49,7 +49,7 @@ local function GetItems(items)
         -- Store item ID initially (will be updated to link when async load completes)
         local idx = #t + 1;
         t[idx] = itemID; -- Store numeric ID initially
-        
+
         -- Async load item link using ContinueOnItemLoad
         -- This fires immediately if cached, or async if not cached
         local item = Item:CreateFromItemID(itemID);
@@ -115,12 +115,12 @@ local function GetSpellInfoIfNeeded(varName, spellId, isSpellbookSpell)
     if (not SMARTBUFF_ExpectedData.spellIDToVarName) then SMARTBUFF_ExpectedData.spellIDToVarName = {}; end
     SMARTBUFF_ExpectedData.spellIDToVarName[spellId] = varName;
   end
-  
+
   -- Check if variable is already set (non-nil) - skip if already loaded
   if (_G[varName] ~= nil) then
     return;  -- Already loaded and verified, skip API call
   end
-  
+
   -- Try to load from cache first (AllTheThings pattern: use cache when live data not available)
   local cache = SmartBuffItemSpellCache;
   if (cache and cache.version and cache.spells and cache.spells[varName]) then
@@ -139,7 +139,7 @@ local function GetSpellInfoIfNeeded(varName, spellId, isSpellbookSpell)
       return;
     end
   end
-  
+
   -- Not in cache, try to load from API
   local spellName = C_Spell.GetSpellName(spellId);
   if (not spellName) then
@@ -149,7 +149,7 @@ local function GetSpellInfoIfNeeded(varName, spellId, isSpellbookSpell)
     end
     return;
   end
-  
+
   local spellInfo = getSpellBookItemByName(spellId);
   if (spellInfo) then
     -- Validate data - if incomplete, re-queue for refresh
@@ -157,7 +157,7 @@ local function GetSpellInfoIfNeeded(varName, spellId, isSpellbookSpell)
       C_Spell.RequestLoadSpellData(spellId);
       return;
     end
-    
+
     -- For spellbook spells, verify they're known/valid for this character
     if (isSpellbookSpell) then
       local isKnown = C_SpellBook.IsSpellKnownOrInSpellBook(spellId);
@@ -184,7 +184,7 @@ local function GetSpellInfoIfNeeded(varName, spellId, isSpellbookSpell)
         SmartBuffValidSpells.lastUpdate = GetTime();
       end
     end
-    
+
     -- Valid API response - update variable and cache
     _G[varName] = spellInfo;
     SMARTBUFF_InitItemSpellCache();
@@ -220,12 +220,12 @@ local function GetSpellInfoDirectIfNeeded(varName, spellId, isSpellbookSpell)
     if (not SMARTBUFF_ExpectedData.spellIDToVarName) then SMARTBUFF_ExpectedData.spellIDToVarName = {}; end
     SMARTBUFF_ExpectedData.spellIDToVarName[spellId] = varName;
   end
-  
+
   -- Check if variable is already set (non-nil) - skip if already loaded
   if (_G[varName] ~= nil) then
     return;  -- Already loaded and verified, skip API call
   end
-  
+
   -- Try to load from cache first (AllTheThings pattern: use cache when live data not available)
   local cache = SmartBuffItemSpellCache;
   if (cache and cache.version and cache.spells and cache.spells[varName]) then
@@ -244,7 +244,7 @@ local function GetSpellInfoDirectIfNeeded(varName, spellId, isSpellbookSpell)
       return;
     end
   end
-  
+
   -- Not in cache, try to load from API
   local spellName = C_Spell.GetSpellName(spellId);
   if (not spellName) then
@@ -254,7 +254,7 @@ local function GetSpellInfoDirectIfNeeded(varName, spellId, isSpellbookSpell)
     end
     return;
   end
-  
+
   local spellInfo = C_Spell.GetSpellInfo(spellId);
   if (spellInfo) then
     -- Validate data - if incomplete, re-queue for refresh
@@ -262,7 +262,7 @@ local function GetSpellInfoDirectIfNeeded(varName, spellId, isSpellbookSpell)
       C_Spell.RequestLoadSpellData(spellId);
       return;
     end
-    
+
     -- For spellbook spells, verify they're known/valid for this character
     if (isSpellbookSpell) then
       local isKnown = C_SpellBook.IsSpellKnownOrInSpellBook(spellId);
@@ -289,7 +289,7 @@ local function GetSpellInfoDirectIfNeeded(varName, spellId, isSpellbookSpell)
         SmartBuffValidSpells.lastUpdate = GetTime();
       end
     end
-    
+
     -- Valid API response received - update the variable and cache
     _G[varName] = spellInfo;
     -- Save to cache for persistence
@@ -335,12 +335,12 @@ local function GetItemInfoIfNeeded(varName, itemId)
     if (not SMARTBUFF_ExpectedData.itemIDToVarName) then SMARTBUFF_ExpectedData.itemIDToVarName = {}; end
     SMARTBUFF_ExpectedData.itemIDToVarName[itemId] = varName;
   end
-  
+
   -- Check if variable is already set (non-nil) - skip if already loaded
   if (_G[varName] ~= nil) then
     return;  -- Already loaded and verified, skip API call
   end
-  
+
   -- Try to load from cache first (AllTheThings pattern: use cache when live data not available)
   local cache = SmartBuffItemSpellCache;
   if (cache and cache.version and cache.items and cache.items[varName]) then
@@ -351,7 +351,7 @@ local function GetItemInfoIfNeeded(varName, itemId)
       local itemData = cache.itemData and cache.itemData[varName];
       local minLevel = itemData and itemData[1];
       local texture = itemData and itemData[2];
-      
+
       -- Validate cached data - if incomplete, mark for refresh
       if (not ValidateItemData(cachedLink, minLevel, texture)) then
         if (not cache.needsRefresh) then cache.needsRefresh = {}; end
@@ -368,7 +368,7 @@ local function GetItemInfoIfNeeded(varName, itemId)
       return;  -- Use cached data, refresh in background
     end
   end
-  
+
   -- Not in cache, try to load from API
   local itemName, itemLink, itemRarity, itemLevel, minLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, texture = C_Item.GetItemInfo(itemId);
   if (itemLink) then
@@ -421,14 +421,14 @@ local function InsertItem(t, type, itemId, spellId, duration, link)
   -- Use GetItemInfoIfNeeded pattern to track and cache items
   -- Generate a unique varName for tracking (won't be used as global, just for cache tracking)
   local varName = "SMARTBUFF_DYNAMIC_" .. tostring(itemId);
-  
+
   -- Track expected item for cache sync (and O(1) reverse lookup in DATA_LOAD_RESULT)
   if (SMARTBUFF_ExpectedData and SMARTBUFF_ExpectedData.items) then
     SMARTBUFF_ExpectedData.items[varName] = itemId;
     if (not SMARTBUFF_ExpectedData.itemIDToVarName) then SMARTBUFF_ExpectedData.itemIDToVarName = {}; end
     SMARTBUFF_ExpectedData.itemIDToVarName[itemId] = varName;
   end
-  
+
   -- Try cache first
   local item = nil;
   local minLevel, texture = nil, nil;
@@ -441,14 +441,14 @@ local function InsertItem(t, type, itemId, spellId, duration, link)
       texture = itemData[2];
     end
   end
-  
+
   -- If not in cache, try API
   if (not item) then
     local itemName, itemLink, itemRarity, itemLevel, apiMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, apiTexture = C_Item.GetItemInfo(itemId);
     item = itemLink;
     minLevel = apiMinLevel;
     texture = apiTexture;
-    
+
     -- Cache if valid
     if (item and SMARTBUFF_ValidateItemData(item, minLevel, texture)) then
       SMARTBUFF_InitItemSpellCache();
@@ -479,7 +479,7 @@ local function InsertItem(t, type, itemId, spellId, duration, link)
       C_Item.RequestLoadItemDataByID(itemId);
     end
   end
-  
+
   -- Get spell info (use GetSpellInfoDirectIfNeeded pattern)
   -- Item spells (flasks/potions/toys) are NOT spellbook spells - don't use spellbook check
   local spellVarName = "SMARTBUFF_DYNAMIC_SPELL_" .. tostring(spellId);
@@ -488,12 +488,12 @@ local function InsertItem(t, type, itemId, spellId, duration, link)
     if (not SMARTBUFF_ExpectedData.spellIDToVarName) then SMARTBUFF_ExpectedData.spellIDToVarName = {}; end
     SMARTBUFF_ExpectedData.spellIDToVarName[spellId] = spellVarName;
   end
-  
+
   local spell = nil;
   if (cache and cache.version and cache.spells and cache.spells[spellVarName]) then
     spell = cache.spells[spellVarName];
   end
-  
+
   if (not spell) then
     spell = C_Spell.GetSpellInfo(spellId);
     if (spell and SMARTBUFF_ValidateSpellData(spell)) then
@@ -516,7 +516,7 @@ local function InsertItem(t, type, itemId, spellId, duration, link)
       C_Spell.RequestLoadSpellData(spellId);
     end
   end
-  
+
   -- Accept partial data (AllTheThings pattern) - add item even if data isn't fully loaded yet
   -- Data will be updated when ITEM_DATA_LOAD_RESULT/SPELL_DATA_LOAD_RESULT fires
   if (item) then
@@ -562,7 +562,7 @@ function SMARTBUFF_LoadToys()
         currentToyCount = currentToyCount + 1;
       end
     end
-    
+
     if (currentToyCount == cache.toyCount and currentToyCount == nLearned and nLearned > 0) then
       SMARTBUFF_AddMsgD("Toys already loaded and verified (cached: " .. cache.toyCount .. ")");
       return;
@@ -804,7 +804,7 @@ function SMARTBUFF_InitItemList()
     222781, 222766, 222776, 222780, 222778, 222768, 222783, 222779, 222751, 222773, 222753, 222774, 222752, 222758, 222770, 222775, 222777, 222759,
     222760, 222765, 222763, 222769, 222761, 222772, 222757, 222762, 222754, 222755, 222756, 222767, 222750, 222764, 222771,
     -- Midnight
-    241316, 241312, 241310, 241314, 241318, 
+    241316, 241312, 241310, 241314, 241318,
   });
 
   -- Warlock healthstones
@@ -1133,7 +1133,7 @@ function SMARTBUFF_InitSpellIDs()
   local isSpellBookBuff = true  -- true for spellbook spells, false for item spells
   -- Restore chains and links from cache first (AllTheThings pattern: use cache when live data not available)
   SMARTBUFF_LoadBuffRelationsCache();
-  
+
   -- Only call API if variable is not already set (optimization: skip if already loaded and verified)
   GetSpellInfoIfNeeded("SMARTBUFF_TESTSPELL", 774, isSpellBookBuff );
 
@@ -1358,7 +1358,7 @@ function SMARTBUFF_InitSpellIDs()
   -- Well Fed (Generic)
   GetSpellInfoDirectIfNeeded("SMARTBUFF_WellFedAura", 46899); --"Well Fed"
   GetSpellInfoDirectIfNeeded("SMARTBUFF_HeartyFedAura", 462181); --"Hearty Well Fed"
-  
+
   -- Misc
   GetSpellInfoDirectIfNeeded("SMARTBUFF_KIRUSSOV", 46302); --"K'iru's Song of Victory"
   -- Special case: FISHING has fallback spell ID
@@ -2281,7 +2281,7 @@ function SMARTBUFF_InitSpellList()
     };
   end
 
-  -- Monk 
+  -- Monk
   if (SMARTBUFF_PLAYERCLASS == "MONK") then
     SMARTBUFF_BUFFLIST = {
       {SMARTBUFF_BLACKOX, 15, SMARTBUFF_CONST_SELF, nil, nil, nil, S.ChainMonkStatue},

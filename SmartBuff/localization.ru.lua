@@ -31,9 +31,12 @@ SMARTBUFF_UNDEAD    = "Undead";
 -- Classes
 SMARTBUFF_CLASSES = {"Друид", "Охотник", "Маг", "Паладин", "Жрец", "Разбойник", "Шаман", "Чернокнижник", "Воин", "Рыцарь смерти", "Монах", "Охотник на демонов", "Эвокер", "Питомец Охотника", "Прислужник Чернокнижника", "DK Pet", "танка", "целителя", "Бойцы"};
 
--- Templates and Instances
-SMARTBUFF_TEMPLATES = {"Соло", "Группа", "ЛФР", "Рейд", "Мифический ключ", "Жуткое видение", "Погружение", "Поле боя", "Арена", "Шпиль Пустоты", "Разлом Снов", "Поход на Кель'Данас", "Дворец Неруб-ар", "Освобождение Подкопа", "Пользовательский 1", "Пользовательский 2", "Пользовательский 3", "Пользовательский 4", "Пользовательский 5"};
-SMARTBUFF_INSTANCES = {"Шпиль Пустоты", "Разлом Снов", "Поход на Кель'Данас", "Дворец Неруб-ар", "Освобождение Подкопа"};
+-- Templates: split into generics, instances, custom. Assembled into SMARTBUFF_TEMPLATES at load (SmartBuff.lua).
+-- GENERICS: Enum.SmartBuffGroup (SmartBuff.lua) matches this order. Do not reorder or add/remove without updating both.
+SMARTBUFF_TEMPLATES_GENERICS = {"Соло", "Группа", "ЛФР", "Рейд", "Мифический ключ", "Жуткое видение", "Погружение", "Поле боя", "Арена"};
+-- INSTANCES: Must match GetInstanceInfo() name exactly. Only raids are currently supported; 5-man instance switching is not supported.
+SMARTBUFF_TEMPLATES_INSTANCES = {"Шпиль Пустоты", "Разлом Снов", "Поход на Кель'Данас", "Дворец Неруб-ар", "Освобождение Подкопа"};
+SMARTBUFF_TEMPLATES_CUSTOM = {"Пользовательский 1", "Пользовательский 2", "Пользовательский 3", "Пользовательский 4", "Пользовательский 5"};
 
 -- Mount
 SMARTBUFF_MOUNT = "Увеличивает скорость на (%d+)%%.";
@@ -86,10 +89,10 @@ SMARTBUFF_OFT_BUFFTARGET     = "Баффать цель";
 SMARTBUFF_OFT_BUFFPVP        = "Баффать в PvP";
 SMARTBUFF_OFT_AUTOSWITCHTMPINST = "Подземелья";
 SMARTBUFF_OFT_CHECKCHARGES   = "Проверять заряды";
-SMARTBUFF_OFT_RBT            = "Сброс БТ";
+SMARTBUFF_OFT_RBT            = "R: Таймеры";
 SMARTBUFF_OFT_BUFFINCITIES   = "Баффать в городе";
 SMARTBUFF_OFT_UISYNC         = "Синхронизация UI";
-SMARTBUFF_OFT_BLDURATION     = "Ч.список";
+SMARTBUFF_OFT_BLDURATION     = "Блок";
 SMARTBUFF_OFT_COMPMODE       = "Комп.режим";
 SMARTBUFF_OFT_MINIGRP        = "Мини-группа";
 SMARTBUFF_OFT_ANTIDAZE       = "Анти-стоп";
@@ -99,9 +102,10 @@ SMARTBUFF_OFT_SMARTDEBUFF    = "SmartDebuff";
 SMARTBUFF_OFT_INSHAPESHIFT   = "Shapeshift";
 SMARTBUFF_OFT_LINKGRPBUFFCHECK  = "Grp link";
 SMARTBUFF_OFT_LINKSELFBUFFCHECK = "Self link";
-SMARTBUFF_OFT_RESETALL       = "Reset All";
-SMARTBUFF_OFT_RESETLIST      = "Reset List";
-SMARTBUFF_OFT_RESETBUFFS     = "Reset Buffs";
+SMARTBUFF_OFT_RESETALL       = "R: Всё";
+SMARTBUFF_OFT_RESETLIST      = "R: Список";
+SMARTBUFF_OFT_RESETBUFFS     = "R: Баффы";
+SMARTBUFF_OFT_NEWS           = "News";
 SMARTBUFF_OFT_PURGE_BUFFS    = "New Version, reset ALL SmartBuff buff data?\nThis will reset all buff profiles!";
 SMARTBUFF_OFT_YES            = "Да";
 SMARTBUFF_OFT_NO             = "Нет";
@@ -111,6 +115,13 @@ SMARTBUFF_OFT_REQ_RELOAD     = "Новые версии требуют пере�
 
 -- Options Frame Tooltip Text
 SMARTBUFF_OFTT               = "Включает-выключает SmartBuff.";
+SMARTBUFF_OFTT_RBT           = "Reset BT: Только сброс таймеров баффов (без сохранённых данных).";
+SMARTBUFF_OFTT_RESETALL      = "Reset Всё: Удалить всё (профили + настройки). Требуется ReloadUI.";
+SMARTBUFF_OFTT_RESETBUFFS    = "Reset Баффы: Сброс баффов и профилей до значений по умолчанию.";
+SMARTBUFF_OFTT_RESETLIST     = "Reset Список: Только сброс порядка баффов.";
+SMARTBUFF_OFTT_DONE          = "Закрыть настройки.";
+SMARTBUFF_OFTT_NEWS          = "Просмотр заметок о выпуске и списка изменений.";
+SMARTBUFF_OFTT_HELPLATE_RESET = "Кнопки сброса (наведите для подробностей)";
 SMARTBUFF_OFTT_AUTO          = "Включает-выключает напоминалку.";
 SMARTBUFF_OFTT_AUTOTIMER     = "Задержка в секундах между двумя проверками.";
 SMARTBUFF_OFTT_AUTOCOMBAT    = "Запускать провеку во время боя.\nВся логика напоминаний в бою отключена, пока не включена основная опция «в бою» в окне настроек (не эта).";
@@ -137,7 +148,7 @@ SMARTBUFF_OFTT_AUTOSWITCHTMPINST = "Автоматически менять на
 SMARTBUFF_OFTT_CHECKCHARGES  = "Показывать нехватку зарядов баффа\nпри падении ниже этого числа.\n0 = Отключить";
 SMARTBUFF_OFTT_BUFFINCITIES  = "Баффать даже при нахождении в городе.\nЕсли на вас PvP флаг, баффает в любом случае.";
 SMARTBUFF_OFTT_UISYNC        = "Активировать синхронизацию с UI\nчтобы получать оставшееся время баффов\nот других игроков.";
-SMARTBUFF_OFTT_BLDURATION    = "Сколько секунд игрок держится в чёрном списке.\n0 = Отключить";
+SMARTBUFF_OFTT_BLDURATION    = "Сколько секунд игрок будет заблокирован.\n0 = Отключить";
 SMARTBUFF_OFTT_COMPMODE      = "Режим совместимости.\nВнимание!!!\nИспользуйте этот режим только если\nу вас проблемы с обкастом себя самого.";
 SMARTBUFF_OFTT_MINIGRP       = "Показывать выбор подгрупп рейда\nв отдельной маленькой рамке.";
 SMARTBUFF_OFTT_ANTIDAZE      = "Автоматически прерывать\nДух Гепарда/Стаи\nесли на ком-то из группы\nповисло замедление.";
@@ -204,6 +215,7 @@ SMARTBUFF_MSG_CLASS          = "Класс";
 SMARTBUFF_MSG_CHARGES        = "зарядов";
 SMARTBUFF_MSG_SOUNDS         = "Выбранный звук всплеска: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec changed (%s), loading buff templates...";
+SMARTBUFF_MSG_PVP_PREP_ONLY  = "Из-за ограничений API баффы работают только во время подготовки и отключаются после начала матча.";
 
 -- Support
 SMARTBUFF_MINIMAP_TT         = "Левой кнопкой: меню опций\nПравой кнопкой: Вкл/Выкл\nAlt+Левой Кнопкой: SmartDebuff\nТащить с Shift-ом: Двигать кнопку";

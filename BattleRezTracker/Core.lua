@@ -3,7 +3,6 @@ local addonName, ns = ...
 local lib = LibStub("FerrozEditModeLib-1.0")
 -- Constants
 local FRAME_SIZE = 42                    -- Standard action button size
-local REBIRTH_SPELL_ID = 20484           -- SpellID for Rebirth spell icon
 local TEXCOORD_LEFT = 0.08               -- Texture coordinate crop (WeakAura style)
 local TEXCOORD_RIGHT = 0.92
 local COUNT_FONT_SIZE = 12               -- Font size for charge count
@@ -15,6 +14,15 @@ local log = lib.Log
 local DEFAULT_STATE = {
     height=FRAME_SIZE,
     width=FRAME_SIZE
+}
+
+local REBIRTH_SPELL_ID = 20484           -- SpellID for Rebirth spell icon
+local FALLBACK_ICON = 136048
+local BATTLE_REZ_ICONS = {
+    [20484]  = {order=1, label="Rebirth (Druid)"},
+    [61999]  = {order=2, label="Raise Allied (Deathknight)"},
+    [95750]  = {order=3, label="Soulstone (Warlock)"},
+    [391054] = {order=4, label="Intercession (Paladin)"},
 }
 
 -- show mode boolean
@@ -86,6 +94,15 @@ function BRT_Mixin:UpdateDisplay()
         --don't changes visuals (alpha/saturation) to avoid taint
     end
 
+    if InCombatLockdown() then
+        --always show in combat, if the frame is otherwise shown
+        self.countText:SetAlpha(1.0)
+    else
+        --out of combat, only show the charge count if charges > 0.  
+        --Since this is secret, and alpha is clamped, this is a workaround for the fact that I can't check currentCharges > 0
+        self.countText:SetAlpha(currentCharges)
+    end
+
     -- Update the Cooldown Swipe/Timer
     if startTime and duration then
         --self.cd:SetCooldownFromExpirationTime(startTime, duration)
@@ -109,6 +126,60 @@ function BRT_Mixin:EditModeStopMock()
     self:UpdateDisplay() -- Returns to real combat data
 end
 
+--frame specific configuration
+function BRT_Mixin:UpdateIcon(spellId)
+    local spellInfo = C_Spell.GetSpellInfo(spellId or REBIRTH_SPELL_ID)
+    local changed = self.icon.spellId ~= spellId
+    self.icon.spellId = spellId
+    self.icon:SetTexture(spellInfo.iconID or FALLBACK_ICON)
+    return changed
+end
+function BRT_Mixin:GetOrCreateFrameSpecificControls(socket)
+    if not self.frameSpecificPlugin then
+        local p = CreateFrame("Frame", nil, self, "VerticalLayoutFrame")
+        p.fixedWidth = lib.CONFIG_FRAME_WIDTH
+        p.spacing = lib.CONFIG_ROW_SPACING 
+        self.frameSpecificPlugin = p
+        self.extraControls = {}
+        lib:AddHR(p)
+        self.extraControls.battleRezSpellId = lib:CreateSpellIconSelector(p, "Icon", "battleRezSpellId",BATTLE_REZ_ICONS, lib.CONFIG_ROW_LABEL_WIDTH *2)
+        if BRT_Settings then
+            local spell = BATTLE_REZ_ICONS[BRT_Settings.battleRezSpellId or REBIRTH_SPELL_ID]
+            self.extraControls.battleRezSpellId:SetText(spell and spell.label or "Unknown" )
+        end
+        p:Layout()
+    end
+    return self.extraControls, self.frameSpecificPlugin
+end
+
+function BRT_Mixin:CommitFrameSpecificFields()
+    if not self.workingState then return end
+    BRT_Settings.battleRezSpellId = self.workingState.battleRezSpellId
+end
+
+function BRT_Mixin:UpdateFromState(state)
+    local changed = false
+    if state.battleRezSpellId then
+        changed = self:UpdateIcon(state.battleRezSpellId) or changed
+    end
+    return changed
+end
+
+function BRT_Mixin:GetFrameSpecificSnapshot()
+    return {
+        battleRezSpellId = self.icon.spellId ,
+    }
+end
+
+function BRT_Mixin:OnConfigRefresh(configFrame, state)
+    local controls = configFrame.frameSpecificControls
+    if controls and controls.battleRezSpellId and state.battleRezSpellId then
+        local spell = BATTLE_REZ_ICONS[state.battleRezSpellId]
+        self.extraControls.battleRezSpellId:SetText(spell and spell.label or "Unknown")
+    end
+end
+
+--initialization
 local function InitializeBattleRezTracker()
     BRT_Settings = BRT_Settings or {}
     BRT_Settings.layouts = BRT_Settings.layouts or {}
@@ -124,13 +195,7 @@ local function InitializeBattleRezTracker()
     f.icon = f:CreateTexture(nil, "BACKGROUND")
     f.icon:SetAllPoints(f)
     -- Get the icon texture dynamically from the spell data
-    local spellInfo = C_Spell.GetSpellInfo(REBIRTH_SPELL_ID)
-    if spellInfo then
-        f.icon:SetTexture(spellInfo.iconID)
-    else
-        -- Fallback if the spell data isn't ready yet
-        f.icon:SetTexture(136048)
-    end
+    f:UpdateIcon(BRT_Settings.battleRezSpellId)
     f.icon:SetTexCoord(TEXCOORD_LEFT, TEXCOORD_RIGHT, TEXCOORD_LEFT, TEXCOORD_RIGHT)
 
     --Timer Text (Centered)
@@ -158,8 +223,6 @@ local function InitializeBattleRezTracker()
     f:RegisterEvent("PLAYER_ENTERING_WORLD") 
     f:RegisterEvent("SPELL_UPDATE_CHARGES")  -- Fires when a charge is used or gained
     f:RegisterEvent("PLAYER_REGEN_DISABLED") -- Entering Combat
-    f:RegisterEvent("PLAYER_REGEN_ENABLED")  -- Leaving Combat
-    f:RegisterEvent("ZONE_CHANGED_NEW_AREA") -- Triggered when loading into a dungeon/raid
     f:RegisterEvent("CHALLENGE_MODE_START")  -- Specifically for Mythic+ starts
 
     f:SetScript("OnEvent", function(self, event)

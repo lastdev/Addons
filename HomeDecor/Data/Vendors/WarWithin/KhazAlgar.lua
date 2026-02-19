@@ -38,7 +38,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
     source={
       id=219318,
       type="vendor",
-      faction="Horde",
+      faction="Neutral",
       zone="Dornogal",
       worldmap="2339:5700:6060"
     },
@@ -79,7 +79,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=224353,
+   --   id=224353,
       type="vendor",
       faction="Neutral",
       zone="Orgrimmar",
@@ -255,7 +255,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=240279,
+  --    id=240279,
       type="vendor",
       faction="Neutral",
       zone="Zul'Aman",
@@ -282,7 +282,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=240407,
+   --   id=240407,
       type="vendor",
       faction="Alliance",
       zone="Harandar",
@@ -307,7 +307,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=240838,
+  --    id=240838,
       type="vendor",
       faction="Neutral",
       zone="Eversong Woods",
@@ -336,7 +336,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=241451,
+  --    id=241451,
       type="vendor",
       faction="Alliance",
       zone="Silvermoon City",
@@ -349,7 +349,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=241453,
+  --    id=241453,
       type="vendor",
       faction="Neutral",
       zone="Silvermoon City",
@@ -362,7 +362,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=241928,
+   --   id=241928,
       type="vendor",
       faction="Neutral",
       zone="Zul'Aman",
@@ -378,7 +378,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=242398,
+    --  id=242398,
       type="vendor",
       faction="Neutral",
       zone="Silvermoon City",
@@ -392,7 +392,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=242399,
+  --    id=242399,
       type="vendor",
       faction="Neutral",
       zone="Silvermoon City",
@@ -411,7 +411,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=242723,
+   --   id=242723,
       type="vendor",
       faction="Neutral",
       zone="Eversong Woods",
@@ -425,7 +425,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=242724,
+  --    id=242724,
       type="vendor",
       faction="Neutral",
       zone="Eversong Woods",
@@ -440,7 +440,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=242725,
+  --    id=242725,
       type="vendor",
       faction="Neutral",
       zone="Eversong Woods",
@@ -453,7 +453,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=242726,
+   --   id=242726,
       type="vendor",
       faction="Neutral",
       zone="Eversong Woods",
@@ -467,7 +467,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=243350,
+   --   id=243350,
       type="vendor",
       faction="Alliance",
       zone="Silvermoon City",
@@ -480,7 +480,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=243353,
+  --    id=243353,
       type="vendor",
       faction="Alliance",
       zone="Silvermoon City",
@@ -493,7 +493,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=243359,
+   --   id=243359,
       type="vendor",
       faction="Alliance",
       zone="Silvermoon City",
@@ -506,7 +506,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=243531,
+ --     id=243531,
       type="vendor",
       faction="Alliance",
       zone="Silvermoon City",
@@ -519,7 +519,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=243555,
+--      id=243555,
       type="vendor",
       faction="Alliance",
       zone="Silvermoon City",
@@ -532,7 +532,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=248328,
+   --   id=248328,
       type="vendor",
       faction="Neutral",
       zone="Voidstorm",
@@ -588,7 +588,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=248658,
+  --    id=248658,
       type="vendor",
       faction="Neutral",
       zone="Harandar",
@@ -657,7 +657,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=251259,
+   --   id=251259,
       type="vendor",
       faction="Alliance",
       zone="Harandar",
@@ -745,7 +745,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=252650,
+  --    id=252650,
       type="vendor",
       faction="Neutral",
       zone="Harandar",
@@ -758,7 +758,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=252873,
+    --  id=252873,
       type="vendor",
       faction="Alliance",
       zone="Arcantina",
@@ -799,7 +799,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
     source={
       id=252910,
       type="vendor",
-      faction="Horde",
+      faction="Neutral",
       zone="Dornogal",
       worldmap="2339:5468:5724"
     },
@@ -816,7 +816,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=252915,
+ --     id=252915,
       type="vendor",
       faction="Neutral",
       zone="The Bazaar, Silvermoon City",
@@ -841,7 +841,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=252916,
+  --    id=252916,
       type="vendor",
       faction="Neutral",
       zone="Silvermoon City",
@@ -862,7 +862,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=252917,
+   --   id=252917,
       type="vendor",
       faction="Horde",
       zone="Artistic Aid",
@@ -884,7 +884,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=253035,
+   --   id=253035,
       type="vendor",
       faction="Neutral",
       zone="Zul'Aman",
@@ -897,7 +897,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=254944,
+   --   id=254944,
       type="vendor",
       faction="Neutral",
       zone="Zul'Aman",
@@ -921,7 +921,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=255095,
+  --    id=255095,
       type="vendor",
       faction="Neutral",
       zone="Zul'Aman",
@@ -935,7 +935,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=255098,
+  --    id=255098,
       type="vendor",
       faction="Neutral",
       zone="Zul'Aman",
@@ -948,7 +948,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=255114,
+  --    id=255114,
       type="vendor",
       faction="Neutral",
       zone="Harandar",
@@ -983,7 +983,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=256009,
+   --   id=256009,
       type="vendor",
       faction="Alliance",
       zone="Silvermoon City",
@@ -997,7 +997,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=256026,
+    --  id=256026,
       type="vendor",
       faction="Neutral",
       zone="Silvermoon City",
@@ -1121,7 +1121,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=257632,
+   --   id=257632,
       type="vendor",
       faction="Neutral",
       zone="Voidstorm",
@@ -1137,7 +1137,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=257633,
+  --    id=257633,
       type="vendor",
       faction="Neutral",
       zone="Eversong Woods",
@@ -1179,7 +1179,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=257914,
+  --    id=257914,
       type="vendor",
       faction="Alliance",
       zone="Silvermoon City",
@@ -1192,7 +1192,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=258181,
+  --    id=258181,
       type="vendor",
       faction="Alliance",
       zone="Silvermoon City",
@@ -1236,7 +1236,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=258328,
+   --   id=258328,
       type="vendor",
       faction="Neutral",
       zone="Masters' Perch",
@@ -1251,7 +1251,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=258480,
+   --   id=258480,
       type="vendor",
       faction="Neutral",
       zone="Harandar",
@@ -1264,7 +1264,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=258507,
+   --   id=258507,
       type="vendor",
       faction="Neutral",
       zone="Harandar",
@@ -1277,7 +1277,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=258540,
+   --   id=258540,
       type="vendor",
       faction="Neutral",
       zone="Harandar",
@@ -1290,7 +1290,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=258885,
+ --     id=258885,
       type="vendor",
       faction="Neutral",
       zone="Zul'Aman",
@@ -1303,7 +1303,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=259864,
+  --    id=259864,
       type="vendor",
       faction="Neutral",
       zone="Eversong Woods",
@@ -1332,7 +1332,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=259922,
+   --   id=259922,
       type="vendor",
       faction="Neutral",
       zone="Voidstorm",
@@ -1357,7 +1357,7 @@ NS.Data.Vendors["WarWithin"]["KhazAlgar"] = {
 
   {
     source={
-      id=260180,
+    --  id=260180,
       type="vendor",
       faction="Neutral",
       zone="Zul'Aman",

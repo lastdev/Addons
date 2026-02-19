@@ -243,6 +243,15 @@ local function doGetItemProperties(itemObj, guidOverride, tooltipDataOverride)
         end
     end
 
+    if IS_RETAIL then
+        -- Dealing with Blizzard not lowering all itemlevels: grey boes.
+        if item.Quality == 0 and item.IsBindOnEquip and item.Level > 200 then
+            -- Apply the curve to items that appear to be obviously not downranked appropriately
+            item.Level = C_CurveUtil.EvaluateGameCurve(92181, item.Level)
+            item.MaxLevel = item.Level
+        end
+    end
+
     if IS_RETAIL or IS_CLASSIC_NEXT then
         -- Determine if this item is cosmetic. Blizzard Cosmetic check doesn't count every type of cosmetic
         -- we have seen, so we will use tooltip to ensure it is actually a Cosmetic as the Player sees it.

@@ -77,6 +77,17 @@ end
 function CM:Refresh()
   if not MerchantFrame or not MerchantFrame:IsShown() then return end
 
+  local db = NS.db
+  local prof = db and db.profile
+  if prof then
+    prof.vendor = prof.vendor or {}
+    if prof.vendor.showCollectedCheckmark == nil then prof.vendor.showCollectedCheckmark = true end
+    if not prof.vendor.showCollectedCheckmark then
+      self:HideAll()
+      return
+    end
+  end
+
   local DecorCounts = NS.Systems and NS.Systems.DecorCounts
   if not DecorCounts or type(DecorCounts.GetBreakdownByItem) ~= "function" then
     return
